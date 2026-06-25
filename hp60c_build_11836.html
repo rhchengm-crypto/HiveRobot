@@ -1,0 +1,1244 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge,chrome=1"/>
+<meta name="renderer" content="webkit">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta http-equiv="Pragma" content="no-cache">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Cache-Control" content="max-age=60"/>
+
+
+<meta name="keywords" content="yahboom,亚博智能,亚博,亚博科技,亚博教育,亚博机器人,编程机器人,智能小车,树莓派,jetson,英伟达,NVIDIA,ROS,开发板,单片机,开源硬件,平衡小车" />
+<meta name="description" content="深圳市亚博智能科技有限公司成立于2015年，是一家全球领先的人工智能与机器人教育解决方案提供商，集自主研发、量产制造、全球销售为一体的中国高新技术企业。公司主要产品为人工智能仿生机器人、多形态移动平台机器人、ROS系统复合型机器人及周边设备等。">
+<meta property="og:site_name" content="亚博智能科技官网"/>
+<meta property="og:url" content="https://www.yahboom.com"/>
+<meta property="og:type" content="website"/>
+<meta property="og:image" content="https://www.yahboom.comhttps://img.yahboom.com/images/yahboom.png"/>
+<meta property="og:description" content="深圳市亚博智能科技有限公司成立于2015年，是一家全球领先的人工智能与机器人教育解决方案提供商，集自主研发、量产制造、全球销售为一体的中国高新技术企业。公司主要产品为人工智能仿生机器人、多形态移动平台机器人、ROS系统复合型机器人及周边设备等。"/>
+
+
+
+
+
+
+
+
+
+
+<title>支架安装教程</title>
+<!--subject-->
+<link rel="stylesheet" type="text/css" href="/public/css/base.css" media="all"/>
+<link rel="stylesheet" type="text/css" href="/public/css/study.css" media="all"/>
+<link rel="stylesheet" type="text/css" href="/public/css/animate.css" media="all"/>
+<link rel="stylesheet" type="text/css" href="/public/css/bootstrap-3.3.4.css" media="all"/>
+<link rel="shortcut icon" type="image/x-icon" href="https://img.yahboom.com/images/robotico.ico">
+<link rel="stylesheet" href="/public/css/index_css/build.css"/>
+<!--[if lt IE 9]>
+    <script type="text/javascript" src="/public/webjs/html5shiv.v3.72.min.js"></script>
+<![endif]-->
+</head>
+<body>
+<!--top-->
+<link rel="stylesheet" href="/public/jq/top_zy/css/style.css?v=1.2">
+<style>
+.translate_wrapper{
+	position: relative;
+    left: 0;
+}
+/**/
+.drop-down {
+    display: none;
+    position: absolute;
+    z-index: 2;
+    top: 66px;
+    left: -15%;
+    text-align: center;
+    background: #fff;
+    box-shadow: 1px 1px 6px 0 rgba(100,100,100,0.2);
+    color: #253858;
+    padding: 0;
+    min-width: 160px;
+    border-radius: 8px;
+}
+.nav-support:hover .drop-down {
+	display: block;
+	animation: drop-down 0.3s ease-in-out forwards;
+}
+ul .nav-support:hover .drop-down {
+    display: block;
+    animation: drop-down 0.3s ease-in-out forwards;
+}
+.drop-down:before{
+	content:"";
+	position:absolute;
+	left:0;
+	top:0;
+	transform:translateY(-50%);
+	width:100%;
+	cursor:pointer
+}
+.drop-down:after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -90%);
+    width: 100%;
+    height: 10px;
+    width: 0px;
+    border: 16px solid;
+    border-color: #fff;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    cursor: pointer;
+}
+.drop-down li:not(:last-child) {
+    border: 0 solid #c2dfff;
+    border-bottom-width: 1px;
+}
+.drop-down li {
+    list-style: none;
+    margin-right: 0;
+}
+.nav-content-wrap>ul li {
+    font-size: 14px;
+}
+.drop-down li a {
+    font-size: 14px;
+    display: block;
+    padding: 10px 16px;
+	line-height: 1.5;
+	text-decoration: none;
+    color: #4183c4;
+}
+.drop-down li a:hover {
+    color: #1EAAFF;
+}
+.drop-down li a {
+    font-size: 14px;
+    display: block;
+	line-height: 2;
+}
+.dui-navbar ul.navbar-category>li.category-item{
+	margin-right: 0px;
+}
+</style>
+<script type="text/javascript">
+</script>
+<nav id="site-header-2" class="dui-navbar site-header collapsed">
+	<div class="navbar-container" id="head">
+		<div class="navbar-header"><a href="/home" data-ga-category="pc-nav" data-ga-action="click" data-ga-label="other-logo" class="navbar-brand ga-data"><span class="navbar-brand-logo" style="background-image: url(https://img.yahboom.com/images/logo-264-min.png);"></span></a></div>
+		<div id="siteHeaderNavbar">
+			<!-- <a data-load-lazyr="false" class="category-item search-button" data-toggle="modal" data-target="#myModal-search" href="#" style="padding:0;display:none;" title="本标签仅测试"><img src="https://img.yahboom.com/images/search.png" style="width: 20px;"></a> -->
+			<ul class="navbar-category">
+				<li data-load-lazyr="false" class="category-item"><a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="top-click-线上课程" href="/study" target="_self" class="ga-data">线上课程</a></li>
+				<li data-load-lazyr="false" class="category-item"><a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="top-click-产品中心" href="/store" target="_self" class="ga-data">产品中心</a></li>
+				<li data-load-lazyr="false" class="category-item"><a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="top-click-解决方案" href="/solution" target="_self" class="ga-data">解决方案</a></li>
+				<li data-load-lazyr="false" class="category-item"><a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="top-click-公司动态" href="/activity" target="_self" class="ga-data">动态分享</a></li>
+				<li class="category-item relative nav-support">
+					<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="top-click-下载" href="#" target="_self" class="ga-data">
+						线上商城<span class="l" style="margin: 0 5px;">∨</span>
+					</a>
+					<ul class="drop-down">
+						<li><a href="https://yabozhineng.tmall.com" target="_blank">天猫旗舰店</a></li>
+						<li><a href="https://yahboom.jd.com" target="_blank">京东旗舰店</a></li>
+					</ul>
+				</li>
+				<li class="category-item relative nav-support">
+					<a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="top-click-下载" href="#" target="_self" class="ga-data">
+						软件下载
+						<span class="l" style="margin: 0 5px;">∨</span>
+					</a>
+					<ul class="drop-down">
+						<li><a href="/download_app" target="" >控制软件</a></li>
+						<li><a href="/download_pc" target="" >编程软件</a></li>
+					</ul>
+				</li>
+				<li class="category-item relative"><a data-ga-category="pc_nav" data-ga-action="click" data-ga-label="top-click-关于我们" href="/about" target="_self" class="ga-data">关于我们</a></li>
+				<!-- <li class="category-item relative">
+					<div class="translate_wrapper">
+						<div class="current_lang">
+							<div class="lang" style="width: 120px;">
+							  <img src="https://img.yahboom.com/images/299914.svg">
+							  <span class="lang-txt">CN</span>
+							</div>
+						</div>
+						<div class="more_lang">
+							<div class="lang selected" data-value='cn'>
+							  <img src="https://img.yahboom.com/images/299914.svg">
+							  <span class="lang-txt">CN</span>      
+							</div>
+							<div class="lang" data-value='en' onclick="location.href='https://www.yahboom.net'">
+							  <img src="https://img.yahboom.com/images/299722.svg">
+							  <span class="lang-txt">EN<span> (US)</span></span>      
+							</div>
+						</div>
+					</div>
+					<script src="/public/app/app/js/jquery.min.js"></script>
+					<script  src="/public/jq/top_zy/js/index.js"></script>
+				</li> -->
+			</ul>
+		</div>
+	</div>
+</nav>
+<!--top End-->
+<!-- 搜索 -->
+<!-- <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<link rel="stylesheet" type="text/css" href="/public/css/bootstrap.min.3.3.7.css">
+<script src="/public/js/jquery.min.js"></script>
+<script src="/public/js/bootstrap.min.3.3.7.js"></script>
+<style>
+.search-button{
+	padding: 30px 16px;
+	float: right;
+	display: block;
+}
+/*搜索*/
+.search-demo .modal-header{
+	border-bottom: 0px solid #e5e5e5;
+}
+/*搜索按钮*/
+.search-demo .s_btn_wr {
+	width: 112px;
+	position: absolute;
+	z-index: 2;
+	zoom: 1;
+	border: 0;
+}
+.search-demo .s_btn_wr .s_btn {
+	cursor: pointer;
+	width: 112px;
+	height: 40px;
+	line-height: 41px;
+	line-height: 40px\9;
+	background-color: #28a7e1;
+	border-radius: 0 10px 10px 0;
+	font-size: 17px;
+	box-shadow: none;
+	font-weight: 400;
+	border: 0;
+	outline: 0;
+	color: #fff;
+	letter-spacing: normal;
+}
+.search-demo .s_btn_wr .s_btn:hover {
+	background: #1c85b5;
+}
+/*搜索栏*/
+.search-demo .s_ipt_wr {
+	width: 390px;
+	height: 40px;
+	overflow: visible;
+	display: inline-table;
+}
+.search-demo .s_ipt {
+	height: 40px;
+	font: 16px/18px arial;
+	padding: 10px 0 10px 14px;
+	margin: 0;
+	background: transparent;
+	outline: 0;
+	-webkit-appearance: none;
+	border: 2px solid #c4c7ce;
+	border-radius: 10px 0 0 10px;
+	border-right: 0;
+	width: 100%;
+}
+.search-demo .s_ipt:focus{
+	border-color:#28a7e1;
+}
+/*产品*/
+.search-demo .search-modal-body a img {
+	width: 120px;
+	height: 120px;
+	margin-left: 10px;
+}
+.search-demo .modal-content{
+	position: absolute;
+}
+.search-demo .search-modal-body{
+	float: left;
+	width: 600px;
+	max-height: 405px;
+	overflow: auto;
+}
+.search-demo .search-product{
+	float: left;
+	width: 130px;
+	margin: 0 10px 5px 0;
+	font-size: 12px;
+}
+.search-demo .search-modal-body{
+	padding: 10px;
+}
+.search-product p{
+	height: 35px;
+}
+.modal-backdrop{
+	z-index: 899;
+}
+</style>
+<style>
+.sy1_ul>.sy2_inside{
+	position: absolute;
+}
+.sy2_inside{
+	float: left;
+}
+.search-button{
+	padding: 5px 10px;
+	text-align: center;
+	color: #Fff;
+	font-size: 15px;
+	box-shadow: 1px 1px 6px 0 rgb(100 100 100 / 20%);
+	border-radius: 8px;
+	margin-left: 20px;
+}
+.search-dianji a:hover,{
+	color: rgb(187 187 187);
+}
+.search-dianji a:focus {
+	color: #fff;
+}
+</style>
+<div class="search-demo">
+	<div class="modal fade" id="myModal-search" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<!-- 搜索栏 -->
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<span class="bg s_ipt_wr new-pmd quickdelete-wrap">
+						<input id="kw" class="s_ipt" value="" maxlength="255" autocomplete="off" placeholder="输入产品名称...">
+					</span>
+					<span class="bg s_btn_wr">
+						<input type="submit" id="su" onclick="searchdata();" value="搜索" class="s_btn">
+					</span>
+				</div>
+				<div class="search-modal-body">
+					<p style="color: rgb(193 193 193);width: 100px;height: 100px;margin: 0 41%;">暂无结果</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+/*$(function(){
+	$("#kw").keyup(function(e){
+		if(e.keyCode==13){
+			$("#su").trigger("click");
+		}
+	})
+})*/
+$(document).ready(function() {
+    $(document).keydown(function(event) {
+        if (event.key == "Enter") {
+            //console.log('回车键被按下了！');
+            $("#su").trigger("click");
+        }
+    });
+});
+function searchdata(d){
+	$("body").css('padding-right','0');
+	var data=$('#kw').val();
+	var sosuo_value=$("#sosuo").data("value");
+	if(sosuo_value==1){
+		$.ajax({
+			type: "post",
+			url: 'https://www.yahboom.com/searchdata',
+			dataType: "json",
+			data: 'data='+data+'&sosuo_value='+sosuo_value,
+			success: function(msg){
+				$('.search-modal-body').empty();
+				if(msg.data!=''){
+					$.each(msg.data,function(n,vo){
+						if(vo.customid==1){
+							if(vo.typeid==7){
+								var li='<a href="/study_module/'+vo.cname+'" class="search-product" title="'+vo.name+'"> <img src="https://img.yahboom.com/newsimg/'+vo.img+'?imageView2/0/w/200/h/200"><p>'+vo.name+'</p></a>';
+							}else{
+								var li='<a href="/study/'+vo.cname+'" class="search-product" title="'+vo.name+'"> <img src="https://img.yahboom.com/newsimg/'+vo.img+'?imageView2/0/w/200/h/200"><p>'+vo.name+'</p></a>';
+							}
+						}else{
+							var li='<a href="'+vo.customurl+'" class="search-product" target="_blank" title="'+vo.name+'"> <img src="https://img.yahboom.com/newsimg/'+vo.img+'?imageView2/0/w/200/h/200"><p>'+vo.name+'</p></a>';
+						}
+						$('.search-modal-body img').error(function(){
+							$(this).attr('src','https://img.yahboom.com/images/wutu.png');
+						});
+						$('.search-modal-body').append(li);
+					})
+				}else{
+					$('.search-modal-body').append('<p style="color: rgb(193 193 193);width: 100px;height: 100px;margin: 0 41%;">暂无结果</p>');
+				}				
+			}
+		});
+	}else if(sosuo_value==2){
+		$.ajax({
+			type: "post",
+			url: 'https://www.yahboom.com/searchdata',
+			dataType: "json",
+			data: 'data='+data+'&sosuo_value='+sosuo_value,
+			success: function(msg){
+				$('.search-modal-body').empty();
+				if(msg.data!=''){
+					$.each(msg.data,function(n,vo){
+						var li='<a title="'+vo.name+'" class="search-product" href="/tbdetails?id='+vo.id+'" target="_blank"><img class="thumb" src="https://img.yahboom.com/gwimg/'+vo.img+'?imageView2/0/w/200/h/200"><p>'+vo.name+'</p></a>';
+						$('.search-modal-body img').error(function(){
+							$(this).attr('src','https://img.yahboom.com/images/wutu.png');
+						});
+						$('.search-modal-body').append(li);
+					})
+				}else{
+					$('.search-modal-body').append('<p style="color: rgb(193 193 193);width: 100px;height: 100px;margin: 0 41%;">暂无结果</p>');
+				}				
+			}
+		});
+	}
+}
+</script>
+<!-- 搜索 END-->
+<link href="/public/jq/3/css/homefast_nav.css?v=0.1" type="text/css" rel="stylesheet" />
+<div class="nav_a" style="background: rgba(98, 98, 98, 0.88);">
+	<ul class="sy1_ul sy1_ul_stydy">
+		<div class="sy2_inside">
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  				  <li class="sy1_li navli6">
+					  <a id="12" class="sy1_tit" href="javascript:void(0)" target="_self" >
+						<span class="navspan">教育机器人</span>
+						<span class="l" style="margin: 0 5px;">∨</span>
+					  </a>
+					  						<ul class="sy2_ul">
+						  <div class="sy2_inside">
+																																																																																																																																																																																																																																																																																																																												<li class="sy2_li navli1" data-cid="673,648,602,441,615," data-id="70" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">机械手臂</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="707,601,684,592," data-id="70" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">多足机器人</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="506,386,297,293,328,362,296,253,302" data-id="70" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">积木机器人</span></a> </li>
+							  																						<li class="sy2_li navli1" data-cid="724,597,642,294,186,527" data-id="70" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">两轮差速型</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="684,667,687" data-id="70" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">双轮平衡型</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="640,639,627,626,445,603,617" data-id="70" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">四驱差速型</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="721,552,553" data-id="70" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">阿克曼转向型</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="584,512,339,191" data-id="70" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">履带型</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="726,722,712,542,529,683,591,663,647" data-id="70" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">全向移动型</span></a> </li>
+							  																																				<li class="sy2_li navli1" data-cid="707,712,542,640,639" data-id="70" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">复合型机器人</span></a> </li>
+							  																																																																																																																																																										<div class="clearit"></div>
+						  </div>
+						  <div data-filter="image-blur" class="nav2_yywh_img" id="70">
+							
+						  </div>
+					   </ul>
+					   				  </li>
+			  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  				  <li class="sy1_li navli6">
+					  <a id="12" class="sy1_tit" href="javascript:void(0)" target="_self" >
+						<span class="navspan">JETSON</span>
+						<span class="l" style="margin: 0 5px;">∨</span>
+					  </a>
+					  						<ul class="sy2_ul">
+						  <div class="sy2_inside">
+																																																																							<li class="sy2_li navli1" data-cid="745,739,694,695,629" data-id="461" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">主板</span></a> </li>
+							  																																																									<li class="sy2_li navli1" data-cid="726,721,722,712,640,639,542,529,552,584" data-id="461" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">智能小车</span></a> </li>
+							  																																				<li class="sy2_li navli1" data-cid="673,608,648,592," data-id="461" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">仿生机器人</span></a> </li>
+							  																																																		<li class="sy2_li navli1" data-cid="596,742,450,416,298," data-id="461" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">外壳</span></a> </li>
+							  																																				<li class="sy2_li navli1" data-cid="299,740,634,368,440,686,260" data-id="461" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">摄像头</span></a> </li>
+							  																													<li class="sy2_li navli1" data-cid="114,620,371" data-id="461" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">显示屏</span></a> </li>
+							  																																																																							<li class="sy2_li navli1" data-cid="708,300,701,758" data-id="461" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">主板周边配件</span></a> </li>
+							  																																																																																																																																																																																																																																																																			<div class="clearit"></div>
+						  </div>
+						  <div data-filter="image-blur" class="nav2_yywh_img" id="461">
+							
+						  </div>
+					   </ul>
+					   				  </li>
+			  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  				  <li class="sy1_li navli6">
+					  <a id="12" class="sy1_tit" href="javascript:void(0)" target="_self" >
+						<span class="navspan">树莓派</span>
+						<span class="l" style="margin: 0 5px;">∨</span>
+					  </a>
+					  						<ul class="sy2_ul">
+						  <div class="sy2_inside">
+															<li class="sy2_li navli1" data-cid="618,689,308,668,507" data-id="68" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">主板</span></a> </li>
+							  																																																																														<li class="sy2_li navli1" data-cid="726,721,722,712,684,663,627,584,542,529,552,445,527" data-id="68" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">智能小车</span></a> </li>
+							  																																																																														<li class="sy2_li navli1" data-cid="707,601,684,606,592," data-id="68" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">仿生机器人</span></a> </li>
+							  																						<li class="sy2_li navli1" data-cid="669,623,625,643,644,624,622,750,498" data-id="68" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">外壳</span></a> </li>
+							  																																											<li class="sy2_li navli1" data-cid="688,610,109,740,634,368,440,686,260" data-id="68" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">摄像头</span></a> </li>
+							  																																				<li class="sy2_li navli1" data-cid="114,620,371" data-id="68" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">显示屏</span></a> </li>
+							  																																				<li class="sy2_li navli1" data-cid="738,677,646,664,478,758" data-id="68" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">扩展板</span></a> </li>
+							  																																																																																																																																																																																																																																																																																																													<div class="clearit"></div>
+						  </div>
+						  <div data-filter="image-blur" class="nav2_yywh_img" id="68">
+							
+						  </div>
+					   </ul>
+					   				  </li>
+			  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  				  <li class="sy1_li navli6">
+					  <a id="12" class="sy1_tit" href="javascript:void(0)" target="_self" >
+						<span class="navspan">地瓜RDK</span>
+						<span class="l" style="margin: 0 5px;">∨</span>
+					  </a>
+					  						<ul class="sy2_ul">
+						  <div class="sy2_inside">
+																																																																														<li class="sy2_li navli1" data-cid="715,676,570,744,720," data-id="551" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">主板</span></a> </li>
+							  																																																									<li class="sy2_li navli1" data-cid="726,721,722,683,591," data-id="551" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">机器人</span></a> </li>
+							  																																											<li class="sy2_li navli1" data-cid="716,674,550" data-id="551" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">外壳</span></a> </li>
+							  																																											<li class="sy2_li navli1" data-cid="734,671,581,740,440,634,368,686,260" data-id="551" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">摄像头</span></a> </li>
+							  																																				<li class="sy2_li navli1" data-cid="114,620,371" data-id="551" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">显示屏</span></a> </li>
+							  																													<li class="sy2_li navli1" data-cid="713,714,758" data-id="551" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">扩展板</span></a> </li>
+							  																																																																																																																																																																																																																																																																																																																											<div class="clearit"></div>
+						  </div>
+						  <div data-filter="image-blur" class="nav2_yywh_img" id="551">
+							
+						  </div>
+					   </ul>
+					   				  </li>
+			  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  				  <li class="sy1_li navli6">
+					  <a id="12" class="sy1_tit" href="javascript:void(0)" target="_self" >
+						<span class="navspan">嵌入式专区</span>
+						<span class="l" style="margin: 0 5px;">∨</span>
+					  </a>
+					  						<ul class="sy2_ul">
+						  <div class="sy2_inside">
+																																				<li class="sy2_li navli1" data-cid="564,578,64,672,535,561" data-id="462" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">STM32开发板/驱动板</span></a> </li>
+							  																																																																																																																																																																																																																																																																											<li class="sy2_li navli1" data-cid="667,617,603,700,588" data-id="462" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">STM32机器人小车</span></a> </li>
+							  																																																																																																																															<li class="sy2_li navli1" data-cid="692,645,635,630,687,626," data-id="462" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">ESP32系列</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="705,580,406" data-id="462" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">RISC-V系列</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="685,724,700,588" data-id="462" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">MSPM0系列</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="188,506,386" data-id="462" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">microbit主板/套件</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="597,642,294,186,506,386" data-id="462" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">microbit机器人</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="258,286,477,454," data-id="462" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">micro:bit配件</span></a> </li>
+							  																																																																																																																<div class="clearit"></div>
+						  </div>
+						  <div data-filter="image-blur" class="nav2_yywh_img" id="462">
+							
+						  </div>
+					   </ul>
+					   				  </li>
+			  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  				  <li class="sy1_li navli6">
+					  <a id="12" class="sy1_tit" href="javascript:void(0)" target="_self" >
+						<span class="navspan">视觉模块</span>
+						<span class="l" style="margin: 0 5px;">∨</span>
+					  </a>
+					  						<ul class="sy2_ul">
+						  <div class="sy2_inside">
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																								<li class="sy2_li navli1" data-cid="747,698,657,656,594,516,681,514,723,693,733" data-id="609" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">3D深度相机</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="740,634,440,368,686,566,563,585" data-id="609" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">USB摄像头</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="705,580,406,692,645,635" data-id="609" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">AI视觉模块</span></a> </li>
+							  																																																																																											<div class="clearit"></div>
+						  </div>
+						  <div data-filter="image-blur" class="nav2_yywh_img" id="609">
+							
+						  </div>
+					   </ul>
+					   				  </li>
+			  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  				  <li class="sy1_li navli6">
+					  <a id="12" class="sy1_tit" href="javascript:void(0)" target="_self" >
+						<span class="navspan">激光雷达</span>
+						<span class="l" style="margin: 0 5px;">∨</span>
+					  </a>
+					  						<ul class="sy2_ul">
+						  <div class="sy2_inside">
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																													<li class="sy2_li navli1" data-cid="612,614,638,611,613,729,693,682," data-id="610" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">单线雷达</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="746,616" data-id="610" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">多线雷达</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="717,641,480" data-id="610" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">单点测距模块</span></a> </li>
+							  																																																																						<div class="clearit"></div>
+						  </div>
+						  <div data-filter="image-blur" class="nav2_yywh_img" id="610">
+							
+						  </div>
+					   </ul>
+					   				  </li>
+			  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  				  <li class="sy1_li navli6">
+					  <a id="12" class="sy1_tit" href="javascript:void(0)" target="_self" >
+						<span class="navspan">传感器/电子模块</span>
+						<span class="l" style="margin: 0 5px;">∨</span>
+					  </a>
+					  						<ul class="sy2_ul">
+						  <div class="sy2_inside">
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		<li class="sy2_li navli1" data-cid="725,541,62" data-id="611" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">IMU模块</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="727,680,129,338,587,585" data-id="611" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">循迹模块</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="319,77,117,226,454,717,641,480" data-id="611" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">测距模块</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="704,743,551,418,419,454,649" data-id="611" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">语音模块</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="758,539,573,737,65," data-id="611" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">通讯模块</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="114,620,371,511,633,658,336,430,454,340,655" data-id="611" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">显示屏/RGB灯</span></a> </li>
+							  															<li class="sy2_li navli1" data-cid="433,432,322,659,660,661,454" data-id="611" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">其他模块</span></a> </li>
+							  																					<div class="clearit"></div>
+						  </div>
+						  <div data-filter="image-blur" class="nav2_yywh_img" id="611">
+							
+						  </div>
+					   </ul>
+					   				  </li>
+			  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  				  <li class="sy1_li navli6">
+					  <a id="12" class="sy1_tit" href="javascript:void(0)" target="_self" >
+						<span class="navspan">机器人配件区</span>
+						<span class="l" style="margin: 0 5px;">∨</span>
+					  </a>
+					  						<ul class="sy2_ul">
+						  <div class="sy2_inside">
+																													<li class="sy2_li navli1" data-cid="700,588,675,558,560,587" data-id="74" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">机器人底盘/支架</span></a> </li>
+							  																																											<li class="sy2_li navli1" data-cid="630,535,672,561,286,748," data-id="74" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">机器人扩展板</span></a> </li>
+							  																																																		<li class="sy2_li navli1" data-cid="607,447,528,61,289,560,566,563,686,160,226,561,501,495,494,446" data-id="74" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">舵机/舵机驱动</span></a> </li>
+							  																																											<li class="sy2_li navli1" data-cid="703,556,574,523,288,699,565,63" data-id="74" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">电机/电机驱动</span></a> </li>
+							  																																											<li class="sy2_li navli1" data-cid="537,732,520,72,147" data-id="74" > <a id="197" class="sy2_tit " href="javascript:void(0)" target="_self"><span class="navspan">手柄/遥控器</span></a> </li>
+							  																																																																																																																																																																																																																																																																																																																																																																																																	<div class="clearit"></div>
+						  </div>
+						  <div data-filter="image-blur" class="nav2_yywh_img" id="74">
+							
+						  </div>
+					   </ul>
+					   				  </li>
+			  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  			  <li class="sy2_li navli1"> <a id="197" class="sy2_tit " href="#" target="_self"><span class="navspan"></span></a> </li>
+		  		  <div class="clearit"></div>
+		</div>
+		<!-- 搜索 -->
+		<div class="search-dianji" style="">
+			<a data-load-lazyr="false" class="category-item search-button" data-toggle="modal" data-target="#myModal-search" href="#" title="本标签仅测试" onclick="$(body).css('padding-right','0');" id="sosuo" data-value="1">
+				搜索
+				<img src="https://img.yahboom.com/images/search-1.png" style="width: 20px;">
+			</a>
+		</div>
+	</ul>
+</div>
+<input type="hidden" name="videotype" value="2">
+<input type="hidden" value="0" id="video_lock">
+<div class="ship article">
+	<h1 style="text-align: center;padding: 10px;">支架安装教程</h1>
+    <section class="position">
+		<span>您当前位置：</span>
+        <a href="https://www.yahboom.com" title="">首页</a>
+        <i>&gt;</i>
+        <a href="/study/hp60c" title="">Nuwa-HP60C深度相机</a>
+        <i>&gt;</i>
+        <em>支架安装教程</em>
+	</section>
+    <h3	style="margin: 0 auto;background: rgb(235, 235, 235) none repeat scroll 0 0;height: 1px;"></h3>
+                <div class="ship_b">
+                <div style="margin-top:10px;">
+                    <h3 style="text-align: center;">教程以Gemini MAX相机为例，本款相机安装方式与Gemini MAX相机一致</h3>
+                    <div class="close_light_bg" id="close_light_bg"></div>
+                    <div class="video" id="CuPlayer1">
+                    	<video height="350" width="600" poster="https://video.yahboom.top/snapshot/80cd93c5410371ef99a54531958c010200005.jpg" controlslist="nodownload" controls="" src="https://video.yahboom.top/80cd93c5410371ef99a54531958c0102/145d2fab7860481e940af61394e3018a-9ab125844d454cf0ce75d8dda925a1c5-od-S00000001-200000.mp4" type="video/mp4"></video>                    </div>
+                </div>
+				            </div>
+            </div>
+<div class="tuwen bigbox">
+			<iframe src="/public/upload/upload-html/1735813848/hp60-max.html" frameborder="0" scrolling="no" id="documentation_test" onload="this.height=100" style="width:100%;"></iframe>
+		<script type="text/javascript">
+		function reinitIframe(){
+			var iframe = document.getElementById("documentation_test");
+			try{
+			var bHeight = iframe.contentWindow.document.body.scrollHeight;
+			var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+			var height = Math.max(bHeight, dHeight);
+			iframe.height = height;
+			
+						
+// 			const rawHash = window.location.hash; // "#4%E6%BA%90..."
+// 			const decodedHash = decodeURIComponent(rawHash); // "#4源代码解析"
+// 			const id = decodedHash.substring(1); // "4源代码解析"			
+
+			// 或使用 setTimeout 微延迟
+// 			setTimeout(() => {
+// 				const target = iframe.contentDocument.getElementById(id);
+// 			    if(target != null){
+// 			        target?.scrollIntoView({ block: 'start' });
+// 			    }else{
+//     				const targets = iframe.contentDocument.getElementsByName(id);
+//                     if (targets.length) {
+//                       targets[0].scrollIntoView(); // 滚动到第一个
+//                     }			        
+// 			    }
+				
+// 			}, 20);
+			
+			}catch (ex){}
+		}
+		
+        function getHashFromUrl(url) {
+          const index = url.indexOf('#');
+          if (index !== -1) {
+            // 从 # 的下一个位置开始截取
+            return url.substring(index + 1);
+          }
+          return null; // 或 ''，表示没有 #
+        }		
+		
+		
+		window.setInterval("reinitIframe()", 200);
+		
+		$('#documentation_test').on('load', function() {
+    		$(document).ready(function() {
+    			$('#documentation_test').contents().find('a').click(function(event) {
+    			    
+    			    var id = getHashFromUrl($(this).attr('href'))
+    			    
+    			    if(id == null){
+        				event.preventDefault(); // 阻止默认行为，即不在当前iframe中打开链接
+        				var url = $(this).attr('href'); // 获取链接的URL
+        				window.open(url, '_blank'); // 在新窗口中打开链接    			        
+    			    }else{
+            			setTimeout(() => {
+            			    var iframe = document.getElementById("documentation_test");
+            				const target = iframe.contentDocument.getElementById(id);
+            			    if(target != null){
+            			        target?.scrollIntoView({ block: 'start' });
+            			    }else{
+                				const targets = iframe.contentDocument.getElementsByName(id);
+                                if (targets.length) {
+                                  targets[0].scrollIntoView(); // 滚动到第一个
+                                }			        
+            			    }
+            				
+            			}, 20); 			        
+    			    }
+    			    
+
+    			});
+    		});
+		});
+		</script>
+	</div>
+<!-- 缩放 -->
+<!-- <img src="" alt="" class="bigimg" style="display: none;">
+<div class="mask" style="display: none;">
+	<img src="https://img.yahboom.com/images/close.png" alt="">
+</div> -->
+<div id="clear"></div>
+<!-- <div style="width: 1px;margin: 0 auto;">
+    <a href="#head" id="weixin" class="scroll" style="display: inline;z-index:9999;"><span id="toTopHover" style="opacity: 0;"></span></a>
+</div> -->
+<a download="" href="" target="blank" id="downPdf"></a>
+<style>
+.footer-copyright a{color:#CCC;}
+.footer-copyright a:hover{color:#fff;}
+.footer-copyright h4{color:#FFF;}
+.footer-copyright li{
+	margin-bottom: 8px;
+	font-size: 12px;
+}
+.footer-copyright p{
+	color:#666;
+	font-size: 12px;
+}
+.footer-copyright .container{
+	padding-left: 0px;
+	padding-top: 10px;
+    -webkit-box-pack: justify;
+    -moz-justify-content: space-between;
+    justify-content: space-between;
+    margin-top: 48px;
+    padding-bottom: 16px;
+}
+.col-md-2{
+    width: 22%;
+	margin-bottom: 24px;
+}
+div .col-md-3 img{  
+    cursor: pointer;  
+    transition: all 0.6s;
+    max-width:100px;
+    max-height:100px;
+}  
+div .col-md-3 img:hover{
+    transform: scale(1.5);
+}
+.footer-copyright li a:hover {
+    color: #f2f2f2;
+}
+.footer-change-country:hover .gray {
+    display: none;
+}
+.footer-change-country:hover .white {
+    display: block;
+}
+.footer-change-country .gray {
+    display: block;
+}
+.footer-change-country .white {
+    display: none;
+}
+#current-region-placeholder a{
+	display: inline;
+	text-decoration: blink;
+}
+/*--------*/
+.er-code {
+	padding: 4px;
+	border-radius: 4px;
+	background: #fff;
+	-ms-box-shadow: 0 2px 6px 0 rgba(0,0,0,.1);
+	-o-box-shadow: 0 2px 6px 0 rgba(0,0,0,.1);
+	box-shadow: 0 2px 6px 0 rgba(0,0,0,.1);
+}
+.social-wechat{
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+.social-wechat .er-code img {
+	width: 126px;
+	height: 126px;
+}
+.footer-social{
+	display: flex;
+	float: right;
+}
+.footer-social li {
+	width: 32px;
+	height: 32px;
+	justify-content: center;
+    transition: all .3s;
+    border-radius: 50%;
+    cursor: pointer;
+	margin-bottom: 0;
+	margin-left: 5px;
+}
+.footer-social li:hover {
+    background: rgba(255,255,255,.09);
+}
+.footer-social li img {
+	vertical-align: middle;
+	height: 20px;
+	display: block;
+}
+.footer-copyright ul{
+	margin-bottom:0;
+}
+.footer-about{
+	overflow: hidden;
+}
+.footer-about .footer-social .social-wechat .popup{
+	display: none;
+    position: absolute;
+    bottom: 26px;
+    right: -5px;
+    width: 134px;
+    height: 150px;
+}
+.social-wechat .triangle {
+    position: absolute;
+    background: #fff;
+    -ms-box-shadow: 4px 4px 8px rgba(0,0,0,.1);
+    -o-box-shadow: 4px 4px 8px rgba(0,0,0,.1);
+    box-shadow: 4px 4px 8px rgba(0,0,0,.1);
+    z-index: 8;
+    width: 11px;
+    height: 11px;
+    bottom: 16px;
+    right: 16px;
+    transform: translateY(50%) rotate(45deg);
+}
+.footer-about{
+	margin: 0 auto;
+    text-align: center;
+    overflow: hidden;
+    padding: 35px 0;
+}
+</style>
+
+<div class="footer-copyright">
+    <div class="container" style="padding-left: 15px;border-bottom: 1px solid #6c7073;">
+        <div style="overflow: auto;">
+            <div class="col-md-2 col-sm-5 col-xs-12 ">
+                <h4 style="">关于亚博</h4>
+                <ul>
+                    <li>
+                        <a href="https://www.yahboom.com/about" style="text-decoration: none;">关于我们</a>
+                    </li>
+					<li>
+                        <a href="https://www.yahboom.com/activity" style="text-decoration: none;">公司动态</a>
+                    </li>
+					<li>
+                        <a href="https://www.yahboom.com/about#header8" style="text-decoration: none;">办公地址</a>
+                    </li>
+                    <li>
+                    	<a href="https://www.zhipin.com/job_detail/?query=%E6%B7%B1%E5%9C%B3%E5%B8%82%E4%BA%9A%E5%8D%9A%E6%99%BA%E8%83%BD%E7%A7%91%E6%8A%80%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8&city=101280600&industry=&position=" target="_blank" style="text-decoration: none;">人才招募</a>
+                    </li>
+					<li>
+                        <a href="https://www.yahboom.com/home#banner6" style="text-decoration: none;">合作伙伴</a>
+                    </li>
+                </ul>
+            </div>
+			<div class="col-md-2 col-sm-6 col-xs-12 ">
+                <h4 style="">购买渠道</h4>
+                <ul>
+                    <li><a href="https://yabozhineng.tmall.com/" target="_blank" style="text-decoration: none;">亚博智能天猫旗舰店</a></li>
+					<li><a href="https://yahboom.jd.com" target="_blank" style="text-decoration: none;">亚博智能京东商城</a></li>
+					<li><a href="https://category.yahboom.net/" target="_blank" style="text-decoration: none;">亚博智能海外商城</a></li>
+                    <li><a href="https://yabozhineng.1688.com/" target="_blank" style="text-decoration: none;">阿里巴巴国内站</a></li>
+                </ul>
+            </div>
+			<div class="col-md-2 col-sm-6 col-xs-12">
+                <h4 style="">服务与支持</h4>
+                <ul>
+                    <li><a href="https://www.yahboom.com/download_pc" style="text-decoration: none;">软件中心</a></li>
+                    <li><a href="https://www.yahboom.com/study" style="text-decoration: none;">产品资料</a></li>
+                    <li><a href="https://www.yahboom.com/solution" style="text-decoration: none;">解决方案</a></li>
+					<li><a href="https://www.yahboom.com/about#header7" style="text-decoration: none;">售后服务</a></li>
+					<li><a href="https://www.yahboom.com/application" style="text-decoration: none;">商务合作</a></li>
+                </ul>
+            </div>
+			<div class="footer-about">
+				<div style="float: right;width: 222px;">
+					<h1 style="color: #fff;width: 100%;float: left;font-size: 16px;margin-bottom: 35px;">社交媒体平台</h1>
+					<div style="clear:both;"></div>
+					<img src="https://img.yahboom.com/images/logo-2.png" style="width: 170px;margin: 0 auto;padding-bottom: 40px;">
+				</div>
+				<div style="clear:both;"></div>
+				<ul class="footer-social">
+					<li class="social-wechat">
+						<a href="javascript:void(0)" title="wx" class="ga-data">
+							<img alt="wechat" src="//www3.djicdn.com/uploads/footer_social/cover/120/ead4fc6850bc8dd360e91db867446a68.png">
+						</a>
+						<div class="popup">
+							<div class="er-code">
+								<img class="dps" src="https://img.yahboom.com/images/erweima.jpg">
+							</div>
+							<div class="triangle"></div>
+						</div>
+					</li>
+					<li class="social-wechat">
+						<a href="https://space.bilibili.com/649901866" target="_blank" title="Bilibili" class="ga-data">
+							<img alt="Bilibili" src="//www4.djicdn.com/uploads/footer_social/cover/5626/d87d3e3507f0e18e9b7adda139b8a822.png">
+						</a>
+					</li>
+					<li class="social-wechat">
+						<a href="https://www.douyin.com/search/%E4%BA%9A%E5%8D%9A%E6%99%BA%E8%83%BD?publish_time=0&sort_type=0&source=switch_tab&type=general" target="_blank" title="抖音" class="ga-data">
+							<img alt="抖音" src="https://img.yahboom.com/images/about/抖音.png">
+						</a>
+					</li>
+					<li class="social-wechat">
+						<a href="https://www.ixigua.com/home/3351760774376280" target="_blank" title="西瓜视频" class="ga-data">
+							<img alt="西瓜视频" src="https://img.yahboom.com/images/about/西瓜视频.png">
+						</a>
+					</li>
+					<li class="social-wechat">
+						<a href="https://www.facebook.com/yahboomcar" target="_blank" title="Facebook" class="ga-data">
+							<img alt="Facebook" src="https://img.yahboom.com/images/about/facebook.png">
+						</a>
+					</li>
+					<li class="social-wechat">
+						<a href="https://www.youtube.com/channel/UCaishn63yF9Q_jKWEiaacFw" target="_blank" title="YouTube" class="ga-data">
+							<img alt="YouTube" src="https://img.yahboom.com/images/about/youtube.png">
+						</a>
+					</li>
+				</ul>
+			</div>
+        </div>
+    </div>
+    <div style="background:#272727;border-top: 2px solid rgba(235, 235, 235, 0);text-align: center;overflow: hidden;">
+        <div class="container" style="margin-top:5px;text-align: left;">
+			<div class="footer-change-country" style="display: flex;-webkit-box-align: center;-moz-align-items: center;align-items: center;height: 24px;margin: 0;padding: 0;border: 0;font-size: 100%;font-weight: 400;vertical-align: baseline;background: 0 0;color: #9fa3a6;float: right;margin-right: 20px;">
+				<img class="icon-locale gray" src="//www2.djicdn.com/assets/images/v3/foot/language-7441fda2976c3a423628f392d6fc2498.svg">
+				<img class="icon-locale white" src="//www2.djicdn.com/assets/images/v3/foot/language-white-4d09967be3fd63008e12859a0d408c04.svg">
+				<div id="change-locale" class="change-locale ga-data">
+					<span id="current-region-placeholder"><a href="javascript:void(0)" style="font-size: 14px;">简体中文</a> / <a href="http://www.yahboom.net/home" style="font-size: 14px;">English</a></span>
+				</div>
+			</div>
+            <p>版权信息：亚博智能科技有限公司 &nbsp;&nbsp;|&nbsp;&nbsp;<a href="https://beian.miit.gov.cn" target="_blank" style="display: initial;">粤ICP备16058507号</a>&nbsp;</p>
+            <p>Copyright © 2017-2026 Yahboom. All Rights Reserved.</p>
+			<p class="ad-desc" style="margin: 0;padding: 0;border: 0;font-size: 12px;font-weight: 400;vertical-align: baseline;background: 0 0;font-family: &quot;Open Sans&quot;,&quot;PingFang SC&quot;,&quot;Microsoft YaHei&quot;,&quot;Helvetica Neue&quot;,&quot;Hiragino Sans GB&quot;,&quot;WenQuanYi Micro Hei&quot;,Arial,sans-serif;">本网站直接或间接向消费者推销商品或者服务的商业宣传均属于“广告”（包装及参数、售后保障等商品信息除外）</p>
+            <br/>
+        </div>
+    </div>
+</div>
+<script>
+(function(){
+	$(".social-wechat").hover(function(){
+		$(this).find('.popup').css("display","block");
+	},function(){
+		$(this).find('.popup').css("display","none");
+	});
+})
+</script>
+<script src="/public/webjs/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="/public/player/js/swfobject.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?40de97bbce7a43793b642bf2a13d369b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!--导航js-->
+<script src="/public/jq/3/js/jquery-1.5.1.min.js"></script>
+<script src="/public/jq/3/js/homefast_navxl.js"></script>
+<script type="text/javascript" src="/public/js/move_top.js" ></script>
+<script type="text/javascript" src="/public/js/easing.js" ></script>
+<script src="/public/js/zoom.js"></script>
+<script type="text/javascript">
+
+
+$(function(){
+	/**/
+	$('.category-item').eq(0).find('a').attr('style','border-bottom: 2px solid #000;text-decoration: unset;');
+	$('video').each(function(){
+		$(this).attr('controlslist','nodownload');
+		$(this).attr('preload','none');
+	});
+    for(var i=0;i<$("video").length;i++)
+	{
+        var video_url=$("video").eq(i).attr('src');
+		if(video_url==null){
+			var video_url=$("video").eq(i).find("source").attr('src');
+			video_url = video_url.replace(/www.yahboom.top/,"video.yahboom.top");
+			video_url = video_url.replace(/http:/,"https:");
+			$("video").eq(i).find("source").attr('src',video_url);
+			$("video").eq(i).attr('src',video_url);
+		}else{
+			video_url = video_url.replace(/www.yahboom.top/,"video.yahboom.top");
+			video_url = video_url.replace(/http:/,"https:");
+			$("video").eq(i).attr('src',video_url);
+		}
+		$("video").eq(i).error(function(t){
+			$.ajax({
+				type: "post",
+				url: 'https://www.yahboom.com/video_error',
+				dataType: "json",
+				data: {er:1,url:t.target['baseURI'],src:t.target['src']},
+				success: function(msg){
+					/*console.log(msg);*/
+				}
+			});
+		})
+    }
+    var json={};
+	for(var i=0;i<8;i++){
+		json[i]={};
+		json[i]['a']=$(".sy1_li").eq(i).find("ul li").attr('data-cid');
+		json[i]['b']=$(".sy1_li").eq(i).find("ul li").attr('data-id');
+        $(".sy1_li .sy2_inside:eq("+i+")").eq(0).find('li').eq(0).attr('style','background: rgba(169, 166, 166, 0.6705882352941176);color: #fff;');
+        $(".sy1_li .sy2_inside:eq("+i+")").eq(0).find('li').eq(0).find('span').attr('style','color: #fff;');
+	}
+	d_img(json,null,1);
+    var handle = null;
+    $('.bod_1').mouseover(function(){
+        var cid=$(this).attr('data-cid');
+        var id=$(this).attr('data-id');
+        var a=$(this);
+        handle=setTimeout(function(){
+            $('.bod_1').attr('style','');
+            $('.bod_1').find('a span').attr('style','');
+            a.attr('style','background: rgba(169, 166, 166, 0.6705882352941176)');
+            a.find('a span').attr('style','color: #fff;');
+            d_img(cid,id);
+        },400);
+    }).mouseout(function (){
+        clearTimeout(handle);
+    });
+    $(".top_li_a").eq(0).find('a').attr('style','color: #fff');
+    $(".top_li_a").eq(0).attr('style','background: rgba(55, 162, 234, 0.83)');
+});
+jQuery(document).ready(function($) {
+	$(".scroll").click(function(event){
+		event.preventDefault();
+		$('html,body').animate({
+			scrollTop:$(this.hash).offset().top
+		},500);
+	});
+	$(".ff").css("display","none");
+});
+function pwd(pwdid){
+	var pwd=prompt('请输入提取码');
+	if(pwd!=' ' && pwd!=null){
+		var cid="681";
+		$.get("https://www.yahboom.com/jmima",{pwd:pwd,pwdid:pwdid,cid:cid},function(json){
+			if(json!=null){
+				downloadfile(json);
+				return false;
+			}else{
+				alert('输入错误');	
+			}
+		})
+	}
+}
+function v_pwd(){}
+function downloadfile(url) {  
+	var a = document.getElementById("downPdf");
+	a.href=url;
+	a.download='';
+	a.click();  
+}  
+function ruleSelector(selector) {
+	function uni(selector) {
+		return selector.replace(/::/g, ':')
+	}
+	return Array.prototype.filter.call(Array.prototype.concat.apply([], Array.prototype.map.call(document.styleSheets, function(x) {
+		return Array.prototype.slice.call(x.cssRules);
+	})), function(x) {
+		return uni(x.selectorText) === uni(selector);
+	});
+}
+function d_img(i,id=null,f=null){
+	if(id==null){
+		i=JSON.stringify(i);
+	}
+	$.ajax({
+		type: "post",
+		url: 'https://www.yahboom.com/studyjson',
+		dataType: "json",
+		data: 'id='+i+'&f='+f,
+		success: function(msg){
+			if(id!=null){
+				$('#'+id).empty();
+				$.each(msg,function(n,vo){
+					if(vo.customid==1){
+						if(vo.typeid==7){
+							var li='<a href="/study_module/'+vo.cname+'" style="float: left;"> <img src="https://img.yahboom.com/newsimg/'+vo.img+'?imageView2/0/w/200/h/200" /><p>'+vo.name+'</p></a>';
+						}else{
+							var li='<a href="/study/'+vo.cname+'" style="float: left;"> <img src="https://img.yahboom.com/newsimg/'+vo.img+'?imageView2/0/w/200/h/200" /><p>'+vo.name+'</p></a>';
+						}
+					}else{
+						var li='<a href="'+vo.customurl+'" style="float: left;" target=""> <img src="https://img.yahboom.com/newsimg/'+vo.img+'?imageView2/0/w/200/h/200" /><p>'+vo.name+'</p></a>';
+					}
+					$('#'+id).append(li);
+				})
+			}else{
+				$.each(msg,function(n1,vo1){
+					$('#'+vo1.b).empty();
+					$.each(vo1.a,function(n2,vo2){
+						if(vo2.customid==1){
+							if(vo2.typeid==7){
+								var li='<a href="/study_module/'+vo2.cname+'" style="float: left;" title="'+vo2.name+'"> <img src="https://img.yahboom.com/newsimg/'+vo2.img+'?imageView2/0/w/200/h/200" /><p>'+vo2.name+'</p></a>';
+							}else{
+								var li='<a href="/study/'+vo2.cname+'" style="float: left;" title="'+vo2.name+'"> <img src="https://img.yahboom.com/newsimg/'+vo2.img+'?imageView2/0/w/200/h/200" /><p>'+vo2.name+'</p></a>';
+							}
+						}else{
+							var li='<a href="'+vo2.customurl+'" style="float: left;" target="" title="'+vo2.name+'"> <img src="https://img.yahboom.com/newsimg/'+vo2.img+'?imageView2/0/w/200/h/200" /><p>'+vo2.name+'</p></a>';
+						}
+						$('#'+vo1.b).append(li);
+					})
+					$('#'+vo1.b).append('<div class="clearit"></div>');
+				})
+			}
+		}
+	});
+}
+function iframeAutoHeight(){
+	var iframe=document.getElementById("midFraim");
+	if(navigator.userAgent.indexOf("MSIE")>0||navigator.userAgent.indexOf("rv:11")>0||navigator.userAgent.indexOf("Firefox")>0){
+		iframe.height=iframe.contentWindow.document.body.scrollHeight;
+	}else{
+		iframe.height=iframe.contentWindow.document.documentElement.scrollHeight;
+	}
+}
+// 两秒后模拟点击
+setTimeout(function() {
+	// IE
+	if(document.all) {
+		//document.getElementById("clickMe").click();
+	}else {
+	// 其它浏览器
+		var e = document.createEvent("MouseEvents");
+		e.initEvent("click", true, true);
+		//document.getElementById("inform").dispatchEvent(e);
+	}
+}, 2000);
+//判断浏览器
+window.onload = function () {
+	//application/vnd.chromium.remoting-viewer 可能为360特有
+	var is360 = _mime("type", "application/vnd.chromium.remoting-viewer");
+	if (isChrome() && is360) { 
+		//$('video').removeClass('video').addClass('video');
+	}
+}
+//检测是否是谷歌内核(可排除360及谷歌以外的浏览器)
+function isChrome(){
+	var ua = navigator.userAgent.toLowerCase();
+	return ua.indexOf("chrome") > 1;
+}
+//测试mime
+function _mime(option, value) {
+	var mimeTypes = navigator.mimeTypes;
+	for (var mt in mimeTypes) {
+		if (mimeTypes[mt][option] == value) {
+			return true;
+		}
+	}
+	return false;
+}
+</script>
+</body>
+</html>
