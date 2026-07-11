@@ -165,11 +165,47 @@ SHOULDER_FRONT_TABLE_GRASP = -math.radians(90)
 SHOULDER_FRONT_TABLE_CLEAR = -math.radians(80)
 SHOULDER_FRONT_HIGH_APPROACH = -math.radians(60)
 
+# Empirical first pass for front/back random placement. The current successful
+# tabletop grasp baseline was around arm_x=8.8 cm. Keep this deliberately
+# small until more random-position samples are measured.
+ARM_X_BASELINE_CM = 8.8
+ARM_X_CM_PER_DEG = 1.0
+ARM_X_FRONT_LIMIT_DEG = 5.0
+ARM_X_ELBOW_LIMIT_DEG = 0.0
+ARM_X_ELBOW_GAIN = 0.0
+ARM_X_WRIST_CM_PER_DEG = 0.45
+ARM_X_WRIST_LIMIT_DEG = 8.0
+
 ARM_Y_CENTER_CM = 40.6
-ARM_Y_CM_PER_DEG = 1.0
+# Vision targets that land left/right of center are currently converted with a
+# conservative gain. 1.2 cm/deg was still too inward, while 1.5 cm/deg was
+# slightly too outward in the first RGB-refined random-position tests.
+ARM_Y_CM_PER_DEG = 1.4
+ARM_Y_NEAR_INWARD_BIAS_DEG = -2.0
+ARM_Y_FAR_INWARD_BIAS_DEG = -10.0
+ARM_X_ADAPT_NEAR_CM = 8.0
+ARM_X_ADAPT_FAR_CM = 12.0
 SHOULDER_SIDE_TEST_LIMIT_DEG = 25.0
 
-WRIST_DOWN_TEST_DEG = -54.0
+WRIST_DOWN_TEST_DEG = -50.0
+WRIST_NEAR_EXTRA_DOWN_BIAS_DEG = 12.0
+WRIST_FAR_EXTRA_DOWN_BIAS_DEG = 22.0
+WRIST_FAR_X_UP_START_CM = 14.0
+WRIST_FAR_X_UP_FULL_CM = 18.0
+WRIST_FAR_X_UP_MAX_DEG = 10.0
+WRIST_LOW_Z_START_CM = 40.0
+WRIST_LOW_Z_EXTRA_MAX_DEG = 18.0
+WRIST_LOW_Z_EXTRA_DEG_PER_CM = 1.8
+ELBOW_LOW_Z_START_CM = 40.0
+ELBOW_LOW_Z_UP_MAX_DEG = 10.0
+ELBOW_LOW_Z_UP_DEG_PER_CM = 1.2
+MID_LOW_Z_MIN_CM = 34.0
+MID_LOW_Z_MAX_CM = 40.0
+MID_LOW_FRONT_UP_DEG = 3.0
+MID_LOW_ELBOW_DOWN_DEG = 4.0
+MID_LOW_WRIST_DOWN_DEG = 2.0
+ELBOW_NEAR_EXTRA_DOWN_BIAS_DEG = 0.0
+ELBOW_FAR_EXTRA_DOWN_BIAS_DEG = 9.0
 LIFT_SHOULDER_FRONT_DEG = 0.0
 LIFT_ELBOW_DEG = 22.0
 LIFT_WRIST_UP_DEG = 10.0
@@ -415,14 +451,26 @@ class LeftArmController:
         self.move_home_safe(home, seconds=seconds)
 
     def move_home_safe(self, home: Dict[str, float], seconds: float = 4.0) -> None:
+        print("safe home step 0: open claw first")
+        self.open_claw_safe()
+
         current = self.read_position_targets()
-        side_home_first = dict(home)
-        side_home_first["shoulder_front"] = current["shoulder_front"]
-        side_home_first["elbow"] = current["elbow"]
+        wrist_home_first = dict(current)
+        wrist_home_first["wrist"] = home["wrist"]
+        self.check_targets(home, wrist_home_first)
+
+        print("safe home step 1: wrist back home first")
+        self.move_pose(
+            wrist_home_first,
+            seconds=max(2.0, seconds * 0.6),
+            active="wrist",
+        )
+
+        side_home_first = dict(wrist_home_first)
         side_home_first["shoulder_side"] = home["shoulder_side"]
         self.check_targets(home, side_home_first)
 
-        print("safe home step 1: shoulder_side back home first")
+        print("safe home step 2: shoulder_side back home")
         self.move_pose(
             side_home_first,
             seconds=max(3.0, seconds * 0.8),
@@ -433,7 +481,7 @@ class LeftArmController:
         elbow_safe_next["elbow"] = home["elbow"] + ELBOW_SAFE_OFFSETS["elbow"]
         self.check_targets(home, elbow_safe_next)
 
-        print("safe home step 2: elbow back to safe angle")
+        print("safe home step 3: elbow back to safe angle")
         self.move_pose(
             elbow_safe_next,
             seconds=max(3.0, seconds * 0.8),
@@ -446,14 +494,14 @@ class LeftArmController:
         )
         self.check_targets(home, shoulder_home_next)
 
-        print("safe home step 3: shoulder_front back to safe angle while elbow stays safe")
+        print("safe home step 4: shoulder_front back to safe angle while elbow stays safe")
         self.move_pose(
             shoulder_home_next,
             seconds=max(3.5, seconds),
             active="shoulder_front",
         )
 
-        print("safe home step 4: elbow back home")
+        print("safe home step 5: elbow back home")
         elbow_home_next = dict(shoulder_home_next)
         elbow_home_next["elbow"] = home["elbow"]
         self.check_targets(home, elbow_home_next)
@@ -463,7 +511,7 @@ class LeftArmController:
             active="elbow",
         )
 
-        print("safe home step 5: shoulder_front back home")
+        print("safe home step 6: shoulder_front back home")
         self.move_pose(
             home,
             seconds=max(3.5, seconds),
@@ -489,6 +537,7 @@ class LeftArmController:
         home: Dict[str, float],
         final_targets: Optional[Dict[str, float]] = None,
         seconds: float = 4.0,
+        skip_claw: bool = False,
     ) -> Dict[str, float]:
         if final_targets is None:
             final_targets = self.targets_from_offsets(home, PREGRASP_OFFSETS)
@@ -546,7 +595,10 @@ class LeftArmController:
         )
 
         wrist_planned = dict(side_planned)
-        wrist_planned["wrist"] = home["wrist"] + math.radians(WRIST_DOWN_TEST_DEG)
+        wrist_planned["wrist"] = final_targets.get(
+            "wrist",
+            home["wrist"] + math.radians(WRIST_DOWN_TEST_DEG),
+        )
         self.check_targets(home, wrist_planned)
 
         print("safe path step 6: wrist down test angle")
@@ -555,6 +607,10 @@ class LeftArmController:
             seconds=max(2.5, seconds * 0.6),
             active="wrist",
         )
+
+        if skip_claw:
+            print("safe path stopped after six motions. Claw close is skipped.")
+            return wrist_planned
 
         print("safe path step 7: claw close until pressure/contact")
         claw_hold_pos = self.close_claw_pressure()
@@ -711,9 +767,84 @@ class LeftArmController:
                 shoulder_front = max(shoulder_front, SHOULDER_FRONT_HIGH_APPROACH)
                 zone += "+z_high_clamped"
 
+        reach_delta_deg = clamp(
+            -(arm_x_cm - ARM_X_BASELINE_CM) / ARM_X_CM_PER_DEG,
+            -ARM_X_FRONT_LIMIT_DEG,
+            ARM_X_FRONT_LIMIT_DEG,
+        )
+        mid_low_z = MID_LOW_Z_MIN_CM <= arm_z_cm < MID_LOW_Z_MAX_CM
+        if mid_low_z:
+            reach_delta_deg -= MID_LOW_FRONT_UP_DEG
+        shoulder_front += math.radians(reach_delta_deg)
         offsets["shoulder_front"] = shoulder_front
 
+        arm_x_adapt_t = clamp(
+            (arm_x_cm - ARM_X_ADAPT_NEAR_CM) / (ARM_X_ADAPT_FAR_CM - ARM_X_ADAPT_NEAR_CM),
+            0.0,
+            1.0,
+        )
+        side_inward_bias_deg = lerp(
+            ARM_Y_NEAR_INWARD_BIAS_DEG,
+            ARM_Y_FAR_INWARD_BIAS_DEG,
+            arm_x_adapt_t,
+        )
+        elbow_extra_down_bias_deg = lerp(
+            ELBOW_NEAR_EXTRA_DOWN_BIAS_DEG,
+            ELBOW_FAR_EXTRA_DOWN_BIAS_DEG,
+            arm_x_adapt_t,
+        )
+        wrist_extra_down_bias_deg = lerp(
+            WRIST_NEAR_EXTRA_DOWN_BIAS_DEG,
+            WRIST_FAR_EXTRA_DOWN_BIAS_DEG,
+            arm_x_adapt_t,
+        )
+
+        elbow_reach_delta_deg = clamp(
+            reach_delta_deg * ARM_X_ELBOW_GAIN,
+            -ARM_X_ELBOW_LIMIT_DEG,
+            ARM_X_ELBOW_LIMIT_DEG,
+        )
+        elbow_up_deg = 0.0
+        if arm_z_cm < ELBOW_LOW_Z_START_CM:
+            elbow_up_deg = min(
+                ELBOW_LOW_Z_UP_MAX_DEG,
+                (ELBOW_LOW_Z_START_CM - arm_z_cm) * ELBOW_LOW_Z_UP_DEG_PER_CM,
+            )
+        elbow_mid_low_down_deg = MID_LOW_ELBOW_DOWN_DEG if mid_low_z else 0.0
+        offsets["elbow"] = PREGRASP_OFFSETS["elbow"] + math.radians(
+            elbow_reach_delta_deg
+            + elbow_up_deg
+            - elbow_mid_low_down_deg
+            - elbow_extra_down_bias_deg
+        )
+
+        wrist_down_deg = WRIST_DOWN_TEST_DEG
+        if arm_z_cm < WRIST_LOW_Z_START_CM:
+            extra_wrist_down = min(
+                WRIST_LOW_Z_EXTRA_MAX_DEG,
+                (WRIST_LOW_Z_START_CM - arm_z_cm) * WRIST_LOW_Z_EXTRA_DEG_PER_CM,
+            )
+            wrist_down_deg -= extra_wrist_down
+        wrist_x_delta_deg = clamp(
+            (arm_x_cm - ARM_X_BASELINE_CM) / ARM_X_WRIST_CM_PER_DEG,
+            -ARM_X_WRIST_LIMIT_DEG,
+            ARM_X_WRIST_LIMIT_DEG,
+        )
+        wrist_down_deg += wrist_x_delta_deg
+        if mid_low_z:
+            wrist_down_deg -= MID_LOW_WRIST_DOWN_DEG
+        wrist_down_deg -= wrist_extra_down_bias_deg
+        wrist_far_x_up_t = clamp(
+            (arm_x_cm - WRIST_FAR_X_UP_START_CM) / (WRIST_FAR_X_UP_FULL_CM - WRIST_FAR_X_UP_START_CM),
+            0.0,
+            1.0,
+        )
+        wrist_far_x_up_deg = wrist_far_x_up_t * WRIST_FAR_X_UP_MAX_DEG
+        wrist_down_deg += wrist_far_x_up_deg
+        offsets["wrist"] = math.radians(wrist_down_deg)
+
         side_deg = (arm_y_cm - ARM_Y_CENTER_CM) / ARM_Y_CM_PER_DEG
+        side_deg += side_inward_bias_deg
         side_deg = clamp(
             side_deg,
             -SHOULDER_SIDE_TEST_LIMIT_DEG,
@@ -729,12 +860,32 @@ class LeftArmController:
             "shoulder_front_offset_deg=", math.degrees(shoulder_front),
         )
         print(
+            "coarse wrist:",
+            "arm_z_cm=", arm_z_cm,
+            "wrist_x_delta_deg=", wrist_x_delta_deg,
+            "wrist_extra_down_bias_deg=", wrist_extra_down_bias_deg,
+            "wrist_far_x_up_deg=", wrist_far_x_up_deg,
+            "wrist_down_offset_deg=", wrist_down_deg,
+        )
+        print(
+            "coarse reach:",
+            "arm_x_baseline_cm=", ARM_X_BASELINE_CM,
+            "arm_x_offset_cm=", arm_x_cm - ARM_X_BASELINE_CM,
+            "shoulder_front_reach_delta_deg=", reach_delta_deg,
+            "elbow_reach_delta_deg=", elbow_reach_delta_deg,
+            "elbow_low_z_up_deg=", elbow_up_deg,
+            "elbow_mid_low_down_deg=", elbow_mid_low_down_deg,
+            "elbow_extra_down_bias_deg=", elbow_extra_down_bias_deg,
+        )
+        print(
             "coarse lateral:",
             "arm_y_center_cm=", ARM_Y_CENTER_CM,
+            "arm_x_adapt_t=", arm_x_adapt_t,
+            "arm_y_inward_bias_deg=", side_inward_bias_deg,
             "shoulder_side_offset_deg=", side_deg,
             "limited_to_deg=+/-", SHOULDER_SIDE_TEST_LIMIT_DEG,
         )
-        print("arm_x not executed yet; arm_z controls shoulder_front, arm_y controls shoulder_side.")
+        print("arm_x controls wrist plus small reach, arm_z controls wrist/height, arm_y controls shoulder_side.")
         return self.targets_from_offsets(home, offsets)
 
     def close(self) -> None:
@@ -777,6 +928,11 @@ def build_parser() -> argparse.ArgumentParser:
     target.add_argument("--y", type=float, required=True, help="arm_y in cm")
     target.add_argument("--z", type=float, required=True, help="arm_z in cm")
     target.add_argument("--execute", action="store_true")
+    target.add_argument("--skip-claw", action="store_true")
+    target.add_argument("--front-bias-deg", type=float, default=0.0)
+    target.add_argument("--side-bias-deg", type=float, default=0.0)
+    target.add_argument("--elbow-bias-deg", type=float, default=0.0)
+    target.add_argument("--wrist-bias-deg", type=float, default=0.0)
     target.add_argument("--seconds", type=float, default=4.0)
 
     return parser
@@ -820,10 +976,29 @@ def main() -> None:
             arm.print_status()
         elif args.cmd == "target":
             targets = arm.target_from_arm_xyz(home, args.x, args.y, args.z)
+            bias_map = {
+                "shoulder_front": args.front_bias_deg,
+                "shoulder_side": args.side_bias_deg,
+                "elbow": args.elbow_bias_deg,
+                "wrist": args.wrist_bias_deg,
+            }
+            active_biases = {
+                name: deg for name, deg in bias_map.items() if abs(deg) > 1e-9
+            }
+            if active_biases:
+                print("manual target biases deg:", active_biases)
+                for name, deg in active_biases.items():
+                    targets[name] += math.radians(deg)
+                arm.check_targets(home, targets)
             print("planned targets:")
             print(json.dumps(targets, ensure_ascii=False, indent=2))
             if args.execute:
-                arm.move_pregrasp_safe(home, final_targets=targets, seconds=args.seconds)
+                arm.move_pregrasp_safe(
+                    home,
+                    final_targets=targets,
+                    seconds=args.seconds,
+                    skip_claw=args.skip_claw,
+                )
                 arm.print_status()
             else:
                 print("dry run only. Add --execute to move.")
