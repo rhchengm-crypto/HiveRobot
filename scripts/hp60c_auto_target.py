@@ -17,6 +17,13 @@ from typing import Optional, Tuple
 import numpy as np
 
 
+INCH_TO_CM = 2.54
+CAMERA_FORWARD_FROM_SHOULDER_CM = 2.5 * INCH_TO_CM
+CAMERA_LEFT_FROM_SHOULDER_CM = 7.3 * INCH_TO_CM
+CAMERA_UP_FROM_SHOULDER_CM = 4.5 * INCH_TO_CM
+CAMERA_PITCH_DOWN_DEG = 54.0
+
+
 @dataclass
 class Intrinsics:
     fx: float
@@ -525,6 +532,35 @@ def provisional_arm_target(
     )
 
 
+def camera_to_shoulder_frame_cm(
+    camera_xyz_cm: Tuple[float, float, float],
+    camera_forward_cm: float,
+    camera_left_cm: float,
+    camera_up_cm: float,
+    camera_pitch_down_deg: float,
+) -> Tuple[float, float, float]:
+    """Convert HP60C optical coordinates into shoulder_front-axis frame.
+
+    Camera frame from pixel projection:
+      x: image right, y: image down, z: camera forward.
+
+    Shoulder frame used here:
+      forward: from shoulder_front axis toward the tabletop target,
+      left: positive to the robot/camera left side,
+      up: positive upward from the shoulder_front axis.
+    """
+    cam_x_right_cm, cam_y_down_cm, cam_z_forward_cm = camera_xyz_cm
+    pitch = math.radians(camera_pitch_down_deg)
+    shoulder_forward_cm = camera_forward_cm + (
+        cam_z_forward_cm * math.cos(pitch) - cam_y_down_cm * math.sin(pitch)
+    )
+    shoulder_left_cm = camera_left_cm - cam_x_right_cm
+    shoulder_up_cm = camera_up_cm - (
+        cam_z_forward_cm * math.sin(pitch) + cam_y_down_cm * math.cos(pitch)
+    )
+    return shoulder_forward_cm, shoulder_left_cm, shoulder_up_cm
+
+
 def run_controller(controller: str, arm_xyz_cm: Tuple[float, float, float]) -> None:
     cmd = [
         "sudo",
@@ -544,7 +580,7 @@ def run_controller(controller: str, arm_xyz_cm: Tuple[float, float, float]) -> N
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument("--rgb-topic", default="/ascamera_hp60c/rgb0/image")
     parser.add_argument("--depth-topic", default="/ascamera_hp60c/depth0/image_raw")
     parser.add_argument("--camera-info-topic", default="/ascamera_hp60c/rgb0/camera_info")
@@ -581,6 +617,16 @@ def main() -> None:
     parser.add_argument("--arm-offset-x", type=float, default=18.4)
     parser.add_argument("--arm-offset-y", type=float, default=20.9)
     parser.add_argument("--arm-offset-z", type=float, default=-27.4)
+    parser.add_argument("--camera-forward-from-shoulder-cm", type=float, default=CAMERA_FORWARD_FROM_SHOULDER_CM)
+    parser.add_argument("--camera-left-from-shoulder-cm", type=float, default=CAMERA_LEFT_FROM_SHOULDER_CM)
+    parser.add_argument("--camera-up-from-shoulder-cm", type=float, default=CAMERA_UP_FROM_SHOULDER_CM)
+    parser.add_argument("--camera-pitch-down-deg", type=float, default=CAMERA_PITCH_DOWN_DEG)
+    parser.add_argument(
+        "--controller-mode",
+        choices=("legacy", "shoulder"),
+        default="legacy",
+        help="legacy uses empirical arm_cm; shoulder prints/runs shoulder-frame target.",
+    )
 
     parser.add_argument("--save-debug-prefix", default=None)
     parser.add_argument("--execute", action="store_true")
@@ -712,12 +758,26 @@ def main() -> None:
         camera_xyz,
         (args.arm_offset_x, args.arm_offset_y, args.arm_offset_z),
     )
+    shoulder_xyz = camera_to_shoulder_frame_cm(
+        camera_xyz,
+        args.camera_forward_from_shoulder_cm,
+        args.camera_left_from_shoulder_cm,
+        args.camera_up_from_shoulder_cm,
+        args.camera_pitch_down_deg,
+    )
 
     result = {
         "pixel": {"u": u, "v": v},
         "depth_cm": target_depth_m * 100.0,
         "camera_cm": {"x": camera_xyz[0], "y": camera_xyz[1], "z": camera_xyz[2]},
         "arm_cm": {"x": arm_xyz[0], "y": arm_xyz[1], "z": arm_xyz[2]},
+        "shoulder_frame_cm": {
+            "forward": shoulder_xyz[0],
+            "left": shoulder_xyz[1],
+            "up": shoulder_xyz[2],
+            "camera_pitch_down_deg": args.camera_pitch_down_deg,
+            "note": "Origin is shoulder_front axis; forward/left/up use measured camera offsets and pitch.",
+        },
         "intrinsics": {
             "fx": intr.fx,
             "fy": intr.fy,
@@ -751,23 +811,56 @@ def main() -> None:
         cv2.imwrite(args.save_debug_prefix + "_depth_target.jpg", depth_vis)
         print("saved debug images:", args.save_debug_prefix + "_rgb_target.jpg")
 
-    cmd = [
-        "sudo",
-        "python3",
-        args.controller,
-        "target",
-        "--x",
-        f"{arm_xyz[0]:.2f}",
-        "--y",
-        f"{arm_xyz[1]:.2f}",
-        "--z",
-        f"{arm_xyz[2]:.2f}",
-        "--execute",
-    ]
+    if args.controller_mode == "shoulder":
+        cmd = [
+            "sudo",
+            "python3",
+            args.controller,
+            "target-shoulder",
+            "--forward",
+            f"{shoulder_xyz[0]:.2f}",
+            "--left",
+            f"{shoulder_xyz[1]:.2f}",
+            "--up",
+            f"{shoulder_xyz[2]:.2f}",
+            "--execute",
+            "--allow-unverified-geometry",
+        ]
+    else:
+        cmd = [
+            "sudo",
+            "python3",
+            args.controller,
+            "target",
+            "--x",
+            f"{arm_xyz[0]:.2f}",
+            "--y",
+            f"{arm_xyz[1]:.2f}",
+            "--z",
+            f"{arm_xyz[2]:.2f}",
+            "--execute",
+        ]
     if args.skip_claw:
         cmd.append("--skip-claw")
     print("Controller command:")
     print(" ".join(cmd))
+    print("Shoulder-frame dry-run command:")
+    print(
+        " ".join(
+            [
+                "sudo",
+                "python3",
+                args.controller,
+                "target-shoulder",
+                "--forward",
+                f"{shoulder_xyz[0]:.2f}",
+                "--left",
+                f"{shoulder_xyz[1]:.2f}",
+                "--up",
+                f"{shoulder_xyz[2]:.2f}",
+            ]
+        )
+    )
 
     if args.execute:
         subprocess.check_call(cmd)
