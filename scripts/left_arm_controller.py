@@ -173,32 +173,32 @@ GEOMETRY_WRIST_BIAS_DEG = -37.6
 GEOMETRY_AFFINE_ENABLED = True
 GEOMETRY_AFFINE_COEFFS = {
     "shoulder_front": {
-        "bias_deg": -80.996696610,
-        "raw_scale": -0.229565366,
-        "forward_coef_deg": -33.306674913,
-        "left_coef_deg": 31.376116819,
-        "up_coef_deg": -41.442343246,
+        "bias_deg": -80.926085264,
+        "raw_scale": -0.250464587,
+        "forward_coef_deg": -35.598400670,
+        "left_coef_deg": 31.570295140,
+        "up_coef_deg": -43.266068308,
     },
     "shoulder_side": {
-        "bias_deg": -49.032358811,
-        "raw_scale": 4.597966745,
-        "forward_coef_deg": -13.540532874,
-        "left_coef_deg": 164.194568142,
-        "up_coef_deg": -29.648174517,
+        "bias_deg": -53.236620158,
+        "raw_scale": 3.470022298,
+        "forward_coef_deg": -14.863640979,
+        "left_coef_deg": 136.259494246,
+        "up_coef_deg": -33.223317488,
     },
     "elbow": {
-        "bias_deg": 59.262106768,
-        "raw_scale": -0.283497494,
-        "forward_coef_deg": -114.872448485,
-        "left_coef_deg": 37.422202477,
-        "up_coef_deg": -75.493007809,
+        "bias_deg": 74.176551073,
+        "raw_scale": -0.302709379,
+        "forward_coef_deg": -110.533415960,
+        "left_coef_deg": 33.367318419,
+        "up_coef_deg": -56.631723906,
     },
     "wrist": {
-        "bias_deg": -128.843820980,
-        "raw_scale": 0.781811565,
-        "forward_coef_deg": 278.749479499,
-        "left_coef_deg": 4.319692060,
-        "up_coef_deg": 157.367759572,
+        "bias_deg": -174.833321699,
+        "raw_scale": 0.372262494,
+        "forward_coef_deg": 212.785101575,
+        "left_coef_deg": 17.787186591,
+        "up_coef_deg": 69.279982762,
     },
 }
 LEGACY_ARM_OFFSET_X_CM = 18.4
@@ -240,9 +240,63 @@ ARM_X_ADAPT_NEAR_CM = 8.0
 ARM_X_ADAPT_FAR_CM = 12.0
 SHOULDER_SIDE_NEAR_SOFT_LIMIT_DEG = -13.0
 SHOULDER_SIDE_FAR_SOFT_LIMIT_DEG = -18.0
-SHOULDER_SIDE_VERY_NEAR_X_START_CM = 4.0
-SHOULDER_SIDE_VERY_NEAR_X_FULL_CM = 2.0
+SHOULDER_SIDE_VERY_NEAR_X_START_CM = 8.0
+SHOULDER_SIDE_VERY_NEAR_X_FULL_CM = 4.0
 SHOULDER_SIDE_VERY_NEAR_SOFT_LIMIT_DEG = -2.0
+SHOULDER_SIDE_BLEND_PROTECT_X_START_CM = 8.0
+SHOULDER_SIDE_BLEND_PROTECT_X_FULL_CM = 4.0
+SHOULDER_SIDE_FAR_LEFT_RELEASE_FORWARD_START_CM = 42.0
+SHOULDER_SIDE_FAR_LEFT_RELEASE_FORWARD_FULL_CM = 44.0
+SHOULDER_SIDE_FAR_LEFT_RELEASE_LEFT_MIN_CM = 30.0
+SHOULDER_SIDE_FAR_LEFT_RELEASE_LEFT_PEAK_CM = 32.5
+SHOULDER_SIDE_FAR_LEFT_RELEASE_LEFT_MAX_CM = 35.0
+SHOULDER_SIDE_FAR_LEFT_RELEASE_X_MIN_CM = 3.0
+SHOULDER_SIDE_FAR_LEFT_RELEASE_X_PEAK_CM = 4.5
+SHOULDER_SIDE_FAR_LEFT_RELEASE_X_MAX_CM = 6.0
+SHOULDER_SIDE_FAR_LEFT_RELEASE_MAX_FRACTION = 0.35
+GEOMETRY_SHOULDER_SIDE_FAR_LEFT_TRANSITION_OUTWARD_MAX_DEG = 4.8
+# Body-safety side clamp is only for the measured folded-arm collision window.
+# Front offset is measured relative to home: -50deg is the normal grasp
+# reference with more side room; -90deg is the folded/body-risk reference.
+GEOMETRY_SHOULDER_SIDE_BODY_SAFE_ENABLED = True
+GEOMETRY_SHOULDER_SIDE_BODY_SAFE_FRONT_GRASP_DEG = 50.0
+GEOMETRY_SHOULDER_SIDE_BODY_SAFE_FRONT_FULL_DEG = 90.0
+GEOMETRY_SHOULDER_SIDE_BODY_SAFE_GRASP_SIDE_IN_LIMIT_DEG = 25.0
+GEOMETRY_SHOULDER_SIDE_BODY_SAFE_AUTO_SIDE_IN_LIMIT_DEG = 12.0
+GEOMETRY_SHOULDER_SIDE_BODY_SAFE_HARD_SIDE_IN_LIMIT_DEG = 15.0
+GEOMETRY_SHOULDER_SIDE_BODY_SAFE_FORBIDDEN_SIDE_IN_DEG = 20.0
+GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_FORWARD_MIN_CM = 35.0
+GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_FORWARD_PEAK_CM = 37.5
+GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_FORWARD_MAX_CM = 40.5
+GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_LEFT_START_CM = 37.8
+GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_LEFT_FULL_CM = 39.0
+GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_X_START_CM = 1.0
+GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_X_FULL_CM = -2.0
+GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_MAX_FRACTION = 0.9
+GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_FORWARD_MIN_CM = 44.8
+GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_FORWARD_PEAK_CM = 46.0
+GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_FORWARD_MAX_CM = 47.2
+GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_LEFT_MIN_CM = 27.5
+GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_LEFT_PEAK_CM = 29.5
+GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_LEFT_MAX_CM = 31.5
+GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_X_MIN_CM = 6.0
+GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_X_PEAK_CM = 7.5
+GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_X_MAX_CM = 9.0
+GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_MAX_DEG = 1.6
+GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_FORWARD_MIN_CM = 44.8
+GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_FORWARD_PEAK_CM = 46.0
+GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_FORWARD_MAX_CM = 47.2
+GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_LEFT_MIN_CM = 27.4
+GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_LEFT_PEAK_CM = 28.6
+GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_LEFT_MAX_CM = 29.2
+GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_X_MIN_CM = 7.6
+GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_X_PEAK_CM = 8.4
+GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_X_MAX_CM = 9.2
+GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_MAX_DEG = 0.9
+SHOULDER_SIDE_MID_NEAR_OUTWARD_X_MIN_CM = 4.0
+SHOULDER_SIDE_MID_NEAR_OUTWARD_X_PEAK_CM = 6.0
+SHOULDER_SIDE_MID_NEAR_OUTWARD_X_MAX_CM = 8.0
+SHOULDER_SIDE_MID_NEAR_OUTWARD_MAX_DEG = 2.0
 SHOULDER_SIDE_TEST_LIMIT_DEG = 25.0
 
 WRIST_DOWN_TEST_DEG = -50.0
@@ -275,6 +329,50 @@ WRIST_FAR_HIGH_Z_FULL_CM = 41.5
 WRIST_FAR_HIGH_X_START_CM = 14.0
 WRIST_FAR_HIGH_X_FULL_CM = 15.5
 WRIST_FAR_HIGH_EXTRA_DOWN_MAX_DEG = 10.0
+WRIST_FAR_MID_EXTRA_DOWN_X_START_CM = 12.0
+WRIST_FAR_MID_EXTRA_DOWN_X_FULL_CM = 14.0
+WRIST_FAR_MID_EXTRA_DOWN_Z_MIN_CM = 34.5
+WRIST_FAR_MID_EXTRA_DOWN_Z_PEAK_CM = 36.5
+WRIST_FAR_MID_EXTRA_DOWN_Z_MAX_CM = 38.5
+WRIST_FAR_MID_EXTRA_DOWN_MAX_DEG = 4.0
+GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_FORWARD_START_CM = 44.0
+GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_FORWARD_FULL_CM = 45.6
+GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_LEFT_MIN_CM = 21.0
+GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_LEFT_PEAK_CM = 23.5
+GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_LEFT_MAX_CM = 26.0
+GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_UP_MIN_CM = -40.5
+GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_UP_PEAK_CM = -39.3
+GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_UP_MAX_CM = -38.2
+GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_MAX_DEG = 8.0
+GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_FORWARD_START_CM = 43.5
+GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_FORWARD_FULL_CM = 44.2
+GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_LEFT_MIN_CM = 33.2
+GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_LEFT_PEAK_CM = 34.4
+GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_LEFT_MAX_CM = 35.8
+GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_UP_MIN_CM = -40.3
+GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_UP_PEAK_CM = -39.4
+GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_UP_MAX_CM = -38.5
+GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_MAX_DEG = 6.0
+GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_FORWARD_START_CM = 42.6
+GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_FORWARD_FULL_CM = 43.2
+GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_LEFT_MIN_CM = 35.5
+GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_LEFT_PEAK_CM = 36.9
+GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_LEFT_MAX_CM = 38.2
+GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_UP_MIN_CM = -40.4
+GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_UP_PEAK_CM = -39.6
+GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_UP_MAX_CM = -38.8
+GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_MAX_DEG = 6.5
+GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_FORWARD_MIN_CM = 35.0
+GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_FORWARD_PEAK_CM = 37.5
+GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_FORWARD_MAX_CM = 40.5
+GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_LEFT_START_CM = 37.8
+GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_LEFT_FULL_CM = 39.0
+GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_X_START_CM = 1.0
+GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_X_FULL_CM = -2.0
+GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_UP_MIN_CM = -39.8
+GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_UP_PEAK_CM = -38.7
+GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_UP_MAX_CM = -37.8
+GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_MAX_DEG = 10.0
 ELBOW_LOW_Z_START_CM = 40.0
 ELBOW_LOW_Z_UP_MAX_DEG = 10.0
 ELBOW_LOW_Z_UP_DEG_PER_CM = 1.2
@@ -288,6 +386,21 @@ ELBOW_FAR_EXTRA_DOWN_BIAS_DEG = 9.0
 LIFT_SHOULDER_FRONT_DEG = 0.0
 LIFT_ELBOW_DEG = 22.0
 LIFT_WRIST_UP_DEG = 10.0
+LIMIT_HOLD_WRIST_POST_LIFT_ELBOW_DEG = 8.0
+LIMIT_HOLD_WRIST_POST_LIFT_MARGIN_DEG = 2.0
+LIMIT_FRONT_LIFT_MIN_DEG = 16.748
+LIMIT_FRONT_LIFT_MAX_DEG = 17.688
+LIMIT_FRONT_LIFT_TARGET_FRACTION = 0.17
+LIMIT_FRONT_LIFT_ARM_X_START_CM = 6.0
+LIMIT_FRONT_LIFT_ARM_X_FULL_CM = 1.0
+LIMIT_FRONT_LIFT_FORWARD_START_CM = 28.0
+LIMIT_FRONT_LIFT_FORWARD_FULL_CM = 24.0
+LIMIT_ELBOW_DROP_MIN_DEG = 9.536
+LIMIT_ELBOW_DROP_MAX_DEG = 13.328
+LIMIT_ELBOW_DROP_ARM_X_START_CM = 6.0
+LIMIT_ELBOW_DROP_ARM_X_FULL_CM = 1.0
+LIMIT_ELBOW_DROP_FORWARD_START_CM = 28.0
+LIMIT_ELBOW_DROP_FORWARD_FULL_CM = 24.0
 
 
 
@@ -410,6 +523,70 @@ def ramp_between(value: float, start: float, full: float) -> float:
     if start == full:
         return 1.0 if value >= full else 0.0
     return clamp((value - start) / (full - start), 0.0, 1.0)
+
+
+def triangular_bump(value: float, start: float, peak: float, end: float) -> float:
+    if value <= start or value >= end:
+        return 0.0
+    if value <= peak:
+        return clamp((value - start) / (peak - start), 0.0, 1.0)
+    return clamp((end - value) / (end - peak), 0.0, 1.0)
+
+
+def auto_limit_front_lift_deg(
+    legacy_arm_x_cm: float,
+    shoulder_forward_cm: float,
+    safe_shoulder_front_rad: float,
+    planned_shoulder_front_rad: float,
+) -> float:
+    near_x_t = clamp(
+        (LIMIT_FRONT_LIFT_ARM_X_START_CM - legacy_arm_x_cm)
+        / (LIMIT_FRONT_LIFT_ARM_X_START_CM - LIMIT_FRONT_LIFT_ARM_X_FULL_CM),
+        0.0,
+        1.0,
+    )
+    near_forward_t = clamp(
+        (LIMIT_FRONT_LIFT_FORWARD_START_CM - shoulder_forward_cm)
+        / (LIMIT_FRONT_LIFT_FORWARD_START_CM - LIMIT_FRONT_LIFT_FORWARD_FULL_CM),
+        0.0,
+        1.0,
+    )
+    position_t = max(near_x_t, near_forward_t)
+    target_delta_deg = max(
+        0.0,
+        math.degrees(safe_shoulder_front_rad - planned_shoulder_front_rad),
+    )
+    geometric_lift_deg = target_delta_deg * LIMIT_FRONT_LIFT_TARGET_FRACTION
+    position_lift_deg = lerp(
+        LIMIT_FRONT_LIFT_MIN_DEG,
+        LIMIT_FRONT_LIFT_MAX_DEG,
+        position_t,
+    )
+    return clamp(
+        max(geometric_lift_deg, position_lift_deg),
+        LIMIT_FRONT_LIFT_MIN_DEG,
+        LIMIT_FRONT_LIFT_MAX_DEG,
+    )
+
+
+def auto_limit_elbow_drop_deg(legacy_arm_x_cm: float, shoulder_forward_cm: float) -> float:
+    near_x_t = clamp(
+        (LIMIT_ELBOW_DROP_ARM_X_START_CM - legacy_arm_x_cm)
+        / (LIMIT_ELBOW_DROP_ARM_X_START_CM - LIMIT_ELBOW_DROP_ARM_X_FULL_CM),
+        0.0,
+        1.0,
+    )
+    near_forward_t = clamp(
+        (LIMIT_ELBOW_DROP_FORWARD_START_CM - shoulder_forward_cm)
+        / (LIMIT_ELBOW_DROP_FORWARD_START_CM - LIMIT_ELBOW_DROP_FORWARD_FULL_CM),
+        0.0,
+        1.0,
+    )
+    return lerp(
+        LIMIT_ELBOW_DROP_MIN_DEG,
+        LIMIT_ELBOW_DROP_MAX_DEG,
+        max(near_x_t, near_forward_t),
+    )
 
 
 def eval_axis_ramp(rule: AxisRamp, arm_x_cm: float, arm_z_cm: float) -> float:
@@ -711,7 +888,9 @@ class LeftArmController:
         forward_cm: float,
         left_cm: float,
         up_cm: float,
+        geometry_execution_blend: float = 0.0,
     ) -> Dict[str, float]:
+        geometry_execution_blend = clamp(geometry_execution_blend, 0.0, 1.0)
         print("received shoulder-frame target cm:", forward_cm, left_cm, up_cm)
         print(
             "shoulder-frame target means origin=shoulder_front axis, axes=forward/left/up."
@@ -726,10 +905,208 @@ class LeftArmController:
             left_cm,
             up_cm,
         )
+        legacy_arm_xyz = self.legacy_arm_xyz_from_shoulder_frame(forward_cm, left_cm, up_cm)
+        legacy_arm_x_cm = legacy_arm_xyz[0]
+        geometry_wrist_far_front_extra_down_deg = (
+            GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_MAX_DEG
+            * ramp_between(
+                forward_cm,
+                GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_FORWARD_START_CM,
+                GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_FORWARD_FULL_CM,
+            )
+            * triangular_bump(
+                left_cm,
+                GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_LEFT_MIN_CM,
+                GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_LEFT_PEAK_CM,
+                GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_LEFT_MAX_CM,
+            )
+            * triangular_bump(
+                up_cm,
+                GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_UP_MIN_CM,
+                GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_UP_PEAK_CM,
+                GEOMETRY_WRIST_FAR_FRONT_EXTRA_DOWN_UP_MAX_CM,
+            )
+        )
+        if geometry_wrist_far_front_extra_down_deg > 0.0:
+            calibrated_offsets["wrist"] -= math.radians(geometry_wrist_far_front_extra_down_deg)
+            print(
+                "geometry wrist far-front extra down:",
+                "deg=", geometry_wrist_far_front_extra_down_deg,
+            )
+        geometry_wrist_far_left_extra_up_deg = (
+            GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_MAX_DEG
+            * ramp_between(
+                forward_cm,
+                GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_FORWARD_START_CM,
+                GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_FORWARD_FULL_CM,
+            )
+            * triangular_bump(
+                left_cm,
+                GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_LEFT_MIN_CM,
+                GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_LEFT_PEAK_CM,
+                GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_LEFT_MAX_CM,
+            )
+            * triangular_bump(
+                up_cm,
+                GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_UP_MIN_CM,
+                GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_UP_PEAK_CM,
+                GEOMETRY_WRIST_FAR_LEFT_EXTRA_UP_UP_MAX_CM,
+            )
+        )
+        if geometry_wrist_far_left_extra_up_deg > 0.0:
+            calibrated_offsets["wrist"] += math.radians(geometry_wrist_far_left_extra_up_deg)
+            print(
+                "geometry wrist far-left extra up:",
+                "deg=", geometry_wrist_far_left_extra_up_deg,
+            )
+        geometry_wrist_far_left_edge_extra_up_deg = (
+            GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_MAX_DEG
+            * ramp_between(
+                forward_cm,
+                GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_FORWARD_START_CM,
+                GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_FORWARD_FULL_CM,
+            )
+            * triangular_bump(
+                left_cm,
+                GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_LEFT_MIN_CM,
+                GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_LEFT_PEAK_CM,
+                GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_LEFT_MAX_CM,
+            )
+            * triangular_bump(
+                up_cm,
+                GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_UP_MIN_CM,
+                GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_UP_PEAK_CM,
+                GEOMETRY_WRIST_FAR_LEFT_EDGE_EXTRA_UP_UP_MAX_CM,
+            )
+        )
+        if geometry_wrist_far_left_edge_extra_up_deg > 0.0:
+            calibrated_offsets["wrist"] += math.radians(geometry_wrist_far_left_edge_extra_up_deg)
+            print(
+                "geometry wrist far-left edge extra up:",
+                "deg=", geometry_wrist_far_left_edge_extra_up_deg,
+            )
+        geometry_wrist_extreme_left_extra_up_deg = (
+            GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_MAX_DEG
+            * triangular_bump(
+                forward_cm,
+                GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_FORWARD_MIN_CM,
+                GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_FORWARD_PEAK_CM,
+                GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_FORWARD_MAX_CM,
+            )
+            * ramp_between(
+                left_cm,
+                GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_LEFT_START_CM,
+                GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_LEFT_FULL_CM,
+            )
+            * ramp_between(
+                legacy_arm_x_cm,
+                GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_X_START_CM,
+                GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_X_FULL_CM,
+            )
+            * triangular_bump(
+                up_cm,
+                GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_UP_MIN_CM,
+                GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_UP_PEAK_CM,
+                GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_UP_MAX_CM,
+            )
+        )
+        if geometry_wrist_extreme_left_extra_up_deg > 0.0:
+            calibrated_offsets["wrist"] += math.radians(
+                geometry_wrist_extreme_left_extra_up_deg
+            )
+            print(
+                "geometry wrist extreme-left extra up:",
+                "deg=", geometry_wrist_extreme_left_extra_up_deg,
+            )
+        geometry_shoulder_side_far_left_transition_outward_deg = (
+            GEOMETRY_SHOULDER_SIDE_FAR_LEFT_TRANSITION_OUTWARD_MAX_DEG
+            * ramp_between(
+                forward_cm,
+                SHOULDER_SIDE_FAR_LEFT_RELEASE_FORWARD_START_CM,
+                SHOULDER_SIDE_FAR_LEFT_RELEASE_FORWARD_FULL_CM,
+            )
+            * triangular_bump(
+                left_cm,
+                SHOULDER_SIDE_FAR_LEFT_RELEASE_LEFT_MIN_CM,
+                SHOULDER_SIDE_FAR_LEFT_RELEASE_LEFT_PEAK_CM,
+                SHOULDER_SIDE_FAR_LEFT_RELEASE_LEFT_MAX_CM,
+            )
+            * triangular_bump(
+                legacy_arm_x_cm,
+                SHOULDER_SIDE_FAR_LEFT_RELEASE_X_MIN_CM,
+                SHOULDER_SIDE_FAR_LEFT_RELEASE_X_PEAK_CM,
+                SHOULDER_SIDE_FAR_LEFT_RELEASE_X_MAX_CM,
+            )
+        )
+        if geometry_shoulder_side_far_left_transition_outward_deg > 0.0:
+            calibrated_offsets["shoulder_side"] += math.radians(
+                geometry_shoulder_side_far_left_transition_outward_deg
+            )
+            print(
+                "geometry shoulder_side far-left transition outward:",
+                "deg=", geometry_shoulder_side_far_left_transition_outward_deg,
+            )
+        geometry_shoulder_side_far_center_outward_deg = (
+            GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_MAX_DEG
+            * triangular_bump(
+                forward_cm,
+                GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_FORWARD_MIN_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_FORWARD_PEAK_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_FORWARD_MAX_CM,
+            )
+            * triangular_bump(
+                left_cm,
+                GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_LEFT_MIN_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_LEFT_PEAK_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_LEFT_MAX_CM,
+            )
+            * triangular_bump(
+                legacy_arm_x_cm,
+                GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_X_MIN_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_X_PEAK_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_CENTER_OUTWARD_X_MAX_CM,
+            )
+        )
+        if geometry_shoulder_side_far_center_outward_deg > 0.0:
+            calibrated_offsets["shoulder_side"] += math.radians(
+                geometry_shoulder_side_far_center_outward_deg
+            )
+            print(
+                "geometry shoulder_side far-center outward:",
+                "deg=", geometry_shoulder_side_far_center_outward_deg,
+            )
+        geometry_shoulder_side_far_right_center_outward_deg = (
+            GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_MAX_DEG
+            * triangular_bump(
+                forward_cm,
+                GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_FORWARD_MIN_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_FORWARD_PEAK_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_FORWARD_MAX_CM,
+            )
+            * triangular_bump(
+                left_cm,
+                GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_LEFT_MIN_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_LEFT_PEAK_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_LEFT_MAX_CM,
+            )
+            * triangular_bump(
+                legacy_arm_x_cm,
+                GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_X_MIN_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_X_PEAK_CM,
+                GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_X_MAX_CM,
+            )
+        )
+        if geometry_shoulder_side_far_right_center_outward_deg > 0.0:
+            calibrated_offsets["shoulder_side"] += math.radians(
+                geometry_shoulder_side_far_right_center_outward_deg
+            )
+            print(
+                "geometry shoulder_side far-right-center outward:",
+                "deg=", geometry_shoulder_side_far_right_center_outward_deg,
+            )
         calibrated_targets = self.targets_from_offsets(home, calibrated_offsets)
         print("calibrated geometry planned targets:")
         print(json.dumps(calibrated_targets, ensure_ascii=False, indent=2))
-        legacy_arm_xyz = self.legacy_arm_xyz_from_shoulder_frame(forward_cm, left_cm, up_cm)
         print(
             "legacy-equivalent arm target cm:",
             "x=", legacy_arm_xyz[0],
@@ -739,10 +1116,113 @@ class LeftArmController:
         legacy_targets = self.target_from_arm_xyz(home, *legacy_arm_xyz)
         print("legacy-equivalent planned targets:")
         print(json.dumps(legacy_targets, ensure_ascii=False, indent=2))
-        print(
-            "target-shoulder execution uses legacy-equivalent targets while geometry IK is still being calibrated."
+        geometry_shoulder_side_extreme_left_inward_t = (
+            GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_MAX_FRACTION
+            * triangular_bump(
+                forward_cm,
+                GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_FORWARD_MIN_CM,
+                GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_FORWARD_PEAK_CM,
+                GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_FORWARD_MAX_CM,
+            )
+            * ramp_between(
+                left_cm,
+                GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_LEFT_START_CM,
+                GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_LEFT_FULL_CM,
+            )
+            * ramp_between(
+                legacy_arm_x_cm,
+                GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_X_START_CM,
+                GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_X_FULL_CM,
+            )
         )
-        return legacy_targets
+        if (
+            geometry_shoulder_side_extreme_left_inward_t > 0.0
+            and calibrated_targets["shoulder_side"] > legacy_targets["shoulder_side"]
+        ):
+            requested_side = calibrated_targets["shoulder_side"]
+            used_side = lerp(
+                calibrated_targets["shoulder_side"],
+                legacy_targets["shoulder_side"],
+                geometry_shoulder_side_extreme_left_inward_t,
+            )
+            calibrated_targets["shoulder_side"] = used_side
+            print(
+                "geometry shoulder_side extreme-left inward:",
+                "deg=", math.degrees(requested_side - used_side),
+                "fraction=", geometry_shoulder_side_extreme_left_inward_t,
+                "requested=", requested_side,
+                "used=", used_side,
+            )
+        side_body_safe_t = 0.0
+        if GEOMETRY_SHOULDER_SIDE_BODY_SAFE_ENABLED:
+            front_forward_deg = max(
+                0.0,
+                -math.degrees(calibrated_targets["shoulder_front"] - home["shoulder_front"]),
+            )
+            side_in_deg = max(
+                0.0,
+                -math.degrees(calibrated_targets["shoulder_side"] - home["shoulder_side"]),
+            )
+            front_t = ramp_between(
+                front_forward_deg,
+                GEOMETRY_SHOULDER_SIDE_BODY_SAFE_FRONT_GRASP_DEG,
+                GEOMETRY_SHOULDER_SIDE_BODY_SAFE_FRONT_FULL_DEG,
+            )
+            if front_t > 0.0:
+                side_safe_limit_deg = lerp(
+                    GEOMETRY_SHOULDER_SIDE_BODY_SAFE_GRASP_SIDE_IN_LIMIT_DEG,
+                    GEOMETRY_SHOULDER_SIDE_BODY_SAFE_AUTO_SIDE_IN_LIMIT_DEG,
+                    front_t,
+                )
+                side_hard_limit_deg = lerp(
+                    GEOMETRY_SHOULDER_SIDE_BODY_SAFE_GRASP_SIDE_IN_LIMIT_DEG,
+                    GEOMETRY_SHOULDER_SIDE_BODY_SAFE_HARD_SIDE_IN_LIMIT_DEG,
+                    front_t,
+                )
+                side_t = ramp_between(side_in_deg, side_safe_limit_deg, side_hard_limit_deg)
+                side_body_safe_t = front_t * side_t
+            else:
+                side_safe_limit_deg = GEOMETRY_SHOULDER_SIDE_BODY_SAFE_GRASP_SIDE_IN_LIMIT_DEG
+                side_hard_limit_deg = GEOMETRY_SHOULDER_SIDE_BODY_SAFE_GRASP_SIDE_IN_LIMIT_DEG
+        if side_body_safe_t > 0.0:
+            requested_side = calibrated_targets["shoulder_side"]
+            safe_side = home["shoulder_side"] - math.radians(side_safe_limit_deg)
+            calibrated_targets["shoulder_side"] = safe_side
+            print(
+                "geometry shoulder_side body safety clamp:",
+                "requested=", requested_side,
+                "used=", safe_side,
+                "body_safe_t=", side_body_safe_t,
+                "front_forward_deg=", front_forward_deg,
+                "side_in_deg=", side_in_deg,
+                "side_safe_limit_deg=", side_safe_limit_deg,
+                "side_hard_limit_deg=", side_hard_limit_deg,
+            )
+        blended_targets = dict(legacy_targets)
+        if geometry_execution_blend > 0.0:
+            for name in ("shoulder_front", "shoulder_side", "elbow", "wrist"):
+                blended_targets[name] = lerp(
+                    legacy_targets[name],
+                    calibrated_targets[name],
+                    geometry_execution_blend,
+                )
+            self.check_targets(home, blended_targets)
+            print(
+                "target-shoulder execution blend:",
+                "legacy_weight=", 1.0 - geometry_execution_blend,
+                "geometry_weight=", geometry_execution_blend,
+                "shoulder_side_geometry_weight=", geometry_execution_blend,
+                "far_center_side_outward_deg=", geometry_shoulder_side_far_center_outward_deg,
+                "far_right_center_side_outward_deg=", geometry_shoulder_side_far_right_center_outward_deg,
+                "extreme_left_side_inward_fraction=", geometry_shoulder_side_extreme_left_inward_t,
+            )
+            print("blended planned targets:")
+            print(json.dumps(blended_targets, ensure_ascii=False, indent=2))
+        else:
+            print(
+                "target-shoulder execution uses legacy-equivalent targets; geometry IK is logged only."
+            )
+        return blended_targets
 
     def command_targets(
         self,
@@ -930,15 +1410,20 @@ class LeftArmController:
         final_targets: Optional[Dict[str, float]] = None,
         seconds: float = 4.0,
         skip_claw: bool = False,
+        pre_claw_front_lift_deg: float = 0.0,
+        pre_claw_elbow_drop_deg: float = 0.0,
+        hold_wrist_lift: bool = False,
     ) -> Dict[str, float]:
         if final_targets is None:
             final_targets = self.targets_from_offsets(home, PREGRASP_OFFSETS)
         self.check_targets(home, final_targets)
+        front_lift_from_safe = hold_wrist_lift and abs(pre_claw_front_lift_deg) > 1e-9
 
         table_clearance = self.targets_from_offsets(home, TABLE_CLEARANCE_OFFSETS)
         elbow_safe = self.targets_from_offsets(home, ELBOW_SAFE_OFFSETS)
         shoulder_grasp = dict(elbow_safe)
-        shoulder_grasp["shoulder_front"] = final_targets["shoulder_front"]
+        if not front_lift_from_safe:
+            shoulder_grasp["shoulder_front"] = final_targets["shoulder_front"]
         self.check_targets(home, table_clearance)
         self.check_targets(home, elbow_safe)
         self.check_targets(home, shoulder_grasp)
@@ -957,23 +1442,32 @@ class LeftArmController:
             active="elbow",
         )
 
-        print("safe path step 3: shoulder_front to planned grasp angle; elbow holds")
-        self.move_pose(
-            shoulder_grasp,
-            seconds=max(4.0, seconds),
-            active="shoulder_front",
-        )
+        if front_lift_from_safe:
+            print("safe path step 3: shoulder_front holds safe angle for front-lift test")
+            self.hold_pose(shoulder_grasp, 0.8)
+        else:
+            print("safe path step 3: shoulder_front to planned grasp angle; elbow holds")
+            self.move_pose(
+                shoulder_grasp,
+                seconds=max(4.0, seconds),
+                active="shoulder_front",
+            )
 
         elbow_planned = dict(shoulder_grasp)
-        elbow_planned["elbow"] = final_targets["elbow"]
+        if not front_lift_from_safe:
+            elbow_planned["elbow"] = final_targets["elbow"]
         self.check_targets(home, elbow_planned)
 
-        print("safe path step 4: elbow to planned grasp angle; shoulder holds")
-        self.move_pose(
-            elbow_planned,
-            seconds=max(3.0, seconds * 0.8),
-            active="elbow",
-        )
+        if front_lift_from_safe:
+            print("safe path step 4: elbow holds safe angle for front-lift test")
+            self.hold_pose(elbow_planned, 0.8)
+        else:
+            print("safe path step 4: elbow to planned grasp angle; shoulder holds")
+            self.move_pose(
+                elbow_planned,
+                seconds=max(3.0, seconds * 0.8),
+                active="elbow",
+            )
 
         side_planned = dict(elbow_planned)
         side_planned["shoulder_side"] = final_targets["shoulder_side"]
@@ -986,41 +1480,101 @@ class LeftArmController:
             active="shoulder_side",
         )
 
-        wrist_planned = dict(side_planned)
-        wrist_planned["wrist"] = final_targets.get(
-            "wrist",
-            home["wrist"] + math.radians(WRIST_DOWN_TEST_DEG),
-        )
-        self.check_targets(home, wrist_planned)
+        if front_lift_from_safe:
+            wrist_planned = dict(side_planned)
+            print("safe path step 6: skip wrist down; wrist holds current safe angle")
+            self.hold_pose(wrist_planned, 0.8)
+        else:
+            wrist_planned = dict(side_planned)
+            wrist_planned["wrist"] = final_targets.get(
+                "wrist",
+                home["wrist"] + math.radians(WRIST_DOWN_TEST_DEG),
+            )
+            self.check_targets(home, wrist_planned)
 
-        print("safe path step 6: wrist down test angle")
-        self.move_pose(
-            wrist_planned,
-            seconds=max(2.5, seconds * 0.6),
-            active="wrist",
-        )
+            print("safe path step 6: wrist down test angle")
+            self.move_pose(
+                wrist_planned,
+                seconds=max(2.5, seconds * 0.6),
+                active="wrist",
+            )
+
+        grasp_pose = wrist_planned
+        if abs(pre_claw_front_lift_deg) > 1e-9:
+            front_lift_pose = dict(grasp_pose)
+            front_lift_pose["shoulder_front"] = (
+                front_lift_pose["shoulder_front"] - math.radians(pre_claw_front_lift_deg)
+                if front_lift_from_safe
+                else front_lift_pose["shoulder_front"] + math.radians(pre_claw_front_lift_deg)
+            )
+            self.check_targets(home, front_lift_pose)
+            print(
+                "safe path step 6a: shoulder_front calculated forward lift before claw; wrist holds",
+                "front_lift_deg=", pre_claw_front_lift_deg,
+                "sign=", "forward_negative" if front_lift_from_safe else "legacy_positive",
+            )
+            self.move_pose(
+                front_lift_pose,
+                seconds=max(2.0, seconds * 0.5),
+                active="shoulder_front",
+            )
+            grasp_pose = front_lift_pose
+        if front_lift_from_safe and abs(pre_claw_elbow_drop_deg) > 1e-9:
+            elbow_limit_pose = dict(grasp_pose)
+            elbow_limit_pose["elbow"] = (
+                elbow_limit_pose["elbow"] - math.radians(pre_claw_elbow_drop_deg)
+            )
+            self.check_targets(home, elbow_limit_pose)
+            print(
+                "safe path step 6b: elbow calculated drop before claw; wrist holds",
+                "elbow_drop_deg=", pre_claw_elbow_drop_deg,
+            )
+            self.move_pose(
+                elbow_limit_pose,
+                seconds=max(2.0, seconds * 0.5),
+                active="elbow",
+            )
+            grasp_pose = elbow_limit_pose
 
         if skip_claw:
             print("safe path stopped after six motions. Claw close is skipped.")
-            return wrist_planned
+            return grasp_pose
 
         print("safe path step 7: claw close until pressure/contact")
         claw_hold_pos = self.close_claw_pressure()
 
-        lift_planned = dict(wrist_planned)
+        lift_planned = dict(grasp_pose)
         lift_planned["shoulder_front"] = (
             lift_planned["shoulder_front"] + math.radians(LIFT_SHOULDER_FRONT_DEG)
         )
-        lift_planned["elbow"] = lift_planned["elbow"] + math.radians(LIFT_ELBOW_DEG)
-        lift_planned["wrist"] = lift_planned["wrist"] + math.radians(LIFT_WRIST_UP_DEG)
+        if hold_wrist_lift:
+            elbow_lift_requested = math.radians(LIMIT_HOLD_WRIST_POST_LIFT_ELBOW_DEG)
+            elbow_limit_target = (
+                home["elbow"]
+                + self.specs["elbow"].max_offset
+                - math.radians(LIMIT_HOLD_WRIST_POST_LIFT_MARGIN_DEG)
+            )
+            elbow_target_requested = lift_planned["elbow"] + elbow_lift_requested
+            lift_planned["elbow"] = min(elbow_target_requested, elbow_limit_target)
+            print(
+                "hold-wrist post-contact elbow lift limited:",
+                "requested_deg=", LIMIT_HOLD_WRIST_POST_LIFT_ELBOW_DEG,
+                "used_deg=", math.degrees(lift_planned["elbow"] - grasp_pose["elbow"]),
+            )
+        else:
+            lift_planned["elbow"] = lift_planned["elbow"] + math.radians(LIFT_ELBOW_DEG)
+            lift_planned["wrist"] = lift_planned["wrist"] + math.radians(LIFT_WRIST_UP_DEG)
         self.check_targets(home, lift_planned)
 
-        print("safe path step 8: lift grasped object about 5cm")
+        print(
+            "safe path step 8: lift grasped object about 5cm",
+            "hold_wrist_lift=", hold_wrist_lift,
+        )
         self.move_pose_with_claw_hold(
             lift_planned,
             claw_hold_pos=claw_hold_pos,
             seconds=3.0,
-            active=("shoulder_front", "elbow", "wrist"),
+            active=("shoulder_front", "elbow") if hold_wrist_lift else ("shoulder_front", "elbow", "wrist"),
         )
 
         print("safe path stopped after eight motions. Object should be lifted.")
@@ -1265,10 +1819,35 @@ class LeftArmController:
         wrist_very_near_high_up_deg = wrist_corrections["wrist_very_near_high_up_deg"]
         wrist_far_high_extra_down_deg = -wrist_corrections["wrist_far_high_extra_down_deg"]
         wrist_down_deg += sum(wrist_corrections.values())
+        wrist_far_mid_extra_down_deg = (
+            WRIST_FAR_MID_EXTRA_DOWN_MAX_DEG
+            * ramp_between(
+                arm_x_cm,
+                WRIST_FAR_MID_EXTRA_DOWN_X_START_CM,
+                WRIST_FAR_MID_EXTRA_DOWN_X_FULL_CM,
+            )
+            * triangular_bump(
+                arm_z_cm,
+                WRIST_FAR_MID_EXTRA_DOWN_Z_MIN_CM,
+                WRIST_FAR_MID_EXTRA_DOWN_Z_PEAK_CM,
+                WRIST_FAR_MID_EXTRA_DOWN_Z_MAX_CM,
+            )
+        )
+        wrist_down_deg -= wrist_far_mid_extra_down_deg
         offsets["wrist"] = math.radians(wrist_down_deg)
 
         side_deg = (arm_y_cm - ARM_Y_CENTER_CM) / ARM_Y_CM_PER_DEG
         side_deg += side_inward_bias_deg
+        side_mid_near_outward_deg = (
+            SHOULDER_SIDE_MID_NEAR_OUTWARD_MAX_DEG
+            * triangular_bump(
+                arm_x_cm,
+                SHOULDER_SIDE_MID_NEAR_OUTWARD_X_MIN_CM,
+                SHOULDER_SIDE_MID_NEAR_OUTWARD_X_PEAK_CM,
+                SHOULDER_SIDE_MID_NEAR_OUTWARD_X_MAX_CM,
+            )
+        )
+        side_deg += side_mid_near_outward_deg
         side_deg = max(side_deg, side_inward_soft_limit_deg)
         side_deg = clamp(
             side_deg,
@@ -1301,6 +1880,7 @@ class LeftArmController:
             "wrist_very_low_extra_down_deg=", wrist_very_low_extra_down_deg,
             "wrist_very_near_high_up_deg=", wrist_very_near_high_up_deg,
             "wrist_far_high_extra_down_deg=", wrist_far_high_extra_down_deg,
+            "wrist_far_mid_extra_down_deg=", wrist_far_mid_extra_down_deg,
             "wrist_down_offset_deg=", wrist_down_deg,
         )
         print(
@@ -1321,6 +1901,7 @@ class LeftArmController:
             "arm_y_inward_bias_deg=", side_inward_bias_deg,
             "side_very_near_t=", side_very_near_t,
             "side_inward_soft_limit_deg=", side_inward_soft_limit_deg,
+            "side_mid_near_outward_deg=", side_mid_near_outward_deg,
             "shoulder_side_offset_deg=", side_deg,
             "limited_to_deg=+/-", SHOULDER_SIDE_TEST_LIMIT_DEG,
         )
@@ -1375,6 +1956,23 @@ def build_parser() -> argparse.ArgumentParser:
     target.add_argument("--side-bias-deg", type=float, default=0.0)
     target.add_argument("--elbow-bias-deg", type=float, default=0.0)
     target.add_argument("--wrist-bias-deg", type=float, default=0.0)
+    target.add_argument(
+        "--pre-claw-front-lift-deg",
+        type=float,
+        default=0.0,
+        help="after wrist pregrasp, lift shoulder_front by this many degrees before closing claw",
+    )
+    target.add_argument(
+        "--pre-claw-elbow-drop-deg",
+        type=float,
+        default=0.0,
+        help="with front-lift test, drop elbow by this many degrees before closing claw",
+    )
+    target.add_argument(
+        "--hold-wrist-lift",
+        action="store_true",
+        help="with pre-claw front lift, skip wrist-down before claw; after contact, lift without adding wrist-up",
+    )
     target.add_argument("--seconds", type=float, default=4.0)
 
     target_shoulder = sub.add_parser("target-shoulder")
@@ -1383,11 +1981,39 @@ def build_parser() -> argparse.ArgumentParser:
     target_shoulder.add_argument("--up", type=float, required=True, help="shoulder-frame up in cm")
     target_shoulder.add_argument("--execute", action="store_true")
     target_shoulder.add_argument(
+        "--geometry-execution-blend",
+        type=float,
+        default=0.0,
+        help="0.0 keeps legacy execution; 0.25 uses 75%% legacy and 25%% calibrated geometry",
+    )
+    target_shoulder.add_argument(
         "--allow-unverified-geometry",
         action="store_true",
-        help="permit target-shoulder motion; current motion target is legacy-equivalent while geometry IK is logged",
+        help="permit target-shoulder motion, including optional calibrated geometry blend",
     )
     target_shoulder.add_argument("--skip-claw", action="store_true")
+    target_shoulder.add_argument(
+        "--pre-claw-front-lift-deg",
+        type=float,
+        default=0.0,
+        help="after wrist pregrasp, lift shoulder_front by this many degrees before closing claw",
+    )
+    target_shoulder.add_argument(
+        "--pre-claw-elbow-drop-deg",
+        type=float,
+        default=0.0,
+        help="with front-lift test, drop elbow by this many degrees before closing claw",
+    )
+    target_shoulder.add_argument(
+        "--auto-pre-claw-front-lift",
+        action="store_true",
+        help="compute front-lift degrees for extreme near-left hold-wrist grasp tests",
+    )
+    target_shoulder.add_argument(
+        "--hold-wrist-lift",
+        action="store_true",
+        help="with pre-claw front lift, skip wrist-down before claw; after contact, lift without adding wrist-up",
+    )
     target_shoulder.add_argument("--seconds", type=float, default=4.0)
 
     return parser
@@ -1453,12 +2079,46 @@ def main() -> None:
                     final_targets=targets,
                     seconds=args.seconds,
                     skip_claw=args.skip_claw,
+                    pre_claw_front_lift_deg=args.pre_claw_front_lift_deg,
+                    pre_claw_elbow_drop_deg=args.pre_claw_elbow_drop_deg,
+                    hold_wrist_lift=args.hold_wrist_lift,
                 )
                 arm.print_status()
             else:
                 print("dry run only. Add --execute to move.")
         elif args.cmd == "target-shoulder":
-            targets = arm.target_from_shoulder_xyz(home, args.forward, args.left, args.up)
+            targets = arm.target_from_shoulder_xyz(
+                home,
+                args.forward,
+                args.left,
+                args.up,
+                geometry_execution_blend=args.geometry_execution_blend,
+            )
+            pre_claw_front_lift_deg = args.pre_claw_front_lift_deg
+            pre_claw_elbow_drop_deg = args.pre_claw_elbow_drop_deg
+            if args.auto_pre_claw_front_lift:
+                legacy_arm_xyz = arm.legacy_arm_xyz_from_shoulder_frame(
+                    args.forward,
+                    args.left,
+                    args.up,
+                )
+                pre_claw_front_lift_deg = auto_limit_front_lift_deg(
+                    legacy_arm_xyz[0],
+                    args.forward,
+                    home["shoulder_front"] + ELBOW_SAFE_OFFSETS["shoulder_front"],
+                    targets["shoulder_front"],
+                )
+                pre_claw_elbow_drop_deg = auto_limit_elbow_drop_deg(
+                    legacy_arm_xyz[0],
+                    args.forward,
+                )
+                print(
+                    "auto pre-claw limit pose:",
+                    "legacy_arm_x_cm=", legacy_arm_xyz[0],
+                    "shoulder_forward_cm=", args.forward,
+                    "front_lift_deg=", pre_claw_front_lift_deg,
+                    "elbow_drop_deg=", pre_claw_elbow_drop_deg,
+                )
             print("planned targets selected for target-shoulder execution:")
             print(json.dumps(targets, ensure_ascii=False, indent=2))
             if args.execute and args.allow_unverified_geometry:
@@ -1467,6 +2127,9 @@ def main() -> None:
                     final_targets=targets,
                     seconds=args.seconds,
                     skip_claw=args.skip_claw,
+                    pre_claw_front_lift_deg=pre_claw_front_lift_deg,
+                    pre_claw_elbow_drop_deg=pre_claw_elbow_drop_deg,
+                    hold_wrist_lift=args.hold_wrist_lift,
                 )
                 arm.print_status()
             elif args.execute:

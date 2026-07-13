@@ -22,6 +22,9 @@ CAMERA_FORWARD_FROM_SHOULDER_CM = 2.5 * INCH_TO_CM
 CAMERA_LEFT_FROM_SHOULDER_CM = 7.3 * INCH_TO_CM
 CAMERA_UP_FROM_SHOULDER_CM = 4.5 * INCH_TO_CM
 CAMERA_PITCH_DOWN_DEG = 54.0
+EXTREME_NEAR_LEFT_ARM_X_MAX_CM = 6.0
+EXTREME_NEAR_LEFT_FORWARD_MAX_CM = 28.0
+EXTREME_NEAR_LEFT_LEFT_MIN_CM = 31.0
 
 
 @dataclass
@@ -579,6 +582,55 @@ def run_controller(controller: str, arm_xyz_cm: Tuple[float, float, float]) -> N
     subprocess.check_call(cmd)
 
 
+def choose_shoulder_grasp_strategy(
+    arm_xyz_cm: Tuple[float, float, float],
+    shoulder_xyz_cm: Tuple[float, float, float],
+    requested_strategy: str,
+) -> Tuple[str, dict]:
+    if requested_strategy != "auto":
+        return requested_strategy, {"mode": requested_strategy, "reason": "user_selected"}
+
+    arm_x_cm = arm_xyz_cm[0]
+    forward_cm, left_cm, _up_cm = shoulder_xyz_cm
+    extreme_near_left = (
+        arm_x_cm <= EXTREME_NEAR_LEFT_ARM_X_MAX_CM
+        and forward_cm <= EXTREME_NEAR_LEFT_FORWARD_MAX_CM
+        and left_cm >= EXTREME_NEAR_LEFT_LEFT_MIN_CM
+    )
+    if extreme_near_left:
+        return (
+            "extreme-near-left",
+            {
+                "mode": "extreme-near-left",
+                "reason": "arm_x/forward/left inside validated near-left limit region",
+                "arm_x_cm": arm_x_cm,
+                "shoulder_forward_cm": forward_cm,
+                "shoulder_left_cm": left_cm,
+                "thresholds": {
+                    "arm_x_max_cm": EXTREME_NEAR_LEFT_ARM_X_MAX_CM,
+                    "forward_max_cm": EXTREME_NEAR_LEFT_FORWARD_MAX_CM,
+                    "left_min_cm": EXTREME_NEAR_LEFT_LEFT_MIN_CM,
+                },
+            },
+        )
+
+    return (
+        "normal",
+        {
+            "mode": "normal",
+            "reason": "target outside validated near-left limit region",
+            "arm_x_cm": arm_x_cm,
+            "shoulder_forward_cm": forward_cm,
+            "shoulder_left_cm": left_cm,
+            "thresholds": {
+                "arm_x_max_cm": EXTREME_NEAR_LEFT_ARM_X_MAX_CM,
+                "forward_max_cm": EXTREME_NEAR_LEFT_FORWARD_MAX_CM,
+                "left_min_cm": EXTREME_NEAR_LEFT_LEFT_MIN_CM,
+            },
+        },
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(allow_abbrev=False)
     parser.add_argument("--rgb-topic", default="/ascamera_hp60c/rgb0/image")
@@ -592,10 +644,10 @@ def main() -> None:
     # Default to the usable tabletop area. Keep the top edge below the drawer
     # background, but make the left/right range wide enough for random target
     # placement tests.
-    parser.add_argument("--roi-x0", type=int, default=120)
-    parser.add_argument("--roi-y0", type=int, default=135)
-    parser.add_argument("--roi-x1", type=int, default=540)
-    parser.add_argument("--roi-y1", type=int, default=385)
+    parser.add_argument("--roi-x0", type=int, default=55)
+    parser.add_argument("--roi-y0", type=int, default=115)
+    parser.add_argument("--roi-x1", type=int, default=605)
+    parser.add_argument("--roi-y1", type=int, default=455)
     parser.add_argument("--min-depth-m", type=float, default=0.20)
     parser.add_argument("--max-depth-m", type=float, default=1.20)
     parser.add_argument("--close-margin-cm", type=float, default=1.5)
@@ -627,10 +679,44 @@ def main() -> None:
         default="legacy",
         help="legacy uses empirical arm_cm; shoulder prints/runs shoulder-frame target.",
     )
+    parser.add_argument(
+        "--geometry-execution-blend",
+        type=float,
+        default=1.0,
+        help="shoulder mode only: 1.0 means full calibrated geometry execution",
+    )
+    parser.add_argument(
+        "--grasp-strategy",
+        choices=("auto", "normal", "extreme-near-left"),
+        default="auto",
+        help="shoulder mode only: auto selects normal or validated near-left limit path",
+    )
 
     parser.add_argument("--save-debug-prefix", default=None)
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--skip-claw", action="store_true")
+    parser.add_argument(
+        "--pre-claw-front-lift-deg",
+        type=float,
+        default=0.0,
+        help="forward to controller: lift shoulder_front before claw while wrist holds",
+    )
+    parser.add_argument(
+        "--pre-claw-elbow-drop-deg",
+        type=float,
+        default=0.0,
+        help="forward to controller: drop elbow before claw while wrist holds",
+    )
+    parser.add_argument(
+        "--auto-pre-claw-front-lift",
+        action="store_true",
+        help="forward to controller: compute front-lift degrees for extreme near-left tests",
+    )
+    parser.add_argument(
+        "--hold-wrist-lift",
+        action="store_true",
+        help="forward to controller: skip wrist-down before claw and keep wrist unchanged during post-contact lift",
+    )
     parser.add_argument("--controller", default="left_arm_controller.py")
     args = parser.parse_args()
 
@@ -765,6 +851,11 @@ def main() -> None:
         args.camera_up_from_shoulder_cm,
         args.camera_pitch_down_deg,
     )
+    strategy, strategy_info = choose_shoulder_grasp_strategy(
+        arm_xyz,
+        shoulder_xyz,
+        args.grasp_strategy if args.controller_mode == "shoulder" else "normal",
+    )
 
     result = {
         "pixel": {"u": u, "v": v},
@@ -785,6 +876,7 @@ def main() -> None:
             "cy": intr.cy,
         },
         "detect": detect_info,
+        "controller_strategy": strategy_info,
     }
     print(json.dumps(result, indent=2, ensure_ascii=False))
 
@@ -823,6 +915,8 @@ def main() -> None:
             f"{shoulder_xyz[1]:.2f}",
             "--up",
             f"{shoulder_xyz[2]:.2f}",
+            "--geometry-execution-blend",
+            f"{args.geometry_execution_blend:.2f}",
             "--execute",
             "--allow-unverified-geometry",
         ]
@@ -840,27 +934,49 @@ def main() -> None:
             f"{arm_xyz[2]:.2f}",
             "--execute",
         ]
+    use_limit_strategy = args.controller_mode == "shoulder" and strategy == "extreme-near-left"
+    use_auto_limit = args.auto_pre_claw_front_lift or use_limit_strategy
+    use_hold_wrist = args.hold_wrist_lift or use_limit_strategy
+
     if args.skip_claw:
         cmd.append("--skip-claw")
+    if abs(args.pre_claw_front_lift_deg) > 1e-9:
+        cmd.extend(["--pre-claw-front-lift-deg", f"{args.pre_claw_front_lift_deg:.2f}"])
+    if abs(args.pre_claw_elbow_drop_deg) > 1e-9:
+        cmd.extend(["--pre-claw-elbow-drop-deg", f"{args.pre_claw_elbow_drop_deg:.2f}"])
+    if use_auto_limit:
+        cmd.append("--auto-pre-claw-front-lift")
+    if use_hold_wrist:
+        cmd.append("--hold-wrist-lift")
+    print("Controller strategy:")
+    print(json.dumps(strategy_info, ensure_ascii=False, indent=2))
     print("Controller command:")
     print(" ".join(cmd))
     print("Shoulder-frame dry-run command:")
-    print(
-        " ".join(
-            [
-                "sudo",
-                "python3",
-                args.controller,
-                "target-shoulder",
-                "--forward",
-                f"{shoulder_xyz[0]:.2f}",
-                "--left",
-                f"{shoulder_xyz[1]:.2f}",
-                "--up",
-                f"{shoulder_xyz[2]:.2f}",
-            ]
-        )
-    )
+    dry_cmd = [
+        "sudo",
+        "python3",
+        args.controller,
+        "target-shoulder",
+        "--forward",
+        f"{shoulder_xyz[0]:.2f}",
+        "--left",
+        f"{shoulder_xyz[1]:.2f}",
+        "--up",
+        f"{shoulder_xyz[2]:.2f}",
+        "--geometry-execution-blend",
+        f"{args.geometry_execution_blend:.2f}",
+        "--allow-unverified-geometry",
+    ]
+    if abs(args.pre_claw_front_lift_deg) > 1e-9:
+        dry_cmd.extend(["--pre-claw-front-lift-deg", f"{args.pre_claw_front_lift_deg:.2f}"])
+    if abs(args.pre_claw_elbow_drop_deg) > 1e-9:
+        dry_cmd.extend(["--pre-claw-elbow-drop-deg", f"{args.pre_claw_elbow_drop_deg:.2f}"])
+    if use_auto_limit:
+        dry_cmd.append("--auto-pre-claw-front-lift")
+    if use_hold_wrist:
+        dry_cmd.append("--hold-wrist-lift")
+    print(" ".join(dry_cmd))
 
     if args.execute:
         subprocess.check_call(cmd)

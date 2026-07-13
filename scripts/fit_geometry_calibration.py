@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
-"""Fit shoulder-frame geometry IK to successful empirical grasp targets."""
+"""Fit shoulder-frame geometry IK to empirical grasp targets.
+
+Version 2 understands two sample groups:
+  normal_samples: regular target-shoulder planned joint targets
+  limit_samples: hold-wrist extreme-near-left front/elbow limit poses
+
+If geometry_calibration_samples_v2.json exists, it is preferred. The older
+geometry_calibration_samples.json remains supported for comparison.
+"""
 
 from __future__ import annotations
 
 import json
 import math
 import os
-from typing import Callable, Dict, Iterable, List, Tuple
+from typing import Callable, Dict, Iterable, List, Optional, Tuple
 
 
 INCH_TO_CM = 2.54
@@ -160,14 +168,214 @@ def print_model_coefficients(model_name: str, coeffs: List[float]) -> str:
     return json.dumps({k: round(v, 6) for k, v in coeff_label.items()})
 
 
-def main() -> None:
-    here = os.path.dirname(os.path.abspath(__file__))
+def load_payload(here: str) -> Tuple[dict, str]:
+    v2_path = os.path.join(here, "geometry_calibration_samples_v2.json")
+    if os.path.exists(v2_path):
+        with open(v2_path, "r", encoding="utf-8") as f:
+            return json.load(f), v2_path
     path = os.path.join(here, "geometry_calibration_samples.json")
     with open(path, "r", encoding="utf-8") as f:
-        payload = json.load(f)
+        return json.load(f), path
+
+
+def limit_position_t(sample: dict) -> float:
+    arm_x_start = 6.0
+    arm_x_full = 1.0
+    forward_start = 28.0
+    forward_full = 24.0
+    near_x_t = clamp(
+        (arm_x_start - sample["legacy_arm_x_cm"]) / (arm_x_start - arm_x_full),
+        0.0,
+        1.0,
+    )
+    near_forward_t = clamp(
+        (forward_start - sample["forward_cm"]) / (forward_start - forward_full),
+        0.0,
+        1.0,
+    )
+    return max(near_x_t, near_forward_t)
+
+
+def fit_limit_line(samples: List[dict], key: str) -> Optional[Tuple[float, float, List[float]]]:
+    usable = [sample for sample in samples if sample.get("result") == "success"]
+    if len(usable) < 2:
+        return None
+    ts = [limit_position_t(sample) for sample in usable]
+    ys = [sample[key] for sample in usable]
+    slope, intercept = fit_line(ts, ys)
+    errors = [slope * limit_position_t(sample) + intercept - sample[key] for sample in usable]
+    return intercept, slope, errors
+
+
+def print_limit_model(limit_samples: List[dict]) -> None:
+    if not limit_samples:
+        return
+    print()
+    print("Limit hold-wrist model:")
+    print("Sample count:", len(limit_samples))
+    print("Success count:", sum(1 for sample in limit_samples if sample.get("result") == "success"))
+    print("Samples:")
+    for sample in limit_samples:
+        print(
+            "  ",
+            sample["id"],
+            "result=" + sample.get("result", "unknown"),
+            "position_t=%.4f" % limit_position_t(sample),
+            "front_lift_deg=%.3f" % sample["front_lift_deg"],
+            "elbow_drop_deg=%.3f" % sample["elbow_drop_deg"],
+        )
+
+    for key, label in (
+        ("front_lift_deg", "front_lift"),
+        ("elbow_drop_deg", "elbow_drop"),
+    ):
+        fitted = fit_limit_line(limit_samples, key)
+        if fitted is None:
+            print("  ", label, "not enough successful samples to fit")
+            continue
+        intercept, slope, errors = fitted
+        abs_errors = [abs(err) for err in errors]
+        print(
+            "  ",
+            label,
+            "success-fit min_deg=%.3f" % intercept,
+            "range_deg=%.3f" % slope,
+            "mean_abs_err_deg=%.3f" % (sum(abs_errors) / len(abs_errors)),
+            "max_abs_err_deg=%.3f" % max(abs_errors),
+        )
+        if key == "front_lift_deg":
+            print("     suggested LIMIT_FRONT_LIFT_MIN_DEG = %.3f" % intercept)
+            print("     suggested LIMIT_FRONT_LIFT_MAX_DEG = %.3f" % (intercept + slope))
+        else:
+            print("     suggested LIMIT_ELBOW_DROP_MIN_DEG = %.3f" % intercept)
+            print("     suggested LIMIT_ELBOW_DROP_MAX_DEG = %.3f" % (intercept + slope))
+
+
+def is_success_result(sample: dict) -> bool:
+    return sample.get("result") == "success"
+
+
+def print_local_correction_diagnostics(all_samples: List[dict]) -> None:
+    local_samples = [sample for sample in all_samples if sample.get("fit") is False]
+    if not local_samples:
+        return
+
+    print()
+    print("Local correction diagnostics:")
+    print("Sample count:", len(local_samples))
+    print(
+        "These samples are intentionally excluded from affine fitting; use them to tune local correction parameters."
+    )
+
+    wrist_extreme = [
+        sample
+        for sample in local_samples
+        if "geometry_wrist_extreme_left_extra_up_deg" in sample
+    ]
+    if wrist_extreme:
+        print()
+        print("Extreme-left wrist-up correction:")
+        for sample in wrist_extreme:
+            print(
+                "  ",
+                sample["id"],
+                "result=" + sample.get("result", "unknown"),
+                "extra_up_deg=%.3f" % sample["geometry_wrist_extreme_left_extra_up_deg"],
+            )
+        success_values = [
+            sample["geometry_wrist_extreme_left_extra_up_deg"]
+            for sample in wrist_extreme
+            if is_success_result(sample)
+        ]
+        low_values = [
+            sample["geometry_wrist_extreme_left_extra_up_deg"]
+            for sample in wrist_extreme
+            if "needs" in sample.get("result", "") or "too_down" in sample.get("result", "")
+        ]
+        if low_values:
+            print("   insufficient wrist-up below_deg=%.3f" % max(low_values))
+        if success_values:
+            print("   validated wrist-up success_deg=%.3f" % min(success_values))
+            print("   suggested GEOMETRY_WRIST_EXTREME_LEFT_EXTRA_UP_MAX_DEG ~= 10.0")
+
+    extreme_side = [
+        sample
+        for sample in local_samples
+        if "extreme_left_side_inward_fraction" in sample
+    ]
+    if extreme_side:
+        print()
+        print("Extreme-left shoulder_side inward correction:")
+        for sample in extreme_side:
+            print(
+                "  ",
+                sample["id"],
+                "result=" + sample.get("result", "unknown"),
+                "fraction=%.3f" % sample["extreme_left_side_inward_fraction"],
+                "target_side=%.4f" % sample["target"]["shoulder_side"],
+            )
+        success_values = [
+            sample["extreme_left_side_inward_fraction"]
+            for sample in extreme_side
+            if is_success_result(sample)
+        ]
+        if success_values:
+            print("   validated side inward fraction=%.3f" % min(success_values))
+            print("   suggested GEOMETRY_SHOULDER_SIDE_EXTREME_LEFT_INWARD_MAX_FRACTION ~= 0.9")
+
+    far_right_side = [
+        sample
+        for sample in local_samples
+        if "far_right_center_side_outward_deg" in sample
+    ]
+    if far_right_side:
+        print()
+        print("Far-right-center shoulder_side outward correction:")
+        for sample in far_right_side:
+            print(
+                "  ",
+                sample["id"],
+                "result=" + sample.get("result", "unknown"),
+                "far_center_deg=%.3f" % sample.get("far_center_side_outward_deg", 0.0),
+                "far_right_center_deg=%.3f" % sample["far_right_center_side_outward_deg"],
+            )
+        success_values = [
+            sample["far_right_center_side_outward_deg"]
+            for sample in far_right_side
+            if is_success_result(sample)
+        ]
+        if success_values:
+            print("   validated far-right-center outward_deg=%.3f" % min(success_values))
+            print("   suggested GEOMETRY_SHOULDER_SIDE_FAR_RIGHT_CENTER_OUTWARD_MAX_DEG ~= 0.9")
+
+    far_center_side = [
+        sample
+        for sample in local_samples
+        if "far_center_side_outward_deg" in sample
+        or "far_center_side_cap" in sample
+    ]
+    if far_center_side:
+        print()
+        print("Far-center shoulder_side outward correction:")
+        for sample in far_center_side:
+            print(
+                "  ",
+                sample["id"],
+                "result=" + sample.get("result", "unknown"),
+                "far_center_deg=%.3f" % sample.get("far_center_side_outward_deg", 0.0),
+                "legacy_cap=%.3f" % sample.get("far_center_side_cap", 0.0),
+            )
+        print("   keep as local geometry correction; do not fold into base affine yet.")
+
+
+def main() -> None:
+    here = os.path.dirname(os.path.abspath(__file__))
+    payload, path = load_payload(here)
 
     home = payload["home"]
-    samples = payload["samples"]
+    all_samples = payload.get("normal_samples", payload.get("samples", []))
+    samples = [sample for sample in all_samples if sample.get("fit", True)]
+    limit_samples = payload.get("limit_samples", [])
     raw_by_joint: Dict[str, List[float]] = {joint: [] for joint in JOINTS}
     target_by_joint: Dict[str, List[float]] = {joint: [] for joint in JOINTS}
 
@@ -187,6 +395,7 @@ def main() -> None:
             target_by_joint[joint].append(target_offsets[joint])
         rows.append((sample, raw, target_offsets))
 
+    print("Sample file:", os.path.basename(path))
     print("Fit target: empirical motor offset ~= scale * raw_geometry_offset + bias")
     print("Sample count:", len(samples))
     print()
@@ -272,6 +481,9 @@ def main() -> None:
         print("%s_FORWARD_COEF_DEG = %.9f" % (prefix, math.degrees(coeffs[2])))
         print("%s_LEFT_COEF_DEG = %.9f" % (prefix, math.degrees(coeffs[3])))
         print("%s_UP_COEF_DEG = %.9f" % (prefix, math.degrees(coeffs[4])))
+
+    print_limit_model(limit_samples)
+    print_local_correction_diagnostics(all_samples)
 
 
 if __name__ == "__main__":
