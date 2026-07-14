@@ -180,11 +180,11 @@ GEOMETRY_AFFINE_COEFFS = {
         "up_coef_deg": -43.266068308,
     },
     "shoulder_side": {
-        "bias_deg": -53.236620158,
-        "raw_scale": 3.470022298,
-        "forward_coef_deg": -14.863640979,
-        "left_coef_deg": 136.259494246,
-        "up_coef_deg": -33.223317488,
+        "bias_deg": -50.261432974,
+        "raw_scale": 1.559119071,
+        "forward_coef_deg": -3.908046835,
+        "left_coef_deg": 84.909028149,
+        "up_coef_deg": -16.213168138,
     },
     "elbow": {
         "bias_deg": 74.176551073,
@@ -252,7 +252,7 @@ SHOULDER_SIDE_FAR_LEFT_RELEASE_LEFT_PEAK_CM = 32.5
 SHOULDER_SIDE_FAR_LEFT_RELEASE_LEFT_MAX_CM = 35.0
 SHOULDER_SIDE_FAR_LEFT_RELEASE_X_MIN_CM = 3.0
 SHOULDER_SIDE_FAR_LEFT_RELEASE_X_PEAK_CM = 4.5
-SHOULDER_SIDE_FAR_LEFT_RELEASE_X_MAX_CM = 6.0
+SHOULDER_SIDE_FAR_LEFT_RELEASE_X_MAX_CM = 7.0
 SHOULDER_SIDE_FAR_LEFT_RELEASE_MAX_FRACTION = 0.35
 GEOMETRY_SHOULDER_SIDE_FAR_LEFT_TRANSITION_OUTWARD_MAX_DEG = 4.8
 # Body-safety side clamp is only for the measured folded-arm collision window.

@@ -767,6 +767,124 @@
       "geometry_execution_blend": 1.00,
       "shoulder_side_geometry_weight": 1.00,
       "note": "Farther right-front full grasp success. Full geometry blend contacted and lifted cleanly at forward ~=45cm, left ~=26cm; keep as a base affine sample."
+    },
+    {
+      "id": "S77",
+      "forward_cm": 44.09,
+      "left_cm": 30.57,
+      "up_cm": -39.02,
+      "target": {
+        "shoulder_front": -0.059060990887870646,
+        "shoulder_side": -2.9772252552287917,
+        "elbow": -0.3495125101569261,
+        "wrist": 0.2620831191750038
+      },
+      "result": "corrected_from_fail_side_needs_outward",
+      "fit": true,
+      "geometry_execution_blend": 1.00,
+      "shoulder_side_geometry_weight": 1.00,
+      "operator_side_outward_correction_deg": 0.75,
+      "failed_run_id": "20260713_201300_121_execute_target",
+      "validated_planned": {
+        "shoulder_front": -0.059060990887870646,
+        "shoulder_side": -2.990315224618749,
+        "elbow": -0.3495125101569261,
+        "wrist": 0.2620831191750038
+      },
+      "note": "Web execution reached the target but operator marked the grasp as failed: shoulder_side needed slightly more outward motion. Added a conservative +0.75deg outward correction and keep this corrected target as a base affine sample for the next fit."
+    },
+    {
+      "id": "S78",
+      "forward_cm": 44.04,
+      "left_cm": 30.39,
+      "up_cm": -39.31,
+      "target": {
+        "shoulder_front": -0.05500588858971278,
+        "shoulder_side": -2.9413874396365847,
+        "elbow": -0.34447122292453347,
+        "wrist": 0.2522384379681779
+      },
+      "result": "corrected_from_fail_continue_side_outward",
+      "fit": true,
+      "geometry_execution_blend": 1.00,
+      "shoulder_side_geometry_weight": 1.00,
+      "operator_side_outward_correction_deg": 2.50,
+      "failed_run_id": "20260713_202101_661_execute_target",
+      "validated_planned": {
+        "shoulder_front": -0.05500588858971278,
+        "shoulder_side": -2.985020670936443,
+        "elbow": -0.34447122292453347,
+        "wrist": 0.2522384379681779
+      },
+      "note": "Retest after S77 still failed; operator note: continue increasing shoulder_side outward amplitude. Increased the correction to +2.50deg outward from the executed planned shoulder_side and keep this corrected target as a base affine sample for the next fit."
+    },
+    {
+      "id": "S79",
+      "forward_cm": 43.80,
+      "left_cm": 30.42,
+      "up_cm": -38.99,
+      "target": {
+        "shoulder_front": -0.05757856046218568,
+        "shoulder_side": -2.8930259787621795,
+        "elbow": -0.3411002442230433,
+        "wrist": 0.24069622824016523
+      },
+      "result": "corrected_from_fail_side_outward_plus_5deg",
+      "fit": true,
+      "geometry_execution_blend": 1.00,
+      "shoulder_side_geometry_weight": 1.00,
+      "operator_side_outward_correction_deg": 5.00,
+      "failed_run_id": "20260713_203241_428_execute_target",
+      "validated_planned": {
+        "shoulder_front": -0.05757856046218568,
+        "shoulder_side": -2.980292441361896,
+        "elbow": -0.3411002442230433,
+        "wrist": 0.24069622824016523
+      },
+      "note": "Latest web retest failed; operator note: shoulder_side continue outward by 5deg. Added +5.00deg outward from the executed planned shoulder_side and keep this corrected target as a base affine sample for the next fit."
+    },
+    {
+      "id": "S80",
+      "forward_cm": 43.92,
+      "left_cm": 30.46,
+      "up_cm": -39.15,
+      "target": {
+        "shoulder_front": -0.05553254873722313,
+        "shoulder_side": -2.8791800694944176,
+        "elbow": -0.341984975416451,
+        "wrist": 0.24689723156511723
+      },
+      "result": "success_side_still_needs_outward_plus_5deg",
+      "fit": true,
+      "geometry_execution_blend": 1.00,
+      "shoulder_side_geometry_weight": 1.00,
+      "operator_side_outward_correction_deg": 5.00,
+      "source_run_id": "20260713_203637_814_execute_target",
+      "validated_planned": {
+        "shoulder_front": -0.05553254873722313,
+        "shoulder_side": -2.966446532094134,
+        "elbow": -0.341984975416451,
+        "wrist": 0.24689723156511723
+      },
+      "note": "Latest web retest succeeded, but operator note says shoulder_side still needs another +5deg outward. Added +5.00deg outward from the executed planned shoulder_side and keep this corrected target as a base affine sample for the next fit."
+    },
+    {
+      "id": "S81",
+      "forward_cm": 43.92,
+      "left_cm": 30.46,
+      "up_cm": -39.15,
+      "target": {
+        "shoulder_front": -0.05553254873722313,
+        "shoulder_side": -2.9563695335398577,
+        "elbow": -0.341984975416451,
+        "wrist": 0.24689723156511723
+      },
+      "result": "perfect",
+      "fit": true,
+      "geometry_execution_blend": 1.00,
+      "shoulder_side_geometry_weight": 1.00,
+      "source_run_id": "20260713_204152_042_execute_target",
+      "note": "Full web execution was marked perfect by the operator. Keep the executed planned targets as a base affine sample for the next fit."
     }
   ],
   "limit_samples": [
