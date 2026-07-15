@@ -112,3 +112,113 @@ cp data/hp60c_web_runs.jsonl ~/hp60c_web_runs_$(date +%Y%m%d_%H%M%S).jsonl
 
 This does not write per-frame debug images to disk. Use `hp60c_auto_target.py --save-debug-prefix ...`
 only when a still-frame debug snapshot is intentionally needed.
+
+## YOLO on Orin
+
+The Orin is JetPack 5 / L4T R35.6.1, so use the Jetson JetPack 5 Ultralytics Docker image.
+The verified setup uses Docker with the NVIDIA runtime and host networking so the container can
+read the HP60C stream server at `http://127.0.0.1:8090/debug.jpg`.
+
+First confirm the NVIDIA runtime can see Jetson devices:
+
+```bash
+sudo docker run --rm --runtime nvidia nvcr.io/nvidia/l4t-base:35.4.1 \
+  bash -lc "ls /dev/nvhost* | head"
+```
+
+Start YOLO:
+
+```bash
+mkdir -p ~/hive_robot/DM_Control_Python/yolo_runs
+
+sudo docker run -it --rm \
+  --runtime nvidia \
+  --network host \
+  --ipc host \
+  -v ~/hive_robot:/workspace/hive_robot \
+  ultralytics/ultralytics:latest-jetson-jetpack5
+```
+
+Inside the container, verify CUDA and YOLO:
+
+```bash
+python3 - <<'PY'
+import torch
+from ultralytics import YOLO
+
+print("torch:", torch.__version__)
+print("cuda:", torch.cuda.is_available())
+if torch.cuda.is_available():
+    print("gpu:", torch.cuda.get_device_name(0))
+
+model = YOLO("yolo11n.pt")
+print("YOLO loaded")
+PY
+```
+
+Expected verified output includes `cuda: True`, `gpu: Orin`, and `YOLO loaded`.
+
+To test the HP60C current frame without reusing a cached `debug.jpg`, save a timestamped image and
+predict on that file:
+
+```bash
+ts=$(date +%s%3N)
+img=/tmp/hp60c_${ts}.jpg
+wget -O "$img" "http://127.0.0.1:8090/debug.jpg?t=${ts}"
+
+yolo predict model=yolo11n.pt \
+  source="$img" \
+  imgsz=1280 \
+  conf=0.01 \
+  classes=39,76 \
+  project=/workspace/hive_robot/DM_Control_Python/yolo_runs \
+  name=bottle_scissors_${ts}
+```
+
+COCO class ids used during testing:
+
+- `39`: bottle
+- `76`: scissors
+- `73`: book
+- `67`: cell phone
+
+Notes from 2026-07-15 testing:
+
+- `yolo11n.pt` runs on Orin CUDA successfully.
+- Built-in `/ultralytics/ultralytics/assets/bus.jpg` detects `4 persons, 1 bus`, confirming the model and GPU are healthy.
+- HP60C default COCO detection is unreliable in the overhead worktable view.
+- Class-limited detection is usable for quick checks: scissors detected around `0.41-0.44`; bottle was weak around `0.03`.
+- For robot use, keep a class whitelist and per-class confidence thresholds. Long term, train a HP60C-specific chess/screw/object model.
+
+## ESP32 USB Serial Test
+
+The ESP32 connected through CH340 appears as `/dev/ttyUSB0`. A simple Arduino sketch was compiled
+and uploaded with `arduino-cli`, then verified with `ping -> pong` at 115200 baud.
+
+Useful commands:
+
+```bash
+cd ~/hive_robot/esp32_ping/esp32_ping
+export PATH="$PWD/bin:$PATH"
+
+arduino-cli compile --fqbn esp32:esp32:esp32 .
+arduino-cli upload -p /dev/ttyUSB0 --fqbn esp32:esp32:esp32 .
+```
+
+Serial verification:
+
+```bash
+python3 - <<'PY'
+import serial, time
+
+ser = serial.Serial("/dev/ttyUSB0", 115200, timeout=1)
+time.sleep(2)
+ser.write(b"ping\n")
+time.sleep(0.3)
+for _ in range(10):
+    line = ser.readline()
+    if line:
+        print(line.decode(errors="replace").rstrip())
+ser.close()
+PY
+```

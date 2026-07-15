@@ -140,6 +140,68 @@ def main():
         ws.append(row)
     style_sheet(ws, [22, 90], 34)
 
+    ws = wb.create_sheet("YOLO on Orin")
+    ws.append(["Purpose", "Command / Setting", "When to Use", "Success Signal"])
+    yolo_rows = [
+        [
+            "Check Jetson Docker runtime",
+            'sudo docker run --rm --runtime nvidia nvcr.io/nvidia/l4t-base:35.4.1 bash -lc "ls /dev/nvhost* | head"',
+            "Run once after Docker/NVIDIA runtime setup",
+            "Container prints /dev/nvhost-as-gpu and other /dev/nvhost* devices",
+        ],
+        [
+            "Create YOLO output directory",
+            "mkdir -p ~/hive_robot/DM_Control_Python/yolo_runs",
+            "Before running YOLO predictions",
+            "Directory exists on the Orin host",
+        ],
+        [
+            "Start YOLO JetPack 5 container",
+            "sudo docker run -it --rm \\\n  --runtime nvidia \\\n  --network host \\\n  --ipc host \\\n  -v ~/hive_robot:/workspace/hive_robot \\\n  ultralytics/ultralytics:latest-jetson-jetpack5",
+            "Use this on Orin JetPack 5 / L4T R35.x",
+            "Shell prompt changes to root@ubuntu:/ultralytics#",
+        ],
+        [
+            "Verify CUDA and model loading",
+            "python3 - <<'PY'\nimport torch\nfrom ultralytics import YOLO\nprint('torch:', torch.__version__)\nprint('cuda:', torch.cuda.is_available())\nif torch.cuda.is_available():\n    print('gpu:', torch.cuda.get_device_name(0))\nmodel = YOLO('yolo11n.pt')\nprint('YOLO loaded')\nPY",
+            "Inside the YOLO container",
+            "Shows cuda: True, gpu: Orin, YOLO loaded",
+        ],
+        [
+            "Test built-in COCO image",
+            "yolo predict model=yolo11n.pt source=/ultralytics/ultralytics/assets/bus.jpg imgsz=640 conf=0.25",
+            "Use this to confirm YOLO itself works",
+            "Detects 4 persons and 1 bus",
+        ],
+        [
+            "Capture current HP60C frame",
+            "ts=$(date +%s%3N)\nimg=/tmp/hp60c_${ts}.jpg\nwget -O \"$img\" \"http://127.0.0.1:8090/debug.jpg?t=${ts}\"",
+            "Use timestamp to avoid cached debug.jpg",
+            "Creates a fresh /tmp/hp60c_<timestamp>.jpg",
+        ],
+        [
+            "Detect bottle and scissors on HP60C frame",
+            "yolo predict model=yolo11n.pt \\\n  source=\"$img\" \\\n  imgsz=1280 \\\n  conf=0.01 \\\n  classes=39,76 \\\n  project=/workspace/hive_robot/DM_Control_Python/yolo_runs \\\n  name=bottle_scissors_${ts}",
+            "Inside the YOLO container after capturing current HP60C frame",
+            "Results saved under DM_Control_Python/yolo_runs",
+        ],
+        [
+            "Useful COCO class ids",
+            "bottle=39\ncell phone=67\nbook=73\nscissors=76",
+            "Use with classes=... to reduce noisy detections",
+            "Class-limited detection is cleaner than all-class low-conf detection",
+        ],
+        [
+            "Testing note",
+            "Default yolo11n.pt is only a COCO sanity check. HP60C overhead worktable images need class whitelist/per-class thresholds, then a custom HP60C chess/screw/object model.",
+            "Use when moving from demo detection to robot control",
+            "Scissors detected reliably around 0.41-0.44; bottle was weak around 0.03 in testing",
+        ],
+    ]
+    for row in yolo_rows:
+        ws.append(row)
+    style_sheet(ws, [28, 92, 44, 50], 74)
+
     wb.save(OUT)
     load_workbook(OUT)
     print(str(OUT.resolve()).encode("utf-8", errors="replace").decode("ascii", errors="ignore"))
