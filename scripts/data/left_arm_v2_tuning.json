@@ -1,0 +1,1052 @@
+{
+  "type": "left_arm_v2_tuning",
+  "updated_at": "2026-08-06",
+  "home_file": "scripts/data/left_arm_v2_home.json",
+  "current_default_home": {
+    "joints": ["wrist", "wrist_side", "arm_roll", "elbow", "shoulder_front", "shoulder_side", "shoulder_rotate"],
+    "auto_gains": true,
+    "source": "full_arm_7joints_no_claw pass result"
+  },
+  "home_joints_rad": {
+    "shoulder_front": 0.8363851308822632,
+    "shoulder_side": -2.853627920150757,
+    "shoulder_rotate": 2.3554208278656006,
+    "elbow": -1.2956817150115967,
+    "arm_roll": -2.657930850982666,
+    "wrist_side": 0.1668955534696579,
+    "wrist": -2.0780880451202393
+  },
+  "auto_home_gains": {
+    "wrist": {"kp": 22.0, "kd": 1.4, "seconds": 5.0},
+    "wrist_side": {"kp": 22.0, "kd": 1.4, "seconds": 5.0},
+    "elbow": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
+    "arm_roll": {"kp": 45.0, "kd": 2.5, "seconds": 5.0},
+    "shoulder_front": {"kp": 90.0, "kd": 4.0, "seconds": 6.0},
+    "shoulder_side": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
+    "shoulder_rotate": {"kp": 60.0, "kd": 3.0, "seconds": 6.0}
+  },
+  "auto_nudge_gains": {
+    "wrist": {"kp": 18.0, "kd": 1.2},
+    "wrist_side": {"kp": 18.0, "kd": 1.2},
+    "arm_roll": {"kp": 45.0, "kd": 2.5},
+    "elbow": {"kp": 70.0, "kd": 3.0},
+    "shoulder_front": {"kp": 80.0, "kd": 3.5},
+    "shoulder_side": {"kp": 70.0, "kd": 3.0},
+    "shoulder_rotate": {"kp": 60.0, "kd": 3.0}
+  },
+  "verified_joints": {
+    "wrist_side": {
+      "nudge": {"deg": 5.0, "seconds": 4.0, "kp": 10.0, "kd": 0.8},
+      "home": {"deadband_deg": 0.5, "max_delta_deg": 8.0, "seconds": 4.0, "kp": 10.0, "kd": 0.8},
+      "result": "pass"
+    },
+    "wrist": {
+      "nudge": {"deg": 5.0, "seconds": 4.0, "kp": 18.0, "kd": 1.2},
+      "home": {"deadband_deg": 0.5, "max_delta_deg": 8.0, "seconds": 4.0, "kp": 22.0, "kd": 1.4},
+      "result": "pass"
+    },
+    "arm_roll": {
+      "nudge": {"deg": 5.0, "seconds": 5.0, "kp": 45.0, "kd": 2.5},
+      "home": {"deadband_deg": 0.5, "max_delta_deg": 8.0, "seconds": 5.0, "kp": 45.0, "kd": 2.5},
+      "result": "pass"
+    },
+    "shoulder_rotate": {
+      "nudge": {"deg": 5.0, "seconds": 6.0, "kp": 60.0, "kd": 3.0},
+      "home": {"deadband_deg": 0.5, "max_delta_deg": 8.0, "seconds": 6.0, "kp": 60.0, "kd": 3.0},
+      "result": "pass"
+    },
+    "elbow": {
+      "nudge": {
+        "deg": 5.0,
+        "seconds": 6.0,
+        "kp": 90.0,
+        "kd": 4.0,
+        "start_rad": -1.2891966104507446,
+        "target_rad": -1.2019301478510283,
+        "final_rad": -1.2167162895202637,
+        "actual_delta_deg": 4.15281236777488
+      },
+      "home": {
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "seconds": 6.0,
+        "kp": 90.0,
+        "kd": 4.0,
+        "target_rad": -1.2956817150115967,
+        "final_rad": -1.2891966104507446,
+        "home_error_deg": 0.3715681024132669
+      },
+      "result": "pass"
+    },
+    "shoulder_front": {
+      "nudge": {
+        "deg": 5.0,
+        "seconds": 6.0,
+        "kp": 90.0,
+        "kd": 4.0,
+        "start_rad": 0.8360036611557007,
+        "target_rad": 0.9232701237554172,
+        "final_rad": 0.8981841802597046,
+        "actual_delta_deg": 3.5626815260346536
+      },
+      "home": {
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "seconds": 6.0,
+        "kp": 90.0,
+        "kd": 4.0,
+        "target_rad": 0.8363851308822632,
+        "final_rad": 0.8360036611557007,
+        "home_error_deg": 0.02185681576301295
+      },
+      "result": "pass"
+    },
+    "shoulder_side": {
+      "nudge": {
+        "deg": 5.0,
+        "seconds": 6.0,
+        "kp": 70.0,
+        "kd": 3.0,
+        "actual_delta_deg_before_home": 3.650107733968174
+      },
+      "home": {
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "seconds": 6.0,
+        "kp": 70.0,
+        "kd": 3.0,
+        "target_rad": -2.853627920150757,
+        "final_rad": -2.852102041244507,
+        "home_error_deg": 0.08742780875834192
+      },
+      "result": "pass"
+    }
+  },
+  "verified_combinations": {
+    "wrist_side,wrist": {
+      "nudge": {
+        "joints": ["wrist_side", "wrist"],
+        "deg": 5.0,
+        "seconds": 5.0,
+        "kp": 18.0,
+        "kd": 1.2,
+        "start_rad": {
+          "wrist_side": 0.1661325991153717,
+          "wrist": -2.0780880451202393
+        },
+        "target_rad": {
+          "wrist_side": 0.2533990617150882,
+          "wrist": -1.9908215825205229
+        },
+        "final_rad": {
+          "wrist_side": 0.23861294984817505,
+          "wrist": -1.9987411499023438
+        }
+      },
+      "home": {
+        "joints": ["wrist_side", "wrist"],
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "seconds": 5.0,
+        "kp": 22.0,
+        "kd": 1.4,
+        "delta_deg_before_home": {
+          "wrist_side": -4.109104130155847,
+          "wrist": -4.546242213452187
+        },
+        "target_rad": {
+          "wrist_side": 0.1668955534696579,
+          "wrist": -2.0780880451202393
+        },
+        "final_rad": {
+          "wrist_side": 0.16956588625907898,
+          "wrist": -2.0777065753936768
+        },
+        "home_error_deg": {
+          "wrist_side": 0.1530000987290347,
+          "wrist": 0.02185681576301295
+        }
+      },
+      "result": "pass"
+    },
+    "arm_roll,wrist_side,wrist": {
+      "nudge": {
+        "joints": ["arm_roll", "wrist_side", "wrist"],
+        "deg": 5.0,
+        "seconds": 6.0,
+        "kp": 45.0,
+        "kd": 2.5,
+        "start_rad": {
+          "arm_roll": -2.6552605628967285,
+          "wrist_side": 0.16956588625907898,
+          "wrist": -2.0777065753936768
+        },
+        "target_rad": {
+          "arm_roll": -2.567994100297012,
+          "wrist_side": 0.25683234885879547,
+          "wrist": -1.9904401127939604
+        },
+        "final_rad": {
+          "arm_roll": -2.572098970413208,
+          "wrist_side": 0.24967575073242188,
+          "wrist": -1.9945448637008667
+        }
+      },
+      "home": {
+        "joints": ["arm_roll", "wrist_side", "wrist"],
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "seconds": 6.0,
+        "kp": 45.0,
+        "kd": 2.5,
+        "delta_deg_before_home": {
+          "arm_roll": -4.939661109644922,
+          "wrist_side": -4.742955930416786,
+          "wrist": -4.786671702425806
+        },
+        "target_rad": {
+          "arm_roll": -2.657930850982666,
+          "wrist_side": 0.1668955534696579,
+          "wrist": -2.0780880451202393
+        },
+        "final_rad": {
+          "arm_roll": -2.6552605628967285,
+          "wrist_side": 0.1665140837430954,
+          "wrist": -2.0780880451202393
+        },
+        "home_error_deg": {
+          "arm_roll": 0.1530000987290347,
+          "wrist_side": 0.02185681576301295,
+          "wrist": 0.0
+        }
+      },
+      "result": "pass"
+    },
+    "shoulder_front,elbow": {
+      "nudge": {
+        "joints": ["shoulder_front", "elbow"],
+        "deg": 5.0,
+        "seconds": 6.0,
+        "kp": 80.0,
+        "kd": 3.5,
+        "start_rad": {
+          "shoulder_front": 0.8360036611557007,
+          "elbow": -1.2891966104507446
+        },
+        "target_rad": {
+          "shoulder_front": 0.9232701237554172,
+          "elbow": -1.2019301478510283
+        },
+        "final_rad": {
+          "shoulder_front": 0.9039062857627869,
+          "elbow": -1.2117570638656616
+        }
+      },
+      "home": {
+        "joints": ["elbow", "shoulder_front"],
+        "auto_gains": true,
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "delta_deg_before_home": {
+          "elbow": -4.808528307769847,
+          "shoulder_front": -3.868677202503167
+        },
+        "gains": {
+          "elbow": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
+          "shoulder_front": {"kp": 90.0, "kd": 4.0, "seconds": 6.0}
+        },
+        "target_rad": {
+          "elbow": -1.2956817150115967,
+          "shoulder_front": 0.8363851308822632
+        },
+        "final_rad": {
+          "elbow": -1.2891966104507446,
+          "shoulder_front": 0.840199887752533
+        },
+        "home_error_deg": {
+          "elbow": 0.3715681024132669,
+          "shoulder_front": 0.21871024569021738
+        },
+        "shake": false
+      },
+      "result": "pass"
+    },
+    "shoulder_side,shoulder_front,elbow": {
+      "nudge": {
+        "joints": ["shoulder_side", "shoulder_front", "elbow"],
+        "deg": 5.0,
+        "seconds": 6.0,
+        "kp": 75.0,
+        "kd": 3.5,
+        "start_rad": {
+          "shoulder_side": -2.8585870265960693,
+          "shoulder_front": 0.840199887752533,
+          "elbow": -1.2891966104507446
+        },
+        "target_rad": {
+          "shoulder_side": -2.771320563996353,
+          "shoulder_front": 0.9274663503522494,
+          "elbow": -1.2019301478510283
+        },
+        "final_rad": {
+          "shoulder_side": -2.790684461593628,
+          "shoulder_front": 0.9027618765830994,
+          "elbow": -1.2117570638656616
+        }
+      },
+      "home": {
+        "joints": ["elbow", "shoulder_front", "shoulder_side"],
+        "auto_gains": true,
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "delta_deg_before_home": {
+          "elbow": -4.808528307769847,
+          "shoulder_front": -3.8031073864710447,
+          "shoulder_side": -3.5845379179360517
+        },
+        "gains": {
+          "elbow": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
+          "shoulder_front": {"kp": 90.0, "kd": 4.0, "seconds": 6.0},
+          "shoulder_side": {"kp": 70.0, "kd": 3.0, "seconds": 6.0}
+        },
+        "target_rad": {
+          "elbow": -1.2956817150115967,
+          "shoulder_front": 0.8363851308822632,
+          "shoulder_side": -2.853627920150757
+        },
+        "final_rad": {
+          "elbow": -1.2891966104507446,
+          "shoulder_front": 0.8360036611557007,
+          "shoulder_side": -2.852102041244507
+        },
+        "home_error_deg": {
+          "elbow": 0.3715681024132669,
+          "shoulder_front": 0.02185681576301295,
+          "shoulder_side": 0.08742780875834192
+        },
+        "shake": false
+      },
+      "result": "pass"
+    },
+    "shoulder_rotate,shoulder_side,shoulder_front,elbow": {
+      "nudge": {
+        "joints": ["shoulder_rotate", "shoulder_side", "shoulder_front", "elbow"],
+        "deg": 5.0,
+        "seconds": 6.0,
+        "kp": 70.0,
+        "kd": 3.5,
+        "start_rad": {
+          "shoulder_rotate": 2.3477911949157715,
+          "shoulder_side": -2.852102041244507,
+          "shoulder_front": 0.8360036611557007,
+          "elbow": -1.2891966104507446
+        },
+        "target_rad": {
+          "shoulder_rotate": 2.435057657515488,
+          "shoulder_side": -2.7648355786447905,
+          "shoulder_front": 0.9232701237554172,
+          "elbow": -1.2019301478510283
+        },
+        "final_rad": {
+          "shoulder_rotate": 2.429426908493042,
+          "shoulder_side": -2.7887768745422363,
+          "shoulder_front": 0.8962767720222473,
+          "elbow": -1.2117570638656616
+        }
+      },
+      "home": {
+        "joints": ["elbow", "shoulder_front", "shoulder_side", "shoulder_rotate"],
+        "auto_gains": true,
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "delta_deg_before_home": {
+          "elbow": -4.808528307769847,
+          "shoulder_front": -3.54082470724797,
+          "shoulder_side": -3.715691210378637,
+          "shoulder_rotate": -4.2621063439796565
+        },
+        "gains": {
+          "elbow": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
+          "shoulder_front": {"kp": 90.0, "kd": 4.0, "seconds": 6.0},
+          "shoulder_side": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
+          "shoulder_rotate": {"kp": 60.0, "kd": 3.0, "seconds": 6.0}
+        },
+        "target_rad": {
+          "elbow": -1.2956817150115967,
+          "shoulder_front": 0.8363851308822632,
+          "shoulder_side": -2.853627920150757,
+          "shoulder_rotate": 2.3554208278656006
+        },
+        "final_rad": {
+          "elbow": -1.2891966104507446,
+          "shoulder_front": 0.8360036611557007,
+          "shoulder_side": -2.8513388633728027,
+          "shoulder_rotate": 2.361905813217163
+        },
+        "home_error_deg": {
+          "elbow": 0.3715681024132669,
+          "shoulder_front": 0.02185681576301295,
+          "shoulder_side": 0.13114150194033167,
+          "shoulder_rotate": 0.3715681024132669
+        },
+        "shake": false
+      },
+      "result": "pass"
+    },
+    "full_arm_7joints_no_claw": {
+      "nudge": {
+        "joints": ["shoulder_rotate", "shoulder_side", "shoulder_front", "elbow", "arm_roll", "wrist_side", "wrist"],
+        "deg": 5.0,
+        "seconds": 7.0,
+        "kp": 60.0,
+        "kd": 3.0,
+        "start_rad": {
+          "shoulder_rotate": 2.3615243434906006,
+          "shoulder_side": -2.8513388633728027,
+          "shoulder_front": 0.8360036611557007,
+          "elbow": -1.2891966104507446,
+          "arm_roll": -2.647249460220337,
+          "wrist_side": 0.1661325991153717,
+          "wrist": -2.0780880451202393
+        },
+        "target_rad": {
+          "shoulder_rotate": 2.448790806090317,
+          "shoulder_side": -2.7640724007730864,
+          "shoulder_front": 0.9232701237554172,
+          "elbow": -1.2019301478510283,
+          "arm_roll": -2.5599829976206205,
+          "wrist_side": 0.2533990617150882,
+          "wrist": -1.9908215825205229
+        },
+        "final_rad": {
+          "shoulder_rotate": 2.4427785873413086,
+          "shoulder_side": -2.790684461593628,
+          "shoulder_front": 0.8981841802597046,
+          "elbow": -1.2144273519515991,
+          "arm_roll": -2.5648508071899414,
+          "wrist_side": 0.2462424635887146,
+          "wrist": -1.9949263334274292
+        }
+      },
+      "home": {
+        "joints": ["wrist", "wrist_side", "arm_roll", "elbow", "shoulder_front", "shoulder_side", "shoulder_rotate"],
+        "auto_gains": true,
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "delta_deg_before_home": {
+          "wrist": -4.764815097081765,
+          "wrist_side": -4.546243067225833,
+          "arm_roll": -5.354950271560037,
+          "elbow": -4.655532070361561,
+          "shoulder_front": -3.54082470724797,
+          "shoulder_side": -3.6063945232800925,
+          "shoulder_rotate": -5.027087531021085
+        },
+        "gains": {
+          "wrist": {"kp": 22.0, "kd": 1.4, "seconds": 5.0},
+          "wrist_side": {"kp": 22.0, "kd": 1.4, "seconds": 5.0},
+          "arm_roll": {"kp": 45.0, "kd": 2.5, "seconds": 5.0},
+          "elbow": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
+          "shoulder_front": {"kp": 90.0, "kd": 4.0, "seconds": 6.0},
+          "shoulder_side": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
+          "shoulder_rotate": {"kp": 60.0, "kd": 3.0, "seconds": 6.0}
+        },
+        "target_rad": {
+          "wrist": -2.0780880451202393,
+          "wrist_side": 0.1668955534696579,
+          "arm_roll": -2.657930850982666,
+          "elbow": -1.2956817150115967,
+          "shoulder_front": 0.8363851308822632,
+          "shoulder_side": -2.853627920150757,
+          "shoulder_rotate": 2.3554208278656006
+        },
+        "final_rad": {
+          "wrist": -2.0780880451202393,
+          "wrist_side": 0.1661325991153717,
+          "arm_roll": -2.6544976234436035,
+          "elbow": -1.2891966104507446,
+          "shoulder_front": 0.8360036611557007,
+          "shoulder_side": -2.852102041244507,
+          "shoulder_rotate": 2.3615243434906006
+        },
+        "home_error_deg": {
+          "wrist": 0.0,
+          "wrist_side": 0.04371390437917096,
+          "arm_roll": 0.19671254519568784,
+          "elbow": 0.3715681024132669,
+          "shoulder_front": 0.02185681576301295,
+          "shoulder_side": 0.08742780875834192,
+          "shoulder_rotate": 0.3497112866502539
+        },
+        "shake": false
+      },
+      "result": "pass"
+    },
+    "full_arm_7joints_no_claw_8deg": {
+      "nudge": {
+        "joints": ["shoulder_rotate", "shoulder_side", "shoulder_front", "elbow", "arm_roll", "wrist_side", "wrist"],
+        "deg": 8.0,
+        "max_deg": 10.0,
+        "seconds": 10.0,
+        "kp": 60.0,
+        "kd": 3.0,
+        "start_rad": {
+          "shoulder_rotate": 2.3607614040374756,
+          "shoulder_side": -2.852102041244507,
+          "shoulder_front": 0.8360036611557007,
+          "elbow": -1.2891966104507446,
+          "arm_roll": -2.6544976234436035,
+          "wrist_side": 0.1661325991153717,
+          "wrist": -2.0780880451202393
+        },
+        "target_rad": {
+          "shoulder_rotate": 2.500387744197022,
+          "shoulder_side": -2.7124757010849603,
+          "shoulder_front": 0.975630001315247,
+          "elbow": -1.1495702702911983,
+          "arm_roll": -2.514871283284057,
+          "wrist_side": 0.30575893927491804,
+          "wrist": -1.938461704960693
+        },
+        "final_rad": {
+          "shoulder_rotate": 2.4950408935546875,
+          "shoulder_side": -2.750629425048828,
+          "shoulder_front": 0.9439612627029419,
+          "elbow": -1.1640726327896118,
+          "arm_roll": -2.5194551944732666,
+          "wrist_side": 0.29850462079048157,
+          "wrist": -1.943045735359192
+        }
+      },
+      "home": {
+        "joints": ["wrist", "wrist_side", "arm_roll", "elbow", "shoulder_front", "shoulder_side", "shoulder_rotate"],
+        "auto_gains": true,
+        "deadband_deg": 0.5,
+        "max_delta_deg": 12.0,
+        "delta_deg_before_home": {
+          "wrist": -7.759211010350375,
+          "wrist_side": -7.540644103136321,
+          "arm_roll": -7.934070683291872,
+          "elbow": -7.540644956909968,
+          "shoulder_front": -6.163658329667887,
+          "shoulder_side": -5.901379065539397,
+          "shoulder_rotate": -8.087066920700158
+        },
+        "final_rad": {
+          "wrist": -2.0780880451202393,
+          "wrist_side": 0.1657511293888092,
+          "arm_roll": -2.6552605628967285,
+          "elbow": -1.2891966104507446,
+          "shoulder_front": 0.8360036611557007,
+          "shoulder_side": -2.8513388633728027,
+          "shoulder_rotate": 2.3615243434906006
+        },
+        "home_error_deg": {
+          "wrist": 0.0,
+          "wrist_side": 0.06557036087353089,
+          "arm_roll": 0.1530000987290347,
+          "elbow": 0.3715681024132669,
+          "shoulder_front": 0.02185681576301295,
+          "shoulder_side": 0.13114150194033167,
+          "shoulder_rotate": 0.3497112866502539
+        },
+        "shake": false,
+        "uses_default_home_order_and_auto_gains": true
+      },
+      "result": "pass"
+    },
+    "full_arm_7joints_no_claw_12deg_auto_gains": {
+      "nudge": {
+        "joints": ["shoulder_rotate", "shoulder_side", "shoulder_front", "elbow", "arm_roll", "wrist_side", "wrist"],
+        "deg": 12.0,
+        "max_deg": 20.0,
+        "seconds": 14.0,
+        "auto_gains": true,
+        "start_rad": {
+          "shoulder_rotate": 2.3798351287841797,
+          "shoulder_side": -2.853627920150757,
+          "shoulder_front": 0.8470664620399475,
+          "elbow": -1.256771206855774,
+          "arm_roll": -2.6068131923675537,
+          "wrist_side": 0.18902114033699036,
+          "wrist": -2.0555810928344727
+        },
+        "target_rad": {
+          "shoulder_rotate": 2.589274639023499,
+          "shoulder_side": -2.6441884099114374,
+          "shoulder_front": 1.0565059722792671,
+          "elbow": -1.0473316966164543,
+          "arm_roll": -2.3973736821282343,
+          "wrist_side": 0.3984606505763099,
+          "wrist": -1.846141582595153
+        },
+        "final_rad": {
+          "shoulder_rotate": 2.585068941116333,
+          "shoulder_side": -2.682345390319824,
+          "shoulder_front": 1.028648853302002,
+          "elbow": -1.0622186660766602,
+          "arm_roll": -2.406538486480713,
+          "wrist_side": 0.36640727519989014,
+          "wrist": -1.8678950071334839
+        },
+        "shake": false
+      },
+      "home": {
+        "joints": ["wrist", "wrist_side", "arm_roll", "elbow", "shoulder_front", "shoulder_side", "shoulder_rotate"],
+        "auto_gains": true,
+        "deadband_deg": 0.5,
+        "max_delta_deg": 16.0,
+        "delta_deg_before_home": {
+          "wrist": -12.043173959674073,
+          "wrist_side": -11.431179618530821,
+          "arm_roll": -14.42557809312037,
+          "elbow": -13.420160586916154,
+          "shoulder_front": -11.015899848125816,
+          "shoulder_side": -9.813766063636061,
+          "shoulder_rotate": -13.179724267753365
+        },
+        "final_rad": {
+          "wrist": -2.0784695148468018,
+          "wrist_side": 0.1657511293888092,
+          "arm_roll": -2.655642032623291,
+          "elbow": -1.2872892618179321,
+          "shoulder_front": 0.8360036611557007,
+          "shoulder_side": -2.852102041244507,
+          "shoulder_rotate": 2.3645761013031006
+        },
+        "home_error_deg": {
+          "wrist": 0.02185681576301295,
+          "wrist_side": 0.06557036087353089,
+          "arm_roll": 0.13114320948726883,
+          "elbow": 0.48028047368153724,
+          "shoulder_front": 0.02185681576301295,
+          "shoulder_side": 0.08742780875834192,
+          "shoulder_rotate": 0.5240008774512784
+        },
+        "shake": false
+      },
+      "result": "pass"
+    },
+    "full_arm_7joints_no_claw_16deg_auto_gains": {
+      "nudge": {
+        "joints": ["shoulder_rotate", "shoulder_side", "shoulder_front", "elbow", "arm_roll", "wrist_side", "wrist"],
+        "deg": 16.0,
+        "max_deg": 20.0,
+        "seconds": 18.0,
+        "auto_gains": true,
+        "start_rad": {
+          "shoulder_rotate": 2.364194631576538,
+          "shoulder_side": -2.852102041244507,
+          "shoulder_front": 0.8360036611557007,
+          "elbow": -1.2872892618179321,
+          "arm_roll": -2.655642032623291,
+          "wrist_side": 0.1657511293888092,
+          "wrist": -2.0784695148468018
+        },
+        "target_rad": {
+          "shoulder_rotate": 2.6434473118956308,
+          "shoulder_side": -2.572849360925414,
+          "shoulder_front": 1.1152563414747934,
+          "elbow": -1.0080365814988395,
+          "arm_roll": -2.3763893523041983,
+          "wrist_side": 0.44500380970790193,
+          "wrist": -1.799216834527709
+        },
+        "final_rad": {
+          "shoulder_rotate": 2.640383005142212,
+          "shoulder_side": -2.6209278106689453,
+          "shoulder_front": 1.0812923908233643,
+          "elbow": -1.0210193395614624,
+          "arm_roll": -2.3805980682373047,
+          "wrist_side": 0.4079881012439728,
+          "wrist": -1.815251350402832
+        },
+        "max_observed_tau": {
+          "shoulder_rotate": 0.41709402203559875,
+          "shoulder_side": 3.3299145698547363,
+          "shoulder_front": 2.6871795654296875,
+          "elbow": 0.8683760762214661,
+          "arm_roll": 0.4444444477558136,
+          "wrist_side": 0.642246663570404,
+          "wrist": 0.27106228470802307
+        },
+        "shake": false
+      },
+      "home": {
+        "joints": ["wrist", "wrist_side", "arm_roll", "elbow", "shoulder_front", "shoulder_side", "shoulder_rotate"],
+        "auto_gains": true,
+        "deadband_deg": 0.5,
+        "max_delta_deg": 20.0,
+        "delta_deg_before_home": {
+          "wrist": -15.059433308475894,
+          "wrist_side": -13.813585459524411,
+          "arm_roll": -15.889997971927784,
+          "elbow": -15.736994904330329,
+          "shoulder_front": -14.032152366738465,
+          "shoulder_side": -13.332734165539991,
+          "shoulder_rotate": -16.3271300788086
+        },
+        "final_rad": {
+          "wrist": -2.0784695148468018,
+          "wrist_side": 0.16308079659938812,
+          "arm_roll": -2.6560235023498535,
+          "elbow": -1.2853819131851196,
+          "shoulder_front": 0.8360036611557007,
+          "shoulder_side": -2.852102041244507,
+          "shoulder_rotate": 2.364194631576538
+        },
+        "home_error_deg": {
+          "wrist": 0.02185681576301295,
+          "wrist_side": 0.21871451456432334,
+          "arm_roll": 0.10928639381524873,
+          "elbow": 0.5895671439436162,
+          "shoulder_front": 0.02185681576301295,
+          "shoulder_side": 0.08742780875834192,
+          "shoulder_rotate": 0.5021440616882654
+        },
+        "shake": false
+      },
+      "result": "pass",
+      "notes": [
+        "No shaking with nudge auto-gains.",
+        "Watch shoulder_side and shoulder_front torque before increasing to 20 degrees."
+      ]
+    },
+    "full_arm_7joints_no_claw_20deg_auto_gains": {
+      "nudge": {
+        "joints": ["shoulder_rotate", "shoulder_side", "shoulder_front", "elbow", "arm_roll", "wrist_side", "wrist"],
+        "deg": 20.0,
+        "max_deg": 20.0,
+        "seconds": 24.0,
+        "auto_gains": true,
+        "start_rad": {
+          "shoulder_rotate": 2.364194631576538,
+          "shoulder_side": -2.852102041244507,
+          "shoulder_front": 0.8360036611557007,
+          "elbow": -1.2853819131851196,
+          "arm_roll": -2.6560235023498535,
+          "wrist_side": 0.16308079659938812,
+          "wrist": -2.0784695148468018
+        },
+        "target_rad": {
+          "shoulder_rotate": 2.713260481975404,
+          "shoulder_side": -2.503036190845641,
+          "shoulder_front": 1.1850695115545666,
+          "elbow": -0.9363160627862537,
+          "arm_roll": -2.3069576519509876,
+          "wrist_side": 0.5121466469982541,
+          "wrist": -1.7294036644479358
+        },
+        "final_rad": {
+          "shoulder_rotate": 2.7136263847351074,
+          "shoulder_side": -2.559891700744629,
+          "shoulder_front": 1.1465247869491577,
+          "elbow": -0.952735185623169,
+          "arm_roll": -2.310025215148926,
+          "wrist_side": 0.4705500900745392,
+          "wrist": -1.7591744661331177
+        },
+        "max_observed_tau": {
+          "shoulder_rotate": -0.1846153885126114,
+          "shoulder_side": 3.9452991485595703,
+          "shoulder_front": 3.0427350997924805,
+          "elbow": 1.100854754447937,
+          "arm_roll": 0.29401710629463196,
+          "wrist_side": 0.7252747416496277,
+          "wrist": 0.5250305533409119
+        },
+        "shake": false
+      },
+      "home": {
+        "joints": ["wrist", "wrist_side", "arm_roll", "elbow", "shoulder_front", "shoulder_side", "shoulder_rotate"],
+        "auto_gains": true,
+        "deadband_deg": 0.5,
+        "max_delta_deg": 24.0,
+        "delta_deg_before_home": {
+          "wrist": -18.27240210537408,
+          "wrist_side": -17.398123377460465,
+          "arm_roll": -19.933524602088692,
+          "elbow": -19.802388385119034,
+          "shoulder_front": -17.76969335227197,
+          "shoulder_side": -16.829845662099878,
+          "shoulder_rotate": -20.567379817444216
+        },
+        "final_rad": {
+          "wrist": -2.0784695148468018,
+          "wrist_side": 0.16308079659938812,
+          "arm_roll": -2.656404972076416,
+          "elbow": -1.2834744453430176,
+          "shoulder_front": 0.8360036611557007,
+          "shoulder_side": -2.852102041244507,
+          "shoulder_rotate": 2.364194631576538
+        },
+        "home_error_deg": {
+          "wrist": 0.02185681576301295,
+          "wrist_side": 0.21871451456432334,
+          "arm_roll": 0.08742951630524787,
+          "elbow": 0.6999954919827867,
+          "shoulder_front": 0.02185681576301295,
+          "shoulder_side": 0.08742780875834192,
+          "shoulder_rotate": 0.5021440616882654
+        },
+        "shake": false
+      },
+      "result": "pass_with_attention",
+      "notes": [
+        "20 degree full-arm synchronous nudge is stable only with nudge auto-gains and long 24 second duration.",
+        "Shoulder_side and shoulder_front torque are relatively high; do not increase beyond 20 degrees as a default full-arm synchronous test.",
+        "The earlier 20 degree uniform-gain test failed with severe shaking."
+      ]
+    }
+  },
+  "failed_combinations": {
+    "full_arm_7joints_no_claw_20deg_sync_nudge": {
+      "nudge": {
+        "joints": ["shoulder_rotate", "shoulder_side", "shoulder_front", "elbow", "arm_roll", "wrist_side", "wrist"],
+        "deg": 20.0,
+        "max_deg": 20.0,
+        "seconds": 18.0,
+        "kp": 55.0,
+        "kd": 3.0,
+        "start_rad": {
+          "shoulder_rotate": 2.3607614040374756,
+          "shoulder_side": -2.8513388633728027,
+          "shoulder_front": 0.8360036611557007,
+          "elbow": -1.2891966104507446,
+          "arm_roll": -2.6552605628967285,
+          "wrist_side": 0.1657511293888092,
+          "wrist": -2.0780880451202393
+        },
+        "target_rad": {
+          "shoulder_rotate": 2.7098272544363415,
+          "shoulder_side": -2.502273012973937,
+          "shoulder_front": 1.1850695115545666,
+          "elbow": -0.9401307600518787,
+          "arm_roll": -2.3061947124978626,
+          "wrist_side": 0.5148169797876752,
+          "wrist": -1.7290221947213733
+        },
+        "result": "failed_severe_shake_interrupted"
+      },
+      "lesson": "Do not run all 7 joints as a synchronous 20 degree nudge. Recover to home, then test large moves by staged joint groups or lower gains."
+    },
+    "elbow,wrist_side,wrist_home_elbow_first": {
+      "nudge": {
+        "joints": ["elbow", "wrist_side", "wrist"],
+        "deg": 5.0,
+        "seconds": 6.0,
+        "kp": 70.0,
+        "kd": 3.0,
+        "start_rad": {
+          "elbow": -1.2899595499038696,
+          "wrist_side": 0.1665140837430954,
+          "wrist": -2.0780880451202393
+        },
+        "target_rad": {
+          "elbow": -1.2026930873041533,
+          "wrist_side": 0.2537805463428119,
+          "wrist": -1.9908215825205229
+        },
+        "final_rad": {
+          "elbow": -1.2232013940811157,
+          "wrist_side": 0.24929426610469818,
+          "wrist": -1.9945448637008667
+        },
+        "result": "nudge_pass"
+      },
+      "home": {
+        "joints": ["elbow", "wrist_side", "wrist"],
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "seconds": 6.0,
+        "kp": 90.0,
+        "kd": 4.0,
+        "delta_deg_before_home": {
+          "elbow": -4.152816487070282,
+          "wrist_side": -4.721098471299099,
+          "wrist": -4.786671702425806
+        },
+        "result": "failed_shake_interrupted"
+      },
+      "lesson": "Do not home this combination elbow-first. Recover wrist and wrist_side first, then elbow."
+    }
+  },
+  "verified_recovery_sequences": {
+    "elbow,wrist_side,wrist_home_wrist_first_single_command": {
+      "nudge": {
+        "joints": ["elbow", "wrist_side", "wrist"],
+        "deg": 5.0,
+        "seconds": 6.0,
+        "kp": 70.0,
+        "kd": 3.0,
+        "start_rad": {
+          "elbow": -1.2891966104507446,
+          "wrist_side": 0.16956588625907898,
+          "wrist": -2.0712215900421143
+        },
+        "target_rad": {
+          "elbow": -1.2019301478510283,
+          "wrist_side": 0.25683234885879547,
+          "wrist": -1.9839551274423979
+        },
+        "final_rad": {
+          "elbow": -1.2228199243545532,
+          "wrist_side": 0.25310903787612915,
+          "wrist": -1.9876782894134521
+        }
+      },
+      "home": {
+        "joints": ["wrist", "wrist_side", "elbow"],
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "seconds": 6.0,
+        "kp": 70.0,
+        "kd": 3.0,
+        "delta_deg_before_home": {
+          "wrist": -5.18009742880771,
+          "wrist_side": -4.939668793607738,
+          "elbow": -4.174673092414324
+        },
+        "target_rad": {
+          "wrist": -2.0780880451202393,
+          "wrist_side": 0.1668955534696579,
+          "elbow": -1.2956817150115967
+        },
+        "final_rad": {
+          "wrist": -2.0792324542999268,
+          "wrist_side": 0.1684214472770691,
+          "elbow": -1.2891966104507446
+        },
+        "home_error_deg": {
+          "wrist": 0.06556865332659373,
+          "wrist_side": 0.08742780875834192,
+          "elbow": 0.3715681024132669
+        }
+      },
+      "result": "failed_light_shake",
+      "lesson": "Single-command home with wrist,wrist_side,elbow reduced shaking versus elbow-first, but still shook. Do not use as a verified recovery strategy yet."
+    },
+    "elbow,wrist_side,wrist_home_wrist_first_auto_gains": {
+      "nudge": {
+        "joints": ["elbow", "wrist_side", "wrist"],
+        "deg": 5.0,
+        "seconds": 6.0,
+        "kp": 70.0,
+        "kd": 3.0,
+        "start_rad": {
+          "elbow": -1.2888151407241821,
+          "wrist_side": 0.1665140837430954,
+          "wrist": -2.0784695148468018
+        },
+        "target_rad": {
+          "elbow": -1.2015486781244658,
+          "wrist_side": 0.2537805463428119,
+          "wrist": -1.9912030522470854
+        },
+        "final_rad": {
+          "elbow": -1.2182421684265137,
+          "wrist_side": 0.24967575073242188,
+          "wrist": -1.9953078031539917
+        }
+      },
+      "home": {
+        "joints": ["wrist", "wrist_side", "elbow"],
+        "auto_gains": true,
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "delta_deg_before_home": {
+          "wrist": -4.742958491737724,
+          "wrist_side": -4.742955930416786,
+          "elbow": -4.4369591867319835
+        },
+        "gains": {
+          "wrist": {"kp": 22.0, "kd": 1.4, "seconds": 5.0},
+          "wrist_side": {"kp": 22.0, "kd": 1.4, "seconds": 5.0},
+          "elbow": {"kp": 70.0, "kd": 3.0, "seconds": 6.0}
+        },
+        "target_rad": {
+          "wrist": -2.0780880451202393,
+          "wrist_side": 0.1668955534696579,
+          "elbow": -1.2956817150115967
+        },
+        "final_rad": {
+          "wrist": -2.0780880451202393,
+          "wrist_side": 0.16918440163135529,
+          "elbow": -1.2891966104507446
+        },
+        "home_error_deg": {
+          "wrist": 0.0,
+          "wrist_side": 0.13114320948726883,
+          "elbow": 0.3715681024132669
+        },
+        "shake": false
+      },
+      "result": "pass",
+      "lesson": "Use --auto-gains for mixed wrist and elbow home. Unified high kp caused shaking; per-joint gains removed it."
+    },
+    "elbow,wrist_side,wrist_recover_wrist_first": {
+      "nudge": {
+        "joints": ["elbow", "wrist_side", "wrist"],
+        "deg": 5.0,
+        "seconds": 6.0,
+        "kp": 70.0,
+        "kd": 3.0,
+        "start_rad": {
+          "elbow": -1.2914854288101196,
+          "wrist_side": 0.14705882966518402,
+          "wrist": -2.0586328506469727
+        },
+        "target_rad": {
+          "elbow": -1.2042189662104033,
+          "wrist_side": 0.2343252922649005,
+          "wrist": -1.9713663880472563
+        },
+        "final_rad": {
+          "elbow": -1.2232013940811157,
+          "wrist_side": 0.230601966381073,
+          "wrist": -1.9754711389541626
+        },
+        "result": "nudge_pass"
+      },
+      "home_stage_1": {
+        "joints": ["wrist", "wrist_side"],
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "seconds": 5.0,
+        "kp": 22.0,
+        "kd": 1.4,
+        "delta_deg_before_home": {
+          "wrist": -6.010655262070431,
+          "wrist_side": -3.6719660468595077
+        },
+        "final_rad": {
+          "wrist": -2.0712215900421143,
+          "wrist_side": 0.16956588625907898
+        }
+      },
+      "home_stage_2": {
+        "joints": ["elbow"],
+        "deadband_deg": 0.5,
+        "max_delta_deg": 8.0,
+        "seconds": 6.0,
+        "kp": 70.0,
+        "kd": 3.0,
+        "delta_deg_before_home": {
+          "elbow": -4.393245976043902
+        },
+        "target_rad": {
+          "elbow": -1.2956817150115967
+        },
+        "final_rad": {
+          "elbow": -1.2891966104507446
+        },
+        "home_error_deg": {
+          "elbow": 0.3715681024132669
+        }
+      },
+      "result": "pass",
+      "lesson": "For elbow plus wrist recovery, home wrist and wrist_side first, then home elbow separately."
+    }
+  },
+  "pending_5deg_visual_tests": []
+}

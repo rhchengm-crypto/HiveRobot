@@ -25,6 +25,7 @@ SERIAL_BAUD = 921600
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(SCRIPT_DIR, "left_arm_home.json")
+CLAW_HOME_PATH = os.path.join(SCRIPT_DIR, "data", "left_arm_claw_home.json")
 
 
 @dataclass(frozen=True)
@@ -103,6 +104,18 @@ JOINTS = [
         max_offset=math.radians(95),
     ),
     JointSpec(
+        name="wrist_side",
+        motor_type=DM_Motor_Type.DM4310,
+        slave_id=0x2A,
+        master_id=0x1A,
+        kp_hold=18,
+        kd_hold=0.8,
+        kp_move=28,
+        kd_move=1.0,
+        min_offset=-math.radians(45),
+        max_offset=math.radians(45),
+    ),
+    JointSpec(
         name="wrist",
         motor_type=DM_Motor_Type.DM4310,
         slave_id=0x29,
@@ -120,7 +133,7 @@ JOINTS = [
 # Current measured claw constants.
 CLAW_SLAVE_ID = 0x28
 CLAW_MASTER_ID = 0x18
-CLAW_Q_OPEN = -3.88056
+CLAW_Q_OPEN = 8.117609
 CLAW_OPEN_TOL = 0.08
 CLAW_CLOSE_OFFSET = 14.0
 CLAW_CONTACT_TAU_THRESHOLD = 0.28
@@ -129,6 +142,34 @@ CLAW_STALL_VEL_THRESHOLD = 0.08
 CLAW_ANOMALY_VEL_THRESHOLD = 8.0
 CLAW_ANOMALY_POS_JUMP = 2.5
 CLAW_BACKOFF = 0.04
+CLAW_CONTACT_HOLD_EXTRA = 0.08
+
+# Keep torque continuous when switching from a held pose into a new move.
+# Without this short preload, a newly started command can spend a few hundred
+# milliseconds enabling/reading state before the first MIT hold frame arrives.
+STARTUP_HOLD_SECONDS = 0.35
+ENABLE_STEP_HOLD_SECONDS = 0.10
+MOVE_PRELOAD_HOLD_SECONDS = 0.25
+TRANSITION_HOLD_SCALE = 1.25
+TRANSITION_FF_SCALE = 0.70
+
+# Shoulder_front carries most gravity load when the arm is far forward.
+# Position-only MIT hold waits for an angle error before producing torque,
+# which causes a visible dip at large angles. This feed-forward starts carrying
+# that load before the joint sags. Tuned from observed hold torque around
+# shoulder_front ~= 2.02 rad and teach home ~= 0.79 rad.
+SHOULDER_FRONT_GRAVITY_ZERO_RAD = 0.79
+SHOULDER_FRONT_GRAVITY_TAU_MAX = 8.0
+SHOULDER_FRONT_GRAVITY_TAU_MIN = -1.0
+SHOULDER_FRONT_GRAVITY_TAU_LIMIT = 9.0
+ELBOW_GRAVITY_ZERO_RAD = -1.07
+ELBOW_GRAVITY_TAU_MAX = 5.0
+ELBOW_GRAVITY_TAU_MIN = -0.8
+ELBOW_GRAVITY_TAU_LIMIT = 6.0
+WRIST_GRAVITY_ZERO_RAD = 1.11
+WRIST_GRAVITY_TAU_MAX = 1.6
+WRIST_GRAVITY_TAU_MIN = -1.2
+WRIST_GRAVITY_TAU_LIMIT = 2.0
 
 
 # Post-shortening table clearance measurements.
@@ -138,6 +179,7 @@ READY_OFFSETS = {
     "shoulder_rotate": 0.0,
     "elbow": 0.0,
     "arm_roll": 0.0,
+    "wrist_side": 0.0,
     "wrist": 0.0,
 }
 
@@ -147,6 +189,7 @@ PREGRASP_OFFSETS = {
     "shoulder_rotate": 0.0,
     "elbow": math.radians(42),
     "arm_roll": 0.0,
+    "wrist_side": 0.0,
     "wrist": 0.0,
 }
 
@@ -413,6 +456,7 @@ TABLE_CLEARANCE_OFFSETS = {
     "shoulder_rotate": 0.0,
     "elbow": 0.0,
     "arm_roll": 0.0,
+    "wrist_side": 0.0,
     "wrist": 0.0,
 }
 
@@ -422,6 +466,7 @@ ELBOW_SAFE_OFFSETS = {
     "shoulder_rotate": 0.0,
     "elbow": math.radians(100),
     "arm_roll": 0.0,
+    "wrist_side": 0.0,
     "wrist": 0.0,
 }
 
@@ -638,15 +683,53 @@ class LeftArmController:
         self.claw = Motor(DM_Motor_Type.DM4310, CLAW_SLAVE_ID, CLAW_MASTER_ID)
         self.ctrl.addMotor(self.claw)
 
-    def enable_all(self) -> None:
+    def enable_all(
+        self,
+        ff_scale_overrides: Optional[Dict[str, float]] = None,
+        enable_hold_scale: float = TRANSITION_HOLD_SCALE,
+        enable_ff_scale: float = TRANSITION_FF_SCALE,
+        startup_hold_seconds: float = STARTUP_HOLD_SECONDS,
+    ) -> None:
+        enabled_names = []
         for name in self.specs:
             print("enable", name)
             self.ctrl.enable(self.motors[name])
-            time.sleep(0.12)
+            time.sleep(0.03)
+            enabled_names.append(name)
+            targets = self.read_named_position_targets(enabled_names)
+            self.hold_named_pose(
+                targets,
+                ENABLE_STEP_HOLD_SECONDS,
+                hold_scale=enable_hold_scale,
+                ff_scale=enable_ff_scale,
+                ff_scale_overrides=ff_scale_overrides,
+            )
 
         print("enable claw")
         self.ctrl.enable(self.claw)
-        time.sleep(0.12)
+        self.hold_named_pose(
+            self.read_named_position_targets(enabled_names),
+            ENABLE_STEP_HOLD_SECONDS,
+            hold_scale=enable_hold_scale,
+            ff_scale=enable_ff_scale,
+            ff_scale_overrides=ff_scale_overrides,
+        )
+        print("startup preload hold current pose")
+        if startup_hold_seconds > 0.0:
+            self.hold_current_pose(
+                startup_hold_seconds,
+                hold_scale=enable_hold_scale,
+                ff_scale=enable_ff_scale,
+                ff_scale_overrides=ff_scale_overrides,
+            )
+
+    def enable_named(self, names: Iterable[str]) -> None:
+        for name in names:
+            if name not in self.motors:
+                raise ValueError("unknown joint: " + name)
+            print("enable", name)
+            self.ctrl.enable(self.motors[name])
+            time.sleep(0.03)
 
     def refresh_all(self) -> None:
         for motor in self.motors.values():
@@ -672,6 +755,14 @@ class LeftArmController:
         }
         return status
 
+    def read_named_position_targets(self, names: Iterable[str]) -> Dict[str, float]:
+        names = list(names)
+        for name in names:
+            self.ctrl.refresh_motor_status(self.motors[name])
+        time.sleep(0.02)
+        self.ctrl.recv()
+        return {name: float(self.motors[name].getPosition()) for name in names}
+
     def print_status(self) -> None:
         status = self.read_status()
         for name, data in status.items():
@@ -696,13 +787,46 @@ class LeftArmController:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return home
 
+    def load_claw_open_position(self, path: str = CLAW_HOME_PATH) -> float:
+        if not os.path.exists(path):
+            return CLAW_Q_OPEN
+        with open(path, "r", encoding="utf-8") as f:
+            payload = json.load(f)
+        return float(payload["claw_open"])
+
+    def capture_claw_home(self, path: str = CLAW_HOME_PATH) -> float:
+        status = self.read_status()["claw"]
+        claw_open = float(status["pos"])
+        payload = {
+            "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "claw_open": claw_open,
+            "status": status,
+            "notes": "Captured current claw position as open/home position.",
+        }
+        directory = os.path.dirname(path)
+        if directory:
+            os.makedirs(directory, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        print("saved claw home:", path)
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return claw_open
+
     def load_home(self, path: str = CONFIG_PATH) -> Dict[str, float]:
         with open(path, "r", encoding="utf-8") as f:
             payload = json.load(f)
         home = payload["home"]
         missing = sorted(set(self.specs) - set(home))
         if missing:
-            raise RuntimeError("home file missing joints: " + ", ".join(missing))
+            if set(missing) != {"wrist_side"}:
+                raise RuntimeError("home file missing joints: " + ", ".join(missing))
+            current = self.read_status()
+            home["wrist_side"] = current["wrist_side"]["pos"]
+            print(
+                "home file missing wrist_side; using current position as temporary home:",
+                home["wrist_side"],
+            )
         return {name: float(home[name]) for name in self.specs}
 
     def targets_from_offsets(
@@ -728,6 +852,14 @@ class LeftArmController:
                     f"offset={offset:.4f}, "
                     f"limit=[{spec.min_offset:.4f}, {spec.max_offset:.4f}]"
                 )
+
+    def check_named_targets(
+        self,
+        home: Dict[str, float],
+        targets: Dict[str, float],
+        names: Iterable[str],
+    ) -> None:
+        self.check_targets(home, {name: targets[name] for name in names})
 
     def geometry_ik_offsets_from_shoulder_frame(
         self,
@@ -1229,6 +1361,8 @@ class LeftArmController:
         targets: Dict[str, float],
         active: Optional[object] = None,
         hold_scale: float = 1.0,
+        ff_scale: float = 1.0,
+        ff_scale_overrides: Optional[Dict[str, float]] = None,
     ) -> None:
         if active is None:
             active_names = set()
@@ -1244,22 +1378,114 @@ class LeftArmController:
                 kp, kd = spec.kp_move, spec.kd_move
             else:
                 kp, kd = spec.kp_hold * hold_scale, spec.kd_hold
-            self.ctrl.controlMIT(motor, kp, kd, target, 0, 0)
+            self.ctrl.controlMIT(
+                motor,
+                kp,
+                kd,
+                target,
+                0,
+                self.feedforward_tau(name, target)
+                * ff_scale
+                * (ff_scale_overrides or {}).get(name, 1.0),
+            )
 
-    def hold_pose(self, targets: Dict[str, float], seconds: float) -> None:
+    def feedforward_tau(self, name: str, target: float) -> float:
+        if name == "shoulder_front":
+            return clamp(
+                SHOULDER_FRONT_GRAVITY_TAU_MAX
+                * math.sin(target - SHOULDER_FRONT_GRAVITY_ZERO_RAD),
+                SHOULDER_FRONT_GRAVITY_TAU_MIN,
+                SHOULDER_FRONT_GRAVITY_TAU_LIMIT,
+            )
+        if name == "elbow":
+            return clamp(
+                ELBOW_GRAVITY_TAU_MAX * math.sin(target - ELBOW_GRAVITY_ZERO_RAD),
+                ELBOW_GRAVITY_TAU_MIN,
+                ELBOW_GRAVITY_TAU_LIMIT,
+            )
+        if name == "wrist":
+            return clamp(
+                WRIST_GRAVITY_TAU_MAX * math.sin(target - WRIST_GRAVITY_ZERO_RAD),
+                WRIST_GRAVITY_TAU_MIN,
+                WRIST_GRAVITY_TAU_LIMIT,
+            )
+        return 0.0
+
+    def hold_named_pose(
+        self,
+        targets: Dict[str, float],
+        seconds: float,
+        hold_scale: float = 1.0,
+        ff_scale: float = 1.0,
+        ff_scale_overrides: Optional[Dict[str, float]] = None,
+    ) -> None:
         start = time.time()
         while time.time() - start < seconds:
-            self.command_targets(targets)
+            for name, target in targets.items():
+                spec = self.specs[name]
+                self.ctrl.controlMIT(
+                    self.motors[name],
+                    spec.kp_hold * hold_scale,
+                    spec.kd_hold,
+                    target,
+                    0,
+                    self.feedforward_tau(name, target)
+                    * ff_scale
+                    * (ff_scale_overrides or {}).get(name, 1.0),
+                )
             time.sleep(0.01)
+
+    def hold_pose(
+        self,
+        targets: Dict[str, float],
+        seconds: float,
+        hold_scale: float = 1.0,
+        ff_scale: float = 1.0,
+        ff_scale_overrides: Optional[Dict[str, float]] = None,
+    ) -> None:
+        start = time.time()
+        while time.time() - start < seconds:
+            self.command_targets(
+                targets,
+                hold_scale=hold_scale,
+                ff_scale=ff_scale,
+                ff_scale_overrides=ff_scale_overrides,
+            )
+            time.sleep(0.01)
+
+    def hold_current_pose(
+        self,
+        seconds: float,
+        hold_scale: float = 1.0,
+        ff_scale: float = 1.0,
+        ff_scale_overrides: Optional[Dict[str, float]] = None,
+    ) -> Dict[str, float]:
+        current = self.read_position_targets()
+        self.hold_pose(
+            current,
+            seconds,
+            hold_scale=hold_scale,
+            ff_scale=ff_scale,
+            ff_scale_overrides=ff_scale_overrides,
+        )
+        return current
 
     def move_pose(
         self,
         targets: Dict[str, float],
         seconds: float = 4.0,
-        active: Optional[str] = None,
+        active: Optional[object] = None,
+        ff_scale_overrides: Optional[Dict[str, float]] = None,
     ) -> None:
         current = self.read_status()
         starts = {name: current[name]["pos"] for name in self.specs}
+        self.hold_pose(
+            starts,
+            MOVE_PRELOAD_HOLD_SECONDS,
+            hold_scale=TRANSITION_HOLD_SCALE,
+            ff_scale=TRANSITION_FF_SCALE,
+            ff_scale_overrides=ff_scale_overrides,
+        )
 
         start_time = time.time()
         while time.time() - start_time < seconds:
@@ -1268,10 +1494,16 @@ class LeftArmController:
             step_targets = {}
             for name in self.specs:
                 step_targets[name] = starts[name] * (1.0 - s) + targets[name] * s
-            self.command_targets(step_targets, active=active)
+            ff_scale = TRANSITION_FF_SCALE * (1.0 - s) + s
+            self.command_targets(
+                step_targets,
+                active=active,
+                ff_scale=ff_scale,
+                ff_scale_overrides=ff_scale_overrides,
+            )
             time.sleep(0.01)
 
-        self.hold_pose(targets, 0.8)
+        self.hold_pose(targets, 0.8, ff_scale_overrides=ff_scale_overrides)
 
     def move_pose_with_claw_hold(
         self,
@@ -1314,9 +1546,75 @@ class LeftArmController:
         self.check_targets(home, targets)
         self.move_pose(targets, seconds=seconds, active=joint)
 
+    def move_single_joint(
+        self,
+        joint: str,
+        target: float,
+        seconds: float = 1.0,
+    ) -> None:
+        if joint not in self.specs:
+            raise ValueError("unknown joint: " + joint)
+        spec = self.specs[joint]
+        motor = self.motors[joint]
+        self.ctrl.refresh_motor_status(motor)
+        time.sleep(0.02)
+        self.ctrl.recv()
+        start = float(motor.getPosition())
+
+        hold_start = time.time()
+        while time.time() - hold_start < min(0.15, max(0.0, seconds * 0.2)):
+            self.ctrl.controlMIT(
+                motor,
+                spec.kp_hold,
+                spec.kd_hold,
+                start,
+                0,
+                self.feedforward_tau(joint, start) * TRANSITION_FF_SCALE,
+            )
+            time.sleep(0.01)
+
+        start_time = time.time()
+        while time.time() - start_time < seconds:
+            a = (time.time() - start_time) / max(1e-6, seconds)
+            s = smoothstep(a)
+            step_target = start * (1.0 - s) + target * s
+            ff_scale = TRANSITION_FF_SCALE * (1.0 - s) + s
+            self.ctrl.controlMIT(
+                motor,
+                spec.kp_move,
+                spec.kd_move,
+                step_target,
+                0,
+                self.feedforward_tau(joint, step_target) * ff_scale,
+            )
+            time.sleep(0.01)
+
+        hold_end = time.time()
+        while time.time() - hold_end < 0.4:
+            self.ctrl.controlMIT(
+                motor,
+                spec.kp_hold,
+                spec.kd_hold,
+                target,
+                0,
+                self.feedforward_tau(joint, target),
+            )
+            time.sleep(0.01)
+
     def read_position_targets(self) -> Dict[str, float]:
         status = self.read_status()
         return {name: status[name]["pos"] for name in self.specs}
+
+    def read_position_targets_stable(
+        self,
+        samples: int = 4,
+        delay: float = 0.05,
+    ) -> Dict[str, float]:
+        targets = self.read_position_targets()
+        for _ in range(max(1, samples) - 1):
+            self.hold_pose(targets, delay)
+            targets = self.read_position_targets()
+        return targets
 
     def go_home(self, home: Dict[str, float], seconds: float = 4.0) -> None:
         self.check_targets(home, home)
@@ -1403,6 +1701,87 @@ class LeftArmController:
         self.check_targets(home, targets)
         self.move_pregrasp_safe(home, final_targets=targets, seconds=seconds)
         return targets
+
+    def move_clearance_test_safe(
+        self,
+        home: Dict[str, float],
+        targets: Dict[str, float],
+        active_names: Iterable[str],
+        seconds: float = 4.0,
+    ) -> None:
+        active_set = set(active_names)
+        current = self.read_position_targets()
+
+        front_first = dict(current)
+        if "shoulder_front" in active_set:
+            front_first["shoulder_front"] = targets["shoulder_front"]
+            self.check_named_targets(home, front_first, ["shoulder_front"])
+            print("clearance step 1: shoulder_front to test angle")
+            self.move_pose(
+                front_first,
+                seconds=max(2.5, seconds * 0.7),
+                active="shoulder_front",
+            )
+        else:
+            print("clearance step 1: shoulder_front holds current")
+
+        elbow_next = dict(front_first)
+        if "elbow" in active_set:
+            elbow_next["elbow"] = targets["elbow"]
+            self.check_named_targets(home, elbow_next, ["elbow"])
+            print("clearance step 2: elbow to test angle")
+            self.move_pose(
+                elbow_next,
+                seconds=max(2.5, seconds * 0.7),
+                active="elbow",
+            )
+        else:
+            print("clearance step 2: elbow holds current")
+
+        side_next = dict(elbow_next)
+        side_active = [
+            name
+            for name in ("shoulder_side", "shoulder_rotate", "arm_roll")
+            if name in active_set
+        ]
+        if side_active:
+            for name in side_active:
+                side_next[name] = targets[name]
+            self.check_named_targets(home, side_next, side_active)
+            print("clearance step 3: shoulder_side/rotate/arm_roll to test angle")
+            self.move_pose(
+                side_next,
+                seconds=max(2.5, seconds * 0.7),
+                active=tuple(side_active),
+            )
+        else:
+            print("clearance step 3: shoulder_side/rotate/arm_roll hold current")
+
+        wrist_side_next = dict(side_next)
+        if "wrist_side" in active_set:
+            wrist_side_next["wrist_side"] = targets["wrist_side"]
+            self.check_named_targets(home, wrist_side_next, ["wrist_side"])
+            print("clearance step 4: wrist_side to test angle")
+            self.move_pose(
+                wrist_side_next,
+                seconds=max(2.0, seconds * 0.5),
+                active="wrist_side",
+            )
+        else:
+            print("clearance step 4: wrist_side holds current")
+
+        wrist_next = dict(wrist_side_next)
+        if "wrist" in active_set:
+            wrist_next["wrist"] = targets["wrist"]
+            self.check_named_targets(home, wrist_next, ["wrist"])
+            print("clearance step 5: wrist up/down to test angle")
+            self.move_pose(
+                wrist_next,
+                seconds=max(2.0, seconds * 0.5),
+                active="wrist",
+            )
+        else:
+            print("clearance step 5: wrist up/down holds current")
 
     def move_pregrasp_safe(
         self,
@@ -1581,11 +1960,14 @@ class LeftArmController:
         return lift_planned
 
     def open_claw_safe(self) -> None:
-        status = self.read_status()["claw"]
+        full_status = self.read_status()
+        arm_hold_targets = {name: full_status[name]["pos"] for name in self.specs}
+        status = full_status["claw"]
         pos = status["pos"]
-        err = pos - CLAW_Q_OPEN
+        claw_q_open = self.load_claw_open_position()
+        err = pos - claw_q_open
         print("claw current", status)
-        print("claw Q_OPEN", CLAW_Q_OPEN, "err", err)
+        print("claw Q_OPEN", claw_q_open, "err", err)
         if abs(err) <= CLAW_OPEN_TOL:
             print("claw already open")
             return
@@ -1596,18 +1978,22 @@ class LeftArmController:
         while time.time() - start_time < seconds:
             a = (time.time() - start_time) / seconds
             s = smoothstep(a)
-            target = start_pos * (1.0 - s) + CLAW_Q_OPEN * s
+            target = start_pos * (1.0 - s) + claw_q_open * s
+            self.command_targets(arm_hold_targets, hold_scale=TRANSITION_HOLD_SCALE)
             self.ctrl.controlMIT(self.claw, 22, 0.8, target, 0, 0)
             time.sleep(0.01)
 
         for _ in range(100):
-            self.ctrl.controlMIT(self.claw, 14, 0.7, CLAW_Q_OPEN, 0, 0)
+            self.command_targets(arm_hold_targets, hold_scale=TRANSITION_HOLD_SCALE)
+            self.ctrl.controlMIT(self.claw, 14, 0.7, claw_q_open, 0, 0)
             time.sleep(0.01)
 
         print("claw opened", self.read_status()["claw"])
 
     def close_claw_pressure(self) -> float:
-        status = self.read_status()["claw"]
+        full_status = self.read_status()
+        arm_hold_targets = {name: full_status[name]["pos"] for name in self.specs}
+        status = full_status["claw"]
         start_pos = status["pos"]
         print("claw pressure close start", status)
         print("claw pressure close mode: keep closing until contact or Ctrl+C")
@@ -1623,6 +2009,7 @@ class LeftArmController:
             while True:
                 elapsed = time.time() - start_time
                 target = start_pos + close_rate * elapsed
+                self.command_targets(arm_hold_targets, hold_scale=TRANSITION_HOLD_SCALE)
                 self.ctrl.controlMIT(self.claw, 26, 0.9, target, 0, 0)
 
                 now = time.time()
@@ -1672,9 +2059,19 @@ class LeftArmController:
             contact_pos = float(self.claw.getPosition())
             print("claw close interrupted, hold current pos", contact_pos)
 
-        hold_pos = contact_pos - CLAW_BACKOFF
-        print("claw backoff hold pos", hold_pos)
+        hold_pos = max(contact_pos, target) + CLAW_CONTACT_HOLD_EXTRA
+        print(
+            "claw contact hold pos",
+            hold_pos,
+            "contact_pos=",
+            contact_pos,
+            "last_target=",
+            target,
+            "hold_extra=",
+            CLAW_CONTACT_HOLD_EXTRA,
+        )
         for _ in range(120):
+            self.command_targets(arm_hold_targets, hold_scale=TRANSITION_HOLD_SCALE)
             self.ctrl.controlMIT(self.claw, 18, 0.8, hold_pos, 0, 0)
             time.sleep(0.01)
 
@@ -1946,6 +2343,17 @@ def build_parser() -> argparse.ArgumentParser:
     move_joint.add_argument("--target", type=float, required=True)
     move_joint.add_argument("--seconds", type=float, default=4.0)
 
+    clearance = sub.add_parser("clearance-test")
+    clearance.add_argument("--execute", action="store_true")
+    clearance.add_argument("--front-deg", type=float, default=-70.0)
+    clearance.add_argument("--side-deg", type=float, default=None)
+    clearance.add_argument("--rotate-deg", type=float, default=None)
+    clearance.add_argument("--elbow-deg", type=float, default=70.0)
+    clearance.add_argument("--arm-roll-deg", type=float, default=None)
+    clearance.add_argument("--wrist-side-deg", type=float, default=None)
+    clearance.add_argument("--wrist-deg", type=float, default=None)
+    clearance.add_argument("--seconds", type=float, default=4.0)
+
     target = sub.add_parser("target")
     target.add_argument("--x", type=float, required=True, help="arm_x in cm")
     target.add_argument("--y", type=float, required=True, help="arm_y in cm")
@@ -2055,6 +2463,43 @@ def main() -> None:
         elif args.cmd == "move-joint":
             arm.move_joint_slow(home, args.joint, args.target, args.seconds)
             arm.print_status()
+        elif args.cmd == "clearance-test":
+            requested_offsets_deg = {
+                "shoulder_front": args.front_deg,
+                "shoulder_side": args.side_deg,
+                "shoulder_rotate": args.rotate_deg,
+                "elbow": args.elbow_deg,
+                "arm_roll": args.arm_roll_deg,
+                "wrist_side": args.wrist_side_deg,
+                "wrist": args.wrist_deg,
+            }
+            active_offsets_deg = {
+                name: deg
+                for name, deg in requested_offsets_deg.items()
+                if deg is not None
+            }
+            current_targets = arm.read_position_targets()
+            targets = dict(current_targets)
+            for name, deg in active_offsets_deg.items():
+                targets[name] = home[name] + math.radians(deg)
+            arm.check_named_targets(home, targets, active_offsets_deg)
+            print("clearance test active offsets deg:")
+            print(json.dumps(active_offsets_deg, ensure_ascii=False, indent=2))
+            print("clearance test holding current for:")
+            hold_names = [name for name in targets if name not in active_offsets_deg]
+            print(json.dumps(hold_names, ensure_ascii=False, indent=2))
+            print("clearance test planned targets:")
+            print(json.dumps(targets, ensure_ascii=False, indent=2))
+            if args.execute:
+                arm.move_clearance_test_safe(
+                    home,
+                    targets,
+                    active_names=active_offsets_deg,
+                    seconds=args.seconds,
+                )
+                arm.print_status()
+            else:
+                print("dry run only. Add --execute to move.")
         elif args.cmd == "target":
             targets = arm.target_from_arm_xyz(home, args.x, args.y, args.z)
             bias_map = {

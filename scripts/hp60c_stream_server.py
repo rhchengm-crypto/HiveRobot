@@ -26,6 +26,7 @@ import cv2
 import numpy as np
 
 DEFAULT_CONTROLLER = "/home/nvidia/hive_robot/DM_Control_Python/left_arm_controller.py"
+DEFAULT_TEACH_CONTROLLER = "/home/nvidia/hive_robot/DM_Control_Python/teach_left_arm.py"
 
 from hp60c_auto_target import (
     CAMERA_FORWARD_FROM_SHOULDER_CM,
@@ -222,6 +223,17 @@ CLEAN_HTML_PAGE = """<!doctype html>
     }
     .coord strong { font-size: 18px; color: #f5f75b; }
     .buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    .nudge-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 90px 80px;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
     button {
       min-height: 34px;
       padding: 7px 10px;
@@ -235,6 +247,18 @@ CLEAN_HTML_PAGE = """<!doctype html>
     button:hover { background: #303944; }
     button.primary { border-color: #4e8fd8; background: #1e4f86; }
     button.danger { border-color: #8f5555; background: #563030; }
+    select,
+    input[type="number"],
+    input[type="text"] {
+      min-height: 34px;
+      width: 100%;
+      padding: 7px 9px;
+      border: 1px solid #44505c;
+      background: #101418;
+      color: #f5f7fa;
+      border-radius: 6px;
+      font-size: 13px;
+    }
     label {
       display: inline-flex;
       align-items: center;
@@ -295,12 +319,49 @@ CLEAN_HTML_PAGE = """<!doctype html>
           <label><input id="skipClaw" type="checkbox"> Skip claw</label>
           <button type="button" onclick="copyCommand()">Copy Command</button>
           <button id="executeBtn" type="button" class="primary" onclick="executeTarget()">Execute Target</button>
+          <button id="clearanceBtn" type="button" onclick="tableClearance()">Table Clearance</button>
           <button id="homeBtn" type="button" onclick="goHome()">Home</button>
+        </div>
+      </section>
+      <section class="panel">
+        <h2>Joint Adjust</h2>
+        <div class="form-grid">
+          <select id="customJoint" aria-label="Joint">
+            <option value="shoulder_front">Front</option>
+            <option value="shoulder_side">Side</option>
+            <option value="shoulder_rotate">Rotate</option>
+            <option value="elbow">Elbow</option>
+            <option value="arm_roll">Arm Roll</option>
+            <option value="wrist_side">Wrist Side</option>
+            <option value="wrist">Wrist</option>
+          </select>
+          <input id="customDeg" type="number" step="0.1" value="1" aria-label="Degrees">
+          <input id="customSeconds" type="number" step="0.1" value="1.0" aria-label="Seconds">
+        </div>
+        <div class="buttons" style="margin-bottom: 10px;">
+          <button type="button" class="primary" onclick="applyCustomNudge()">Apply Nudge</button>
+        </div>
+        <div class="nudge-grid">
+          <button type="button" onclick="nudgeJoint('shoulder_front', 2)">Front +2 deg</button>
+          <button type="button" onclick="nudgeJoint('shoulder_front', -2)">Front -2 deg</button>
+          <button type="button" onclick="nudgeJoint('shoulder_side', 1)">Side +1 deg</button>
+          <button type="button" onclick="nudgeJoint('shoulder_side', -1)">Side -1 deg</button>
+          <button type="button" onclick="nudgeJoint('elbow', 2)">Elbow +2 deg</button>
+          <button type="button" onclick="nudgeJoint('elbow', -2)">Elbow -2 deg</button>
+          <button type="button" onclick="nudgeJoint('wrist', -2)">Wrist Up 2 deg</button>
+          <button type="button" onclick="nudgeJoint('wrist', 2)">Wrist Down 2 deg</button>
+          <button type="button" onclick="nudgeJoint('wrist_side', 1)">Wrist Side +1 deg</button>
+          <button type="button" onclick="nudgeJoint('wrist_side', -1)">Wrist Side -1 deg</button>
         </div>
       </section>
       <section class="panel">
         <h2>Run Result</h2>
         <div class="buttons">
+          <button type="button" onclick="lowTorque()">Low Torque</button>
+          <button type="button" class="danger" onclick="stopLowTorque()">Stop Low Torque</button>
+          <button type="button" class="primary" onclick="recordPose()">Record Pose</button>
+          <button type="button" onclick="replayPose()">Replay Pose</button>
+          <button type="button" onclick="captureClawHome()">Capture Claw Home</button>
           <button type="button" onclick="annotate('perfect')">Mark Perfect</button>
           <button type="button" onclick="annotate('success')">Mark Success</button>
           <button type="button" class="danger" onclick="annotate('fail')">Mark Failure</button>
@@ -417,6 +478,140 @@ CLEAN_HTML_PAGE = """<!doctype html>
       }
     }
 
+    async function tableClearance() {
+      if (!confirm('Move the robot arm to Table Clearance?')) return;
+      const btn = document.getElementById('clearanceBtn');
+      btn.disabled = true;
+      btn.textContent = 'Moving...';
+      setStatus('Moving to Table Clearance...');
+      try {
+        const res = await fetch('/table-clearance', { method: 'POST' });
+        const data = await res.json();
+        setStatus(data.ok ? 'Table Clearance finished. Run ID: ' + data.run_id : 'Table Clearance failed:\\n' + resultDetails(data));
+      } catch (err) {
+        setStatus('Table Clearance request failed:\\n' + err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Table Clearance';
+        await refresh();
+      }
+    }
+
+    async function nudgeJoint(joint, deg) {
+      await nudgeJointTimed(joint, deg, 1.0);
+    }
+
+    async function nudgeJointTimed(joint, deg, seconds) {
+      setStatus('Adjusting ' + joint + ' by ' + deg + ' deg...');
+      try {
+        const res = await fetch('/joint-nudge?joint=' + encodeURIComponent(joint) + '&deg=' + encodeURIComponent(deg) + '&seconds=' + encodeURIComponent(seconds), { method: 'POST' });
+        const data = await res.json();
+        setStatus(data.ok ? 'Adjusted ' + joint + ' by ' + deg + ' deg.' : 'Joint adjust failed:\\n' + resultDetails(data));
+      } catch (err) {
+        setStatus('Joint adjust request failed:\\n' + err);
+      } finally {
+        await refresh();
+      }
+    }
+
+    async function applyCustomNudge() {
+      const joint = document.getElementById('customJoint').value;
+      const deg = Number(document.getElementById('customDeg').value);
+      const seconds = Number(document.getElementById('customSeconds').value);
+      if (!Number.isFinite(deg) || !Number.isFinite(seconds)) {
+        setStatus('Custom nudge needs numeric degrees and seconds.');
+        return;
+      }
+      await nudgeJointTimed(joint, deg, seconds);
+    }
+
+    async function recordPose() {
+      const stamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 14);
+      const name = prompt('Pose name:', 'chess_grasp_' + stamp);
+      if (!name) return;
+      const note = prompt('Optional note:', 'web command adjusted successful grasp') || '';
+      setStatus('Recording current pose...');
+      try {
+        const res = await fetch('/record-pose?name=' + encodeURIComponent(name) + '&note=' + encodeURIComponent(note), { method: 'POST' });
+        const data = await res.json();
+        setStatus(data.ok ? 'Pose recorded: ' + name : 'Record pose failed:\\n' + resultDetails(data));
+      } catch (err) {
+        setStatus('Record pose request failed:\\n' + err);
+      } finally {
+        await refresh();
+      }
+    }
+
+    async function lowTorque() {
+      const seconds = prompt('Low torque seconds:', '30');
+      if (!seconds) return;
+      const kp = prompt('KP:', '8');
+      if (!kp) return;
+      const kd = prompt('KD:', '0.6');
+      if (!kd) return;
+      if (!confirm('Enter low torque mode for ' + seconds + ' seconds? Hold the arm while it softens.')) return;
+      setStatus('Low torque active...');
+      try {
+        const res = await fetch(
+          '/low-torque?seconds=' + encodeURIComponent(seconds) +
+          '&kp=' + encodeURIComponent(kp) +
+          '&kd=' + encodeURIComponent(kd),
+          { method: 'POST' }
+        );
+        const data = await res.json();
+        setStatus(data.ok ? 'Low torque finished.' : 'Low torque failed:\\n' + resultDetails(data));
+      } catch (err) {
+        setStatus('Low torque request failed:\\n' + err);
+      } finally {
+        await refresh();
+      }
+    }
+
+    async function stopLowTorque() {
+      if (!confirm('Stop low torque now?')) return;
+      setStatus('Stopping low torque...');
+      try {
+        const res = await fetch('/stop-low-torque', { method: 'POST' });
+        const data = await res.json();
+        setStatus(data.ok ? 'Low torque stopped.' : 'Stop low torque failed:\\n' + resultDetails(data));
+      } catch (err) {
+        setStatus('Stop low torque request failed:\\n' + err);
+      } finally {
+        await refresh();
+      }
+    }
+
+    async function replayPose() {
+      const name = prompt('Pose name to replay:', '');
+      if (!name) return;
+      if (!confirm('Replay pose "' + name + '"? The robot arm will move.')) return;
+      setStatus('Replaying pose: ' + name + '...');
+      try {
+        const skip = document.getElementById('skipClaw').checked ? '1' : '0';
+        const res = await fetch('/replay-pose?name=' + encodeURIComponent(name) + '&skip_claw=' + skip, { method: 'POST' });
+        const data = await res.json();
+        setStatus(data.ok ? 'Replay finished: ' + name : 'Replay failed:\\n' + resultDetails(data));
+      } catch (err) {
+        setStatus('Replay request failed:\\n' + err);
+      } finally {
+        await refresh();
+      }
+    }
+
+    async function captureClawHome() {
+      if (!confirm('Save current claw position as claw home/open position?')) return;
+      setStatus('Capturing claw home...');
+      try {
+        const res = await fetch('/capture-claw-home', { method: 'POST' });
+        const data = await res.json();
+        setStatus(data.ok ? 'Claw home captured.' : 'Capture claw home failed:\\n' + resultDetails(data));
+      } catch (err) {
+        setStatus('Capture claw home request failed:\\n' + err);
+      } finally {
+        await refresh();
+      }
+    }
+
     async function annotate(result) {
       const note = prompt('Optional note:', '') || '';
       const res = await fetch('/annotate-last?result=' + encodeURIComponent(result) + '&note=' + encodeURIComponent(note), { method: 'POST' });
@@ -471,6 +666,7 @@ class DetectorConfig:
 @dataclass
 class ControllerConfig:
     controller: str
+    teach_controller: str
     python_bin: str
     geometry_execution_blend: float
     use_sudo: bool
@@ -496,7 +692,16 @@ class RunJournal:
         with self.lock:
             with open(self.path, "a", encoding="utf-8") as f:
                 f.write(line + "\n")
-            if record.get("type") in ("execute_target", "home"):
+            if record.get("type") in (
+                "execute_target",
+                "home",
+                "table_clearance",
+                "joint_nudge",
+                "record_pose",
+                "replay_pose",
+                "low_torque",
+                "capture_claw_home",
+            ):
                 self.last_run_id = run_id
         return run_id
 
@@ -882,7 +1087,83 @@ def build_home_command(ctrl: ControllerConfig) -> list:
     cmd = []
     if ctrl.use_sudo:
         cmd.extend(["sudo", "-n"])
-    cmd.extend([ctrl.python_bin, ctrl.controller, "home"])
+    cmd.extend([ctrl.python_bin, ctrl.teach_controller, "home"])
+    return cmd
+
+
+def build_table_clearance_command(ctrl: ControllerConfig) -> list:
+    cmd = []
+    if ctrl.use_sudo:
+        cmd.extend(["sudo", "-n"])
+    cmd.extend([ctrl.python_bin, ctrl.teach_controller, "table-clearance"])
+    return cmd
+
+
+def build_joint_nudge_command(ctrl: ControllerConfig, joint: str, deg: float, seconds: float) -> list:
+    cmd = []
+    if ctrl.use_sudo:
+        cmd.extend(["sudo", "-n"])
+    cmd.extend(
+        [
+            ctrl.python_bin,
+            ctrl.teach_controller,
+            "nudge",
+            "--joint",
+            joint,
+            "--deg",
+            f"{deg:.3f}",
+            "--seconds",
+            f"{seconds:.2f}",
+        ]
+    )
+    return cmd
+
+
+def build_record_pose_command(ctrl: ControllerConfig, name: str, note: str) -> list:
+    cmd = []
+    if ctrl.use_sudo:
+        cmd.extend(["sudo", "-n"])
+    cmd.extend([ctrl.python_bin, ctrl.teach_controller, "record", "--name", name])
+    if note:
+        cmd.extend(["--note", note])
+    return cmd
+
+
+def build_replay_pose_command(ctrl: ControllerConfig, name: str, skip_claw: bool) -> list:
+    cmd = []
+    if ctrl.use_sudo:
+        cmd.extend(["sudo", "-n"])
+    cmd.extend([ctrl.python_bin, ctrl.teach_controller, "replay", "--name", name])
+    if not skip_claw:
+        cmd.append("--close-claw")
+    return cmd
+
+
+def build_low_torque_command(ctrl: ControllerConfig, seconds: float, kp: float, kd: float) -> list:
+    cmd = []
+    if ctrl.use_sudo:
+        cmd.extend(["sudo", "-n"])
+    cmd.extend(
+        [
+            ctrl.python_bin,
+            ctrl.teach_controller,
+            "low-torque",
+            "--seconds",
+            f"{seconds:.2f}",
+            "--kp",
+            f"{kp:.3f}",
+            "--kd",
+            f"{kd:.3f}",
+        ]
+    )
+    return cmd
+
+
+def build_capture_claw_home_command(ctrl: ControllerConfig) -> list:
+    cmd = []
+    if ctrl.use_sudo:
+        cmd.extend(["sudo", "-n"])
+    cmd.extend([ctrl.python_bin, ctrl.teach_controller, "capture-claw-home"])
     return cmd
 
 
@@ -894,6 +1175,9 @@ def make_handler(
     jpeg_quality: int,
     stream_fps: float,
 ):
+    low_torque_lock = threading.Lock()
+    low_torque_process: dict = {"proc": None, "cmd": None, "started_at": None}
+
     class Handler(BaseHTTPRequestHandler):
         server_version = "HiveRobotHP60CStream/1.0"
 
@@ -935,6 +1219,27 @@ def make_handler(
                 return
             if parsed.path == "/home":
                 self.go_home()
+                return
+            if parsed.path == "/table-clearance":
+                self.table_clearance()
+                return
+            if parsed.path == "/joint-nudge":
+                self.joint_nudge(parse_qs(parsed.query))
+                return
+            if parsed.path == "/record-pose":
+                self.record_pose(parse_qs(parsed.query))
+                return
+            if parsed.path == "/replay-pose":
+                self.replay_pose(parse_qs(parsed.query))
+                return
+            if parsed.path == "/low-torque":
+                self.low_torque(parse_qs(parsed.query))
+                return
+            if parsed.path == "/stop-low-torque":
+                self.stop_low_torque()
+                return
+            if parsed.path == "/capture-claw-home":
+                self.capture_claw_home()
                 return
             if parsed.path == "/annotate-last":
                 self.annotate_last(parse_qs(parsed.query))
@@ -1025,20 +1330,20 @@ def make_handler(
             )
             self.send_json(payload, HTTPStatus.OK if completed.returncode == 0 else HTTPStatus.INTERNAL_SERVER_ERROR)
 
-        def go_home(self) -> None:
-            cmd = build_home_command(ctrl)
+        def run_teach_action(self, action_type: str, cmd: list, extra: Optional[dict] = None) -> Tuple[dict, HTTPStatus]:
             started_at = time.time()
             payload = {
                 "execute_enabled": ctrl.execute_enabled,
                 "command": cmd,
                 "command_text": " ".join(cmd),
             }
+            if extra:
+                payload.update(extra)
             if not ctrl.execute_enabled:
                 payload["ok"] = False
                 payload["error"] = "controller execution disabled; restart with --enable-controller-execute"
-                self.send_json(payload, HTTPStatus.FORBIDDEN)
-                return
-            print("execute home command:", " ".join(cmd))
+                return payload, HTTPStatus.FORBIDDEN
+            print("execute teach command:", " ".join(cmd))
             try:
                 completed = subprocess.run(cmd, check=False, text=True, capture_output=True)
             except Exception as exc:
@@ -1047,16 +1352,16 @@ def make_handler(
                 payload["duration_s"] = round(time.time() - started_at, 3)
                 payload["run_id"] = journal.append(
                     {
-                        "type": "home",
+                        "type": action_type,
                         "ok": False,
                         "error": str(exc),
                         "started_at": started_at,
                         "duration_s": payload["duration_s"],
                         "command": cmd,
+                        **(extra or {}),
                     }
                 )
-                self.send_json(payload, HTTPStatus.INTERNAL_SERVER_ERROR)
-                return
+                return payload, HTTPStatus.INTERNAL_SERVER_ERROR
             payload["ok"] = completed.returncode == 0
             payload["returncode"] = completed.returncode
             payload["duration_s"] = round(time.time() - started_at, 3)
@@ -1064,7 +1369,7 @@ def make_handler(
             payload["stderr"] = completed.stderr[-4000:]
             payload["run_id"] = journal.append(
                 {
-                    "type": "home",
+                    "type": action_type,
                     "ok": payload["ok"],
                     "returncode": completed.returncode,
                     "started_at": started_at,
@@ -1072,9 +1377,214 @@ def make_handler(
                     "command": cmd,
                     "stdout": completed.stdout,
                     "stderr": completed.stderr,
+                    **(extra or {}),
                 }
             )
-            self.send_json(payload, HTTPStatus.OK if completed.returncode == 0 else HTTPStatus.INTERNAL_SERVER_ERROR)
+            status = HTTPStatus.OK if completed.returncode == 0 else HTTPStatus.INTERNAL_SERVER_ERROR
+            return payload, status
+
+        def go_home(self) -> None:
+            cmd = build_home_command(ctrl)
+            payload, status = self.run_teach_action("home", cmd)
+            self.send_json(payload, status)
+
+        def table_clearance(self) -> None:
+            cmd = build_table_clearance_command(ctrl)
+            payload, status = self.run_teach_action("table_clearance", cmd)
+            self.send_json(payload, status)
+
+        def joint_nudge(self, query: dict) -> None:
+            joint = query.get("joint", [""])[0]
+            allowed = {
+                "shoulder_front",
+                "shoulder_side",
+                "shoulder_rotate",
+                "elbow",
+                "arm_roll",
+                "wrist_side",
+                "wrist",
+            }
+            if joint not in allowed:
+                self.send_json({"ok": False, "error": "invalid joint"}, HTTPStatus.BAD_REQUEST)
+                return
+            try:
+                deg = float(query.get("deg", ["0"])[0])
+                seconds = float(query.get("seconds", ["1.0"])[0])
+            except ValueError:
+                self.send_json({"ok": False, "error": "deg and seconds must be numbers"}, HTTPStatus.BAD_REQUEST)
+                return
+            cmd = build_joint_nudge_command(ctrl, joint, deg, max(0.2, min(seconds, 10.0)))
+            payload, status = self.run_teach_action(
+                "joint_nudge",
+                cmd,
+                {"joint": joint, "delta_deg": deg, "seconds": seconds},
+            )
+            self.send_json(payload, status)
+
+        def record_pose(self, query: dict) -> None:
+            name = query.get("name", [""])[0].strip()
+            note = query.get("note", [""])[0].strip()
+            if not name:
+                self.send_json({"ok": False, "error": "pose name is required"}, HTTPStatus.BAD_REQUEST)
+                return
+            if not all(ch.isalnum() or ch in ("_", "-", ".") for ch in name):
+                self.send_json(
+                    {"ok": False, "error": "pose name may only contain letters, numbers, underscore, dash, dot"},
+                    HTTPStatus.BAD_REQUEST,
+                )
+                return
+            cmd = build_record_pose_command(ctrl, name, note)
+            _rgb, _depth, _intr, _rgb_stamp, _depth_stamp, target, err, target_stamp = state.snapshot()
+            payload, status = self.run_teach_action(
+                "record_pose",
+                cmd,
+                {
+                    "pose_name": name,
+                    "note": note,
+                    "target": target,
+                    "target_error": err,
+                    "target_age_s": None if target is None else round(time.time() - target_stamp, 3),
+                },
+            )
+            self.send_json(payload, status)
+
+        def replay_pose(self, query: dict) -> None:
+            name = query.get("name", [""])[0].strip()
+            if not name:
+                self.send_json({"ok": False, "error": "pose name is required"}, HTTPStatus.BAD_REQUEST)
+                return
+            if not all(ch.isalnum() or ch in ("_", "-", ".") for ch in name):
+                self.send_json(
+                    {"ok": False, "error": "pose name may only contain letters, numbers, underscore, dash, dot"},
+                    HTTPStatus.BAD_REQUEST,
+                )
+                return
+            skip_claw = self.query_bool(query, "skip_claw")
+            cmd = build_replay_pose_command(ctrl, name, skip_claw)
+            payload, status = self.run_teach_action(
+                "replay_pose",
+                cmd,
+                {"pose_name": name, "skip_claw": skip_claw},
+            )
+            self.send_json(payload, status)
+
+        def low_torque(self, query: dict) -> None:
+            try:
+                seconds = float(query.get("seconds", ["30"])[0])
+                kp = float(query.get("kp", ["8"])[0])
+                kd = float(query.get("kd", ["0.6"])[0])
+            except ValueError:
+                self.send_json({"ok": False, "error": "seconds, kp, and kd must be numbers"}, HTTPStatus.BAD_REQUEST)
+                return
+            seconds = max(1.0, min(seconds, 120.0))
+            kp = max(0.0, min(kp, 30.0))
+            kd = max(0.0, min(kd, 3.0))
+            cmd = build_low_torque_command(ctrl, seconds, kp, kd)
+            started_at = time.time()
+            payload = {
+                "execute_enabled": ctrl.execute_enabled,
+                "command": cmd,
+                "command_text": " ".join(cmd),
+                "seconds": seconds,
+                "kp": kp,
+                "kd": kd,
+            }
+            if not ctrl.execute_enabled:
+                payload["ok"] = False
+                payload["error"] = "controller execution disabled; restart with --enable-controller-execute"
+                self.send_json(payload, HTTPStatus.FORBIDDEN)
+                return
+            with low_torque_lock:
+                existing = low_torque_process.get("proc")
+                if existing is not None and existing.poll() is None:
+                    payload["ok"] = False
+                    payload["error"] = "low torque is already running"
+                    self.send_json(payload, HTTPStatus.CONFLICT)
+                    return
+                print("execute low torque command:", " ".join(cmd))
+                try:
+                    proc = subprocess.Popen(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                except Exception as exc:
+                    payload["ok"] = False
+                    payload["error"] = str(exc)
+                    payload["duration_s"] = round(time.time() - started_at, 3)
+                    payload["run_id"] = journal.append(
+                        {
+                            "type": "low_torque",
+                            "ok": False,
+                            "error": str(exc),
+                            "started_at": started_at,
+                            "duration_s": payload["duration_s"],
+                            "command": cmd,
+                            "seconds": seconds,
+                            "kp": kp,
+                            "kd": kd,
+                        }
+                    )
+                    self.send_json(payload, HTTPStatus.INTERNAL_SERVER_ERROR)
+                    return
+                low_torque_process.update({"proc": proc, "cmd": cmd, "started_at": started_at})
+
+            stdout, stderr = proc.communicate()
+            with low_torque_lock:
+                if low_torque_process.get("proc") is proc:
+                    low_torque_process.update({"proc": None, "cmd": None, "started_at": None})
+            payload["ok"] = proc.returncode == 0
+            payload["returncode"] = proc.returncode
+            payload["duration_s"] = round(time.time() - started_at, 3)
+            payload["stdout"] = stdout[-4000:]
+            payload["stderr"] = stderr[-4000:]
+            payload["stopped"] = proc.returncode not in (0, None)
+            payload["run_id"] = journal.append(
+                {
+                    "type": "low_torque",
+                    "ok": payload["ok"],
+                    "returncode": proc.returncode,
+                    "started_at": started_at,
+                    "duration_s": payload["duration_s"],
+                    "command": cmd,
+                    "seconds": seconds,
+                    "kp": kp,
+                    "kd": kd,
+                    "stdout": stdout,
+                    "stderr": stderr,
+                    "stopped": payload["stopped"],
+                }
+            )
+            self.send_json(payload, HTTPStatus.OK if payload["ok"] else HTTPStatus.INTERNAL_SERVER_ERROR)
+
+        def stop_low_torque(self) -> None:
+            with low_torque_lock:
+                proc = low_torque_process.get("proc")
+                cmd = low_torque_process.get("cmd")
+                started_at = low_torque_process.get("started_at")
+                if proc is None or proc.poll() is not None:
+                    self.send_json({"ok": False, "error": "low torque is not running"}, HTTPStatus.CONFLICT)
+                    return
+                print("stop low torque command:", " ".join(cmd or []))
+                proc.terminate()
+            try:
+                proc.wait(timeout=2.0)
+                killed = False
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait(timeout=2.0)
+                killed = True
+            payload = {
+                "ok": True,
+                "terminated": True,
+                "killed": killed,
+                "returncode": proc.returncode,
+                "duration_s": None if started_at is None else round(time.time() - started_at, 3),
+                "command": cmd,
+                "command_text": "" if cmd is None else " ".join(cmd),
+            }
+            self.send_json(payload)
+
+        def capture_claw_home(self) -> None:
+            cmd = build_capture_claw_home_command(ctrl)
+            payload, status = self.run_teach_action("capture_claw_home", cmd)
+            self.send_json(payload, status)
 
         def annotate_last(self, query: dict) -> None:
             result = query.get("result", [""])[0]
@@ -1167,6 +1677,7 @@ def main() -> None:
     parser.add_argument("--detect-hz", type=float, default=5.0)
     parser.add_argument("--jpeg-quality", type=int, default=80)
     parser.add_argument("--controller", default=DEFAULT_CONTROLLER)
+    parser.add_argument("--teach-controller", default=DEFAULT_TEACH_CONTROLLER)
     parser.add_argument("--controller-python", default="python3")
     parser.add_argument("--geometry-execution-blend", type=float, default=1.0)
     parser.add_argument("--no-sudo-controller", action="store_true")
@@ -1247,6 +1758,7 @@ def main() -> None:
     )
     ctrl = ControllerConfig(
         controller=args.controller,
+        teach_controller=args.teach_controller,
         python_bin=args.controller_python,
         geometry_execution_blend=args.geometry_execution_blend,
         use_sudo=not args.no_sudo_controller,
@@ -1283,6 +1795,8 @@ def main() -> None:
     print("Direct stream: http://<orin-ip>:%d/stream.mjpg" % args.port)
     print("Single-frame debug: http://<orin-ip>:%d/debug.jpg" % args.port)
     print("Controller execute enabled:", ctrl.execute_enabled)
+    print("Controller:", ctrl.controller)
+    print("Teach controller:", ctrl.teach_controller)
     print("Run log:", os.path.abspath(args.run_log))
     try:
         server.serve_forever()
