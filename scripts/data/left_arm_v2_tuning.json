@@ -7,6 +7,491 @@
     "auto_gains": true,
     "source": "full_arm_7joints_no_claw pass result"
   },
+  "table_clearance_plan": {
+    "file": "scripts/data/left_arm_v2_table_clearance.json",
+    "commands": ["capture-clearance", "show-clearance", "clearance"],
+    "default_move_order": ["shoulder_front", "shoulder_side", "elbow", "shoulder_rotate", "arm_roll", "wrist_side", "wrist"],
+    "auto_gains": true,
+    "safety": "clearance moves are dry-run by default and reject deltas larger than --max-delta-deg",
+    "lesson": "From home to table clearance, move shoulder_front and shoulder_side first so the wrist does not sweep the table."
+  },
+  "left_arm_v2_1": {
+    "file": "scripts/left_arm_v2_1.py",
+    "reason": "In v2 clearance, shoulder_front and elbow were stable but not linked; shoulder_front finished before elbow moved, so the arm path did not match the intended table-clearance trajectory.",
+    "change": "v2.1 keeps v2's three-layer active/strong-hold/base-hold control, but couples shoulder_front and elbow during clearance when both are target joints. They move together in one group interpolation and elbow is skipped later instead of moving a second time.",
+    "failed_initial_test": {
+      "command": "left_arm_v2_1.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "result": "failed_shake",
+      "observation": "Coupling worked, but full-force simultaneous shoulder_front/elbow motion shook. v2 sequential clearance remained stable."
+    },
+    "flexible_coupling_update": {
+      "reason": "The simultaneous large shoulder_front and elbow movement needs lower proportional gain and more damping than single-joint clearance.",
+      "coupled_clearance_move_gains": {
+        "shoulder_front": {"kp": 85.0, "kd": 6.0},
+        "elbow": {"kp": 75.0, "kd": 5.5}
+      },
+      "extra_hold": "During coupled shoulder_front/elbow motion, shoulder_side is promoted from base hold to strong clearance hold.",
+      "escape_hatch": "Use --no-coupled-shoulder-elbow to disable v2.1 coupling and run v2-style sequential clearance."
+    },
+    "flexible_coupling_test": {
+      "command": "left_arm_v2_1.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "result": "pass_with_minor_transient",
+      "observation": "Large shaking was greatly improved, but a brief light shake appeared during the motion and quickly disappeared."
+    },
+    "continuous_coupling_update": {
+      "reason": "The remaining brief shake is likely caused by 5-degree segment boundaries during the coupled shoulder_front/elbow group motion.",
+      "change": "The coupled shoulder_front/elbow phase now keeps the same total duration but removes internal step boundaries by running one continuous interpolation. Later clearance joints still use --step-deg segmentation.",
+      "status": "implemented_pending_orin_test"
+    },
+    "home_shake_after_coupling_update": {
+      "command": "left_arm_v2_1.py home --deadband-deg 0.5 --max-delta-deg 120 --execute",
+      "result": "failed_shake",
+      "observation": "Home shook after clearance; shoulder_rotate was commanded for only about 0.7 deg with high active gain and ended with high tau.",
+      "fix": "v2.1 home now uses a 2.0 deg joint-specific deadband for shoulder_rotate and lowers shoulder_rotate HOME_HOLD_GAINS to kp=24.0 kd=4.0."
+    },
+    "continuous_coupling_test_after_home_fix": {
+      "clearance_result": "pass_with_minor_transient",
+      "home_result": "pass",
+      "observation": "Home no longer shakes. Clearance has only a slight transient that quickly disappears.",
+      "final_home_status": {
+        "wrist": {"pos": -2.0784695148468018, "tau": -0.017094017937779427},
+        "wrist_side": {"pos": 0.16308079659938812, "tau": 0.04639804735779762},
+        "arm_roll": {"pos": -2.6606011390686035, "tau": 0.14358974993228912},
+        "elbow": {"pos": -1.2891966104507446, "tau": -0.4991452991962433},
+        "shoulder_front": {"pos": 0.8360036611557007, "tau": -0.047863248735666275},
+        "shoulder_side": {"pos": -2.8513388633728027, "tau": -0.23931623995304108},
+        "shoulder_rotate": {"pos": 2.369535446166992, "tau": -0.17094017565250397}
+      }
+    },
+    "clearance_shoulder_rotate_deadband_update": {
+      "reason": "Clearance still actively corrected shoulder_rotate by only about 0.8 deg with kp=70, which may cause a small transient similar to the previous home issue.",
+      "fix": "v2.1 clearance now uses a 2.0 deg joint-specific deadband for shoulder_rotate, so it remains held instead of actively corrected for sub-2-degree error.",
+      "status": "implemented_pending_orin_test"
+    },
+    "continuous_coupling_test_after_clearance_rotate_deadband": {
+      "command": "left_arm_v2_1.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "result": "still_shakes",
+      "observation": "shoulder_rotate was skipped correctly, but clearance still showed shaking during the coupled shoulder_front/elbow path."
+    },
+    "coupled_gain_duration_update": {
+      "reason": "The coupled shoulder_front/elbow phase still needs softer active gains and should not spend the full computed 120 seconds in the high-load coupled trajectory.",
+      "coupled_clearance_move_gains": {
+        "shoulder_front": {"kp": 75.0, "kd": 7.0},
+        "elbow": {"kp": 65.0, "kd": 6.5}
+      },
+      "max_coupled_seconds": 80.0,
+      "status": "orin_test_passed"
+    },
+    "verified_baseline": {
+      "clearance_command": "left_arm_v2_1.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "home_command": "left_arm_v2_1.py home --deadband-deg 0.5 --max-delta-deg 120 --execute",
+      "result": "pass",
+      "observation": "Both clearance and home ran without shaking. v2.1 continuous soft coupled shoulder_front/elbow clearance is the current recommended baseline.",
+      "clearance_final_status": {
+        "shoulder_front": {"pos": 1.9449530839920044, "tau": 4.738461494445801},
+        "shoulder_side": {"pos": -2.7327001094818115, "tau": 0.8273504376411438},
+        "elbow": {"pos": 0.3278782367706299, "tau": 3.8905982971191406},
+        "shoulder_rotate": {"pos": 2.374113082885742, "tau": -0.0615384615957737},
+        "arm_roll": {"pos": -2.9711222648620605, "tau": -0.0615384615957737},
+        "wrist_side": {"pos": 0.3404669165611267, "tau": 0.10500610619783401},
+        "wrist": {"pos": -1.176279902458191, "tau": 0.9597069621086121}
+      },
+      "home_final_status": {
+        "wrist": {"pos": -2.0784695148468018, "tau": -0.021978022530674934},
+        "wrist_side": {"pos": 0.16308079659938812, "tau": 0.04639804735779762},
+        "arm_roll": {"pos": -2.660219669342041, "tau": 0.1299145370721817},
+        "elbow": {"pos": -1.2891966104507446, "tau": -0.4991452991962433},
+        "shoulder_front": {"pos": 0.8360036611557007, "tau": -0.03418803587555885},
+        "shoulder_side": {"pos": -2.852102041244507, "tau": -0.17094017565250397},
+        "shoulder_rotate": {"pos": 2.374113082885742, "tau": -0.0615384615957737}
+      }
+    },
+    "status": "recommended_baseline"
+  },
+  "left_arm_v2_2": {
+    "file": "scripts/left_arm_v2_2.py",
+    "reason": "User wants table clearance to link shoulder_front, shoulder_side, and elbow together instead of only shoulder_front plus elbow.",
+    "change": "v2.2 is copied from the stable v2.1 baseline, then changes the clearance coupled group to shoulder_front, shoulder_side, and elbow. The three joints move together in one continuous interpolation when all three are targets.",
+    "coupled_clearance_move_gains": {
+      "shoulder_front": {"kp": 75.0, "kd": 7.0},
+      "shoulder_side": {"kp": 60.0, "kd": 5.0},
+      "elbow": {"kp": 65.0, "kd": 6.5}
+    },
+    "max_coupled_seconds": 80.0,
+    "escape_hatch": "Use --no-coupled-shoulder-group to disable v2.2 three-joint coupling and use sequential behavior.",
+    "verified_test": {
+      "command": "left_arm_v2_2.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "result": "pass_with_tiny_transient",
+      "observation": "shoulder_front, shoulder_side, and elbow moved together as a coupled group. Only a very small shake appeared and quickly disappeared.",
+      "final_status": {
+        "shoulder_front": {"pos": 1.945334553718567, "tau": 4.724786281585693},
+        "shoulder_side": {"pos": -2.7327001094818115, "tau": 0.8136752247810364},
+        "elbow": {"pos": 0.3290226459503174, "tau": 3.7948718070983887},
+        "shoulder_rotate": {"pos": 2.3744945526123047, "tau": -0.07521367818117142},
+        "arm_roll": {"pos": -2.973029613494873, "tau": 0.11623931676149368},
+        "wrist_side": {"pos": 0.3408484160900116, "tau": 0.10012210160493851},
+        "wrist": {"pos": -1.1758984327316284, "tau": 0.9548229575157166}
+      }
+    },
+    "home_failed_after_three_joint_clearance": {
+      "command": "left_arm_v2_2.py home --deadband-deg 0.5 --max-delta-deg 120 --execute",
+      "result": "failed_shake",
+      "observation": "After three-joint coupled clearance, home shook badly. arm_roll and shoulder_rotate showed high transient torque, indicating the old home order moved wrist/roll before retracting the large-load shoulder/elbow group.",
+      "fix": "v2.2 home now defaults to elbow, shoulder_front, shoulder_side first, then shoulder_rotate, wrist, wrist_side, arm_roll. It also couples elbow+shoulder_front+shoulder_side back to home before moving wrist/roll."
+    },
+    "verified_clearance_home_pair": {
+      "clearance_command": "left_arm_v2_2.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "home_command": "left_arm_v2_2.py home --deadband-deg 0.5 --max-delta-deg 120 --execute",
+      "result": "pass",
+      "observation": "Three-joint coupled clearance followed by three-joint coupled home completed without shaking.",
+      "clearance_final_status": {
+        "shoulder_front": {"pos": 1.945334553718567, "tau": 4.738461494445801},
+        "shoulder_side": {"pos": -2.7327001094818115, "tau": 0.8136752247810364},
+        "elbow": {"pos": 0.3271152675151825, "tau": 3.931623935699463},
+        "shoulder_rotate": {"pos": 2.3661019802093506, "tau": -0.3213675320148468},
+        "arm_roll": {"pos": -2.966926097869873, "tau": -0.4991452991962433},
+        "wrist_side": {"pos": 0.33665215969085693, "tau": 0.17826618254184723},
+        "wrist": {"pos": -1.176279902458191, "tau": 0.9548229575157166}
+      },
+      "home_final_status": {
+        "elbow": {"pos": -1.2918668985366821, "tau": -0.3213675320148468},
+        "shoulder_front": {"pos": 0.8360036611557007, "tau": -0.03418803587555885},
+        "shoulder_side": {"pos": -2.8540093898773193, "tau": -0.047863248735666275},
+        "shoulder_rotate": {"pos": 2.380979537963867, "tau": -0.48547008633613586},
+        "wrist": {"pos": -2.0784695148468018, "tau": -0.017094017937779427},
+        "wrist_side": {"pos": 0.16918440163135529, "tau": -0.061050061136484146},
+        "arm_roll": {"pos": -2.660982608795166, "tau": 0.3076923191547394}
+      }
+    },
+    "status": "recommended_baseline"
+  },
+  "left_arm_v2_3": {
+    "file": "scripts/left_arm_v2_3.py",
+    "reason": "After v2.2, user wants table clearance to keep linked motion but avoid the shaking seen when arm_roll, wrist_side, and wrist start together after the shoulder group.",
+    "change": "v2.3 is copied from the stable v2.2 baseline. Clearance changes only the v2.2 shoulder group from shoulder_front+shoulder_side+elbow to shoulder_front+shoulder_side+elbow+arm_roll. All later joints, including wrist_side and wrist, keep v2.2 sequential behavior.",
+    "coupled_clearance_move_gains": {
+      "shoulder_front": {"kp": 75.0, "kd": 7.0},
+      "shoulder_side": {"kp": 60.0, "kd": 5.0},
+      "elbow": {"kp": 65.0, "kd": 6.5},
+      "arm_roll": {"kp": 18.0, "kd": 6.0}
+    },
+    "max_coupled_shoulder_seconds": 80.0,
+    "coupled_clearance_progress_windows": {
+      "arm_roll": [0.65, 1.0]
+    },
+    "execution_order": [
+      "default clearance phase 1: shoulder_front, shoulder_side, elbow, arm_roll coupled",
+      "remaining clearance joints keep v2.2 sequential behavior with holds"
+    ],
+    "first_orin_test": {
+      "clearance_command": "left_arm_v2_3.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "clearance_result": "failed_shake_during_coupled_wrist_group",
+      "home_command": "left_arm_v2_3.py home --deadband-deg 0.5 --max-delta-deg 120 --execute",
+      "home_result": "failed_shake_during_arm_roll_after_interrupted_clearance",
+      "recovery_command": "left_arm_v2_3.py restart --execute",
+      "recovery_result": "pass",
+      "observation": "Restart reduced velocities and torques after Ctrl+C. arm_roll was only about 2.2 deg from home but still shook when actively corrected."
+    },
+    "post_first_test_update": {
+      "fix": "Keep the coupled wrist group, but reduce its gains, increase damping, allow up to 80 seconds, add a 2 second preload hold before it starts, and make enable() idempotent so the second coupled phase does not re-enable all motors. arm_roll home gains were softened to kp=32 kd=4 seconds=8, and arm_roll uses a 3 deg home deadband to avoid small active corrections after interrupted clearance.",
+      "home_arm_roll_gains": {"kp": 32.0, "kd": 4.0, "seconds": 8.0},
+      "home_arm_roll_deadband_deg": 3.0,
+      "coupled_wrist_retest_gains": {
+        "arm_roll": {"kp": 26.0, "kd": 5.0},
+        "wrist_side": {"kp": 10.0, "kd": 2.2},
+        "wrist": {"kp": 10.0, "kd": 2.2}
+      },
+      "enable_behavior": "Within one command, enable() now skips motors that are already enabled to avoid a second enable/mode transition at the wrist-group handoff.",
+      "status": "implemented_pending_orin_test"
+    },
+    "second_orin_test": {
+      "clearance_command": "left_arm_v2_3.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "result": "failed_shake_during_coupled_wrist_group",
+      "observation": "enable() was idempotent and printed enable skip for the second coupled phase, so repeated enable was not the root cause. The wrist group still shook badly once arm_roll+wrist_side+wrist motion began.",
+      "fix": "After the shoulder/elbow coupled phase, v2.3 now reads the actual reached shoulder_front/shoulder_side/elbow positions and uses those reached positions as hold targets for the wrist group. During the wrist group, shoulder_front/shoulder_side/elbow use low base hold gains instead of strong clearance hold gains, reducing the chance that the wrist phase keeps forcing shoulder/elbow toward unreachable theoretical targets.",
+      "status": "implemented_pending_orin_test"
+    },
+    "third_orin_test": {
+      "clearance_command": "left_arm_v2_3.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "result": "failed_shake_during_arm_roll_wrist_side_wrist_group",
+      "observation": "Using actual reached shoulder/elbow positions and low base hold gains still did not remove shaking. Home after interruption was stable when arm_roll was skipped by the 3 deg deadband, and restart was successful.",
+      "fix": "Change clearance logic on top of the v2.2 clearance idea: arm_roll now moves with shoulder_front+shoulder_side+elbow in the first coupled phase. No wrist coupling remains; wrist_side and wrist keep v2.2 sequential behavior.",
+      "status": "implemented_pending_orin_test"
+    },
+    "four_joint_initial_test": {
+      "clearance_command": "left_arm_v2_3.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "result": "failed_shake_immediately_in_shoulder_front_shoulder_side_elbow_arm_roll_group",
+      "observation": "Direct four-joint coupled motion shook immediately when arm_roll started at the same time as shoulder_front, shoulder_side, and elbow.",
+      "fix": "Keep arm_roll in the first coupled phase, but delay arm_roll motion until 65% of the phase progress and soften arm_roll coupled gains to kp=18 kd=6.",
+      "status": "implemented_pending_orin_test"
+    },
+    "delayed_four_joint_clearance_test": {
+      "clearance_command": "left_arm_v2_3.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "clearance_result": "pass",
+      "observation": "Delayed arm_roll in the first coupled clearance phase completed without shaking. wrist_side and wrist then moved sequentially with v2.2 behavior.",
+      "home_command": "left_arm_v2_3.py home --deadband-deg 0.5 --max-delta-deg 120 --execute",
+      "home_result": "failed_shake_during_single_arm_roll_home",
+      "fix": "Home now also couples arm_roll with elbow+shoulder_front+shoulder_side, using kp=18 kd=6 and the same delayed arm_roll progress window [0.65, 1.0]. This should prevent the final single arm_roll home move that shook.",
+      "status": "implemented_pending_orin_test"
+    },
+    "verified_delayed_four_joint_clearance_home_pair": {
+      "clearance_command": "left_arm_v2_3.py clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "home_command": "left_arm_v2_3.py home --deadband-deg 0.5 --max-delta-deg 120 --execute",
+      "result": "pass",
+      "observation": "Clearance and home both completed without shaking. Clearance uses delayed shoulder_front+shoulder_side+elbow+arm_roll coupling, then wrist_side and wrist sequentially. Home uses delayed elbow+shoulder_front+shoulder_side+arm_roll coupling, then wrist and wrist_side sequentially.",
+      "clearance_final_status": {
+        "shoulder_front": {"pos": 1.8820096254348755, "tau": 3.876923084259033},
+        "shoulder_side": {"pos": -2.7403295040130615, "tau": 0.10256410390138626},
+        "elbow": {"pos": 0.273708701133728, "tau": 1.9213675260543823},
+        "shoulder_rotate": {"pos": 2.384413003921509, "tau": -0.1846153885126114},
+        "arm_roll": {"pos": -2.9512856006622314, "tau": -0.1846153885126114},
+        "wrist_side": {"pos": 0.33665215969085693, "tau": 0.17338217794895172},
+        "wrist": {"pos": -1.176279902458191, "tau": 0.9597069621086121}
+      },
+      "home_final_status": {
+        "elbow": {"pos": -1.2899595499038696, "tau": -0.4307692348957062},
+        "shoulder_front": {"pos": 0.8360036611557007, "tau": -0.03418803587555885},
+        "shoulder_side": {"pos": -2.852864980697632, "tau": -0.08888889104127884},
+        "shoulder_rotate": {"pos": 2.3924238681793213, "tau": -0.28034189343452454},
+        "wrist": {"pos": -2.0719845294952393, "tau": -0.13431014120578766},
+        "wrist_side": {"pos": 0.16918440163135529, "tau": -0.07570207864046097},
+        "arm_roll": {"pos": -2.660982608795166, "tau": 0.1846153885126114}
+      },
+      "status": "recommended_baseline"
+    },
+    "coupled_home_move_gains": {
+      "elbow": {"kp": 65.0, "kd": 6.5},
+      "shoulder_front": {"kp": 75.0, "kd": 7.0},
+      "shoulder_side": {"kp": 60.0, "kd": 5.0},
+      "arm_roll": {"kp": 18.0, "kd": 6.0}
+    },
+    "coupled_home_progress_windows": {
+      "arm_roll": [0.65, 1.0]
+    },
+    "shake_recovery_command": {
+      "command": "left_arm_v2_3.py restart --joints shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side,wrist --execute",
+      "behavior": "Reads status, disables selected motors, waits briefly, re-enables them, then holds the current positions with low gains before printing status again.",
+      "defaults": {
+        "off_seconds": 0.8,
+        "hold_seconds": 1.0,
+        "hold_kp": 2.0,
+        "hold_kd": 0.4
+      },
+      "safety": "restart is dry-run by default; add --execute only after interrupting the shaking motion."
+    },
+    "escape_hatch": "Use --no-coupled-shoulder-group to disable the shoulder/elbow/arm_roll group and use v2.2-style sequential clearance.",
+    "status": "recommended_baseline"
+  },
+  "table_clearance_controller_update": {
+    "reason": "Segmented clearance previously restarted each small move, causing shoulder_front to sag at every segment start and accumulate angle error.",
+    "fix": "clearance --step-deg now runs each joint as a continuous segmented trajectory and holds previously reached clearance joints during later joint moves.",
+    "parallel_fix": "clearance --parallel moves selected joints together on one continuous trajectory; use for coupled moves such as shoulder_front plus elbow.",
+    "status": "implemented_pending_orin_test"
+  },
+  "home_controller_update": {
+    "reason": "Returning from table clearance caused shaking because skipped or not-yet-active joints such as shoulder_rotate were not held while large elbow/shoulder_front moves ran.",
+    "fix": "home now separates active movement gains, strong hold gains, and low baseline hold gains. Active joints use HOME_GAINS; coupled/completed joints use HOME_HOLD_GAINS; all other non-active joints remain enabled with HOME_BASE_HOLD_GAINS at current position.",
+    "home_hold_gains": {
+      "wrist": {"kp": 18.0, "kd": 1.4},
+      "wrist_side": {"kp": 18.0, "kd": 1.4},
+      "arm_roll": {"kp": 32.0, "kd": 3.0},
+      "elbow": {"kp": 65.0, "kd": 4.5},
+      "shoulder_front": {"kp": 75.0, "kd": 5.0},
+      "shoulder_side": {"kp": 55.0, "kd": 3.5},
+      "shoulder_rotate": {"kp": 40.0, "kd": 3.5}
+    },
+    "home_base_hold_gains": {
+      "wrist": {"kp": 6.0, "kd": 0.8},
+      "wrist_side": {"kp": 6.0, "kd": 0.8},
+      "arm_roll": {"kp": 10.0, "kd": 2.0},
+      "elbow": {"kp": 20.0, "kd": 3.0},
+      "shoulder_front": {"kp": 25.0, "kd": 4.0},
+      "shoulder_side": {"kp": 16.0, "kd": 2.5},
+      "shoulder_rotate": {"kp": 10.0, "kd": 2.5}
+    },
+    "failed_before_fix": {
+      "command": "home --deadband-deg 0.5 --max-delta-deg 120 --execute",
+      "result": "failed_shake",
+      "observation": "clearance was stable, but home shook because skipped joints were still enabled and held with the original HOME_GAINS."
+    },
+    "status": "orin_test_passed",
+    "verified_after_fix": {
+      "command": "home --deadband-deg 0.5 --max-delta-deg 120 --execute",
+      "result": "pass",
+      "observation": "Home from table clearance no longer shakes with active/strong-hold/base-hold split.",
+      "final_status": {
+        "wrist": {"pos": -2.0712215900421143, "tau": -0.14896215498447418},
+        "wrist_side": {"pos": 0.16308079659938812, "tau": 0.05128205195069313},
+        "arm_roll": {"pos": -2.6606011390686035, "tau": 0.14358974993228912},
+        "elbow": {"pos": -1.2891966104507446, "tau": -0.48547008633613586},
+        "shoulder_front": {"pos": 0.8405813574790955, "tau": -0.3760683834552765},
+        "shoulder_side": {"pos": -2.852102041244507, "tau": -0.1846153885126114},
+        "shoulder_rotate": {"pos": 2.3668649196624756, "tau": -0.28034189343452454}
+      }
+    }
+  },
+  "table_clearance_hold_update": {
+    "reason": "During clearance, shoulder_front movement let elbow move freely because non-active joints were held with the same softer gains used for ordinary home/nudge motion.",
+    "fix": "clearance now separates active movement gains, strong hold gains, and low baseline hold gains. Active movement keeps the stronger gains that held elbow during shoulder_front motion; critical coupled joints and completed clearance joints use strong hold; all other non-active joints still remain enabled with low baseline hold at their current positions. Home keeps the original HOME_GAINS.",
+    "clearance_move_gains": {
+      "wrist": {"kp": 22.0, "kd": 1.4},
+      "wrist_side": {"kp": 22.0, "kd": 1.4},
+      "arm_roll": {"kp": 50.0, "kd": 3.0},
+      "elbow": {"kp": 95.0, "kd": 4.0},
+      "shoulder_front": {"kp": 110.0, "kd": 5.0},
+      "shoulder_side": {"kp": 80.0, "kd": 3.5},
+      "shoulder_rotate": {"kp": 70.0, "kd": 3.5}
+    },
+    "clearance_hold_gains": {
+      "wrist": {"kp": 18.0, "kd": 1.4},
+      "wrist_side": {"kp": 18.0, "kd": 1.4},
+      "arm_roll": {"kp": 35.0, "kd": 3.5},
+      "elbow": {"kp": 85.0, "kd": 5.5},
+      "shoulder_front": {"kp": 95.0, "kd": 6.0},
+      "shoulder_side": {"kp": 65.0, "kd": 4.5},
+      "shoulder_rotate": {"kp": 45.0, "kd": 4.5}
+    },
+    "clearance_base_hold_gains": {
+      "wrist": {"kp": 6.0, "kd": 0.8},
+      "wrist_side": {"kp": 6.0, "kd": 0.8},
+      "arm_roll": {"kp": 12.0, "kd": 2.0},
+      "elbow": {"kp": 25.0, "kd": 3.0},
+      "shoulder_front": {"kp": 30.0, "kd": 4.0},
+      "shoulder_side": {"kp": 18.0, "kd": 2.5},
+      "shoulder_rotate": {"kp": 12.0, "kd": 2.5}
+    },
+    "status": "orin_test_passed",
+    "verified_test": {
+      "command": "clearance --joints shoulder_front,elbow --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "result": "pass",
+      "observation": "Elbow held position while shoulder_front moved.",
+      "final_status": {
+        "shoulder_front": {"pos": 1.9449530839920044, "tau": 5.476922988891602},
+        "elbow": {"pos": 0.3236820101737976, "tau": 4.752136707305908}
+      }
+    },
+    "failed_full_clearance_before_split": {
+      "command": "clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "result": "failed_shake_after_full_sequence",
+      "observation": "Elbow held during shoulder_front motion, but full-arm clearance began shaking after later joints because all non-active joints were held for a long time with the stronger clearance gains.",
+      "final_status": {
+        "shoulder_front": {"pos": 1.9449530839920044, "tau": 5.463247776031494},
+        "shoulder_side": {"pos": -2.733081579208374, "tau": 1.0188034772872925},
+        "elbow": {"pos": 0.3263523280620575, "tau": 4.47863245010376},
+        "shoulder_rotate": {"pos": 2.365720510482788, "tau": -1.4290598630905151},
+        "arm_roll": {"pos": -2.9718852043151855, "tau": -0.1982906013727188},
+        "wrist_side": {"pos": 0.343900203704834, "tau": 0.07081807404756546},
+        "wrist": {"pos": -1.1797131299972534, "tau": 1.028083086013794}
+      }
+    },
+    "failed_full_clearance_with_all_joints_enabled": {
+      "command": "clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "result": "failed_shake_immediately_at_shoulder_front_step_1",
+      "observation": "Even after splitting move and hold gains, full-arm clearance shook immediately when all ordered joints were enabled at startup. Sequential clearance should only enable the active joint plus the minimum required hold joints.",
+      "fix": "Sequential clearance no longer enables all joints at startup. For each step it enables only the active joint and clearance_hold_targets_for(active)."
+    },
+    "rejected_minimal_hold_approach": {
+      "reason": "Keeping only the active joint and a small strong-hold set enabled leaves unrelated joints physically loose, which is unsafe for the full arm.",
+      "replacement": "All non-active joints are now held. Critical/completed joints use strong hold gains; unrelated joints use low baseline hold at current position."
+    },
+    "verified_full_clearance_after_fix": {
+      "command": "clearance --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "result": "pass",
+      "observation": "Full-arm clearance no longer shakes, and all non-active joints remain held.",
+      "final_status": {
+        "shoulder_front": {"pos": 1.9388494491577148, "tau": 5.340170860290527},
+        "shoulder_side": {"pos": -2.738422155380249, "tau": 1.1692308187484741},
+        "elbow": {"pos": 0.3244449496269226, "tau": 4.191452980041504},
+        "shoulder_rotate": {"pos": 2.358854055404663, "tau": -0.34871795773506165},
+        "arm_roll": {"pos": -2.9665446281433105, "tau": -0.4991452991962433},
+        "wrist_side": {"pos": 0.33665215969085693, "tau": 0.17338217794895172},
+        "wrist": {"pos": -1.205653429031372, "tau": 1.6092796325683594}
+      }
+    }
+  },
+  "table_clearance_bringup": {
+    "confirmed_safe_over_table": {
+      "created_at": "2026-08-07 16:55:45",
+      "note": "table clearance v2 confirmed safe over table",
+      "joints": {
+        "shoulder_front": 2.0563440322875977,
+        "shoulder_side": -2.7067596912384033,
+        "shoulder_rotate": 2.3584725856781006,
+        "elbow": 0.4369802474975586,
+        "arm_roll": -2.970740795135498,
+        "wrist_side": 0.35114824771881104,
+        "wrist": -1.0862516164779663
+      },
+      "result": "confirmed_by_visual_check"
+    },
+    "stage_1_shoulder_front_side": {
+      "command": "clearance --joints shoulder_front,shoulder_side --deadband-deg 0.5 --max-delta-deg 80 --step-deg 10 --execute",
+      "result": "pass_with_attention",
+      "final_status": {
+        "shoulder_front": {"pos": 1.962119460105896, "tau": 13.422222137451172},
+        "shoulder_side": {"pos": -2.7563514709472656, "tau": 1.3743590116500854}
+      },
+      "notes": [
+        "Shoulder_front did not reach final clearance target in one staged run and showed high transient torque.",
+        "User visually confirmed the arm could hold this short transition posture."
+      ]
+    },
+    "stage_2_elbow": {
+      "command": "clearance --joints elbow --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute",
+      "planned_steps": 21,
+      "target_rad": 0.5048828721046448,
+      "final_status": {
+        "shoulder_front": {"pos": 2.049858808517456, "tau": 5.517948627471924},
+        "shoulder_side": {"pos": -2.7494850158691406, "tau": 0.9094017148017883},
+        "elbow": {"pos": 0.438506156206131, "tau": 4.588034152984619}
+      },
+      "result": "pass",
+      "notes": [
+        "Elbow large move was split into 5 degree steps.",
+        "After elbow moved, shoulder_front torque dropped from about 13.4 to about 5.5.",
+        "User visually confirmed all joints looked normal."
+      ]
+    },
+    "stage_3_shoulder_front_elbow_finish_attempt": {
+      "command": "clearance --joints shoulder_front,elbow --deadband-deg 0.5 --max-delta-deg 8 --step-deg 4 --execute",
+      "target_rad": {
+        "shoulder_front": 2.11203932762146,
+        "elbow": 0.5048828721046448
+      },
+      "final_status": {
+        "shoulder_front": {"pos": 2.049858808517456, "tau": 5.517948627471924},
+        "shoulder_side": {"pos": -2.745288848876953, "tau": 0.5948718190193176},
+        "elbow": {"pos": 0.4377431869506836, "tau": 4.629059791564941}
+      },
+      "result": "stable_but_did_not_reach_original_target",
+      "notes": [
+        "Small finishing move did not further approach original clearance targets.",
+        "Do not keep forcing the original shoulder_front/elbow clearance angles; recapture the current stable posture as a safer table clearance if visually acceptable."
+      ]
+    },
+    "stage_4_shoulder_front_elbow_parallel_attempt": {
+      "command": "clearance --joints shoulder_front,elbow --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --parallel --execute",
+      "planned_steps": {
+        "shoulder_front": 15,
+        "elbow": 21
+      },
+      "total_seconds": 105.0,
+      "target_rad": {
+        "shoulder_front": 2.11203932762146,
+        "elbow": 0.5048828721046448
+      },
+      "final_status": {
+        "shoulder_front": {"pos": 2.049858808517456, "tau": 5.531623840332031},
+        "shoulder_side": {"pos": -2.852102041244507, "tau": -0.17094017565250397},
+        "elbow": {"pos": 0.4377431869506836, "tau": 4.642735004425049}
+      },
+      "result": "stable_but_did_not_reach_original_target",
+      "notes": [
+        "Parallel shoulder_front plus elbow removed the shoulder-front-first path issue but still settled at the same stable posture.",
+        "This points to insufficient clearance-specific gains/torque for the final few degrees, or an over-aggressive original clearance target."
+      ]
+    }
+  },
   "home_joints_rad": {
     "shoulder_front": 0.8363851308822632,
     "shoulder_side": -2.853627920150757,

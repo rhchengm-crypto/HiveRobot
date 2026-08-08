@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Clean left-arm bring-up controller.
+"""Clean left-arm bring-up controller v2.3.
 
 This v2 controller intentionally does not import or reuse the old
 left_arm_controller / teach_left_arm motion stack. It is for post-reassembly
 bring-up: read status, low-gain holds, capture a new home, small nudges, and
 low-gain home moves.
+
+v2.3 keeps the stable v2.2 clearance idea, but moves arm_roll with the
+shoulder/elbow group before the wrist joints move together.
 """
 
 from __future__ import annotations
@@ -15,7 +18,7 @@ import math
 import os
 import time
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import serial
 from DM_CAN import DM_Motor_Type, Motor, MotorControl
@@ -48,13 +51,13 @@ JOINTS = [
 
 DEFAULT_JOINTS = [spec.name for spec in JOINTS]
 DEFAULT_HOME_ORDER = [
-    "wrist",
-    "wrist_side",
-    "arm_roll",
     "elbow",
     "shoulder_front",
     "shoulder_side",
     "shoulder_rotate",
+    "wrist",
+    "wrist_side",
+    "arm_roll",
 ]
 
 DEFAULT_CLEARANCE_ORDER = [
@@ -81,7 +84,7 @@ HOME_GAINS = {
     "wrist": {"kp": 22.0, "kd": 1.4, "seconds": 5.0},
     "wrist_side": {"kp": 22.0, "kd": 1.4, "seconds": 5.0},
     "elbow": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
-    "arm_roll": {"kp": 45.0, "kd": 2.5, "seconds": 5.0},
+    "arm_roll": {"kp": 32.0, "kd": 4.0, "seconds": 8.0},
     "shoulder_front": {"kp": 90.0, "kd": 4.0, "seconds": 6.0},
     "shoulder_side": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
     "shoulder_rotate": {"kp": 60.0, "kd": 3.0, "seconds": 6.0},
@@ -94,7 +97,7 @@ HOME_HOLD_GAINS = {
     "elbow": {"kp": 65.0, "kd": 4.5},
     "shoulder_front": {"kp": 75.0, "kd": 5.0},
     "shoulder_side": {"kp": 55.0, "kd": 3.5},
-    "shoulder_rotate": {"kp": 40.0, "kd": 3.5},
+    "shoulder_rotate": {"kp": 24.0, "kd": 4.0},
 }
 
 HOME_BASE_HOLD_GAINS = {
@@ -107,6 +110,27 @@ HOME_BASE_HOLD_GAINS = {
     "shoulder_rotate": {"kp": 10.0, "kd": 2.5},
 }
 
+HOME_JOINT_DEADBANDS_DEG = {
+    "arm_roll": 3.0,
+    "shoulder_rotate": 2.0,
+}
+
+COUPLED_HOME_MOVE_GAINS = {
+    "elbow": {"kp": 65.0, "kd": 6.5},
+    "shoulder_front": {"kp": 75.0, "kd": 7.0},
+    "shoulder_side": {"kp": 60.0, "kd": 5.0},
+    "arm_roll": {"kp": 18.0, "kd": 6.0},
+}
+
+COUPLED_HOME_MAX_SECONDS = 80.0
+COUPLED_HOME_PROGRESS_WINDOWS = {
+    "arm_roll": (0.65, 1.0),
+}
+
+CLEARANCE_JOINT_DEADBANDS_DEG = {
+    "shoulder_rotate": 2.0,
+}
+
 CLEARANCE_MOVE_GAINS = {
     "wrist": {"kp": 22.0, "kd": 1.4},
     "wrist_side": {"kp": 22.0, "kd": 1.4},
@@ -115,6 +139,19 @@ CLEARANCE_MOVE_GAINS = {
     "shoulder_front": {"kp": 110.0, "kd": 5.0},
     "shoulder_side": {"kp": 80.0, "kd": 3.5},
     "shoulder_rotate": {"kp": 70.0, "kd": 3.5},
+}
+
+COUPLED_CLEARANCE_MOVE_GAINS = {
+    "shoulder_front": {"kp": 75.0, "kd": 7.0},
+    "shoulder_side": {"kp": 60.0, "kd": 5.0},
+    "elbow": {"kp": 65.0, "kd": 6.5},
+    "arm_roll": {"kp": 18.0, "kd": 6.0},
+}
+
+COUPLED_CLEARANCE_MAX_SECONDS = 80.0
+COUPLED_CLEARANCE_SETTLE_SECONDS = 0.5
+COUPLED_CLEARANCE_PROGRESS_WINDOWS = {
+    "arm_roll": (0.65, 1.0),
 }
 
 CLEARANCE_HOLD_GAINS = {
@@ -169,6 +206,7 @@ class LeftArmV2:
         self.ctrl = MotorControl(self.serial)
         self.specs = {spec.name: spec for spec in JOINTS}
         self.motors: Dict[str, Motor] = {}
+        self.enabled: set[str] = set()
         for spec in JOINTS:
             motor = Motor(spec.motor_type, spec.slave_id, spec.master_id)
             self.ctrl.addMotor(motor)
@@ -186,9 +224,49 @@ class LeftArmV2:
 
     def enable(self, names: Iterable[str]) -> None:
         for name in self.validate(names):
+            if name in self.enabled:
+                print("enable skip", name)
+                continue
             print("enable", name)
             self.ctrl.enable(self.motors[name])
+            self.enabled.add(name)
             time.sleep(0.05)
+
+    def disable(self, names: Iterable[str]) -> None:
+        disable_fn = (
+            getattr(self.ctrl, "disable", None)
+            or getattr(self.ctrl, "disableMotor", None)
+            or getattr(self.ctrl, "disable_motor", None)
+        )
+        if disable_fn is None:
+            raise RuntimeError("MotorControl does not expose disable/disableMotor/disable_motor; cannot restart motors safely.")
+        for name in self.validate(names):
+            print("disable", name)
+            disable_fn(self.motors[name])
+            self.enabled.discard(name)
+            time.sleep(0.05)
+
+    def restart_motors(
+        self,
+        names: Iterable[str],
+        off_seconds: float,
+        hold_seconds: float,
+        hold_kp: float,
+        hold_kd: float,
+    ) -> None:
+        names = self.validate(names)
+        print("v2.3 restart before:")
+        self.print_status(names)
+        self.disable(names)
+        time.sleep(off_seconds)
+        self.enable(names)
+        time.sleep(0.1)
+        if hold_seconds > 0:
+            targets = self.positions(names)
+            print("v2.3 restart hold current positions seconds=", hold_seconds, "kp=", hold_kp, "kd=", hold_kd)
+            self.hold_positions(targets, seconds=hold_seconds, kp=hold_kp, kd=hold_kd)
+        print("v2.3 restart after:")
+        self.print_status(names)
 
     def read_status(self, names: Iterable[str]) -> Dict[str, Dict[str, float]]:
         names = self.validate(names)
@@ -365,6 +443,95 @@ class LeftArmV2:
                 self.ctrl.controlMIT(self.motors[hold_name], joint_kp, joint_kd, hold_target, 0, 0)
             time.sleep(0.02)
 
+    def move_targets_with_holds(
+        self,
+        targets: Dict[str, float],
+        seconds_per_step: float,
+        move_gains: Dict[str, Dict[str, float]],
+        hold_targets: Dict[str, float],
+        hold_gains: Dict[str, Dict[str, float]],
+        fallback_kp: float,
+        fallback_kd: float,
+        step_deg: float = 0.0,
+        preload_seconds: float = 0.2,
+        progress_windows: Optional[Dict[str, Tuple[float, float]]] = None,
+    ) -> None:
+        active_names = self.validate(targets.keys())
+        self.validate(list(hold_targets.keys()))
+        starts = self.positions(active_names)
+        progress_windows = progress_windows or {}
+
+        if step_deg > 0:
+            steps = max(
+                int(math.ceil(abs(math.degrees(targets[name] - starts[name])) / step_deg))
+                for name in active_names
+            )
+        else:
+            steps = 1
+        steps = max(1, steps)
+
+        preload_targets = dict(hold_targets)
+        preload_targets.update(starts)
+        start_time = time.time()
+        while time.time() - start_time < preload_seconds:
+            for name, target in preload_targets.items():
+                if name in starts:
+                    gains = move_gains.get(name, {})
+                else:
+                    gains = hold_gains.get(name, {})
+                kp = gains.get("kp", fallback_kp)
+                kd = gains.get("kd", fallback_kd)
+                self.ctrl.controlMIT(self.motors[name], kp, kd, target, 0, 0)
+            time.sleep(0.02)
+
+        previous = dict(starts)
+        for step in range(1, steps + 1):
+            intermediates = {
+                name: starts[name] + (targets[name] - starts[name]) * (step / steps)
+                for name in active_names
+            }
+            print(
+                "v2.2 continuous group step",
+                ",".join(active_names),
+                f"{step}/{steps}",
+                "targets=",
+                json.dumps(intermediates, ensure_ascii=False),
+            )
+            step_start = time.time()
+            while time.time() - step_start < seconds_per_step:
+                t = (time.time() - step_start) / max(seconds_per_step, 1e-6)
+                s = smoothstep(t)
+                for name in active_names:
+                    gains = move_gains.get(name, {})
+                    kp = gains.get("kp", fallback_kp)
+                    kd = gains.get("kd", fallback_kd)
+                    window_start, window_end = progress_windows.get(name, (0.0, 1.0))
+                    local_s = (s - window_start) / max(window_end - window_start, 1e-6)
+                    local_s = smoothstep(local_s)
+                    target = previous[name] * (1.0 - local_s) + intermediates[name] * local_s
+                    self.ctrl.controlMIT(self.motors[name], kp, kd, target, 0, 0)
+                for hold_name, hold_target in hold_targets.items():
+                    gains = hold_gains.get(hold_name, {})
+                    kp = gains.get("kp", fallback_kp)
+                    kd = gains.get("kd", fallback_kd)
+                    self.ctrl.controlMIT(self.motors[hold_name], kp, kd, hold_target, 0, 0)
+                time.sleep(0.02)
+            previous = intermediates
+
+        final_targets = dict(hold_targets)
+        final_targets.update(targets)
+        start_time = time.time()
+        while time.time() - start_time < 0.5:
+            for name, target in final_targets.items():
+                if name in targets:
+                    gains = move_gains.get(name, {})
+                else:
+                    gains = hold_gains.get(name, {})
+                kp = gains.get("kp", fallback_kp)
+                kd = gains.get("kd", fallback_kd)
+                self.ctrl.controlMIT(self.motors[name], kp, kd, target, 0, 0)
+            time.sleep(0.02)
+
 
 def load_home(path: str = HOME_PATH) -> Dict[str, float]:
     with open(path, "r", encoding="utf-8") as f:
@@ -483,6 +650,14 @@ def build_parser() -> argparse.ArgumentParser:
     status = sub.add_parser("status")
     status.add_argument("--joints", default=common)
 
+    restart = sub.add_parser("restart", help="Disable and re-enable selected motors after shaking.")
+    restart.add_argument("--joints", default=common)
+    restart.add_argument("--off-seconds", type=float, default=0.8)
+    restart.add_argument("--hold-seconds", type=float, default=1.0)
+    restart.add_argument("--hold-kp", type=float, default=2.0)
+    restart.add_argument("--hold-kd", type=float, default=0.4)
+    restart.add_argument("--execute", action="store_true")
+
     hold = sub.add_parser("hold")
     hold.add_argument("--joints", default=common)
     hold.add_argument("--seconds", type=float, default=10.0)
@@ -561,6 +736,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Move selected clearance joints together on one continuous trajectory.",
     )
     clearance.add_argument(
+        "--no-coupled-shoulder-group",
+        dest="coupled_shoulder_group",
+        action="store_false",
+        default=True,
+        help="Disable v2.2 coupled shoulder_front/shoulder_side/elbow clearance move and use sequential v2 behavior.",
+    )
+    clearance.add_argument(
         "--auto-gains",
         dest="auto_gains",
         action="store_true",
@@ -595,6 +777,22 @@ def main() -> None:
 
         if args.cmd == "status":
             arm.print_status(parse_joints(args.joints))
+            return
+
+        if args.cmd == "restart":
+            joints = parse_joints(args.joints)
+            arm.validate(joints)
+            if not args.execute:
+                print("dry run only. Add --execute to disable and re-enable motors.")
+                arm.print_status(joints)
+                return
+            arm.restart_motors(
+                joints,
+                off_seconds=args.off_seconds,
+                hold_seconds=args.hold_seconds,
+                hold_kp=args.hold_kp,
+                hold_kd=args.hold_kd,
+            )
             return
 
         if args.cmd == "hold":
@@ -667,8 +865,9 @@ def main() -> None:
             targets: Dict[str, float] = {}
             for name in ordered:
                 delta_deg = math.degrees(home[name] - current[name])
-                if abs(delta_deg) <= args.deadband_deg:
-                    print("v2 home skip", name, "delta_deg=", delta_deg)
+                deadband_deg = max(args.deadband_deg, HOME_JOINT_DEADBANDS_DEG.get(name, args.deadband_deg))
+                if abs(delta_deg) <= deadband_deg:
+                    print("v2 home skip", name, "delta_deg=", delta_deg, "deadband_deg=", deadband_deg)
                     continue
                 if abs(delta_deg) > args.max_delta_deg:
                     raise RuntimeError(
@@ -690,6 +889,50 @@ def main() -> None:
             completed_targets: Dict[str, float] = {}
             for name in ordered:
                 if name not in targets:
+                    continue
+                if name in completed_targets:
+                    continue
+                if name == "elbow" and "shoulder_front" in targets and "shoulder_side" in targets:
+                    group_names = ["elbow", "shoulder_front", "shoulder_side"]
+                    if "arm_roll" in targets:
+                        group_names.append("arm_roll")
+                    group_targets = {group_name: targets[group_name] for group_name in group_names}
+                    raw_seconds = max(HOME_GAINS.get(group_name, {"seconds": args.seconds})["seconds"] for group_name in group_names)
+                    coupled_seconds = min(raw_seconds * 4.0, COUPLED_HOME_MAX_SECONDS)
+                    hold_targets = {}
+                    hold_gains = {}
+                    for hold_name in ordered:
+                        if hold_name in group_names:
+                            continue
+                        hold_targets[hold_name] = current[hold_name]
+                        hold_gains[hold_name] = HOME_BASE_HOLD_GAINS.get(hold_name, {"kp": args.kp, "kd": args.kd})
+                    move_gains = {
+                        group_name: COUPLED_HOME_MOVE_GAINS.get(group_name, HOME_GAINS.get(group_name, {"kp": args.kp, "kd": args.kd}))
+                        for group_name in group_names
+                    }
+                    print(
+                        "v2.3 home coupled shoulder/roll active",
+                        ",".join(group_names),
+                        "hold joints:",
+                        ", ".join(hold_targets.keys()),
+                    )
+                    for group_name in group_names:
+                        gains = move_gains[group_name]
+                        print("v2.3 home coupled shoulder/roll gains", group_name, "kp=", gains["kp"], "kd=", gains["kd"], "seconds=", coupled_seconds)
+                    print("v2.3 home coupled shoulder/roll progress windows=", json.dumps(COUPLED_HOME_PROGRESS_WINDOWS, ensure_ascii=False))
+                    arm.enable(group_names + list(hold_targets.keys()))
+                    arm.move_targets_with_holds(
+                        group_targets,
+                        seconds_per_step=coupled_seconds,
+                        move_gains=move_gains,
+                        hold_targets=hold_targets,
+                        hold_gains=hold_gains,
+                        fallback_kp=args.kp,
+                        fallback_kd=args.kd,
+                        step_deg=0.0,
+                        progress_windows=COUPLED_HOME_PROGRESS_WINDOWS,
+                    )
+                    completed_targets.update(group_targets)
                     continue
                 if args.auto_gains:
                     gains = HOME_GAINS.get(name, {"kp": args.kp, "kd": args.kd, "seconds": args.seconds})
@@ -728,8 +971,9 @@ def main() -> None:
             deltas_deg: Dict[str, float] = {}
             for name in ordered:
                 delta_deg = math.degrees(clearance[name] - current[name])
-                if abs(delta_deg) <= args.deadband_deg:
-                    print("v2 clearance skip", name, "delta_deg=", delta_deg)
+                deadband_deg = max(args.deadband_deg, CLEARANCE_JOINT_DEADBANDS_DEG.get(name, args.deadband_deg))
+                if abs(delta_deg) <= deadband_deg:
+                    print("v2 clearance skip", name, "delta_deg=", delta_deg, "deadband_deg=", deadband_deg)
                     continue
                 if abs(delta_deg) > args.max_delta_deg:
                     raise RuntimeError(
@@ -789,6 +1033,76 @@ def main() -> None:
             completed_targets: Dict[str, float] = {}
             for name in ordered:
                 if name not in targets:
+                    continue
+                if name in completed_targets:
+                    continue
+                if (
+                    args.coupled_shoulder_group
+                    and name == "shoulder_front"
+                    and "shoulder_side" in targets
+                    and "elbow" in targets
+                ):
+                    group_names = ["shoulder_front", "shoulder_side", "elbow"]
+                    if "arm_roll" in targets:
+                        group_names.append("arm_roll")
+                    group_targets = {group_name: targets[group_name] for group_name in group_names}
+                    seconds = max(HOME_GAINS.get(group_name, {"seconds": args.seconds})["seconds"] for group_name in group_names)
+                    if args.step_deg > 0:
+                        coupled_steps = max(
+                            int(math.ceil(abs(math.degrees(group_targets[group_name] - current[group_name])) / args.step_deg))
+                            for group_name in group_names
+                        )
+                    else:
+                        coupled_steps = 1
+                    raw_coupled_seconds = seconds * max(1, coupled_steps)
+                    coupled_seconds = min(raw_coupled_seconds, COUPLED_CLEARANCE_MAX_SECONDS)
+                    hold_targets, hold_gains = clearance_hold_plan_for(
+                        "shoulder_front",
+                        ordered,
+                        current,
+                        completed_targets,
+                    )
+                    for group_name in group_names:
+                        hold_targets.pop(group_name, None)
+                        hold_gains.pop(group_name, None)
+                    move_gains = {
+                        group_name: COUPLED_CLEARANCE_MOVE_GAINS.get(group_name, CLEARANCE_MOVE_GAINS.get(group_name, {"kp": args.kp, "kd": args.kd}))
+                        for group_name in group_names
+                    }
+                    print(
+                        "v2.3 clearance coupled shoulder/roll active",
+                        ",".join(group_names),
+                        "hold joints:",
+                        ", ".join(hold_targets.keys()),
+                    )
+                    for group_name in group_names:
+                        gains = move_gains[group_name]
+                        print("v2.3 clearance coupled shoulder/roll gains", group_name, "kp=", gains["kp"], "kd=", gains["kd"], "seconds=", coupled_seconds)
+                    print(
+                        "v2.3 clearance coupled shoulder/roll continuous interpolation steps_removed=",
+                        coupled_steps,
+                        "raw_seconds=",
+                        raw_coupled_seconds,
+                        "used_seconds=",
+                        coupled_seconds,
+                    )
+                    print("v2.3 clearance coupled shoulder/roll progress windows=", json.dumps(COUPLED_CLEARANCE_PROGRESS_WINDOWS, ensure_ascii=False))
+                    arm.enable(group_names + list(hold_targets.keys()))
+                    arm.move_targets_with_holds(
+                        group_targets,
+                        seconds_per_step=coupled_seconds,
+                        move_gains=move_gains,
+                        hold_targets=hold_targets,
+                        hold_gains=hold_gains,
+                        fallback_kp=args.kp,
+                        fallback_kd=args.kd,
+                        step_deg=0.0,
+                        progress_windows=COUPLED_CLEARANCE_PROGRESS_WINDOWS,
+                    )
+                    time.sleep(COUPLED_CLEARANCE_SETTLE_SECONDS)
+                    reached = arm.positions(group_names)
+                    completed_targets.update(reached)
+                    print("v2.3 clearance coupled shoulder/roll reached=", json.dumps(reached, ensure_ascii=False))
                     continue
                 if args.auto_gains:
                     gains = CLEARANCE_MOVE_GAINS.get(name, {"kp": args.kp, "kd": args.kd})
