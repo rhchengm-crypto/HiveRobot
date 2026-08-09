@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Clean left-arm bring-up controller v2.3.
+"""Clean left-arm bring-up controller v2.4.
 
 This v2 controller intentionally does not import or reuse the old
 left_arm_controller / teach_left_arm motion stack. It is for post-reassembly
 bring-up: read status, low-gain holds, capture a new home, small nudges, and
 low-gain home moves.
 
-v2.3 keeps the stable v2.2 clearance idea, but moves arm_roll with the
-shoulder/elbow group before the wrist joints move together.
+v2.4 keeps the stable v2.3 clearance/home motion layout and starts tuning
+the shoulder_front hold feedforward to reduce sag during later phases.
 """
 
 from __future__ import annotations
@@ -143,7 +143,7 @@ CLEARANCE_JOINT_DEADBANDS_DEG = {
 }
 
 CLEARANCE_MOVE_GAINS = {
-    "wrist": {"kp": 10.0, "kd": 3.0},
+    "wrist": {"kp": 24.0, "kd": 4.4},
     "wrist_side": {"kp": 22.0, "kd": 1.4},
     "arm_roll": {"kp": 50.0, "kd": 3.0},
     "elbow": {"kp": 95.0, "kd": 4.0},
@@ -165,13 +165,13 @@ CLEARANCE_VELOCITY_FF_JOINTS = {
 }
 
 COUPLED_CLEARANCE_MOVE_GAINS = {
-    "shoulder_front": {"kp": 75.0, "kd": 7.0},
+    "shoulder_front": {"kp": 88.0, "kd": 8.0},
     "shoulder_side": {"kp": 60.0, "kd": 5.0},
     "elbow": {"kp": 65.0, "kd": 6.5},
     "arm_roll": {"kp": 18.0, "kd": 6.0},
 }
 
-COUPLED_CLEARANCE_MAX_SECONDS = 80.0
+COUPLED_CLEARANCE_MAX_SECONDS = 48.0
 COUPLED_CLEARANCE_SETTLE_SECONDS = 0.5
 COUPLED_CLEARANCE_PROGRESS_WINDOWS = {
     "arm_roll": (0.65, 1.0),
@@ -182,7 +182,7 @@ CLEARANCE_HOLD_GAINS = {
     "wrist_side": {"kp": 18.0, "kd": 1.4},
     "arm_roll": {"kp": 26.0, "kd": 5.0},
     "elbow": {"kp": 92.0, "kd": 6.2},
-    "shoulder_front": {"kp": 105.0, "kd": 7.0},
+    "shoulder_front": {"kp": 115.0, "kd": 8.0},
     "shoulder_side": {"kp": 70.0, "kd": 5.0},
     "shoulder_rotate": {"kp": 45.0, "kd": 4.5},
 }
@@ -197,7 +197,15 @@ CLEARANCE_COMPLIANT_HOLDS_BY_ACTIVE = {
 }
 
 CLEARANCE_JOINT_HOLD_TAU = {
-    "shoulder_front": 1.2,
+    "shoulder_front": 2.5,
+}
+
+CLEARANCE_WRIST_FINE_DEADBAND_DEG = 1.0
+CLEARANCE_WRIST_FINE_MAX_BIAS_DEG = 1.5
+CLEARANCE_WRIST_FINE_GAINS = {
+    "kp": 28.0,
+    "kd": 5.0,
+    "seconds": 4.0,
 }
 
 CLEARANCE_BASE_HOLD_GAINS = {
@@ -301,7 +309,7 @@ class LeftArmV2:
         hold_kd: float,
     ) -> None:
         names = self.validate(names)
-        print("v2.3 restart before:")
+        print("v2.4 restart before:")
         self.print_status(names)
         self.disable(names)
         time.sleep(off_seconds)
@@ -309,9 +317,9 @@ class LeftArmV2:
         time.sleep(0.1)
         if hold_seconds > 0:
             targets = self.positions(names)
-            print("v2.3 restart hold current positions seconds=", hold_seconds, "kp=", hold_kp, "kd=", hold_kd)
+            print("v2.4 restart hold current positions seconds=", hold_seconds, "kp=", hold_kp, "kd=", hold_kd)
             self.hold_positions(targets, seconds=hold_seconds, kp=hold_kp, kd=hold_kd)
-        print("v2.3 restart after:")
+        print("v2.4 restart after:")
         self.print_status(names)
 
     def read_status(self, names: Iterable[str]) -> Dict[str, Dict[str, float]]:
@@ -995,15 +1003,15 @@ def main() -> None:
                         for group_name in group_names
                     }
                     print(
-                        "v2.3 home coupled shoulder/roll active",
+                        "v2.4 home coupled shoulder/roll active",
                         ",".join(group_names),
                         "hold joints:",
                         ", ".join(hold_targets.keys()),
                     )
                     for group_name in group_names:
                         gains = move_gains[group_name]
-                        print("v2.3 home coupled shoulder/roll gains", group_name, "kp=", gains["kp"], "kd=", gains["kd"], "seconds=", coupled_seconds)
-                    print("v2.3 home coupled shoulder/roll progress windows=", json.dumps(COUPLED_HOME_PROGRESS_WINDOWS, ensure_ascii=False))
+                        print("v2.4 home coupled shoulder/roll gains", group_name, "kp=", gains["kp"], "kd=", gains["kd"], "seconds=", coupled_seconds)
+                    print("v2.4 home coupled shoulder/roll progress windows=", json.dumps(COUPLED_HOME_PROGRESS_WINDOWS, ensure_ascii=False))
                     arm.enable(group_names + list(hold_targets.keys()))
                     arm.move_targets_with_holds(
                         group_targets,
@@ -1157,23 +1165,23 @@ def main() -> None:
                         for group_name in group_names
                     }
                     print(
-                        "v2.3 clearance coupled shoulder/roll active",
+                        "v2.4 clearance coupled shoulder/roll active",
                         ",".join(group_names),
                         "hold joints:",
                         ", ".join(hold_targets.keys()),
                     )
                     for group_name in group_names:
                         gains = move_gains[group_name]
-                        print("v2.3 clearance coupled shoulder/roll gains", group_name, "kp=", gains["kp"], "kd=", gains["kd"], "seconds=", coupled_seconds)
+                        print("v2.4 clearance coupled shoulder/roll gains", group_name, "kp=", gains["kp"], "kd=", gains["kd"], "seconds=", coupled_seconds)
                     print(
-                        "v2.3 clearance coupled shoulder/roll continuous interpolation steps_removed=",
+                        "v2.4 clearance coupled shoulder/roll continuous interpolation steps_removed=",
                         coupled_steps,
                         "raw_seconds=",
                         raw_coupled_seconds,
                         "used_seconds=",
                         coupled_seconds,
                     )
-                    print("v2.3 clearance coupled shoulder/roll progress windows=", json.dumps(COUPLED_CLEARANCE_PROGRESS_WINDOWS, ensure_ascii=False))
+                    print("v2.4 clearance coupled shoulder/roll progress windows=", json.dumps(COUPLED_CLEARANCE_PROGRESS_WINDOWS, ensure_ascii=False))
                     arm.enable(group_names + list(hold_targets.keys()))
                     arm.move_targets_with_holds(
                         group_targets,
@@ -1189,8 +1197,8 @@ def main() -> None:
                     )
                     time.sleep(COUPLED_CLEARANCE_SETTLE_SECONDS)
                     reached = arm.positions(group_names)
-                    completed_targets.update(reached)
-                    print("v2.3 clearance coupled shoulder/roll reached=", json.dumps(reached, ensure_ascii=False))
+                    completed_targets.update(group_targets)
+                    print("v2.4 clearance coupled shoulder/roll reached=", json.dumps(reached, ensure_ascii=False))
                     continue
                 if args.auto_gains:
                     gains = CLEARANCE_MOVE_GAINS.get(name, {"kp": args.kp, "kd": args.kd})
@@ -1222,6 +1230,51 @@ def main() -> None:
                     active_velocity_ff=name in CLEARANCE_VELOCITY_FF_JOINTS,
                     step_deg=0.0 if name in CLEARANCE_CONTINUOUS_JOINTS else args.step_deg,
                 )
+                if name == "wrist":
+                    wrist_pos = arm.positions([name])[name]
+                    wrist_delta_deg = math.degrees(targets[name] - wrist_pos)
+                    if abs(wrist_delta_deg) > CLEARANCE_WRIST_FINE_DEADBAND_DEG:
+                        fine = CLEARANCE_WRIST_FINE_GAINS
+                        fine_bias_deg = max(
+                            -CLEARANCE_WRIST_FINE_MAX_BIAS_DEG,
+                            min(CLEARANCE_WRIST_FINE_MAX_BIAS_DEG, wrist_delta_deg),
+                        )
+                        fine_target = targets[name] + math.radians(fine_bias_deg)
+                        print(
+                            "v2.4 clearance wrist fine target delta_deg=",
+                            wrist_delta_deg,
+                            "bias_deg=",
+                            fine_bias_deg,
+                            "target=",
+                            fine_target,
+                            "kp=",
+                            fine["kp"],
+                            "kd=",
+                            fine["kd"],
+                            "seconds=",
+                            fine["seconds"],
+                        )
+                        arm.move_target_with_holds(
+                            name,
+                            fine_target,
+                            seconds_per_step=fine["seconds"],
+                            kp=fine["kp"],
+                            kd=fine["kd"],
+                            hold_targets=hold_targets,
+                            hold_gains=hold_gains,
+                            fallback_kp=args.kp,
+                            fallback_kd=args.kd,
+                            hold_tau=CLEARANCE_JOINT_HOLD_TAU,
+                            active_velocity_ff=False,
+                            step_deg=0.0,
+                        )
+                    else:
+                        print(
+                            "v2.4 clearance wrist fine skip delta_deg=",
+                            wrist_delta_deg,
+                            "deadband_deg=",
+                            CLEARANCE_WRIST_FINE_DEADBAND_DEG,
+                        )
                 completed_targets[name] = targets[name]
             arm.print_status(ordered)
             return
