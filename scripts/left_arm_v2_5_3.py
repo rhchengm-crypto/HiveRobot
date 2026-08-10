@@ -96,7 +96,7 @@ HOME_HOLD_GAINS = {
     "arm_roll": {"kp": 32.0, "kd": 3.0},
     "elbow": {"kp": 65.0, "kd": 4.5},
     "shoulder_front": {"kp": 75.0, "kd": 5.0},
-    "shoulder_side": {"kp": 55.0, "kd": 3.5},
+    "shoulder_side": {"kp": 65.0, "kd": 4.5},
     "shoulder_rotate": {"kp": 24.0, "kd": 4.0},
 }
 
@@ -129,13 +129,25 @@ HOME_COMPLIANT_HOLDS_BY_ACTIVE = {
 COUPLED_HOME_MOVE_GAINS = {
     "elbow": {"kp": 65.0, "kd": 6.5},
     "shoulder_front": {"kp": 75.0, "kd": 7.0},
-    "shoulder_side": {"kp": 60.0, "kd": 5.0},
+    "shoulder_side": {"kp": 65.0, "kd": 4.5},
     "arm_roll": {"kp": 18.0, "kd": 6.0},
+    "wrist_side": {"kp": 16.0, "kd": 2.2},
+    "wrist": {"kp": 22.0, "kd": 1.4},
 }
 
-COUPLED_HOME_MAX_SECONDS = 80.0
+COUPLED_HOME_MAX_SECONDS = 16.0
+COUPLED_HOME_CONTROL_DT = 0.01
+COUPLED_HOME_TRAJECTORY = "blend_smootherstep"
+COUPLED_HOME_LINEAR_BLEND = 0.35
+COUPLED_HOME_COMMAND_BIAS_DEG = {
+    "shoulder_side": 1.0,
+}
 COUPLED_HOME_PROGRESS_WINDOWS = {
     "arm_roll": (0.65, 1.0),
+    "wrist": (0.35, 1.0),
+}
+COUPLED_HOME_PRE_WINDOW_GAINS = {
+    "wrist": {"kp": 6.0, "kd": 0.8},
 }
 
 CLEARANCE_JOINT_DEADBANDS_DEG = {
@@ -871,6 +883,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Use verified per-joint nudge gains instead of uniform --kp/--kd.",
     )
 
+    nudge_hold = sub.add_parser("nudge-hold")
+    nudge_hold.add_argument("--joint", required=True)
+    nudge_hold.add_argument("--deg", type=float, required=True)
+    nudge_hold.add_argument("--seconds", type=float, default=2.0)
+    nudge_hold.add_argument("--kp", type=float, default=3.0)
+    nudge_hold.add_argument("--kd", type=float, default=0.3)
+    nudge_hold.add_argument("--max-deg", type=float, default=5.0)
+    nudge_hold.add_argument("--hold-joints", default=common)
+    nudge_hold.add_argument("--auto-gains", action="store_true")
+
     home = sub.add_parser("home")
     home.add_argument("--joints", default=",".join(DEFAULT_HOME_ORDER))
     home.add_argument("--home-file", default=HOME_PATH)
@@ -1036,6 +1058,75 @@ def main() -> None:
             arm.print_status(joints)
             return
 
+        if args.cmd == "nudge-hold":
+            if abs(args.deg) > args.max_deg:
+                raise ValueError(f"nudge deg exceeds --max-deg {args.max_deg}")
+            joints = parse_joints(args.joint)
+            if len(joints) != 1:
+                raise ValueError("nudge-hold expects exactly one --joint")
+            name = joints[0]
+            hold_names = [joint for joint in parse_joints(args.hold_joints) if joint != name]
+            arm.validate([name] + hold_names)
+            all_names = [name] + hold_names
+            arm.enable(all_names)
+            current = arm.positions(all_names)
+            target = current[name] + math.radians(args.deg)
+            if args.auto_gains:
+                if name == "wrist":
+                    active_gains = COUPLED_CLEARANCE_WRIST_FINE_GAINS
+                elif name == "wrist_side":
+                    active_gains = CLEARANCE_HOLD_GAINS["wrist_side"]
+                else:
+                    active_gains = NUDGE_GAINS.get(name, {"kp": args.kp, "kd": args.kd})
+                kp = active_gains["kp"]
+                kd = active_gains["kd"]
+                if name == "wrist":
+                    args.seconds = max(args.seconds, COUPLED_CLEARANCE_WRIST_FINE_GAINS["seconds"])
+            else:
+                kp = args.kp
+                kd = args.kd
+            hold_targets = {joint: current[joint] for joint in hold_names}
+            hold_gains = {
+                joint: CLEARANCE_HOLD_GAINS.get(
+                    joint,
+                    CLEARANCE_BASE_HOLD_GAINS.get(joint, NUDGE_GAINS.get(joint, {"kp": args.kp, "kd": args.kd})),
+                )
+                for joint in hold_names
+            }
+            for compliant_name in CLEARANCE_COMPLIANT_HOLDS_BY_ACTIVE.get(name, set()):
+                if compliant_name in hold_gains:
+                    hold_gains[compliant_name] = CLEARANCE_COMPLIANT_HOLD_GAINS[compliant_name]
+            print(
+                "v2.5.3 nudge-hold active",
+                name,
+                "delta_deg=",
+                args.deg,
+                "kp=",
+                kp,
+                "kd=",
+                kd,
+                "seconds=",
+                args.seconds,
+                "hold joints:",
+                ",".join(hold_names),
+            )
+            print(json.dumps({"start": current, "target": {name: target}, "hold_targets": hold_targets}, ensure_ascii=False, indent=2))
+            arm.move_target_with_holds(
+                name,
+                target,
+                seconds_per_step=args.seconds,
+                kp=kp,
+                kd=kd,
+                hold_targets=hold_targets,
+                hold_gains=hold_gains,
+                fallback_kp=args.kp,
+                fallback_kd=args.kd,
+                hold_tau=CLEARANCE_JOINT_HOLD_TAU,
+                step_deg=0.0,
+            )
+            arm.print_status(all_names)
+            return
+
         if args.cmd == "home":
             home = load_home(args.home_file)
             ordered = [name for name in parse_joints(args.joints) if name in home]
@@ -1074,7 +1165,19 @@ def main() -> None:
                     group_names = ["elbow", "shoulder_front", "shoulder_side"]
                     if "arm_roll" in targets:
                         group_names.append("arm_roll")
+                    if "wrist_side" in targets:
+                        group_names.append("wrist_side")
+                    if "wrist" in targets:
+                        group_names.append("wrist")
                     group_targets = {group_name: targets[group_name] for group_name in group_names}
+                    command_targets = dict(group_targets)
+                    command_bias = {
+                        group_name: math.radians(COUPLED_HOME_COMMAND_BIAS_DEG[group_name])
+                        for group_name in group_names
+                        if group_name in COUPLED_HOME_COMMAND_BIAS_DEG
+                    }
+                    for group_name, bias_rad in command_bias.items():
+                        command_targets[group_name] += bias_rad
                     raw_seconds = max(HOME_GAINS.get(group_name, {"seconds": args.seconds})["seconds"] for group_name in group_names)
                     coupled_seconds = min(raw_seconds * 4.0, COUPLED_HOME_MAX_SECONDS)
                     hold_targets = {}
@@ -1089,18 +1192,29 @@ def main() -> None:
                         for group_name in group_names
                     }
                     print(
-                        "v2.5.3 home coupled shoulder/roll active",
+                        "v2.5.3 home coupled shoulder/roll/wrist active",
                         ",".join(group_names),
                         "hold joints:",
                         ", ".join(hold_targets.keys()),
                     )
                     for group_name in group_names:
                         gains = move_gains[group_name]
-                        print("v2.5.3 home coupled shoulder/roll gains", group_name, "kp=", gains["kp"], "kd=", gains["kd"], "seconds=", coupled_seconds)
-                    print("v2.5.3 home coupled shoulder/roll progress windows=", json.dumps(COUPLED_HOME_PROGRESS_WINDOWS, ensure_ascii=False))
+                        print("v2.5.3 home coupled shoulder/roll/wrist gains", group_name, "kp=", gains["kp"], "kd=", gains["kd"], "seconds=", coupled_seconds)
+                    print("v2.5.3 home coupled shoulder/roll/wrist progress windows=", json.dumps(COUPLED_HOME_PROGRESS_WINDOWS, ensure_ascii=False))
+                    if COUPLED_HOME_PRE_WINDOW_GAINS:
+                        print("v2.5.3 home coupled shoulder/roll/wrist pre-window gains=", json.dumps(COUPLED_HOME_PRE_WINDOW_GAINS, ensure_ascii=False))
+                    if command_bias:
+                        print(
+                            "v2.5.3 home coupled shoulder/roll/wrist command bias deg=",
+                            json.dumps({name: COUPLED_HOME_COMMAND_BIAS_DEG[name] for name in command_bias}, ensure_ascii=False),
+                        )
+                    print("v2.5.3 home coupled shoulder/roll/wrist control_dt=", COUPLED_HOME_CONTROL_DT)
+                    print("v2.5.3 home coupled shoulder/roll/wrist trajectory=", COUPLED_HOME_TRAJECTORY)
+                    if COUPLED_HOME_TRAJECTORY == "blend_smootherstep":
+                        print("v2.5.3 home coupled shoulder/roll/wrist linear_blend=", COUPLED_HOME_LINEAR_BLEND)
                     arm.enable(group_names + list(hold_targets.keys()))
                     arm.move_targets_with_holds(
-                        group_targets,
+                        command_targets,
                         seconds_per_step=coupled_seconds,
                         move_gains=move_gains,
                         hold_targets=hold_targets,
@@ -1109,8 +1223,14 @@ def main() -> None:
                         fallback_kd=args.kd,
                         step_deg=0.0,
                         progress_windows=COUPLED_HOME_PROGRESS_WINDOWS,
+                        pre_window_gains=COUPLED_HOME_PRE_WINDOW_GAINS,
+                        control_dt=COUPLED_HOME_CONTROL_DT,
+                        trajectory=COUPLED_HOME_TRAJECTORY,
+                        linear_blend=COUPLED_HOME_LINEAR_BLEND,
                     )
-                    completed_targets.update(group_targets)
+                    reached = arm.positions(group_names)
+                    print("v2.5.3 home coupled shoulder/roll/wrist reached=", json.dumps(reached, ensure_ascii=False))
+                    completed_targets.update(command_targets)
                     continue
                 if args.auto_gains:
                     gains = HOME_GAINS.get(name, {"kp": args.kp, "kd": args.kd, "seconds": args.seconds})
