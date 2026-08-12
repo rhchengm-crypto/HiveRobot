@@ -29,6 +29,7 @@ SERIAL_BAUD = 921600
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 HOME_PATH = os.path.join(SCRIPT_DIR, "data", "left_arm_v2_home.json")
 TABLE_CLEARANCE_PATH = os.path.join(SCRIPT_DIR, "data", "left_arm_v2_table_clearance.json")
+CLAW_HOME_PATH = os.path.join(SCRIPT_DIR, "data", "left_arm_v2_claw_home.json")
 
 
 @dataclass(frozen=True)
@@ -48,6 +49,8 @@ JOINTS = [
     JointSpec("wrist_side", DM_Motor_Type.DM4310, 0x2A, 0x1A),
     JointSpec("wrist", DM_Motor_Type.DM4310, 0x29, 0x19),
 ]
+CLAW_SPEC = JointSpec("claw", DM_Motor_Type.DM4310, 0x28, 0x18)
+ALL_MOTOR_SPECS = JOINTS + [CLAW_SPEC]
 
 DEFAULT_JOINTS = [spec.name for spec in JOINTS]
 DEFAULT_HOME_ORDER = [
@@ -68,6 +71,16 @@ DEFAULT_CLEARANCE_ORDER = [
     "arm_roll",
     "wrist_side",
     "wrist",
+]
+
+PREHOME_CLEARANCE_ORDER = [
+    "wrist",
+    "wrist_side",
+    "arm_roll",
+    "elbow",
+    "shoulder_rotate",
+    "shoulder_side",
+    "shoulder_front",
 ]
 
 OLD_HOME_ORDER = [
@@ -182,16 +195,18 @@ COUPLED_CLEARANCE_MOVE_GAINS = {
     "shoulder_side": {"kp": 60.0, "kd": 5.0},
     "elbow": {"kp": 65.0, "kd": 6.5},
     "arm_roll": {"kp": 18.0, "kd": 6.0},
+    "wrist_side": {"kp": 16.0, "kd": 2.2},
+    "wrist": {"kp": 22.0, "kd": 1.4},
 }
 
-COUPLED_CLEARANCE_MAX_SECONDS = 10.0
+COUPLED_CLEARANCE_MAX_SECONDS = 12.0
 COUPLED_CLEARANCE_SETTLE_SECONDS = 0.5
 COUPLED_CLEARANCE_CONTROL_DT = 0.01
 COUPLED_CLEARANCE_TRAJECTORY = "blend_smootherstep"
 COUPLED_CLEARANCE_LINEAR_BLEND = 0.35
 COUPLED_CLEARANCE_PROGRESS_WINDOWS = {
-    "arm_roll": (0.65, 1.0),
-    "wrist": (0.35, 1.0),
+    "arm_roll": (0.35, 1.0),
+    "wrist": (0.0, 1.0),
 }
 
 COUPLED_CLEARANCE_PRE_WINDOW_GAINS = {
@@ -218,20 +233,108 @@ CLEARANCE_HOLD_GAINS = {
 
 CLEARANCE_COMPLIANT_HOLD_GAINS = {
     "arm_roll": {"kp": 6.0, "kd": 6.0},
+    "wrist_side": {"kp": 8.0, "kd": 1.6},
+    "shoulder_rotate": {"kp": 8.0, "kd": 4.0},
 }
 
 CLEARANCE_COMPLIANT_HOLDS_BY_ACTIVE = {
     "wrist_side": {"arm_roll"},
-    "wrist": {"arm_roll"},
+    "wrist": {"arm_roll", "wrist_side", "shoulder_rotate"},
 }
 
 CLEARANCE_JOINT_HOLD_TAU = {
     "shoulder_front": 2.5,
 }
 
+NUDGE_HOLD_TAU = {
+    **CLEARANCE_JOINT_HOLD_TAU,
+    "shoulder_front": 3.8,
+    "elbow": 2.2,
+    "wrist": 0.55,
+}
+
+NUDGE_ACTIVE_TAU = {
+    "shoulder_front": 2.4,
+    "wrist": 0.55,
+}
+
+NUDGE_PRELOAD_SECONDS = {
+    "shoulder_front": 0.8,
+}
+
+NUDGE_TRAJECTORY = {
+    "shoulder_front": "blend_smootherstep",
+}
+
+NUDGE_LINEAR_BLEND = {
+    "shoulder_front": 0.35,
+}
+
+NUDGE_STEP_DEG = {}
+
+
+NUDGE_MIN_SECONDS = {
+    "shoulder_front": 2.2,
+    "arm_roll": 1.2,
+}
+
+NUDGE_COMPLIANT_HOLD_GAINS = {
+    "arm_roll": {"kp": 4.0, "kd": 6.0},
+    "shoulder_rotate": {"kp": 6.0, "kd": 5.0},
+    "wrist_side": {"kp": 6.0, "kd": 1.2},
+    "wrist": {"kp": 8.0, "kd": 1.4},
+}
+
+NUDGE_COMPLIANT_HOLD_GAINS_BY_ACTIVE = {
+    "shoulder_front": {
+        "arm_roll": {"kp": 2.5, "kd": 7.0},
+        "shoulder_rotate": {"kp": 4.0, "kd": 6.0},
+        "wrist_side": {"kp": 4.0, "kd": 1.6},
+        "wrist": {"kp": 6.0, "kd": 2.0},
+    },
+    "shoulder_side": {
+        "arm_roll": {"kp": 2.5, "kd": 7.0},
+        "shoulder_rotate": {"kp": 4.0, "kd": 6.0},
+        "wrist_side": {"kp": 4.0, "kd": 1.6},
+        "wrist": {"kp": 6.0, "kd": 2.0},
+    },
+    "elbow": {
+        "arm_roll": {"kp": 2.5, "kd": 7.0},
+        "shoulder_rotate": {"kp": 4.0, "kd": 6.0},
+        "wrist_side": {"kp": 4.0, "kd": 1.6},
+        "wrist": {"kp": 6.0, "kd": 2.0},
+    },
+    "arm_roll": {
+        "shoulder_rotate": {"kp": 4.0, "kd": 6.0},
+        "wrist_side": {"kp": 4.0, "kd": 1.6},
+        "wrist": {"kp": 6.0, "kd": 2.0},
+    },
+    "wrist": {
+        "arm_roll": {"kp": 8.0, "kd": 6.0},
+    },
+}
+
+NUDGE_COMPLIANT_HOLDS_BY_ACTIVE = {
+    "shoulder_front": {"arm_roll", "shoulder_rotate", "wrist_side", "wrist"},
+    "shoulder_side": {"arm_roll", "shoulder_rotate", "wrist_side", "wrist"},
+    "elbow": {"arm_roll", "shoulder_rotate", "wrist_side", "wrist"},
+    "arm_roll": {"shoulder_rotate", "wrist_side", "wrist"},
+    "shoulder_rotate": {"arm_roll", "wrist_side", "wrist"},
+    "wrist": {"arm_roll"},
+}
+
+NUDGE_COUPLED_ACTIVE_RATIOS = {}
+
+NUDGE_COUPLED_ACTIVE_GAINS = {}
+
+NUDGE_TARGET_LIMITS = {}
+
+
 CLEARANCE_WRIST_FINE_DEADBAND_DEG = 1.0
 CLEARANCE_WRIST_FINE_MAX_BIAS_DEG = 1.5
 CLEARANCE_WRIST_FINE_SETTLE_SECONDS = 1.0
+CLEARANCE_WRIST_FINE_ACTIVE_TAU = 0.55
+CLEARANCE_WRIST_FINE_CONTROL_DT = 0.01
 CLEARANCE_WRIST_FINE_GAINS = {
     "kp": 28.0,
     "kd": 5.0,
@@ -240,7 +343,7 @@ CLEARANCE_WRIST_FINE_GAINS = {
 COUPLED_CLEARANCE_WRIST_FINE_GAINS = {
     "kp": 26.0,
     "kd": 4.7,
-    "seconds": 6.0,
+    "seconds": 8.0,
 }
 
 CLEARANCE_BASE_HOLD_GAINS = {
@@ -256,12 +359,29 @@ CLEARANCE_BASE_HOLD_GAINS = {
 NUDGE_GAINS = {
     "wrist": {"kp": 18.0, "kd": 1.2},
     "wrist_side": {"kp": 18.0, "kd": 1.2},
-    "arm_roll": {"kp": 45.0, "kd": 2.5},
+    "arm_roll": {"kp": 12.0, "kd": 7.0},
     "elbow": {"kp": 70.0, "kd": 3.0},
-    "shoulder_front": {"kp": 80.0, "kd": 3.5},
+    "shoulder_front": {"kp": 140.0, "kd": 5.2},
     "shoulder_side": {"kp": 70.0, "kd": 3.0},
     "shoulder_rotate": {"kp": 60.0, "kd": 3.0},
 }
+
+CLAW_OPEN_TOL = 0.08
+CLAW_CLOSE_OFFSET = 6.0
+CLAW_MOVE_SECONDS = 4.0
+CLAW_CLOSE_SECONDS = 8.0
+CLAW_KP_MOVE = 28.0
+CLAW_KD_MOVE = 1.0
+CLAW_KP_OPEN = 22.0
+CLAW_KD_OPEN = 0.8
+CLAW_KP_HOLD = 14.0
+CLAW_KD_HOLD = 0.7
+CLAW_TAU_THRESHOLD = 0.30
+CLAW_STALL_TAU_THRESHOLD = 0.24
+CLAW_VEL_STALL_THRESHOLD = 0.08
+CLAW_CONFIRM_COUNT_NEEDED = 5
+CLAW_BACKOFF = 0.04
+CLAW_HOLD_TRACE_INTERVAL = 1.0
 
 
 def smoothstep(t: float) -> float:
@@ -291,6 +411,11 @@ def blend_smootherstep_derivative(t: float, linear_blend: float = 0.15) -> float
     return linear_blend + (1.0 - linear_blend) * smootherstep_derivative(t)
 
 
+def cosine_smoothstep(t: float) -> float:
+    t = max(0.0, min(1.0, t))
+    return 0.5 - 0.5 * math.cos(math.pi * t)
+
+
 def parse_joints(value: str) -> List[str]:
     return [item.strip() for item in value.split(",") if item.strip()]
 
@@ -305,10 +430,10 @@ class LeftArmV2:
     def __init__(self, port: str = SERIAL_PORT, baud: int = SERIAL_BAUD) -> None:
         self.serial = serial.Serial(port, baud, timeout=1.0)
         self.ctrl = MotorControl(self.serial)
-        self.specs = {spec.name: spec for spec in JOINTS}
+        self.specs = {spec.name: spec for spec in ALL_MOTOR_SPECS}
         self.motors: Dict[str, Motor] = {}
         self.enabled: set[str] = set()
-        for spec in JOINTS:
+        for spec in ALL_MOTOR_SPECS:
             motor = Motor(spec.motor_type, spec.slave_id, spec.master_id)
             self.ctrl.addMotor(motor)
             self.motors[spec.name] = motor
@@ -434,6 +559,118 @@ class LeftArmV2:
         targets = self.positions(names)
         self.hold_positions(targets, seconds=seconds, kp=kp, kd=kd)
 
+    def claw_status(self) -> Dict[str, float]:
+        return self.read_status(["claw"])["claw"]
+
+    def claw_hold(self, target: float, seconds: float, kp: float = CLAW_KP_HOLD, kd: float = CLAW_KD_HOLD) -> None:
+        start = time.time()
+        while time.time() - start < seconds:
+            self.ctrl.controlMIT(self.motors["claw"], kp, kd, target, 0, 0)
+            time.sleep(0.01)
+
+    def claw_hold_forever(self, target: float, kp: float = CLAW_KP_HOLD, kd: float = CLAW_KD_HOLD) -> None:
+        print("claw holding at:", target, "Ctrl+C to stop", flush=True)
+        next_trace = time.time()
+        while True:
+            self.ctrl.controlMIT(self.motors["claw"], kp, kd, target, 0, 0)
+            now = time.time()
+            if now >= next_trace:
+                status = self.claw_status()
+                print(
+                    "claw holding status=",
+                    json.dumps({"target": target, "kp": kp, "kd": kd, **status}, ensure_ascii=False),
+                    flush=True,
+                )
+                next_trace = now + CLAW_HOLD_TRACE_INTERVAL
+            time.sleep(0.01)
+
+    def claw_move_to(
+        self,
+        target: float,
+        seconds: float,
+        kp: float = CLAW_KP_MOVE,
+        kd: float = CLAW_KD_MOVE,
+        label: str = "claw move",
+    ) -> Dict[str, float]:
+        start_pos = self.claw_status()["pos"]
+        print(label, "from:", start_pos, "to:", target, "kp=", kp, "kd=", kd, "seconds=", seconds)
+        start = time.time()
+        while time.time() - start < seconds:
+            a = (time.time() - start) / max(seconds, 1e-6)
+            s = cosine_smoothstep(a)
+            pos_target = start_pos * (1.0 - s) + target * s
+            self.ctrl.controlMIT(self.motors["claw"], kp, kd, pos_target, 0, 0)
+            time.sleep(0.01)
+        self.claw_hold(target, 0.8)
+        status = self.claw_status()
+        print(label, "target:", target, "pos:", status["pos"], "vel:", status["vel"], "tau:", status["tau"])
+        return status
+
+    def claw_home(self, home_pos: float) -> Dict[str, float]:
+        self.enable(["claw"])
+        return self.claw_move_to(home_pos, CLAW_MOVE_SECONDS, kp=CLAW_KP_OPEN, kd=CLAW_KD_OPEN, label="claw home")
+
+    def claw_close_until_pressure(
+        self,
+        home_pos: float,
+        hold: bool = True,
+        close_offset: float = CLAW_CLOSE_OFFSET,
+    ) -> Dict[str, object]:
+        self.enable(["claw"])
+        q_close = home_pos + close_offset
+        print("claw close pressure stop")
+        print("claw home:", home_pos)
+        print("claw close target:", q_close)
+        contact = False
+        contact_pos = home_pos
+        confirm_count = 0
+        last_status = self.claw_status()
+        start = time.time()
+        while time.time() - start < CLAW_CLOSE_SECONDS:
+            elapsed = time.time() - start
+            a = elapsed / max(CLAW_CLOSE_SECONDS, 1e-6)
+            s = cosine_smoothstep(a)
+            target = home_pos * (1.0 - s) + q_close * s
+            self.ctrl.controlMIT(self.motors["claw"], CLAW_KP_MOVE, CLAW_KD_MOVE, target, 0, 0)
+            time.sleep(0.01)
+            last_status = self.claw_status()
+            pos = last_status["pos"]
+            vel = last_status["vel"]
+            tau = last_status["tau"]
+            if elapsed > 0.5:
+                tau_hit = tau > CLAW_TAU_THRESHOLD
+                stall_hit = (
+                    abs(vel) < CLAW_VEL_STALL_THRESHOLD
+                    and abs(target - pos) > 0.15
+                    and tau > CLAW_STALL_TAU_THRESHOLD
+                )
+                if tau_hit or stall_hit:
+                    confirm_count += 1
+                else:
+                    confirm_count = 0
+                if confirm_count >= CLAW_CONFIRM_COUNT_NEEDED:
+                    contact = True
+                    contact_pos = pos
+                    print("CLAW CONTACT detected")
+                    print("pos:", pos, "vel:", vel, "tau:", tau, "target:", target)
+                    break
+            if int(elapsed * 10) % 20 == 0:
+                print("claw closing pos:", pos, "vel:", vel, "tau:", tau, "target:", target)
+        if contact:
+            hold_pos = contact_pos - CLAW_BACKOFF
+            result = {"contact": True, "contact_pos": contact_pos, "hold_pos": hold_pos, "status": last_status}
+        else:
+            hold_pos = last_status["pos"]
+            result = {"contact": False, "contact_pos": None, "hold_pos": hold_pos, "status": last_status}
+            print("claw no contact detected")
+            print("final close pos:", last_status["pos"], "vel:", last_status["vel"], "tau:", last_status["tau"])
+        print("claw pressure result:", json.dumps(result, ensure_ascii=False, indent=2))
+        if hold:
+            self.claw_hold_forever(float(hold_pos))
+        else:
+            self.claw_hold(float(hold_pos), 1.0)
+        return result
+
     def move_targets(
         self,
         targets: Dict[str, float],
@@ -507,7 +744,14 @@ class LeftArmV2:
         fallback_kd: float,
         hold_tau: Optional[Dict[str, float]] = None,
         active_velocity_ff: bool = False,
+        active_tau: float = 0.0,
         step_deg: float = 0.0,
+        control_dt: float = 0.02,
+        preload_seconds: float = 0.2,
+        trajectory: str = "smoothstep",
+        linear_blend: float = 0.0,
+        trace_names: Optional[List[str]] = None,
+        trace_interval: float = 0.5,
     ) -> None:
         self.validate([name] + list(hold_targets.keys()))
         start = self.positions([name])[name]
@@ -519,38 +763,44 @@ class LeftArmV2:
         steps = max(1, steps)
 
         hold_tau = hold_tau or {}
+        trace_names = trace_names or []
         all_targets = dict(hold_targets)
         all_targets[name] = start
         start_time = time.time()
-        while time.time() - start_time < 0.2:
+        while time.time() - start_time < preload_seconds:
             for hold_name, hold_target in all_targets.items():
                 if hold_name == name:
                     joint_kp = kp
                     joint_kd = kd
-                    joint_tau = 0.0
+                    joint_tau = active_tau
                 else:
                     joint_gains = hold_gains.get(hold_name, {})
                     joint_kp = joint_gains.get("kp", fallback_kp)
                     joint_kd = joint_gains.get("kd", fallback_kd)
                     joint_tau = hold_tau.get(hold_name, 0.0)
                 self.ctrl.controlMIT(self.motors[hold_name], joint_kp, joint_kd, hold_target, 0, joint_tau)
-            time.sleep(0.02)
+            time.sleep(control_dt)
 
         previous = start
         for step in range(1, steps + 1):
             intermediate = start + delta * (step / steps)
             print("v2 continuous step", name, f"{step}/{steps}", "target=", intermediate)
             step_start = time.time()
+            next_trace_time = step_start
             while time.time() - step_start < seconds_per_step:
-                t = (time.time() - step_start) / max(seconds_per_step, 1e-6)
+                now = time.time()
+                t = (now - step_start) / max(seconds_per_step, 1e-6)
                 if active_velocity_ff and steps == 1:
                     s = smootherstep(t)
                     active_velocity = delta * smootherstep_derivative(t) / max(seconds_per_step, 1e-6)
+                elif trajectory == "blend_smootherstep":
+                    s = blend_smootherstep(t, linear_blend)
+                    active_velocity = 0.0
                 else:
                     s = smoothstep(t)
                     active_velocity = 0.0
                 active_target = previous * (1.0 - s) + intermediate * s
-                self.ctrl.controlMIT(self.motors[name], kp, kd, active_target, active_velocity, 0)
+                self.ctrl.controlMIT(self.motors[name], kp, kd, active_target, active_velocity, active_tau)
                 for hold_name, hold_target in hold_targets.items():
                     joint_gains = hold_gains.get(hold_name, {})
                     joint_kp = joint_gains.get("kp", fallback_kp)
@@ -563,7 +813,17 @@ class LeftArmV2:
                         0,
                         hold_tau.get(hold_name, 0.0),
                     )
-                time.sleep(0.02)
+                if trace_names and now >= next_trace_time:
+                    print(
+                        "v2 continuous trace",
+                        name,
+                        f"{step}/{steps}",
+                        "t=",
+                        round(now - step_start, 3),
+                        json.dumps(self.read_status(trace_names), ensure_ascii=False),
+                    )
+                    next_trace_time = now + trace_interval
+                time.sleep(control_dt)
             previous = intermediate
 
         final_targets = dict(hold_targets)
@@ -574,14 +834,14 @@ class LeftArmV2:
                 if hold_name == name:
                     joint_kp = kp
                     joint_kd = kd
-                    joint_tau = 0.0
+                    joint_tau = active_tau
                 else:
                     joint_gains = hold_gains.get(hold_name, {})
                     joint_kp = joint_gains.get("kp", fallback_kp)
                     joint_kd = joint_gains.get("kd", fallback_kd)
                     joint_tau = hold_tau.get(hold_name, 0.0)
                 self.ctrl.controlMIT(self.motors[hold_name], joint_kp, joint_kd, hold_target, 0, joint_tau)
-            time.sleep(0.02)
+            time.sleep(control_dt)
 
     def move_targets_with_holds(
         self,
@@ -640,9 +900,10 @@ class LeftArmV2:
             for name, target in preload_targets.items():
                 if name in starts:
                     gains = move_gains.get(name, {})
+                    tau = 0.0
                 else:
                     gains = hold_gains.get(name, {})
-                tau = 0.0 if name in starts else hold_tau.get(name, 0.0)
+                    tau = hold_tau.get(name, 0.0)
                 kp = gains.get("kp", fallback_kp)
                 kd = gains.get("kd", fallback_kd)
                 self.ctrl.controlMIT(self.motors[name], kp, kd, target, 0, tau)
@@ -870,6 +1131,23 @@ def build_parser() -> argparse.ArgumentParser:
     show_clearance = sub.add_parser("show-clearance")
     show_clearance.add_argument("--clearance-file", default=TABLE_CLEARANCE_PATH)
 
+    cap_claw = sub.add_parser("capture-claw-home")
+    cap_claw.add_argument("--note", default="")
+    cap_claw.add_argument("--claw-home-file", default=CLAW_HOME_PATH)
+
+    show_claw = sub.add_parser("show-claw-home")
+    show_claw.add_argument("--claw-home-file", default=CLAW_HOME_PATH)
+
+    claw_home = sub.add_parser("claw-home")
+    claw_home.add_argument("--claw-home-file", default=CLAW_HOME_PATH)
+    claw_home.add_argument("--execute", action="store_true")
+
+    claw_close = sub.add_parser("claw-close")
+    claw_close.add_argument("--claw-home-file", default=CLAW_HOME_PATH)
+    claw_close.add_argument("--close-offset", type=float, default=CLAW_CLOSE_OFFSET)
+    claw_close.add_argument("--no-hold", action="store_true")
+    claw_close.add_argument("--execute", action="store_true")
+
     nudge = sub.add_parser("nudge")
     nudge.add_argument("--joint", required=True)
     nudge.add_argument("--deg", type=float, required=True)
@@ -896,6 +1174,7 @@ def build_parser() -> argparse.ArgumentParser:
     home = sub.add_parser("home")
     home.add_argument("--joints", default=",".join(DEFAULT_HOME_ORDER))
     home.add_argument("--home-file", default=HOME_PATH)
+    home.add_argument("--clearance-file", default=TABLE_CLEARANCE_PATH)
     home.add_argument("--seconds", type=float, default=5.0)
     home.add_argument("--kp", type=float, default=3.0)
     home.add_argument("--kd", type=float, default=0.3)
@@ -915,6 +1194,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Use the uniform --kp/--kd/--seconds values instead.",
     )
     home.add_argument("--execute", action="store_true")
+    home.add_argument(
+        "--prehome-clearance",
+        action="store_true",
+        help="Before home, return joints to table clearance one by one in the tested reverse-chain order.",
+    )
 
     clearance = sub.add_parser("clearance")
     clearance.add_argument("--joints", default=",".join(DEFAULT_CLEARANCE_ORDER))
@@ -971,6 +1255,10 @@ def main() -> None:
         print(json.dumps(load_pose(args.clearance_file), ensure_ascii=False, indent=2))
         return
 
+    if args.cmd == "show-claw-home":
+        print(json.dumps(load_pose(args.claw_home_file), ensure_ascii=False, indent=2))
+        return
+
     arm = LeftArmV2()
     try:
         print("Serial port is open")
@@ -1012,6 +1300,44 @@ def main() -> None:
             joints = parse_joints(args.joints)
             pose = arm.positions(joints)
             save_pose("left_arm_v2_table_clearance", pose, note=args.note, path=args.clearance_file)
+            return
+
+        if args.cmd == "capture-claw-home":
+            pose = {"claw": arm.claw_status()["pos"]}
+            save_pose("left_arm_v2_claw_home", pose, note=args.note, path=args.claw_home_file)
+            return
+
+        if args.cmd == "claw-home":
+            home = load_pose(args.claw_home_file)
+            if "claw" not in home:
+                raise RuntimeError("invalid claw home file: missing claw")
+            if not args.execute:
+                print("dry run only. Add --execute to move claw home.")
+                print(json.dumps({"target": {"claw": home["claw"]}, "status": arm.claw_status()}, ensure_ascii=False, indent=2))
+                return
+            status = arm.claw_home(home["claw"])
+            print(json.dumps({"target": {"claw": home["claw"]}, "status": status}, ensure_ascii=False, indent=2))
+            return
+
+        if args.cmd == "claw-close":
+            home = load_pose(args.claw_home_file)
+            if "claw" not in home:
+                raise RuntimeError("invalid claw home file: missing claw")
+            if not args.execute:
+                print("dry run only. Add --execute to close claw.")
+                print(
+                    json.dumps(
+                        {
+                            "home": home["claw"],
+                            "close_target": home["claw"] + args.close_offset,
+                            "status": arm.claw_status(),
+                        },
+                        ensure_ascii=False,
+                        indent=2,
+                    )
+                )
+                return
+            arm.claw_close_until_pressure(home["claw"], hold=not args.no_hold, close_offset=args.close_offset)
             return
 
         if args.cmd == "nudge":
@@ -1070,7 +1396,27 @@ def main() -> None:
             all_names = [name] + hold_names
             arm.enable(all_names)
             current = arm.positions(all_names)
-            target = current[name] + math.radians(args.deg)
+            requested_target = current[name] + math.radians(args.deg)
+            target = requested_target
+            target_limits = NUDGE_TARGET_LIMITS.get(name)
+            if target_limits:
+                min_target = target_limits.get("min")
+                max_target = target_limits.get("max")
+                if min_target is not None and target < min_target:
+                    target = min_target
+                if max_target is not None and target > max_target:
+                    target = max_target
+                if target != requested_target:
+                    print(
+                        "v2.5.3 nudge-hold target clamped",
+                        name,
+                        "requested=",
+                        requested_target,
+                        "target=",
+                        target,
+                        "limits=",
+                        json.dumps(target_limits, ensure_ascii=False),
+                    )
             if args.auto_gains:
                 if name == "wrist":
                     active_gains = COUPLED_CLEARANCE_WRIST_FINE_GAINS
@@ -1082,6 +1428,8 @@ def main() -> None:
                 kd = active_gains["kd"]
                 if name == "wrist":
                     args.seconds = max(args.seconds, COUPLED_CLEARANCE_WRIST_FINE_GAINS["seconds"])
+                if name in NUDGE_MIN_SECONDS:
+                    args.seconds = max(args.seconds, NUDGE_MIN_SECONDS[name])
             else:
                 kp = args.kp
                 kd = args.kd
@@ -1096,6 +1444,33 @@ def main() -> None:
             for compliant_name in CLEARANCE_COMPLIANT_HOLDS_BY_ACTIVE.get(name, set()):
                 if compliant_name in hold_gains:
                     hold_gains[compliant_name] = CLEARANCE_COMPLIANT_HOLD_GAINS[compliant_name]
+            nudge_compliant_gains = NUDGE_COMPLIANT_HOLD_GAINS_BY_ACTIVE.get(name, NUDGE_COMPLIANT_HOLD_GAINS)
+            for compliant_name in NUDGE_COMPLIANT_HOLDS_BY_ACTIVE.get(name, set()):
+                if compliant_name in hold_gains:
+                    hold_gains[compliant_name] = nudge_compliant_gains[compliant_name]
+            coupled_targets = {name: target}
+            coupled_requested_targets = {name: requested_target}
+            coupled_gains = {name: {"kp": kp, "kd": kd}}
+            coupled_tau = {}
+            for coupled_name, ratio in NUDGE_COUPLED_ACTIVE_RATIOS.get(name, {}).items():
+                if coupled_name not in hold_targets:
+                    continue
+                coupled_requested = current[coupled_name] + math.radians(args.deg * ratio)
+                coupled_targets[coupled_name] = coupled_requested
+                coupled_requested_targets[coupled_name] = coupled_requested
+                coupled_gains[coupled_name] = NUDGE_COUPLED_ACTIVE_GAINS.get(name, {}).get(
+                    coupled_name,
+                    COUPLED_CLEARANCE_MOVE_GAINS.get(
+                        coupled_name,
+                        NUDGE_GAINS.get(coupled_name, {"kp": args.kp, "kd": args.kd}),
+                    ),
+                )
+                if coupled_name in NUDGE_HOLD_TAU and ratio > 0:
+                    coupled_tau[coupled_name] = NUDGE_HOLD_TAU[coupled_name]
+                hold_targets.pop(coupled_name, None)
+                hold_gains.pop(coupled_name, None)
+            if name in NUDGE_ACTIVE_TAU:
+                coupled_tau[name] = NUDGE_ACTIVE_TAU[name]
             print(
                 "v2.5.3 nudge-hold active",
                 name,
@@ -1110,7 +1485,71 @@ def main() -> None:
                 "hold joints:",
                 ",".join(hold_names),
             )
-            print(json.dumps({"start": current, "target": {name: target}, "hold_targets": hold_targets}, ensure_ascii=False, indent=2))
+            print(
+                "v2.5.3 nudge-hold hold_tau=",
+                json.dumps({joint: NUDGE_HOLD_TAU[joint] for joint in hold_targets if joint in NUDGE_HOLD_TAU}, ensure_ascii=False),
+                "control_dt=",
+                0.01,
+            )
+            active_tau = NUDGE_ACTIVE_TAU.get(name, 0.0)
+            if active_tau:
+                print("v2.5.3 nudge-hold active_tau=", {name: active_tau})
+            preload_seconds = NUDGE_PRELOAD_SECONDS.get(name, 0.2)
+            if preload_seconds != 0.2:
+                print("v2.5.3 nudge-hold preload_seconds=", preload_seconds)
+            trajectory = NUDGE_TRAJECTORY.get(name, "smoothstep")
+            linear_blend = NUDGE_LINEAR_BLEND.get(name, 0.0)
+            if trajectory != "smoothstep":
+                print("v2.5.3 nudge-hold trajectory=", trajectory, "linear_blend=", linear_blend)
+            compliant_holds = {
+                joint: hold_gains[joint]
+                for joint in NUDGE_COMPLIANT_HOLDS_BY_ACTIVE.get(name, set())
+                if joint in hold_gains
+            }
+            if compliant_holds:
+                print("v2.5.3 nudge-hold compliant hold gains=", json.dumps(compliant_holds, ensure_ascii=False))
+            step_deg = NUDGE_STEP_DEG.get(name, 0.0)
+            if step_deg > 0:
+                print("v2.5.3 nudge-hold step_deg=", step_deg)
+            if len(coupled_targets) > 1:
+                print(
+                    "v2.5.3 nudge-hold coupled active targets=",
+                    json.dumps(coupled_targets, ensure_ascii=False),
+                    "gains=",
+                    json.dumps(coupled_gains, ensure_ascii=False),
+                    "move_tau_ff=",
+                    json.dumps(coupled_tau, ensure_ascii=False),
+                )
+            print(
+                json.dumps(
+                    {
+                        "start": current,
+                        "requested_target": coupled_requested_targets,
+                        "target": coupled_targets,
+                        "hold_targets": hold_targets,
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
+            if len(coupled_targets) > 1:
+                arm.move_targets_with_holds(
+                    coupled_targets,
+                    seconds_per_step=args.seconds,
+                    move_gains=coupled_gains,
+                    hold_targets=hold_targets,
+                    hold_gains=hold_gains,
+                    fallback_kp=args.kp,
+                    fallback_kd=args.kd,
+                    hold_tau=NUDGE_HOLD_TAU,
+                    preload_seconds=preload_seconds,
+                    control_dt=0.01,
+                    move_tau_ff=coupled_tau,
+                    trajectory=trajectory,
+                    linear_blend=linear_blend,
+                )
+                arm.print_status(all_names)
+                return
             arm.move_target_with_holds(
                 name,
                 target,
@@ -1121,8 +1560,13 @@ def main() -> None:
                 hold_gains=hold_gains,
                 fallback_kp=args.kp,
                 fallback_kd=args.kd,
-                hold_tau=CLEARANCE_JOINT_HOLD_TAU,
-                step_deg=0.0,
+                hold_tau=NUDGE_HOLD_TAU,
+                active_tau=active_tau,
+                step_deg=step_deg,
+                control_dt=0.01,
+                preload_seconds=preload_seconds,
+                trajectory=trajectory,
+                linear_blend=linear_blend,
             )
             arm.print_status(all_names)
             return
@@ -1154,6 +1598,96 @@ def main() -> None:
             if not args.execute:
                 print("dry run only. Add --execute to move.")
                 return
+
+            if args.prehome_clearance:
+                clearance = load_pose(args.clearance_file)
+                prehome_order = [name for name in PREHOME_CLEARANCE_ORDER if name in clearance and name in DEFAULT_JOINTS]
+                print("v2.5.3 pre-home clearance sequential order=", ",".join(prehome_order))
+                arm.enable(DEFAULT_JOINTS)
+                for prehome_name in prehome_order:
+                    prehome_current = arm.positions(DEFAULT_JOINTS)
+                    prehome_target = clearance[prehome_name]
+                    delta_deg = math.degrees(prehome_target - prehome_current[prehome_name])
+                    deadband_deg = max(0.5, CLEARANCE_JOINT_DEADBANDS_DEG.get(prehome_name, 0.5))
+                    if abs(delta_deg) <= deadband_deg:
+                        print(
+                            "v2.5.3 pre-home clearance skip",
+                            prehome_name,
+                            "delta_deg=",
+                            delta_deg,
+                            "deadband_deg=",
+                            deadband_deg,
+                        )
+                        continue
+                    if abs(delta_deg) > args.max_delta_deg:
+                        raise RuntimeError(
+                            f"{prehome_name} pre-home clearance delta {delta_deg:.2f} deg exceeds "
+                            f"--max-delta-deg {args.max_delta_deg}; move in smaller steps."
+                        )
+                    active_gains = NUDGE_GAINS.get(
+                        prehome_name,
+                        CLEARANCE_MOVE_GAINS.get(prehome_name, {"kp": args.kp, "kd": args.kd}),
+                    )
+                    seconds = NUDGE_MIN_SECONDS.get(prehome_name, 6.0 if prehome_name == "wrist" else 2.2)
+                    hold_targets = {
+                        hold_name: prehome_current[hold_name]
+                        for hold_name in DEFAULT_JOINTS
+                        if hold_name != prehome_name
+                    }
+                    hold_gains = {
+                        hold_name: CLEARANCE_HOLD_GAINS.get(
+                            hold_name,
+                            CLEARANCE_BASE_HOLD_GAINS.get(hold_name, {"kp": args.kp, "kd": args.kd}),
+                        )
+                        for hold_name in hold_targets
+                    }
+                    nudge_compliant_gains = NUDGE_COMPLIANT_HOLD_GAINS_BY_ACTIVE.get(
+                        prehome_name,
+                        NUDGE_COMPLIANT_HOLD_GAINS,
+                    )
+                    for compliant_name in NUDGE_COMPLIANT_HOLDS_BY_ACTIVE.get(prehome_name, set()):
+                        if compliant_name in hold_gains:
+                            hold_gains[compliant_name] = nudge_compliant_gains[compliant_name]
+                    active_tau = NUDGE_ACTIVE_TAU.get(prehome_name, 0.0)
+                    preload_seconds = NUDGE_PRELOAD_SECONDS.get(prehome_name, 0.2)
+                    trajectory = NUDGE_TRAJECTORY.get(prehome_name, "smoothstep")
+                    linear_blend = NUDGE_LINEAR_BLEND.get(prehome_name, 0.0)
+                    print(
+                        "v2.5.3 pre-home clearance active",
+                        prehome_name,
+                        "delta_deg=",
+                        delta_deg,
+                        "target=",
+                        prehome_target,
+                        "kp=",
+                        active_gains["kp"],
+                        "kd=",
+                        active_gains["kd"],
+                        "seconds=",
+                        seconds,
+                        "hold joints:",
+                        ",".join(hold_targets.keys()),
+                    )
+                    if active_tau:
+                        print("v2.5.3 pre-home clearance active_tau=", {prehome_name: active_tau})
+                    arm.move_target_with_holds(
+                        prehome_name,
+                        prehome_target,
+                        seconds_per_step=seconds,
+                        kp=active_gains["kp"],
+                        kd=active_gains["kd"],
+                        hold_targets=hold_targets,
+                        hold_gains=hold_gains,
+                        fallback_kp=args.kp,
+                        fallback_kd=args.kd,
+                        hold_tau=NUDGE_HOLD_TAU,
+                        active_tau=active_tau,
+                        control_dt=0.01,
+                        preload_seconds=preload_seconds,
+                        trajectory=trajectory,
+                        linear_blend=linear_blend,
+                    )
+                current = arm.positions(ordered)
 
             completed_targets: Dict[str, float] = {}
             for name in ordered:
@@ -1488,6 +2022,8 @@ def main() -> None:
                                 fallback_kp=args.kp,
                                 fallback_kd=args.kd,
                                 hold_tau=CLEARANCE_JOINT_HOLD_TAU,
+                                active_tau=CLEARANCE_WRIST_FINE_ACTIVE_TAU,
+                                control_dt=CLEARANCE_WRIST_FINE_CONTROL_DT,
                                 active_velocity_ff=False,
                                 step_deg=0.0,
                             )
@@ -1579,6 +2115,8 @@ def main() -> None:
                             fallback_kp=args.kp,
                             fallback_kd=args.kd,
                             hold_tau=CLEARANCE_JOINT_HOLD_TAU,
+                            active_tau=CLEARANCE_WRIST_FINE_ACTIVE_TAU,
+                            control_dt=CLEARANCE_WRIST_FINE_CONTROL_DT,
                             active_velocity_ff=False,
                             step_deg=0.0,
                         )

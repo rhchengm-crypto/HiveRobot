@@ -74,7 +74,7 @@ JOINT_DIRECTION_LABELS = {
     "shoulder_front": {"positive": "Backward", "negative": "Forward"},
     "shoulder_side": {"positive": "Outward", "negative": "Inward"},
     "elbow": {"positive": "Forward", "negative": "Backward"},
-    "shoulder_rotate": {"positive": "Outward Rotate", "negative": "Inward Rotate"},
+    "shoulder_rotate": {"positive": "Inward Rotate", "negative": "Outward Rotate"},
     "arm_roll": {"positive": "Inward Roll", "negative": "Outward Roll"},
     "wrist_side": {"positive": "Wrist Outward", "negative": "Wrist Inward"},
     "wrist": {"positive": "Wrist Forward", "negative": "Wrist Backward"},
@@ -286,8 +286,11 @@ HTML_PAGE = """<!doctype html>
         <div class="buttons">
           <button type="button" onclick="runAction('capture-home')">Capture New Home</button>
           <button type="button" onclick="runAction('capture-clearance')">Capture New Clearance</button>
+          <button type="button" onclick="runAction('capture-claw-home')">Capture Claw Home</button>
           <button type="button" class="primary" onclick="runAction('table-clearance')">Table Clearance Move</button>
           <button type="button" class="primary" onclick="runAction('home')">Home Move</button>
+          <button type="button" class="primary" onclick="runAction('claw-home')">Claw Home</button>
+          <button type="button" class="primary" onclick="runAction('claw-close')">Claw Close</button>
           <button type="button" class="danger" onclick="runAction('emergency-stop', true)">Emergency Stop</button>
         </div>
       </section>
@@ -332,15 +335,18 @@ HTML_PAGE = """<!doctype html>
     const actionNames = {
       'capture-home': 'Capture New Home',
       'capture-clearance': 'Capture New Clearance',
+      'capture-claw-home': 'Capture Claw Home',
       'table-clearance': 'Table Clearance Move',
       'home': 'Home Move',
+      'claw-home': 'Claw Home',
+      'claw-close': 'Claw Close',
       'emergency-stop': 'Emergency Stop'
     };
     const jointDirections = [
       ['shoulder_front', 'Backward', 'Forward'],
       ['shoulder_side', 'Outward', 'Inward'],
       ['elbow', 'Forward', 'Backward'],
-      ['shoulder_rotate', 'Outward Rotate', 'Inward Rotate'],
+      ['shoulder_rotate', 'Inward Rotate', 'Outward Rotate'],
       ['arm_roll', 'Inward Roll', 'Outward Roll'],
       ['wrist_side', 'Wrist Outward', 'Wrist Inward'],
       ['wrist', 'Wrist Forward', 'Wrist Backward']
@@ -385,7 +391,7 @@ HTML_PAGE = """<!doctype html>
     async function runAction(action, force) {
       const label = actionNames[action] || action;
       if (!force && !confirm(label + '?')) return;
-      if (action === 'emergency-stop' && !confirm('Emergency stop: disable all left-arm motors now?')) return;
+      if (action === 'emergency-stop' && !confirm('Emergency stop: disable all left-arm and claw motors now?')) return;
       setStatus(label + ' requested...');
       try {
         const res = await fetch('/api/action/' + action, { method: 'POST', cache: 'no-store' });
@@ -594,12 +600,16 @@ class RunState:
                     "command_text": " ".join(cmd),
                 }
             started_at = time.time()
+            popen_kwargs = dict(popen_kwargs)
+            if os.name == "posix" and "preexec_fn" not in popen_kwargs:
+                popen_kwargs["preexec_fn"] = os.setsid
             try:
                 proc = subprocess.Popen(
                     cmd,
                     text=True,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
+                    bufsize=1,
                     **popen_kwargs,
                 )
             except Exception as exc:
@@ -630,8 +640,28 @@ class RunState:
                 "returncode": None,
                 "duration_s": None,
             }
+            threading.Thread(target=self._stream_reader, args=(proc, proc.stdout, "stdout"), daemon=True).start()
+            threading.Thread(target=self._stream_reader, args=(proc, proc.stderr, "stderr"), daemon=True).start()
             threading.Thread(target=self._waiter, args=(proc,), daemon=True).start()
             return dict(self.current)
+
+    def _terminate_process_group(self, proc: subprocess.Popen) -> None:
+        if os.name == "posix":
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+                return
+            except Exception:
+                pass
+        proc.terminate()
+
+    def _kill_process_group(self, proc: subprocess.Popen) -> None:
+        if os.name == "posix":
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+                return
+            except Exception:
+                pass
+        proc.kill()
 
     def terminate_current(self) -> Optional[dict]:
         with self.lock:
@@ -640,35 +670,44 @@ class RunState:
                 return None
             run = self.current
             try:
-                proc.terminate()
+                self._terminate_process_group(proc)
             except Exception as exc:
                 if run is not None:
                     run["terminate_error"] = str(exc)
                 return None
             return None if run is None else dict(run)
 
-    def cancel_current(self, timeout: float = 1.0) -> Optional[dict]:
+    def cancel_current(
+        self,
+        timeout: float = 1.0,
+        reason: str = "emergency_stop",
+        expected_actions: Optional[set[str]] = None,
+    ) -> Optional[dict]:
         with self.lock:
             proc = self.proc
             run = self.current
             if proc is None or proc.poll() is not None:
                 return None
+            action = "" if run is None else run.get("action", "")
+            if expected_actions is not None and action not in expected_actions:
+                return None
             command_text = "" if run is None else run.get("command_text", "")
-            print("emergency stop: terminating current command:", command_text)
+            print(reason + ": terminating current command:", command_text)
             try:
-                proc.terminate()
+                self._terminate_process_group(proc)
             except Exception as exc:
                 cancelled = {"ok": False, "error": str(exc), "command_text": command_text}
                 self.last = cancelled
                 return cancelled
         killed = False
         try:
-            stdout, stderr = proc.communicate(timeout=timeout)
+            proc.wait(timeout=timeout)
         except subprocess.TimeoutExpired:
             killed = True
-            proc.kill()
-            stdout, stderr = proc.communicate(timeout=timeout)
+            self._kill_process_group(proc)
+            proc.wait(timeout=timeout)
         finished_at = time.time()
+        time.sleep(0.05)
         with self.lock:
             if self.proc is proc:
                 started_epoch = finished_at if run is None else run.get("started_epoch", finished_at)
@@ -677,13 +716,15 @@ class RunState:
                     {
                         "ok": False,
                         "running": False,
-                        "cancelled_by_emergency_stop": True,
+                        "cancelled_by": reason,
+                        "cancelled_by_emergency_stop": reason == "emergency_stop",
+                        "cancelled_by_claw_home": reason == "claw_home",
                         "killed": killed,
                         "returncode": proc.returncode,
                         "duration_s": round(finished_at - started_epoch, 3),
                         "finished_at": iso_time(finished_at),
-                        "stdout": stdout[-4000:],
-                        "stderr": stderr[-4000:],
+                        "stdout": str(cancelled.get("stdout", ""))[-4000:],
+                        "stderr": str(cancelled.get("stderr", ""))[-4000:],
                     }
                 )
                 cancelled.pop("started_epoch", None)
@@ -699,9 +740,24 @@ class RunState:
             self.last = dict(payload)
             self._append_log(payload)
 
+    def _stream_reader(self, proc: subprocess.Popen, stream, field: str) -> None:
+        if stream is None:
+            return
+        try:
+            for line in stream:
+                with self.lock:
+                    if self.proc is proc and self.current is not None:
+                        self.current[field] = (self.current.get(field, "") + line)[-8000:]
+        except Exception as exc:
+            with self.lock:
+                if self.proc is proc and self.current is not None:
+                    key = field + "_reader_error"
+                    self.current[key] = str(exc)
+
     def _waiter(self, proc: subprocess.Popen) -> None:
-        stdout, stderr = proc.communicate()
+        proc.wait()
         finished_at = time.time()
+        time.sleep(0.05)
         with self.lock:
             if self.proc is proc:
                 run = self.current or {}
@@ -713,8 +769,8 @@ class RunState:
                         "returncode": proc.returncode,
                         "duration_s": round(finished_at - started_epoch, 3),
                         "finished_at": iso_time(finished_at),
-                        "stdout": stdout[-8000:],
-                        "stderr": stderr[-8000:],
+                        "stdout": str(run.get("stdout", ""))[-8000:],
+                        "stderr": str(run.get("stderr", ""))[-8000:],
                     }
                 )
                 run.pop("started_epoch", None)
@@ -740,7 +796,7 @@ def cmd_prefix(cfg: ControlConfig) -> list:
     cmd = []
     if cfg.use_sudo:
         cmd.extend(["sudo", "-n"])
-    cmd.extend([cfg.python_bin, cfg.arm_script])
+    cmd.extend([cfg.python_bin, "-u", cfg.arm_script])
     return cmd
 
 
@@ -749,6 +805,8 @@ def build_arm_command(cfg: ControlConfig, action: str) -> list:
         return cmd_prefix(cfg) + ["capture-home", "--note", "web-control"]
     if action == "capture-clearance":
         return cmd_prefix(cfg) + ["capture-clearance", "--note", "web-control"]
+    if action == "capture-claw-home":
+        return cmd_prefix(cfg) + ["capture-claw-home", "--note", "web-control"]
     if action == "table-clearance":
         return cmd_prefix(cfg) + [
             "clearance",
@@ -767,8 +825,13 @@ def build_arm_command(cfg: ControlConfig, action: str) -> list:
             "0.5",
             "--max-delta-deg",
             "120",
+            "--prehome-clearance",
             "--execute",
         ]
+    if action == "claw-home":
+        return cmd_prefix(cfg) + ["claw-home", "--execute"]
+    if action == "claw-close":
+        return cmd_prefix(cfg) + ["claw-close", "--execute"]
     raise ValueError("unknown action: " + action)
 
 
@@ -799,15 +862,15 @@ def build_emergency_stop_command(cfg: ControlConfig) -> list:
         "from left_arm_v2_5_3 import LeftArmV2, DEFAULT_JOINTS\n"
         "arm = LeftArmV2()\n"
         "try:\n"
-        "    arm.disable(DEFAULT_JOINTS)\n"
-        "    print('emergency stop: disabled all left-arm motors')\n"
+        "    arm.disable(DEFAULT_JOINTS + ['claw'])\n"
+        "    print('emergency stop: disabled all left-arm and claw motors')\n"
         "finally:\n"
         "    arm.close()\n"
     )
     cmd = []
     if cfg.use_sudo:
         cmd.extend(["sudo", "-n"])
-    cmd.extend([cfg.python_bin, "-c", code])
+    cmd.extend([cfg.python_bin, "-u", "-c", code])
     return cmd
 
 
@@ -1186,7 +1249,16 @@ def make_handler(
             )
 
         def start_action(self, action: str) -> None:
-            allowed = {"capture-home", "capture-clearance", "table-clearance", "home", "emergency-stop"}
+            allowed = {
+                "capture-home",
+                "capture-clearance",
+                "capture-claw-home",
+                "table-clearance",
+                "home",
+                "claw-home",
+                "claw-close",
+                "emergency-stop",
+            }
             if action not in allowed:
                 self.send_json({"ok": False, "error": "unknown action"}, HTTPStatus.BAD_REQUEST)
                 return
@@ -1243,7 +1315,18 @@ def make_handler(
                 except ValueError as exc:
                     self.send_json({"ok": False, "error": str(exc)}, HTTPStatus.BAD_REQUEST)
                     return
+            cancelled = None
+            if action == "claw-home":
+                cancelled = run_state.cancel_current(
+                    timeout=1.0,
+                    reason="claw_home",
+                    expected_actions={"claw-close"},
+                )
+                if cancelled is not None:
+                    time.sleep(0.2)
             payload = run_state.start(action, cmd, popen_kwargs={})
+            if cancelled is not None:
+                payload["cancelled_previous"] = cancelled
             status = HTTPStatus.OK if payload.get("ok") else HTTPStatus.CONFLICT
             self.send_json(payload, status)
 
@@ -1339,7 +1422,8 @@ def main() -> None:
     parser.add_argument("--jpeg-quality", type=int, default=80)
     parser.add_argument("--arm-script", default=DEFAULT_ARM_SCRIPT)
     parser.add_argument("--python-bin", default="python3")
-    parser.add_argument("--no-sudo", action="store_true")
+    parser.add_argument("--sudo", action="store_true", help="Run arm commands through sudo -n. Default is direct python.")
+    parser.add_argument("--no-sudo", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--enable-execute", action="store_true")
     parser.add_argument("--run-log", default=DEFAULT_RUN_LOG)
     parser.add_argument("--rgb-topic", default="/ascamera_hp60c/rgb0/image")
@@ -1386,7 +1470,7 @@ def main() -> None:
     ctrl_cfg = ControlConfig(
         arm_script=os.path.abspath(args.arm_script),
         python_bin=args.python_bin,
-        use_sudo=not args.no_sudo,
+        use_sudo=bool(args.sudo and not args.no_sudo),
         execute_enabled=args.enable_execute,
         run_log=args.run_log,
     )
