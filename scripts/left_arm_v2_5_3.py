@@ -97,7 +97,7 @@ HOME_GAINS = {
     "wrist": {"kp": 22.0, "kd": 1.4, "seconds": 5.0},
     "wrist_side": {"kp": 16.0, "kd": 2.2, "seconds": 6.0},
     "elbow": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
-    "arm_roll": {"kp": 32.0, "kd": 4.0, "seconds": 8.0},
+    "arm_roll": {"kp": 18.0, "kd": 6.0, "seconds": 12.0},
     "shoulder_front": {"kp": 90.0, "kd": 4.0, "seconds": 6.0},
     "shoulder_side": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
     "shoulder_rotate": {"kp": 24.0, "kd": 4.5, "seconds": 8.0},
@@ -218,7 +218,7 @@ COUPLED_CLEARANCE_VELOCITY_FF_JOINTS = {
 }
 
 COUPLED_CLEARANCE_MOVE_TAU_FF = {
-    "shoulder_front": 0.6,
+    "shoulder_front": 1.0,
 }
 
 CLEARANCE_HOLD_GAINS = {
@@ -243,7 +243,7 @@ CLEARANCE_COMPLIANT_HOLDS_BY_ACTIVE = {
 }
 
 CLEARANCE_JOINT_HOLD_TAU = {
-    "shoulder_front": 2.5,
+    "shoulder_front": 3.0,
 }
 
 NUDGE_HOLD_TAU = {
@@ -251,6 +251,39 @@ NUDGE_HOLD_TAU = {
     "shoulder_front": 3.8,
     "elbow": 2.2,
     "wrist": 0.55,
+}
+
+NUDGE_WRIST_ACTIVE_LOW_SHOULDER_FRONT_THRESHOLD = 1.8
+NUDGE_LOW_SHOULDER_FRONT_HOLD_TAU = 1.2
+NUDGE_LOW_SHOULDER_WRIST_SIDE_HOLD_TAU = -0.35
+NUDGE_LOW_SHOULDER_GAINS = {
+    "wrist_side": {"kp": 24.0, "kd": 2.4},
+}
+NUDGE_LOW_SHOULDER_MIN_SECONDS = {
+    "wrist_side": 4.5,
+}
+NUDGE_LOW_SHOULDER_WRIST_SIDE_FINE_DEADBAND_DEG = 0.8
+NUDGE_LOW_SHOULDER_WRIST_SIDE_FINE_MAX_BIAS_DEG = 1.2
+NUDGE_LOW_SHOULDER_WRIST_SIDE_FINE_GAINS = {
+    "kp": 24.0,
+    "kd": 2.8,
+    "seconds": 2.0,
+}
+NUDGE_LOW_SHOULDER_WRIST_HOLD_GAINS = {
+    "shoulder_rotate": {"kp": 24.0, "kd": 4.5},
+    "shoulder_side": {"kp": 65.0, "kd": 4.5},
+    "arm_roll": {"kp": 12.0, "kd": 7.0},
+}
+NUDGE_LOW_SHOULDER_WRIST_HOLD_TAU = {
+    "arm_roll": -0.55,
+    "shoulder_rotate": -0.8,
+    "shoulder_side": 0.7,
+}
+NUDGE_LOW_SHOULDER_ARM_ROLL_ACTIVE_TAU = -0.65
+NUDGE_LOW_SHOULDER_ARM_ROLL_HOLD_TAU = {
+    "elbow": 5.1,
+    "shoulder_rotate": -0.8,
+    "wrist_side": -0.25,
 }
 
 NUDGE_ACTIVE_TAU = {
@@ -276,6 +309,26 @@ NUDGE_STEP_DEG = {}
 NUDGE_MIN_SECONDS = {
     "shoulder_front": 2.2,
     "arm_roll": 1.2,
+}
+
+PREHOME_CLEARANCE_GAINS = {
+    "wrist_side": {"kp": 16.0, "kd": 2.2},
+    "arm_roll": {"kp": 12.0, "kd": 7.0},
+}
+
+PREHOME_CLEARANCE_BASE_SECONDS = {
+    "wrist_side": 6.0,
+    "arm_roll": 8.0,
+}
+
+PREHOME_CLEARANCE_SECONDS_PER_DEG = {
+    "wrist_side": 6.0 / 5.0,
+    "arm_roll": 8.0 / 10.0,
+}
+
+PREHOME_CLEARANCE_MAX_SECONDS = {
+    "wrist_side": 20.0,
+    "arm_roll": 20.0,
 }
 
 NUDGE_COMPLIANT_HOLD_GAINS = {
@@ -321,6 +374,20 @@ NUDGE_COMPLIANT_HOLDS_BY_ACTIVE = {
     "arm_roll": {"shoulder_rotate", "wrist_side", "wrist"},
     "shoulder_rotate": {"arm_roll", "wrist_side", "wrist"},
     "wrist": {"arm_roll"},
+}
+
+NUDGE_LOW_SHOULDER_COMPLIANT_HOLD_GAINS_BY_ACTIVE = {
+    "shoulder_front": {
+        "arm_roll": {"kp": 12.0, "kd": 7.0},
+        "shoulder_rotate": {"kp": 12.0, "kd": 5.0},
+        "wrist_side": {"kp": 8.0, "kd": 1.6},
+    },
+    "arm_roll": {
+        "shoulder_rotate": {"kp": 12.0, "kd": 5.0},
+        "wrist_side": {"kp": 8.0, "kd": 1.6},
+        "wrist": {"kp": 6.0, "kd": 2.0},
+    },
+    "wrist": NUDGE_LOW_SHOULDER_WRIST_HOLD_GAINS,
 }
 
 NUDGE_COUPLED_ACTIVE_RATIOS = {}
@@ -1092,6 +1159,80 @@ def home_hold_plan_for(
     return hold_targets, hold_gains
 
 
+def prehome_clearance_gains_for(name: str, fallback_kp: float, fallback_kd: float) -> Dict[str, float]:
+    if name in PREHOME_CLEARANCE_GAINS:
+        return PREHOME_CLEARANCE_GAINS[name]
+    return NUDGE_GAINS.get(name, CLEARANCE_MOVE_GAINS.get(name, {"kp": fallback_kp, "kd": fallback_kd}))
+
+
+def prehome_clearance_seconds_for(name: str, delta_deg: float) -> float:
+    default_base = 6.0 if name == "wrist" else 2.2
+    base = PREHOME_CLEARANCE_BASE_SECONDS.get(name, NUDGE_MIN_SECONDS.get(name, default_base))
+    seconds_per_deg = PREHOME_CLEARANCE_SECONDS_PER_DEG.get(name)
+    if seconds_per_deg is not None:
+        base = max(base, abs(delta_deg) * seconds_per_deg)
+    return min(PREHOME_CLEARANCE_MAX_SECONDS.get(name, 20.0), base)
+
+
+def prehome_clearance_hold_gains_for(
+    active: str,
+    hold_names: Iterable[str],
+    fallback_kp: float,
+    fallback_kd: float,
+) -> Dict[str, Dict[str, float]]:
+    hold_gains = {
+        hold_name: CLEARANCE_HOLD_GAINS.get(
+            hold_name,
+            CLEARANCE_BASE_HOLD_GAINS.get(hold_name, {"kp": fallback_kp, "kd": fallback_kd}),
+        )
+        for hold_name in hold_names
+    }
+    for compliant_name in CLEARANCE_COMPLIANT_HOLDS_BY_ACTIVE.get(active, set()):
+        if compliant_name in hold_gains:
+            hold_gains[compliant_name] = CLEARANCE_COMPLIANT_HOLD_GAINS[compliant_name]
+    nudge_compliant_gains = NUDGE_COMPLIANT_HOLD_GAINS_BY_ACTIVE.get(active, NUDGE_COMPLIANT_HOLD_GAINS)
+    for compliant_name in NUDGE_COMPLIANT_HOLDS_BY_ACTIVE.get(active, set()):
+        if compliant_name in hold_gains:
+            hold_gains[compliant_name] = nudge_compliant_gains[compliant_name]
+    return hold_gains
+
+
+def nudge_hold_tau_for(active: str, hold_targets: Dict[str, float], low_shoulder_front: bool = False) -> Dict[str, float]:
+    hold_tau = dict(NUDGE_HOLD_TAU)
+    if low_shoulder_front and "shoulder_front" in hold_targets:
+        hold_tau["shoulder_front"] = NUDGE_LOW_SHOULDER_FRONT_HOLD_TAU
+    if low_shoulder_front and active in ("shoulder_front", "wrist") and "wrist_side" in hold_targets:
+        hold_tau["wrist_side"] = NUDGE_LOW_SHOULDER_WRIST_SIDE_HOLD_TAU
+    if low_shoulder_front and active == "shoulder_front":
+        for hold_name, tau in NUDGE_LOW_SHOULDER_WRIST_HOLD_TAU.items():
+            if hold_name in hold_targets:
+                hold_tau[hold_name] = tau
+    if low_shoulder_front and active in ("wrist_side", "wrist"):
+        for hold_name, tau in NUDGE_LOW_SHOULDER_WRIST_HOLD_TAU.items():
+            if hold_name in hold_targets:
+                hold_tau[hold_name] = tau
+    if low_shoulder_front and active == "arm_roll":
+        for hold_name, tau in NUDGE_LOW_SHOULDER_ARM_ROLL_HOLD_TAU.items():
+            if hold_name in hold_targets:
+                hold_tau[hold_name] = tau
+    return hold_tau
+
+
+def nudge_active_tau_for(name: str, delta_deg: float) -> float:
+    active_tau = NUDGE_ACTIVE_TAU.get(name, 0.0)
+    if name == "shoulder_front" and delta_deg < 0:
+        return 0.0
+    return active_tau
+
+
+def is_low_shoulder_front(current: Dict[str, float]) -> bool:
+    shoulder_front = current.get("shoulder_front")
+    return (
+        shoulder_front is not None
+        and shoulder_front < NUDGE_WRIST_ACTIVE_LOW_SHOULDER_FRONT_THRESHOLD
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Clean v2 left-arm bring-up controller")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -1417,8 +1558,11 @@ def main() -> None:
                         "limits=",
                         json.dumps(target_limits, ensure_ascii=False),
                     )
+            low_shoulder_front = is_low_shoulder_front(current)
             if args.auto_gains:
-                if name == "wrist":
+                if low_shoulder_front and name in NUDGE_LOW_SHOULDER_GAINS:
+                    active_gains = NUDGE_LOW_SHOULDER_GAINS[name]
+                elif name == "wrist":
                     active_gains = COUPLED_CLEARANCE_WRIST_FINE_GAINS
                 elif name == "wrist_side":
                     active_gains = CLEARANCE_HOLD_GAINS["wrist_side"]
@@ -1428,6 +1572,8 @@ def main() -> None:
                 kd = active_gains["kd"]
                 if name == "wrist":
                     args.seconds = max(args.seconds, COUPLED_CLEARANCE_WRIST_FINE_GAINS["seconds"])
+                if low_shoulder_front and name in NUDGE_LOW_SHOULDER_MIN_SECONDS:
+                    args.seconds = max(args.seconds, NUDGE_LOW_SHOULDER_MIN_SECONDS[name])
                 if name in NUDGE_MIN_SECONDS:
                     args.seconds = max(args.seconds, NUDGE_MIN_SECONDS[name])
             else:
@@ -1445,6 +1591,11 @@ def main() -> None:
                 if compliant_name in hold_gains:
                     hold_gains[compliant_name] = CLEARANCE_COMPLIANT_HOLD_GAINS[compliant_name]
             nudge_compliant_gains = NUDGE_COMPLIANT_HOLD_GAINS_BY_ACTIVE.get(name, NUDGE_COMPLIANT_HOLD_GAINS)
+            if is_low_shoulder_front(current):
+                nudge_compliant_gains = {
+                    **nudge_compliant_gains,
+                    **NUDGE_LOW_SHOULDER_COMPLIANT_HOLD_GAINS_BY_ACTIVE.get(name, {}),
+                }
             for compliant_name in NUDGE_COMPLIANT_HOLDS_BY_ACTIVE.get(name, set()):
                 if compliant_name in hold_gains:
                     hold_gains[compliant_name] = nudge_compliant_gains[compliant_name]
@@ -1469,8 +1620,9 @@ def main() -> None:
                     coupled_tau[coupled_name] = NUDGE_HOLD_TAU[coupled_name]
                 hold_targets.pop(coupled_name, None)
                 hold_gains.pop(coupled_name, None)
+            hold_tau = nudge_hold_tau_for(name, hold_targets, low_shoulder_front)
             if name in NUDGE_ACTIVE_TAU:
-                coupled_tau[name] = NUDGE_ACTIVE_TAU[name]
+                coupled_tau[name] = nudge_active_tau_for(name, args.deg)
             print(
                 "v2.5.3 nudge-hold active",
                 name,
@@ -1487,13 +1639,35 @@ def main() -> None:
             )
             print(
                 "v2.5.3 nudge-hold hold_tau=",
-                json.dumps({joint: NUDGE_HOLD_TAU[joint] for joint in hold_targets if joint in NUDGE_HOLD_TAU}, ensure_ascii=False),
+                json.dumps({joint: hold_tau[joint] for joint in hold_targets if joint in hold_tau}, ensure_ascii=False),
                 "control_dt=",
                 0.01,
             )
-            active_tau = NUDGE_ACTIVE_TAU.get(name, 0.0)
+            if hold_tau.get("shoulder_front") != NUDGE_HOLD_TAU.get("shoulder_front"):
+                print(
+                    "v2.5.3 nudge-hold adjusted shoulder_front hold_tau=",
+                    hold_tau["shoulder_front"],
+                    "shoulder_front_pos=",
+                    hold_targets.get("shoulder_front"),
+                )
+            active_tau = nudge_active_tau_for(name, args.deg)
+            if low_shoulder_front and name == "arm_roll":
+                active_tau = NUDGE_LOW_SHOULDER_ARM_ROLL_ACTIVE_TAU
             if active_tau:
                 print("v2.5.3 nudge-hold active_tau=", {name: active_tau})
+            if name in NUDGE_LOW_SHOULDER_GAINS and is_low_shoulder_front(current):
+                print(
+                    "v2.5.3 nudge-hold low shoulder gains active",
+                    name,
+                    "shoulder_front_pos=",
+                    current.get("shoulder_front"),
+                )
+            low_shoulder_hold_overrides = NUDGE_LOW_SHOULDER_COMPLIANT_HOLD_GAINS_BY_ACTIVE.get(name, {})
+            if low_shoulder_hold_overrides and is_low_shoulder_front(current):
+                print(
+                    "v2.5.3 nudge-hold low shoulder compliant hold overrides=",
+                    json.dumps(low_shoulder_hold_overrides, ensure_ascii=False),
+                )
             preload_seconds = NUDGE_PRELOAD_SECONDS.get(name, 0.2)
             if preload_seconds != 0.2:
                 print("v2.5.3 nudge-hold preload_seconds=", preload_seconds)
@@ -1541,7 +1715,7 @@ def main() -> None:
                     hold_gains=hold_gains,
                     fallback_kp=args.kp,
                     fallback_kd=args.kd,
-                    hold_tau=NUDGE_HOLD_TAU,
+                    hold_tau=hold_tau,
                     preload_seconds=preload_seconds,
                     control_dt=0.01,
                     move_tau_ff=coupled_tau,
@@ -1560,7 +1734,7 @@ def main() -> None:
                 hold_gains=hold_gains,
                 fallback_kp=args.kp,
                 fallback_kd=args.kd,
-                hold_tau=NUDGE_HOLD_TAU,
+                hold_tau=hold_tau,
                 active_tau=active_tau,
                 step_deg=step_deg,
                 control_dt=0.01,
@@ -1568,6 +1742,56 @@ def main() -> None:
                 trajectory=trajectory,
                 linear_blend=linear_blend,
             )
+            if name == "wrist_side" and is_low_shoulder_front(current):
+                wrist_side_pos = arm.positions([name])[name]
+                wrist_side_delta_deg = math.degrees(target - wrist_side_pos)
+                if abs(wrist_side_delta_deg) > NUDGE_LOW_SHOULDER_WRIST_SIDE_FINE_DEADBAND_DEG:
+                    fine = NUDGE_LOW_SHOULDER_WRIST_SIDE_FINE_GAINS
+                    fine_bias_deg = max(
+                        -NUDGE_LOW_SHOULDER_WRIST_SIDE_FINE_MAX_BIAS_DEG,
+                        min(NUDGE_LOW_SHOULDER_WRIST_SIDE_FINE_MAX_BIAS_DEG, wrist_side_delta_deg),
+                    )
+                    fine_target = target + math.radians(fine_bias_deg)
+                    print(
+                        "v2.5.3 nudge-hold low shoulder wrist_side fine",
+                        "delta_deg=",
+                        wrist_side_delta_deg,
+                        "bias_deg=",
+                        fine_bias_deg,
+                        "target=",
+                        fine_target,
+                        "kp=",
+                        fine["kp"],
+                        "kd=",
+                        fine["kd"],
+                        "seconds=",
+                        fine["seconds"],
+                    )
+                    arm.move_target_with_holds(
+                        name,
+                        fine_target,
+                        seconds_per_step=fine["seconds"],
+                        kp=fine["kp"],
+                        kd=fine["kd"],
+                        hold_targets=hold_targets,
+                        hold_gains=hold_gains,
+                        fallback_kp=args.kp,
+                        fallback_kd=args.kd,
+                        hold_tau=hold_tau,
+                        active_tau=active_tau,
+                        step_deg=0.0,
+                        control_dt=0.01,
+                        preload_seconds=0.1,
+                        trajectory="smoothstep",
+                        linear_blend=0.0,
+                    )
+                else:
+                    print(
+                        "v2.5.3 nudge-hold low shoulder wrist_side fine skip delta_deg=",
+                        wrist_side_delta_deg,
+                        "deadband_deg=",
+                        NUDGE_LOW_SHOULDER_WRIST_SIDE_FINE_DEADBAND_DEG,
+                    )
             arm.print_status(all_names)
             return
 
@@ -1624,31 +1848,25 @@ def main() -> None:
                             f"{prehome_name} pre-home clearance delta {delta_deg:.2f} deg exceeds "
                             f"--max-delta-deg {args.max_delta_deg}; move in smaller steps."
                         )
-                    active_gains = NUDGE_GAINS.get(
-                        prehome_name,
-                        CLEARANCE_MOVE_GAINS.get(prehome_name, {"kp": args.kp, "kd": args.kd}),
-                    )
-                    seconds = NUDGE_MIN_SECONDS.get(prehome_name, 6.0 if prehome_name == "wrist" else 2.2)
+                    active_gains = prehome_clearance_gains_for(prehome_name, args.kp, args.kd)
+                    seconds = prehome_clearance_seconds_for(prehome_name, delta_deg)
                     hold_targets = {
                         hold_name: prehome_current[hold_name]
                         for hold_name in DEFAULT_JOINTS
                         if hold_name != prehome_name
                     }
-                    hold_gains = {
-                        hold_name: CLEARANCE_HOLD_GAINS.get(
-                            hold_name,
-                            CLEARANCE_BASE_HOLD_GAINS.get(hold_name, {"kp": args.kp, "kd": args.kd}),
-                        )
-                        for hold_name in hold_targets
-                    }
-                    nudge_compliant_gains = NUDGE_COMPLIANT_HOLD_GAINS_BY_ACTIVE.get(
+                    hold_gains = prehome_clearance_hold_gains_for(
                         prehome_name,
-                        NUDGE_COMPLIANT_HOLD_GAINS,
+                        hold_targets.keys(),
+                        args.kp,
+                        args.kd,
                     )
-                    for compliant_name in NUDGE_COMPLIANT_HOLDS_BY_ACTIVE.get(prehome_name, set()):
-                        if compliant_name in hold_gains:
-                            hold_gains[compliant_name] = nudge_compliant_gains[compliant_name]
-                    active_tau = NUDGE_ACTIVE_TAU.get(prehome_name, 0.0)
+                    hold_tau = nudge_hold_tau_for(
+                        prehome_name,
+                        hold_targets,
+                        is_low_shoulder_front(prehome_current),
+                    )
+                    active_tau = nudge_active_tau_for(prehome_name, delta_deg)
                     preload_seconds = NUDGE_PRELOAD_SECONDS.get(prehome_name, 0.2)
                     trajectory = NUDGE_TRAJECTORY.get(prehome_name, "smoothstep")
                     linear_blend = NUDGE_LINEAR_BLEND.get(prehome_name, 0.0)
@@ -1670,6 +1888,24 @@ def main() -> None:
                     )
                     if active_tau:
                         print("v2.5.3 pre-home clearance active_tau=", {prehome_name: active_tau})
+                    print(
+                        "v2.5.3 pre-home clearance hold_tau=",
+                        json.dumps({joint: hold_tau[joint] for joint in hold_targets if joint in hold_tau}, ensure_ascii=False),
+                    )
+                    compliant_hold_names = (
+                        CLEARANCE_COMPLIANT_HOLDS_BY_ACTIVE.get(prehome_name, set())
+                        | NUDGE_COMPLIANT_HOLDS_BY_ACTIVE.get(prehome_name, set())
+                    )
+                    compliant_holds = {
+                        joint: hold_gains[joint]
+                        for joint in compliant_hold_names
+                        if joint in hold_gains
+                    }
+                    if compliant_holds:
+                        print(
+                            "v2.5.3 pre-home clearance compliant hold gains=",
+                            json.dumps(compliant_holds, ensure_ascii=False),
+                        )
                     arm.move_target_with_holds(
                         prehome_name,
                         prehome_target,
@@ -1680,7 +1916,7 @@ def main() -> None:
                         hold_gains=hold_gains,
                         fallback_kp=args.kp,
                         fallback_kd=args.kd,
-                        hold_tau=NUDGE_HOLD_TAU,
+                        hold_tau=hold_tau,
                         active_tau=active_tau,
                         control_dt=0.01,
                         preload_seconds=preload_seconds,
@@ -1695,15 +1931,20 @@ def main() -> None:
                     continue
                 if name in completed_targets:
                     continue
-                if name == "elbow" and "shoulder_front" in targets and "shoulder_side" in targets:
-                    group_names = ["elbow", "shoulder_front", "shoulder_side"]
+                if name == "elbow" and "shoulder_front" in targets:
+                    group_names = ["elbow", "shoulder_front"]
+                    if "shoulder_side" in ordered and "shoulder_side" in home:
+                        group_names.append("shoulder_side")
                     if "arm_roll" in targets:
                         group_names.append("arm_roll")
                     if "wrist_side" in targets:
                         group_names.append("wrist_side")
                     if "wrist" in targets:
                         group_names.append("wrist")
-                    group_targets = {group_name: targets[group_name] for group_name in group_names}
+                    group_targets = {
+                        group_name: targets.get(group_name, home[group_name])
+                        for group_name in group_names
+                    }
                     command_targets = dict(group_targets)
                     command_bias = {
                         group_name: math.radians(COUPLED_HOME_COMMAND_BIAS_DEG[group_name])
