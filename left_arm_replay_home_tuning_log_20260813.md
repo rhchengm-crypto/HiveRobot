@@ -204,3 +204,38 @@ Code syntax check used during tuning:
 ```text
 python -m py_compile scripts/left_arm_v2_5_3.py scripts/left_arm_v2_5_3_move_library.py
 ```
+
+## 2026-08-14 v2.6 nudge-hold adaptive offset
+
+Added v2.6 controller/script copies and web-control notes for low-shoulder adaptive hold compensation.
+
+Observed `shoulder_front:-2 deg` from home/low-shoulder posture:
+
+- `arm_roll` initially drifted about `2.5-2.7 deg`.
+- Hold-tau learning plateaued around `arm_roll tau=-0.545..-0.565`.
+- The first implementation waited for a run without a same-run hold-tau update, so it stayed pending while tau explored around the best value.
+- Changed nudge-hold learning so a same-run hold-tau record that reaches `samples>=3` and `plateau/backoff` can immediately enter hold-target offset learning.
+- Changed hold-target offset application so an existing offset is applied immediately on matching nudges, even while hold-tau continues exploring.
+
+Current useful learned value from robot-side data:
+
+```text
+shoulder_front:negative -> arm_roll hold-target bias ~= +2.2933 deg
+arm_roll hold_tau ~= -0.545..-0.565
+```
+
+Validation after homing:
+
+- With `arm_roll` hold-target bias `+1.9086 deg`, true `arm_roll` drift dropped to about `1.09 deg`.
+- With `arm_roll` hold-target bias `+2.2933 deg`, true `arm_roll` drift was about `0.24-0.46 deg` on later home-near `shoulder_front:-2 deg` tests.
+
+Important interpretation:
+
+- Adaptive records are keyed by active joint and direction, e.g. `shoulder_front:negative -> arm_roll`.
+- The `wrist:positive -> arm_roll` case is separate. First observed `wrist:+2 deg` caused about `2.73 deg` `arm_roll` drift and started its own hold-tau learning at sample 1.
+- Current low-shoulder detection is a simple absolute shoulder-front threshold: `shoulder_front < 1.8 rad` (`103.1 deg`). Home is about `1.517 rad` (`86.9 deg`), so home is currently treated as low-shoulder.
+
+Follow-up:
+
+- Consider adding posture buckets based on `shoulder_front` offset from home or ranges, because one low-shoulder bucket may be too broad across all chess-piece positions.
+- Consider offset-learning hysteresis, for example no additional offset learning for residuals in a `1.0-1.3 deg` gray band, to avoid chasing edge noise.
