@@ -1692,7 +1692,7 @@ def main() -> None:
     parser.add_argument("--arm-script", default=DEFAULT_ARM_SCRIPT)
     parser.add_argument("--move-script", default=DEFAULT_MOVE_SCRIPT)
     parser.add_argument("--python-bin", default="python3")
-    parser.add_argument("--sudo", action="store_true", help="Run arm commands through sudo -n. Default is direct python.")
+    parser.add_argument("--sudo", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--no-sudo", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--enable-execute", action="store_true")
     parser.add_argument("--run-log", default=DEFAULT_RUN_LOG)
@@ -1734,6 +1734,8 @@ def main() -> None:
     parser.add_argument("--camera-pitch-down-deg", type=float, default=DEFAULT_CAMERA_PITCH_DOWN_DEG)
     parser.add_argument("--grasp-strategy", choices=("auto", "normal", "extreme-near-left"), default="auto")
     args = parser.parse_args()
+    if args.sudo:
+        print("v2.6 web control: ignoring --sudo; arm commands run as the current user", flush=True)
 
     import rospy
     from sensor_msgs.msg import CameraInfo, Image
@@ -1742,7 +1744,7 @@ def main() -> None:
         arm_script=os.path.abspath(args.arm_script),
         move_script=os.path.abspath(args.move_script),
         python_bin=args.python_bin,
-        use_sudo=bool(args.sudo and not args.no_sudo),
+        use_sudo=False,
         execute_enabled=args.enable_execute,
         run_log=args.run_log,
         moves_file=os.path.abspath(args.moves_file),

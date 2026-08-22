@@ -31,6 +31,7 @@ HOME_PATH = os.path.join(SCRIPT_DIR, "data", "left_arm_v2_home.json")
 TABLE_CLEARANCE_PATH = os.path.join(SCRIPT_DIR, "data", "left_arm_v2_table_clearance.json")
 CLAW_HOME_PATH = os.path.join(SCRIPT_DIR, "data", "left_arm_v2_claw_home.json")
 ADAPTIVE_HOLD_TAU_PATH = os.path.join(SCRIPT_DIR, "data", "left_arm_v2_6_adaptive_hold_tau.json")
+ADAPTIVE_ACTIVE_TAU_PATH = os.path.join(SCRIPT_DIR, "data", "left_arm_v2_6_adaptive_active_tau.json")
 ADAPTIVE_TARGET_BIAS_PATH = os.path.join(SCRIPT_DIR, "data", "left_arm_v2_6_adaptive_target_bias.json")
 ADAPTIVE_HOLD_TARGET_BIAS_PATH = os.path.join(SCRIPT_DIR, "data", "left_arm_v2_6_adaptive_hold_target_bias.json")
 
@@ -307,6 +308,7 @@ ADAPTIVE_HOLD_TAU_STEP_PER_DEG = 0.01
 ADAPTIVE_HOLD_TAU_MAX_STEP = 0.08
 ADAPTIVE_HOLD_TAU_MIN_EXPLORATION_STEP = 0.01
 ADAPTIVE_HOLD_TAU_MIN_STEP_SCALE = 0.20
+ADAPTIVE_HOLD_TAU_TARGET_BIAS_HANDOFF_DEG = 1.1
 ADAPTIVE_TARGET_BIAS_ERROR_DEADBAND_DEG = 1.0
 ADAPTIVE_TARGET_BIAS_STEP_SCALE = 0.5
 ADAPTIVE_TARGET_BIAS_MAX_STEP_DEG = 0.75
@@ -315,10 +317,15 @@ ADAPTIVE_TARGET_BIAS_MIN_HOLD_TAU_SAMPLES = 3
 ADAPTIVE_HOLD_TARGET_BIAS_STEP_SCALE = 0.5
 ADAPTIVE_HOLD_TARGET_BIAS_MAX_STEP_DEG = 0.75
 ADAPTIVE_HOLD_TARGET_BIAS_LIMIT_DEG = 5.0
+ADAPTIVE_ACTIVE_TAU_ERROR_DEADBAND_DEG = 1.0
+ADAPTIVE_ACTIVE_TAU_IMPROVEMENT_DEADBAND_DEG = 0.20
+ADAPTIVE_ACTIVE_TAU_STEP_PER_DEG = 0.02
+ADAPTIVE_ACTIVE_TAU_MAX_STEP = 0.05
+ADAPTIVE_ACTIVE_TAU_MIN_STEP_SCALE = 0.20
 ACTIVE_TAU_RULES = {
     "base": {
         "shoulder_front": {"positive": 2.4, "negative": 0.0},
-        "wrist": {"positive": 0.55, "negative": 0.55},
+        "wrist": {"positive": 0.40, "negative": 0.40},
     },
     LOW_SHOULDER_POSTURE: {
         "arm_roll": {"positive": -0.45, "negative": -0.65},
@@ -326,7 +333,7 @@ ACTIVE_TAU_RULES = {
 }
 ACTIVE_TAU_LIMITS = {
     "shoulder_front": (0.0, 2.4),
-    "arm_roll": (-0.8, -0.2),
+    "arm_roll": (-0.8, 0.2),
     "wrist": (0.35, 0.7),
 }
 
@@ -521,6 +528,22 @@ COUPLED_CLEARANCE_WRIST_FINE_GAINS = {
     "seconds": 8.0,
 }
 
+WRIST_ACTIVE_SOFT_GAINS = {
+    "kp": COUPLED_CLEARANCE_MOVE_GAINS["wrist"]["kp"],
+    "kd": COUPLED_CLEARANCE_MOVE_GAINS["wrist"]["kd"],
+    "seconds": 12.0,
+    "max_seconds": 12.0,
+}
+WRIST_ACTIVE_REPLAY_TRAJECTORY = "blend_smootherstep"
+WRIST_ACTIVE_REPLAY_LINEAR_BLEND = 0.35
+WRIST_ACTIVE_REPLAY_VELOCITY_FF = False
+WRIST_ACTIVE_REPLAY_ACTIVE_TAU = 0.0
+WRIST_ACTIVE_NUDGE_GAINS = {
+    "kp": 22.0,
+    "kd": 4.7,
+}
+WRIST_ACTIVE_NUDGE_MIN_SECONDS = 6.0
+
 CLEARANCE_BASE_HOLD_GAINS = {
     "wrist": {"kp": 6.0, "kd": 0.8},
     "wrist_side": {"kp": 6.0, "kd": 0.8},
@@ -532,7 +555,7 @@ CLEARANCE_BASE_HOLD_GAINS = {
 }
 
 NUDGE_GAINS = {
-    "wrist": {"kp": 18.0, "kd": 1.2},
+    "wrist": {"kp": WRIST_ACTIVE_SOFT_GAINS["kp"], "kd": WRIST_ACTIVE_SOFT_GAINS["kd"]},
     "wrist_side": {"kp": 18.0, "kd": 1.2},
     "arm_roll": {"kp": 12.0, "kd": 7.0},
     "elbow": {"kp": 70.0, "kd": 3.0},
@@ -966,8 +989,12 @@ class LeftArmV2:
                 now = time.time()
                 t = (now - step_start) / max(seconds_per_step, 1e-6)
                 if active_velocity_ff and steps == 1:
-                    s = smootherstep(t)
-                    active_velocity = delta * smootherstep_derivative(t) / max(seconds_per_step, 1e-6)
+                    if trajectory == "blend_smootherstep":
+                        s = blend_smootherstep(t, linear_blend)
+                        active_velocity = delta * blend_smootherstep_derivative(t, linear_blend) / max(seconds_per_step, 1e-6)
+                    else:
+                        s = smootherstep(t)
+                        active_velocity = delta * smootherstep_derivative(t) / max(seconds_per_step, 1e-6)
                 elif trajectory == "blend_smootherstep":
                     s = blend_smootherstep(t, linear_blend)
                     active_velocity = 0.0
@@ -1068,6 +1095,18 @@ class LeftArmV2:
             steps = 1
         steps = max(1, steps)
 
+        def active_tau_for_progress(name: str, progress: float) -> float:
+            config = move_tau_ff.get(name, 0.0)
+            if not isinstance(config, dict):
+                return float(config)
+            start_tau = float(config.get("start_tau", config.get("tau", 0.0)))
+            end_tau = float(config.get("end_tau", config.get("tau", start_tau)))
+            ramp_fraction = max(1e-6, float(config.get("ramp_fraction", 1.0)))
+            ramp_progress = max(0.0, min(1.0, progress / ramp_fraction))
+            if config.get("ramp") == "smoothstep":
+                ramp_progress = smoothstep(ramp_progress)
+            return start_tau * (1.0 - ramp_progress) + end_tau * ramp_progress
+
         preload_targets = dict(hold_targets)
         preload_targets.update(starts)
         start_time = time.time()
@@ -1075,7 +1114,7 @@ class LeftArmV2:
             for name, target in preload_targets.items():
                 if name in starts:
                     gains = move_gains.get(name, {})
-                    tau = 0.0
+                    tau = active_tau_for_progress(name, 0.0)
                 else:
                     gains = hold_gains.get(name, {})
                     tau = hold_tau.get(name, 0.0)
@@ -1118,7 +1157,7 @@ class LeftArmV2:
                     kp = gains.get("kp", fallback_kp)
                     kd = gains.get("kd", fallback_kd)
                     target = previous[name] * (1.0 - local_s) + intermediates[name] * local_s
-                    active_tau = move_tau_ff.get(name, 0.0)
+                    active_tau = active_tau_for_progress(name, t)
                     self.ctrl.controlMIT(self.motors[name], kp, kd, target, active_velocity, active_tau)
                 for hold_name, hold_target in hold_targets.items():
                     gains = hold_gains.get(hold_name, {})
@@ -1135,7 +1174,7 @@ class LeftArmV2:
             for name, target in final_targets.items():
                 if name in targets:
                     gains = move_gains.get(name, {})
-                    tau = move_tau_ff.get(name, 0.0)
+                    tau = active_tau_for_progress(name, 1.0)
                 else:
                     gains = hold_gains.get(name, {})
                     tau = hold_tau.get(name, 0.0)
@@ -1331,6 +1370,25 @@ def save_adaptive_hold_tau(data: dict, path: str = ADAPTIVE_HOLD_TAU_PATH) -> No
         f.write("\n")
 
 
+def load_adaptive_active_tau(path: str = ADAPTIVE_ACTIVE_TAU_PATH) -> dict:
+    if not os.path.exists(path):
+        return {"type": "left_arm_v2_6_adaptive_active_tau", "rules": {}}
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    if "rules" not in data or not isinstance(data["rules"], dict):
+        raise RuntimeError(f"invalid adaptive active tau file: {path}")
+    return data
+
+
+def save_adaptive_active_tau(data: dict, path: str = ADAPTIVE_ACTIVE_TAU_PATH) -> None:
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    data["type"] = "left_arm_v2_6_adaptive_active_tau"
+    data["updated_at"] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2, sort_keys=True)
+        f.write("\n")
+
+
 def load_adaptive_target_bias(path: str = ADAPTIVE_TARGET_BIAS_PATH) -> dict:
     if not os.path.exists(path):
         return {"type": "left_arm_v2_6_adaptive_target_bias", "rules": {}}
@@ -1434,15 +1492,16 @@ def update_adaptive_hold_target_bias(
         if abs(error_deg) < ADAPTIVE_TARGET_BIAS_ERROR_DEADBAND_DEG:
             continue
         previous = rules.get(hold_name, {})
-        current_bias = float(previous.get("bias_deg", 0.0)) if isinstance(previous, dict) else float(previous or 0.0)
-        previous_error = abs(float(previous.get("last_error_deg", error_deg))) if isinstance(previous, dict) else None
+        has_previous = isinstance(previous, dict) and bool(previous)
+        current_bias = float(previous.get("bias_deg", 0.0)) if has_previous else float(previous or 0.0)
+        previous_error = abs(float(previous.get("last_error_deg", error_deg))) if has_previous else None
         best_error = (
             abs(float(previous.get("best_error_deg", previous.get("last_error_deg", error_deg))))
-            if isinstance(previous, dict)
+            if has_previous
             else abs(error_deg)
         )
-        best_bias = float(previous.get("best_bias_deg", current_bias)) if isinstance(previous, dict) else current_bias
-        step_scale = float(previous.get("step_scale", 1.0)) if isinstance(previous, dict) else 1.0
+        best_bias = float(previous.get("best_bias_deg", current_bias)) if has_previous else current_bias
+        step_scale = float(previous.get("step_scale", 1.0)) if has_previous else 1.0
         abs_error = abs(error_deg)
         improved = abs_error < best_error - ADAPTIVE_HOLD_TAU_IMPROVEMENT_DEADBAND_DEG
         refined_best = abs_error < best_error
@@ -1454,29 +1513,35 @@ def update_adaptive_hold_target_bias(
             best_error = abs_error
             best_bias = current_bias
         if improved:
-            current_bias = current_bias
+            base_bias = current_bias
         elif worse:
-            current_bias = best_bias
+            base_bias = best_bias
             step_scale = max(ADAPTIVE_HOLD_TAU_MIN_STEP_SCALE, step_scale * 0.5)
         elif previous_error is not None:
-            current_bias = best_bias
+            base_bias = best_bias
             step_scale = max(ADAPTIVE_HOLD_TAU_MIN_STEP_SCALE, step_scale * 0.8)
-        delta_bias = max(
-            -ADAPTIVE_HOLD_TARGET_BIAS_MAX_STEP_DEG * step_scale,
-            min(
-                ADAPTIVE_HOLD_TARGET_BIAS_MAX_STEP_DEG * step_scale,
-                error_deg * ADAPTIVE_HOLD_TARGET_BIAS_STEP_SCALE * step_scale,
-            ),
-        )
-        new_bias = max(
-            -ADAPTIVE_HOLD_TARGET_BIAS_LIMIT_DEG,
-            min(ADAPTIVE_HOLD_TARGET_BIAS_LIMIT_DEG, current_bias + delta_bias),
-        )
+        else:
+            base_bias = current_bias
+        if has_previous and (worse or (previous_error is not None and not refined_best)):
+            new_bias = best_bias
+        else:
+            delta_bias = max(
+                -ADAPTIVE_HOLD_TARGET_BIAS_MAX_STEP_DEG * step_scale,
+                min(
+                    ADAPTIVE_HOLD_TARGET_BIAS_MAX_STEP_DEG * step_scale,
+                    error_deg * ADAPTIVE_HOLD_TARGET_BIAS_STEP_SCALE * step_scale,
+                ),
+            )
+            new_bias = max(
+                -ADAPTIVE_HOLD_TARGET_BIAS_LIMIT_DEG,
+                min(ADAPTIVE_HOLD_TARGET_BIAS_LIMIT_DEG, base_bias + delta_bias),
+            )
         if new_bias == current_bias:
             continue
         record = {
             "bias_deg": new_bias,
             "previous_bias_deg": current_bias,
+            "base_bias_deg": base_bias,
             "delta_bias_deg": new_bias - current_bias,
             "last_error_deg": error_deg,
             "best_error_deg": best_error,
@@ -1484,7 +1549,7 @@ def update_adaptive_hold_target_bias(
             "step_scale": step_scale,
             "learning_state": "improved" if improved else "backoff" if worse else "plateau",
             "refined_best": refined_best,
-            "samples": int(previous.get("samples", 0)) + 1 if isinstance(previous, dict) else 1,
+            "samples": int(previous.get("samples", 0)) + 1 if has_previous else 1,
             "updated_at": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
         }
         if label:
@@ -1501,6 +1566,8 @@ def update_adaptive_target_bias(
     low_shoulder_front: bool = False,
     path: str = ADAPTIVE_TARGET_BIAS_PATH,
     label: str = "",
+    force_joints: Optional[Iterable[str]] = None,
+    require_ready: bool = True,
 ) -> Dict[str, dict]:
     posture = adaptive_posture_key(low_shoulder_front)
     if posture is None:
@@ -1508,10 +1575,11 @@ def update_adaptive_target_bias(
     data = load_adaptive_target_bias(path)
     rules = data.setdefault("rules", {}).setdefault(posture, {})
     updates = {}
+    forced = set(force_joints or [])
     for joint, error_deg in final_errors_deg.items():
         if abs(error_deg) < ADAPTIVE_TARGET_BIAS_ERROR_DEADBAND_DEG:
             continue
-        if not adaptive_target_bias_ready_for(joint, error_deg, low_shoulder_front):
+        if require_ready and joint not in forced and not adaptive_target_bias_ready_for(joint, error_deg, low_shoulder_front):
             continue
         previous = rules.get(joint, {})
         current_bias = float(previous.get("bias_deg", 0.0)) if isinstance(previous, dict) else float(previous or 0.0)
@@ -1535,7 +1603,6 @@ def update_adaptive_target_bias(
             current_bias = best_bias
             step_scale = max(ADAPTIVE_HOLD_TAU_MIN_STEP_SCALE, step_scale * 0.5)
         elif previous_error is not None:
-            current_bias = best_bias
             step_scale = max(ADAPTIVE_HOLD_TAU_MIN_STEP_SCALE, step_scale * 0.8)
         delta_bias = max(
             -ADAPTIVE_TARGET_BIAS_MAX_STEP_DEG * step_scale,
@@ -1600,6 +1667,103 @@ def adaptive_hold_tau_for(
     return adapted
 
 
+def adaptive_active_tau_for(
+    name: str,
+    delta_deg: float,
+    active_tau: float,
+    low_shoulder_front: bool = False,
+    path: str = ADAPTIVE_ACTIVE_TAU_PATH,
+) -> float:
+    posture = adaptive_posture_key(low_shoulder_front)
+    if posture is None or name not in ACTIVE_TAU_LIMITS:
+        return clamp_tau(name, active_tau, ACTIVE_TAU_LIMITS)
+    data = load_adaptive_active_tau(path)
+    direction = direction_key(delta_deg)
+    record = data.get("rules", {}).get(posture, {}).get(name, {}).get(direction, {})
+    if not record:
+        return clamp_tau(name, active_tau, ACTIVE_TAU_LIMITS)
+    tau = record.get("tau") if isinstance(record, dict) else record
+    if tau is None:
+        return clamp_tau(name, active_tau, ACTIVE_TAU_LIMITS)
+    return clamp_tau(name, float(tau), ACTIVE_TAU_LIMITS)
+
+
+def update_adaptive_active_tau(
+    name: str,
+    delta_deg: float,
+    active_error_deg: float,
+    applied_tau: float,
+    low_shoulder_front: bool = False,
+    path: str = ADAPTIVE_ACTIVE_TAU_PATH,
+    label: str = "",
+    error_deadband_deg: float = ADAPTIVE_ACTIVE_TAU_ERROR_DEADBAND_DEG,
+) -> Dict[str, dict]:
+    posture = adaptive_posture_key(low_shoulder_front)
+    if posture is None or name not in ACTIVE_TAU_LIMITS or abs(active_error_deg) < error_deadband_deg:
+        return {}
+    data = load_adaptive_active_tau(path)
+    direction = direction_key(delta_deg)
+    rules = data.setdefault("rules", {}).setdefault(posture, {}).setdefault(name, {})
+    previous = rules.get(direction, {})
+    has_previous = isinstance(previous, dict) and bool(previous)
+    current_tau = float(applied_tau)
+    previous_error = abs(float(previous.get("last_error_deg", active_error_deg))) if has_previous else None
+    best_error = (
+        abs(float(previous.get("best_error_deg", previous.get("last_error_deg", active_error_deg))))
+        if has_previous
+        else abs(active_error_deg)
+    )
+    best_tau = float(previous.get("best_tau", current_tau)) if has_previous else current_tau
+    step_scale = float(previous.get("step_scale", 1.0)) if has_previous else 1.0
+    abs_error = abs(active_error_deg)
+    improved = abs_error < best_error - ADAPTIVE_ACTIVE_TAU_IMPROVEMENT_DEADBAND_DEG
+    refined_best = abs_error < best_error
+    worse = previous_error is not None and abs_error > previous_error + ADAPTIVE_ACTIVE_TAU_IMPROVEMENT_DEADBAND_DEG
+    if refined_best:
+        best_error = abs_error
+        best_tau = current_tau
+    if improved:
+        base_tau = current_tau
+    elif worse:
+        base_tau = best_tau
+        step_scale = max(ADAPTIVE_ACTIVE_TAU_MIN_STEP_SCALE, step_scale * 0.5)
+    elif previous_error is not None:
+        base_tau = best_tau
+        step_scale = max(ADAPTIVE_ACTIVE_TAU_MIN_STEP_SCALE, step_scale * 0.8)
+    else:
+        base_tau = current_tau
+    delta_tau = max(
+        -ADAPTIVE_ACTIVE_TAU_MAX_STEP * step_scale,
+        min(
+            ADAPTIVE_ACTIVE_TAU_MAX_STEP * step_scale,
+            active_error_deg * ADAPTIVE_ACTIVE_TAU_STEP_PER_DEG * step_scale,
+        ),
+    )
+    new_tau = clamp_tau(name, base_tau + delta_tau, ACTIVE_TAU_LIMITS)
+    if new_tau == base_tau:
+        return {}
+    record = {
+        "tau": new_tau,
+        "previous_tau": base_tau,
+        "applied_tau": current_tau,
+        "delta_tau": new_tau - base_tau,
+        "direction": direction,
+        "last_error_deg": active_error_deg,
+        "best_error_deg": best_error,
+        "best_tau": best_tau,
+        "step_scale": step_scale,
+        "learning_state": "improved" if improved else "backoff" if worse else "plateau",
+        "refined_best": refined_best,
+        "samples": int(previous.get("samples", 0)) + 1 if has_previous else 1,
+        "updated_at": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+    }
+    if label:
+        record["label"] = label
+    rules[direction] = record
+    save_adaptive_active_tau(data, path)
+    return {f"{name}:{direction}": record}
+
+
 def update_adaptive_hold_tau(
     active: str,
     hold_errors_deg: Dict[str, float],
@@ -1629,10 +1793,31 @@ def update_adaptive_hold_tau(
         )
         best_tau = float(previous.get("best_tau", current_tau)) if isinstance(previous, dict) else current_tau
         step_scale = float(previous.get("step_scale", 1.0)) if isinstance(previous, dict) else 1.0
+        if (
+            isinstance(previous, dict)
+            and previous
+            and step_scale <= ADAPTIVE_HOLD_TAU_MIN_STEP_SCALE
+            and best_error <= ADAPTIVE_HOLD_TAU_TARGET_BIAS_HANDOFF_DEG
+            and abs(error_deg) <= ADAPTIVE_HOLD_TAU_TARGET_BIAS_HANDOFF_DEG
+        ):
+            continue
+        previous_successful_direction = float(previous.get("successful_direction", 0.0)) if isinstance(previous, dict) else 0.0
         previous_delta = float(previous.get("delta_tau", 0.0)) if isinstance(previous, dict) else 0.0
-        search_direction = (
-            1.0 if previous_delta > 0.0 else -1.0 if previous_delta < 0.0 else 1.0 if error_deg >= 0.0 else -1.0
-        )
+        tau_low, tau_high = HOLD_TAU_LIMITS.get(hold_name, (-float("inf"), float("inf")))
+        if tau_high <= 0.0:
+            correction_direction = -1.0 if error_deg >= 0.0 else 1.0
+        elif tau_low >= 0.0:
+            correction_direction = 1.0 if error_deg >= 0.0 else -1.0
+        else:
+            correction_direction = 1.0 if error_deg >= 0.0 else -1.0
+        if previous_successful_direction:
+            search_direction = previous_successful_direction
+        elif best_tau != applied_tau:
+            search_direction = 1.0 if best_tau > applied_tau else -1.0
+        elif previous_delta:
+            search_direction = 1.0 if previous_delta > 0.0 else -1.0
+        else:
+            search_direction = correction_direction
         abs_error = abs(error_deg)
         improved = abs_error < best_error - ADAPTIVE_HOLD_TAU_IMPROVEMENT_DEADBAND_DEG
         refined_best = abs_error < best_error
@@ -1640,18 +1825,27 @@ def update_adaptive_hold_tau(
             previous_error is not None
             and abs_error > previous_error + ADAPTIVE_HOLD_TAU_IMPROVEMENT_DEADBAND_DEG
         )
+        improved_recent = (
+            previous_error is not None
+            and abs_error < previous_error - ADAPTIVE_HOLD_TAU_IMPROVEMENT_DEADBAND_DEG
+        )
         if refined_best:
             best_error = abs_error
             best_tau = applied_tau
-        if improved:
+            if previous_delta:
+                search_direction = 1.0 if previous_delta > 0.0 else -1.0
+        elif improved_recent and previous_delta:
+            search_direction = 1.0 if previous_delta > 0.0 else -1.0
+        if improved or improved_recent:
             current_tau = applied_tau
         elif worse:
             current_tau = best_tau
-            search_direction = -search_direction
             step_scale = max(ADAPTIVE_HOLD_TAU_MIN_STEP_SCALE, step_scale * 0.5)
+        elif previous_error is not None and previous_successful_direction and not worse:
+            current_tau = applied_tau
+            step_scale = max(ADAPTIVE_HOLD_TAU_MIN_STEP_SCALE, step_scale * 0.8)
         elif previous_error is not None:
             current_tau = best_tau
-            search_direction = -search_direction
             step_scale = max(ADAPTIVE_HOLD_TAU_MIN_STEP_SCALE, step_scale * 0.8)
         delta_tau_mag = min(
             ADAPTIVE_HOLD_TAU_MAX_STEP * step_scale,
@@ -1661,20 +1855,30 @@ def update_adaptive_hold_tau(
             ),
         )
         delta_tau = search_direction * delta_tau_mag
-        new_tau = clamp_tau(hold_name, current_tau + delta_tau, HOLD_TAU_LIMITS)
-        if new_tau == current_tau:
+        if worse or (
+            previous_error is not None
+            and not refined_best
+            and not improved_recent
+            and not previous_successful_direction
+        ):
+            new_tau = clamp_tau(hold_name, best_tau + delta_tau, HOLD_TAU_LIMITS)
+        else:
+            new_tau = clamp_tau(hold_name, current_tau + delta_tau, HOLD_TAU_LIMITS)
+        if new_tau == applied_tau:
             continue
         record = {
             "tau": new_tau,
-            "previous_tau": current_tau,
+            "previous_tau": applied_tau,
+            "base_tau": current_tau,
             "applied_tau": applied_tau,
-            "delta_tau": new_tau - current_tau,
+            "delta_tau": new_tau - applied_tau,
             "search_direction": search_direction,
+            "successful_direction": search_direction if (refined_best or improved_recent) else previous_successful_direction,
             "last_error_deg": error_deg,
             "best_error_deg": best_error,
             "best_tau": best_tau,
             "step_scale": step_scale,
-            "learning_state": "improved" if improved else "backoff" if worse else "plateau",
+            "learning_state": "improved" if improved else "recent_improved" if improved_recent else "backoff" if worse else "plateau",
             "refined_best": refined_best,
             "samples": int(previous.get("samples", 0)) + 1 if isinstance(previous, dict) else 1,
             "updated_at": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
@@ -1711,6 +1915,13 @@ def adaptive_hold_tau_record_converged(record: object) -> bool:
     samples = int(record.get("samples", 0))
     state = record.get("learning_state", "")
     return samples >= ADAPTIVE_TARGET_BIAS_MIN_HOLD_TAU_SAMPLES and state in ("plateau", "backoff")
+
+
+def hold_tau_update_waits_for_more_holding(update: object) -> bool:
+    if not isinstance(update, dict) or not update:
+        return False
+    state = str(update.get("learning_state", ""))
+    return bool(update.get("refined_best")) or state in ("improved", "recent_improved")
 
 
 def adaptive_hold_tau_converged_for_active(
@@ -1757,7 +1968,7 @@ def nudge_active_tau_for(name: str, delta_deg: float, low_shoulder_front: bool =
     active_tau = ACTIVE_TAU_RULES["base"].get(name, {}).get(direction, 0.0)
     if low_shoulder_front:
         active_tau = ACTIVE_TAU_RULES[LOW_SHOULDER_POSTURE].get(name, {}).get(direction, active_tau)
-    return clamp_tau(name, active_tau, ACTIVE_TAU_LIMITS)
+    return adaptive_active_tau_for(name, delta_deg, active_tau, low_shoulder_front)
 
 
 def adaptive_hold_gains_for(
@@ -2116,7 +2327,7 @@ def main() -> None:
                 if low_shoulder_front and name in NUDGE_LOW_SHOULDER_GAINS:
                     active_gains = NUDGE_LOW_SHOULDER_GAINS[name]
                 elif name == "wrist":
-                    active_gains = COUPLED_CLEARANCE_WRIST_FINE_GAINS
+                    active_gains = WRIST_ACTIVE_NUDGE_GAINS
                 elif name == "wrist_side":
                     active_gains = CLEARANCE_HOLD_GAINS["wrist_side"]
                 else:
@@ -2124,7 +2335,7 @@ def main() -> None:
                 kp = active_gains["kp"]
                 kd = active_gains["kd"]
                 if name == "wrist":
-                    args.seconds = max(args.seconds, COUPLED_CLEARANCE_WRIST_FINE_GAINS["seconds"])
+                    args.seconds = max(args.seconds, WRIST_ACTIVE_NUDGE_MIN_SECONDS)
                 if low_shoulder_front and name in NUDGE_LOW_SHOULDER_MIN_SECONDS:
                     args.seconds = max(args.seconds, NUDGE_LOW_SHOULDER_MIN_SECONDS[name])
                 if name in NUDGE_MIN_SECONDS:
@@ -2377,11 +2588,50 @@ def main() -> None:
                         NUDGE_LOW_SHOULDER_WRIST_SIDE_FINE_DEADBAND_DEG,
                     )
             arm.print_status(all_names)
-            final_positions = arm.positions(list(nominal_hold_targets.keys()))
+            final_all_positions = arm.positions(all_names)
+            active_error_deg = math.degrees(target - final_all_positions[name])
+            active_tau_updates = update_adaptive_active_tau(
+                name,
+                args.deg,
+                active_error_deg,
+                active_tau,
+                low_shoulder_front=low_shoulder_front,
+                label="nudge-hold-active",
+            )
+            if active_tau_updates:
+                print(
+                    "v2.6 nudge-hold adaptive active tau updates",
+                    json.dumps(active_tau_updates, ensure_ascii=False),
+                )
+            final_positions = {
+                hold_name: final_all_positions[hold_name]
+                for hold_name in nominal_hold_targets
+                if hold_name in final_all_positions
+            }
             final_hold_errors = {
                 hold_name: math.degrees(nominal_hold_targets[hold_name] - final_positions[hold_name])
                 for hold_name in final_positions
             }
+            applied_hold_errors = {
+                hold_name: math.degrees(hold_targets[hold_name] - final_positions[hold_name])
+                for hold_name in final_positions
+                if hold_name in hold_targets
+            }
+            notable_applied_hold_errors = {
+                hold_name: {
+                    "nominal_error_deg": final_hold_errors[hold_name],
+                    "applied_target_error_deg": applied_hold_errors[hold_name],
+                    "hold_target_bias_deg": math.degrees(hold_targets[hold_name] - nominal_hold_targets[hold_name]),
+                }
+                for hold_name in applied_hold_errors
+                if abs(hold_targets[hold_name] - nominal_hold_targets[hold_name]) > 1e-6
+                or abs(applied_hold_errors[hold_name]) >= ADAPTIVE_TARGET_BIAS_ERROR_DEADBAND_DEG
+            }
+            if notable_applied_hold_errors:
+                print(
+                    "v2.6 nudge-hold hold error diagnostics",
+                    json.dumps(notable_applied_hold_errors, ensure_ascii=False),
+                )
             induced_errors = {
                 hold_name: error
                 for hold_name, error in final_hold_errors.items()
@@ -2418,21 +2668,17 @@ def main() -> None:
                 offset_ready_errors = {
                     hold_name: error
                     for hold_name, error in induced_errors.items()
-                    if adaptive_hold_tau_record_converged(hold_tau_updates.get(hold_name))
-                    or (
-                        hold_name not in hold_tau_updates
-                        and adaptive_hold_tau_converged_for_active(nudge_adaptive_active, hold_name, low_shoulder_front)
-                    )
+                    if not hold_tau_update_waits_for_more_holding(hold_tau_updates.get(hold_name))
                 }
-                offset_pending_errors = {
+                hold_tau_learning_errors = {
                     hold_name: error
                     for hold_name, error in induced_errors.items()
-                    if hold_name not in offset_ready_errors
+                    if hold_tau_update_waits_for_more_holding(hold_tau_updates.get(hold_name))
                 }
-                if offset_pending_errors:
+                if hold_tau_learning_errors:
                     print(
-                        "v2.6 nudge-hold adaptive hold target bias pending hold-tau convergence",
-                        json.dumps(offset_pending_errors, ensure_ascii=False),
+                        "v2.6 nudge-hold adaptive hold target bias waiting for hold-tau learning",
+                        json.dumps(hold_tau_learning_errors, ensure_ascii=False),
                     )
                 if not offset_ready_errors:
                     return
@@ -2480,107 +2726,179 @@ def main() -> None:
             if args.prehome_clearance:
                 clearance = load_pose(args.clearance_file)
                 prehome_order = [name for name in PREHOME_CLEARANCE_ORDER if name in clearance and name in DEFAULT_JOINTS]
-                print("v2.6 pre-home clearance sequential order=", ",".join(prehome_order))
+                print("v2.6 pre-home clearance wrist-first coupled order=", ",".join(prehome_order))
                 arm.enable(DEFAULT_JOINTS)
-                for prehome_name in prehome_order:
+                wrist_name = "wrist"
+                if wrist_name in prehome_order:
                     prehome_current = arm.positions(DEFAULT_JOINTS)
+                    prehome_target = clearance[wrist_name]
+                    delta_deg = math.degrees(prehome_target - prehome_current[wrist_name])
+                    deadband_deg = max(0.5, CLEARANCE_JOINT_DEADBANDS_DEG.get(wrist_name, 0.5))
+                    if abs(delta_deg) <= deadband_deg:
+                        print(
+                            "v2.6 pre-home clearance wrist-first skip",
+                            wrist_name,
+                            "delta_deg=",
+                            delta_deg,
+                            "deadband_deg=",
+                            deadband_deg,
+                        )
+                    else:
+                        if abs(delta_deg) > args.max_delta_deg:
+                            raise RuntimeError(
+                                f"{wrist_name} pre-home clearance delta {delta_deg:.2f} deg exceeds "
+                                f"--max-delta-deg {args.max_delta_deg}; move in smaller steps."
+                            )
+                        active_gains = prehome_clearance_gains_for(wrist_name, args.kp, args.kd)
+                        seconds = prehome_clearance_seconds_for(wrist_name, delta_deg)
+                        hold_targets = {
+                            hold_name: prehome_current[hold_name]
+                            for hold_name in DEFAULT_JOINTS
+                            if hold_name != wrist_name
+                        }
+                        hold_gains = prehome_clearance_hold_gains_for(
+                            wrist_name,
+                            hold_targets.keys(),
+                            args.kp,
+                            args.kd,
+                        )
+                        hold_tau = nudge_hold_tau_for(
+                            wrist_name,
+                            hold_targets,
+                            is_low_shoulder_front(prehome_current),
+                        )
+                        active_tau = nudge_active_tau_for(
+                            wrist_name,
+                            delta_deg,
+                            is_low_shoulder_front(prehome_current),
+                        )
+                        preload_seconds = NUDGE_PRELOAD_SECONDS.get(wrist_name, 0.2)
+                        trajectory = NUDGE_TRAJECTORY.get(wrist_name, "smoothstep")
+                        linear_blend = NUDGE_LINEAR_BLEND.get(wrist_name, 0.0)
+                        print(
+                            "v2.6 pre-home clearance wrist-first active",
+                            wrist_name,
+                            "delta_deg=",
+                            delta_deg,
+                            "target=",
+                            prehome_target,
+                            "kp=",
+                            active_gains["kp"],
+                            "kd=",
+                            active_gains["kd"],
+                            "seconds=",
+                            seconds,
+                            "hold joints:",
+                            ",".join(hold_targets.keys()),
+                        )
+                        if active_tau:
+                            print("v2.6 pre-home clearance wrist-first active_tau=", {wrist_name: active_tau})
+                        print(
+                            "v2.6 pre-home clearance wrist-first hold_tau=",
+                            json.dumps({joint: hold_tau[joint] for joint in hold_targets if joint in hold_tau}, ensure_ascii=False),
+                        )
+                        arm.move_target_with_holds(
+                            wrist_name,
+                            prehome_target,
+                            seconds_per_step=seconds,
+                            kp=active_gains["kp"],
+                            kd=active_gains["kd"],
+                            hold_targets=hold_targets,
+                            hold_gains=hold_gains,
+                            fallback_kp=args.kp,
+                            fallback_kd=args.kd,
+                            hold_tau=hold_tau,
+                            active_tau=active_tau,
+                            control_dt=0.01,
+                            preload_seconds=preload_seconds,
+                            trajectory=trajectory,
+                            linear_blend=linear_blend,
+                        )
+
+                prehome_current = arm.positions(DEFAULT_JOINTS)
+                group_names = [name for name in prehome_order if name != wrist_name]
+                group_targets: Dict[str, float] = {}
+                group_gains: Dict[str, Dict[str, float]] = {}
+                group_tau: Dict[str, float] = {}
+                group_deltas_deg: Dict[str, float] = {}
+                skipped_hold_targets: Dict[str, float] = {}
+                group_seconds = 0.0
+                low_shoulder = is_low_shoulder_front(prehome_current)
+                for prehome_name in group_names:
                     prehome_target = clearance[prehome_name]
                     delta_deg = math.degrees(prehome_target - prehome_current[prehome_name])
+                    group_deltas_deg[prehome_name] = delta_deg
                     deadband_deg = max(0.5, CLEARANCE_JOINT_DEADBANDS_DEG.get(prehome_name, 0.5))
                     if abs(delta_deg) <= deadband_deg:
                         print(
-                            "v2.6 pre-home clearance skip",
+                            "v2.6 pre-home clearance coupled skip",
                             prehome_name,
                             "delta_deg=",
                             delta_deg,
                             "deadband_deg=",
                             deadband_deg,
                         )
+                        skipped_hold_targets[prehome_name] = prehome_current[prehome_name]
                         continue
                     if abs(delta_deg) > args.max_delta_deg:
                         raise RuntimeError(
                             f"{prehome_name} pre-home clearance delta {delta_deg:.2f} deg exceeds "
                             f"--max-delta-deg {args.max_delta_deg}; move in smaller steps."
                         )
-                    active_gains = prehome_clearance_gains_for(prehome_name, args.kp, args.kd)
-                    seconds = prehome_clearance_seconds_for(prehome_name, delta_deg)
-                    hold_targets = {
-                        hold_name: prehome_current[hold_name]
-                        for hold_name in DEFAULT_JOINTS
-                        if hold_name != prehome_name
-                    }
+                    group_targets[prehome_name] = prehome_target
+                    group_gains[prehome_name] = prehome_clearance_gains_for(prehome_name, args.kp, args.kd)
+                    group_seconds = max(group_seconds, prehome_clearance_seconds_for(prehome_name, delta_deg))
+                    active_tau = nudge_active_tau_for(prehome_name, delta_deg, low_shoulder)
+                    if active_tau:
+                        group_tau[prehome_name] = active_tau
+
+                if group_targets:
+                    hold_targets = {}
+                    if wrist_name in clearance:
+                        hold_targets[wrist_name] = clearance[wrist_name]
+                    hold_targets.update(skipped_hold_targets)
                     hold_gains = prehome_clearance_hold_gains_for(
-                        prehome_name,
+                        "wrist_side",
                         hold_targets.keys(),
                         args.kp,
                         args.kd,
                     )
-                    hold_tau = nudge_hold_tau_for(
-                        prehome_name,
-                        hold_targets,
-                        is_low_shoulder_front(prehome_current),
-                    )
-                    active_tau = nudge_active_tau_for(
-                        prehome_name,
-                        delta_deg,
-                        is_low_shoulder_front(prehome_current),
-                    )
-                    preload_seconds = NUDGE_PRELOAD_SECONDS.get(prehome_name, 0.2)
-                    trajectory = NUDGE_TRAJECTORY.get(prehome_name, "smoothstep")
-                    linear_blend = NUDGE_LINEAR_BLEND.get(prehome_name, 0.0)
+                    hold_tau = nudge_hold_tau_for("wrist_side", hold_targets, low_shoulder)
                     print(
-                        "v2.6 pre-home clearance active",
-                        prehome_name,
-                        "delta_deg=",
-                        delta_deg,
-                        "target=",
-                        prehome_target,
-                        "kp=",
-                        active_gains["kp"],
-                        "kd=",
-                        active_gains["kd"],
+                        "v2.6 pre-home clearance coupled active",
+                        ",".join(group_targets.keys()),
+                        "deltas_deg=",
+                        json.dumps(group_deltas_deg, ensure_ascii=False),
+                        "targets=",
+                        json.dumps(group_targets, ensure_ascii=False),
                         "seconds=",
-                        seconds,
+                        group_seconds,
                         "hold joints:",
                         ",".join(hold_targets.keys()),
                     )
-                    if active_tau:
-                        print("v2.6 pre-home clearance active_tau=", {prehome_name: active_tau})
+                    if group_tau:
+                        print("v2.6 pre-home clearance coupled active_tau=", json.dumps(group_tau, ensure_ascii=False))
                     print(
-                        "v2.6 pre-home clearance hold_tau=",
+                        "v2.6 pre-home clearance coupled hold_tau=",
                         json.dumps({joint: hold_tau[joint] for joint in hold_targets if joint in hold_tau}, ensure_ascii=False),
                     )
-                    compliant_hold_names = (
-                        CLEARANCE_COMPLIANT_HOLDS_BY_ACTIVE.get(prehome_name, set())
-                        | NUDGE_COMPLIANT_HOLDS_BY_ACTIVE.get(prehome_name, set())
-                    )
-                    compliant_holds = {
-                        joint: hold_gains[joint]
-                        for joint in compliant_hold_names
-                        if joint in hold_gains
-                    }
-                    if compliant_holds:
-                        print(
-                            "v2.6 pre-home clearance compliant hold gains=",
-                            json.dumps(compliant_holds, ensure_ascii=False),
-                        )
-                    arm.move_target_with_holds(
-                        prehome_name,
-                        prehome_target,
-                        seconds_per_step=seconds,
-                        kp=active_gains["kp"],
-                        kd=active_gains["kd"],
+                    arm.move_targets_with_holds(
+                        group_targets,
+                        seconds_per_step=group_seconds,
+                        move_gains=group_gains,
                         hold_targets=hold_targets,
                         hold_gains=hold_gains,
                         fallback_kp=args.kp,
                         fallback_kd=args.kd,
                         hold_tau=hold_tau,
-                        active_tau=active_tau,
+                        move_tau_ff=group_tau,
                         control_dt=0.01,
-                        preload_seconds=preload_seconds,
-                        trajectory=trajectory,
-                        linear_blend=linear_blend,
+                        preload_seconds=0.2,
+                        trajectory="smoothstep",
+                        linear_blend=0.0,
                     )
+                else:
+                    print("v2.6 pre-home clearance coupled: all non-wrist joints inside deadband")
                 current = arm.positions(ordered)
 
             completed_targets: Dict[str, float] = {}
