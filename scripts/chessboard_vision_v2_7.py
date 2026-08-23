@@ -58,6 +58,36 @@ for _file in BOARD_FILES:
         "color": "black",
     }
 
+CHESS_PIECE_YOLO_CLASSES = [
+    "white_pawn",
+    "white_rook",
+    "white_knight",
+    "white_bishop",
+    "white_queen",
+    "white_king",
+    "black_pawn",
+    "black_rook",
+    "black_knight",
+    "black_bishop",
+    "black_queen",
+    "black_king",
+]
+
+OPENING_TARGET_SLOTS = {
+    "white_pawn": ["a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"],
+    "white_rook": ["a1", "h1"],
+    "white_knight": ["b1", "g1"],
+    "white_bishop": ["c1", "f1"],
+    "white_queen": ["d1"],
+    "white_king": ["e1"],
+    "black_pawn": ["a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7"],
+    "black_rook": ["a8", "h8"],
+    "black_knight": ["b8", "g8"],
+    "black_bishop": ["c8", "f8"],
+    "black_queen": ["d8"],
+    "black_king": ["e8"],
+}
+
 # Empty-board reference captured from live v2.7 inspection.
 # This is a known false-positive baseline: with no pieces on the board, g1 can produce
 # a shallow full-width bottom-band depth blob under the rank-1 constant-depth model.
@@ -243,6 +273,16 @@ def square_center_mm(square: str) -> tuple[float, float]:
     return float(center[0]), float(center[1])
 
 
+def board_point_to_square(x_mm: float, y_mm: float) -> Optional[str]:
+    if x_mm < 0.0 or y_mm < 0.0 or x_mm >= BOARD_SIZE_MM or y_mm >= BOARD_SIZE_MM:
+        return None
+    file_index = int(x_mm // SQUARE_SIZE_MM)
+    rank_index = int(y_mm // SQUARE_SIZE_MM)
+    if not (0 <= file_index < 8 and 0 <= rank_index < 8):
+        return None
+    return BOARD_FILES[file_index] + BOARD_RANKS[rank_index]
+
+
 def identify_piece_for_square(square: str, layout: Optional[dict] = None) -> dict:
     square = normalize_square(square)
     piece_layout = STANDARD_STARTING_PIECES if layout is None else layout
@@ -259,6 +299,51 @@ def identify_piece_for_square(square: str, layout: Optional[dict] = None) -> dic
     result["identity_method"] = "standard_starting_position" if layout is None else "custom_square_layout"
     result["identity_confidence"] = 1.0
     return result
+
+
+def assign_opening_targets(piece_class_results: dict, occupied_targets: Optional[Iterable[str]] = None) -> list[dict]:
+    used_targets = set(normalize_square(square) for square in (occupied_targets or []))
+    placement_plan = []
+    for source_square in sorted(piece_class_results):
+        info = piece_class_results[source_square]
+        piece_class = str(info.get("piece_class", "unknown"))
+        if piece_class not in OPENING_TARGET_SLOTS:
+            placement_plan.append(
+                {
+                    "pick": source_square,
+                    "place": None,
+                    "piece_class": piece_class,
+                    "reason": "unknown_piece_class",
+                    "confidence": float(info.get("confidence", 0.0)),
+                }
+            )
+            continue
+        target_square = None
+        for candidate in OPENING_TARGET_SLOTS[piece_class]:
+            if candidate not in used_targets:
+                target_square = candidate
+                used_targets.add(candidate)
+                break
+        if target_square is None:
+            placement_plan.append(
+                {
+                    "pick": source_square,
+                    "place": None,
+                    "piece_class": piece_class,
+                    "reason": "no_opening_slot_available",
+                    "confidence": float(info.get("confidence", 0.0)),
+                }
+            )
+            continue
+        placement_plan.append(
+            {
+                "pick": source_square,
+                "place": target_square,
+                "piece_class": piece_class,
+                "confidence": float(info.get("confidence", 0.0)),
+            }
+        )
+    return placement_plan
 
 
 def board_to_image_points(points_mm: np.ndarray, homography_board_to_image: np.ndarray) -> np.ndarray:

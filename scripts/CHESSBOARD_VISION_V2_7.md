@@ -247,3 +247,100 @@ identity_method=standard_starting_position
 ```
 
 This means identity is assigned from the square when the board is in the standard start layout. After pieces move, identity should be maintained by game-state tracking or replaced by a trained visual/tag classifier. Unknown occupied non-starting squares are reported as `unknown_piece` instead of being guessed.
+
+## 2026-08-23 YOLO chess-piece training path
+
+The project now uses YOLO as the long-term piece classifier. The fixed class set is:
+
+```text
+white_pawn
+white_rook
+white_knight
+white_bishop
+white_queen
+white_king
+black_pawn
+black_rook
+black_knight
+black_bishop
+black_queen
+black_king
+```
+
+For setup games, pieces can be placed on rank 4 and YOLO classifies each visible piece. Same-class pieces do not need unique IDs: any `white_pawn` can be assigned to any open white-pawn starting square.
+
+Dataset config:
+
+```text
+datasets/chess_pieces_yolo/data.yaml
+```
+
+Initialize the dataset:
+
+```bash
+cd /home/nvidia/hive_robot/DM_Control_Python
+python3 scripts/chess_piece_yolo_dataset.py init \
+  --dataset-dir datasets/chess_pieces_yolo
+```
+
+Add a labeled board image. The labels use square/class pairs; the script converts square ROIs into YOLO boxes using the v2.7 board calibration:
+
+```bash
+python3 scripts/chess_piece_yolo_dataset.py add-image \
+  --image /tmp/chess_rank4_001.jpg \
+  --calibration scripts/data/chessboard_vision_v2_7_calibration.json \
+  --dataset-dir datasets/chess_pieces_yolo \
+  --split train \
+  --placements "a4:white_pawn,b4:white_rook,c4:black_king,d4:black_queen"
+```
+
+Start the Orin Ultralytics container:
+
+```bash
+sudo docker run -it --rm \
+  --runtime nvidia \
+  --network host \
+  --ipc host \
+  -v ~/hive_robot:/workspace/hive_robot \
+  ultralytics/ultralytics:latest-jetson-jetpack5
+```
+
+Train:
+
+```bash
+cd /workspace/hive_robot/DM_Control_Python
+yolo detect train \
+  model=yolo11n.pt \
+  data=datasets/chess_pieces_yolo/data.yaml \
+  imgsz=960 \
+  epochs=120 \
+  batch=8 \
+  project=runs/chess_piece_yolo \
+  name=yolo11n_rank4
+```
+
+Run inference and produce a placement plan:
+
+```bash
+python3 scripts/chess_piece_yolo_infer.py \
+  --model runs/chess_piece_yolo/yolo11n_rank4/weights/best.pt \
+  --image /tmp/chess_rank4_test.jpg \
+  --calibration scripts/data/chessboard_vision_v2_7_calibration.json \
+  --squares a4,b4,c4,d4,e4,f4,g4,h4
+```
+
+Output includes:
+
+```text
+piece_class_results
+placement_plan
+```
+
+Example placement plan:
+
+```json
+[
+  {"pick": "a4", "place": "a2", "piece_class": "white_pawn", "confidence": 0.91},
+  {"pick": "b4", "place": "e8", "piece_class": "black_king", "confidence": 0.88}
+]
+```
