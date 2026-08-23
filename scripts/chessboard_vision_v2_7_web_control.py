@@ -31,6 +31,7 @@ from chessboard_vision_v2_7 import (
     BOARD_SIZE_MM,
     DEFAULT_CALIBRATION_PATH,
     annotate_squares_image,
+    assign_opening_targets,
     auto_locate_board_corners,
     draw_squares_overlay_image,
     parse_point_list,
@@ -39,6 +40,7 @@ from chessboard_vision_v2_7 import (
     square_bounds_mm,
 )
 from chess_piece_yolo_dataset import add_labeled_image, init_dataset, parse_placements, write_data_yaml
+from chess_piece_yolo_infer import map_detections_to_squares, run_yolo
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -361,6 +363,10 @@ def build_yolo_train_command(state: "VisionState") -> list[str]:
     ]
 
 
+def default_yolo_model_path() -> str:
+    return os.path.join(repo_root_for_script(), "runs", "chess_piece_yolo", "yolo11n_rank4", "weights", "best.pt")
+
+
 HTML_PAGE = """<!doctype html>
 <html lang="en" translate="no">
 <head>
@@ -466,6 +472,31 @@ HTML_PAGE = """<!doctype html>
       overflow-wrap: anywhere;
       font-size: 12px;
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td {
+      padding: 7px 6px;
+      border-bottom: 1px solid #303944;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: #b8c7d4;
+      font-weight: 700;
+      background: #11161b;
+      position: sticky;
+      top: 0;
+    }
+    .tableWrap {
+      max-height: 280px;
+      overflow: auto;
+      border: 1px solid #303944;
+      border-radius: 6px;
+      background: #0b0f13;
+    }
     .hint { color: #98a6b3; font-size: 12px; line-height: 1.45; }
   </style>
 </head>
@@ -513,11 +544,28 @@ HTML_PAGE = """<!doctype html>
         <button onclick="saveYoloSample()">Save YOLO Sample</button>
         <button onclick="startYoloTrain()">Start YOLO Train</button>
         <button onclick="refreshYoloStatus()">YOLO Train Status</button>
+        <label>YOLO model
+          <input id="yoloModel" value="__YOLO_MODEL__">
+        </label>
+        <label>YOLO detect squares
+          <input id="yoloDetectSquares" value="a4,b4,c4,d4,e4,f4,g4,h4">
+        </label>
+        <button onclick="detectYoloPieces()">YOLO Detect Table</button>
         <p class="hint">
           Place pieces on rank 4, enter square:class labels, save samples, then train.
           Classes include white_pawn, white_rook, white_knight, white_bishop, white_queen, white_king, and black_*.
         </p>
         <pre id="yoloStatus">YOLO training idle.</pre>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr><th>Square</th><th>Piece</th><th>Conf</th><th>Place</th></tr>
+            </thead>
+            <tbody id="yoloPieceTable">
+              <tr><td colspan="4">No YOLO result yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </section>
       <section class="panel">
         <pre id="liveStatus">Live status pending.</pre>
@@ -643,6 +691,55 @@ HTML_PAGE = """<!doctype html>
       status.textContent = JSON.stringify(data, null, 2);
     }
 
+    function renderYoloPieceTable(data) {
+      const tbody = document.getElementById('yoloPieceTable');
+      tbody.innerHTML = '';
+      if (!data.ok) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="4">' + String(data.error || 'YOLO detection failed') + '</td>';
+        tbody.appendChild(row);
+        return;
+      }
+      const planByPick = {};
+      for (const item of (data.placement_plan || [])) {
+        planByPick[item.pick] = item;
+      }
+      const squares = Object.keys(data.piece_class_results || {}).sort();
+      if (!squares.length) {
+        const row = document.createElement('tr');
+        row.innerHTML = '<td colspan="4">No pieces recognized.</td>';
+        tbody.appendChild(row);
+        return;
+      }
+      for (const square of squares) {
+        const info = data.piece_class_results[square];
+        const plan = planByPick[square] || {};
+        const row = document.createElement('tr');
+        row.innerHTML =
+          '<td>' + square + '</td>' +
+          '<td>' + String(info.piece_class || '') + '</td>' +
+          '<td>' + Number(info.confidence || 0).toFixed(2) + '</td>' +
+          '<td>' + String(plan.place || plan.reason || '') + '</td>';
+        tbody.appendChild(row);
+      }
+    }
+
+    async function detectYoloPieces() {
+      const status = document.getElementById('yoloStatus');
+      status.textContent = 'Running YOLO detection...';
+      const params = new URLSearchParams({
+        corners: document.getElementById('corners').value,
+        auto_locate: document.getElementById('autoLocate').checked ? '1' : '0',
+        square_corners: document.getElementById('squareCornerInput').value,
+        model: document.getElementById('yoloModel').value,
+        squares: document.getElementById('yoloDetectSquares').value
+      });
+      const res = await fetch('/api/yolo/detect?' + params.toString());
+      const data = await res.json();
+      renderYoloPieceTable(data);
+      status.textContent = JSON.stringify(data, null, 2);
+    }
+
     async function refreshLiveStatus() {
       try {
         const res = await fetch('/api/status?ts=' + Date.now());
@@ -745,6 +842,7 @@ def make_handler(state: VisionState):
                     HTML_PAGE
                     .replace("__CORNERS__", html.escape(DEFAULT_CORNERS, quote=True))
                     .replace("__SQUARES__", html.escape(DEFAULT_SQUARES, quote=True))
+                    .replace("__YOLO_MODEL__", html.escape(default_yolo_model_path(), quote=True))
                     .replace("__INITIAL_VIEWER_SRC__", "/live-rgb.mjpg?ts=0")
                 )
                 self.send_bytes(page.encode("utf-8"), "text/html; charset=utf-8")
@@ -783,6 +881,9 @@ def make_handler(state: VisionState):
                 return
             if parsed.path == "/api/yolo/status":
                 self.yolo_status()
+                return
+            if parsed.path == "/api/yolo/detect":
+                self.yolo_detect(parsed.query)
                 return
             self.send_json({"ok": False, "error": "not found"}, HTTPStatus.NOT_FOUND)
 
@@ -1079,6 +1180,57 @@ def make_handler(state: VisionState):
                     "log_tail": read_text_tail(state.yolo_train_log_path),
                 }
             self.send_json(payload)
+
+        def yolo_detect(self, query: str) -> None:
+            try:
+                params = parse_qs(query)
+                model_path = params.get("model", [default_yolo_model_path()])[0].strip()
+                squares = params.get("squares", ["a4,b4,c4,d4,e4,f4,g4,h4"])[0]
+                allowed_squares = parse_square_list(squares)
+                corners_text = params.get("corners", [DEFAULT_CORNERS])[0]
+                auto_locate = params.get("auto_locate", ["0"])[0].strip().lower() not in ("0", "false", "no", "off")
+                frame, stamp, seq, _depth, _depth_stamp, _depth_seq = state.camera.snapshot()
+                if frame is None:
+                    raise RuntimeError("live RGB frame not received yet")
+                extra_text = params.get("square_corners", [""])[0]
+                extra_board_points, extra_image_points, extra_labels = parse_square_corner_calibration(extra_text)
+                corner_image_points = parse_point_list(corners_text)
+                corner_image_points, auto_location = save_live_calibration(
+                    state.calibration_path,
+                    frame,
+                    corner_image_points,
+                    auto_locate,
+                    extra_board_points,
+                    extra_image_points,
+                    extra_labels,
+                )
+                capture_dir = Path(state.output_dir) / "yolo_detect"
+                capture_dir.mkdir(parents=True, exist_ok=True)
+                image_path = capture_dir / f"detect_{time.strftime('%Y%m%d_%H%M%S')}_{seq}_{uuid.uuid4().hex[:6]}.jpg"
+                cv2.imwrite(str(image_path), frame)
+                if not os.path.exists(model_path):
+                    raise RuntimeError(f"YOLO model not found: {model_path}")
+                detections = run_yolo(model_path, str(image_path), imgsz=int(params.get("imgsz", ["960"])[0]), conf=float(params.get("conf", ["0.25"])[0]))
+                piece_class_results = map_detections_to_squares(detections, state.calibration_path, allowed_squares)
+                placement_plan = assign_opening_targets(piece_class_results)
+                self.send_json(
+                    {
+                        "ok": True,
+                        "version": WEB_VERSION,
+                        "model": model_path,
+                        "image_path": str(image_path),
+                        "squares": allowed_squares,
+                        "detections": detections,
+                        "piece_class_results": piece_class_results,
+                        "placement_plan": placement_plan,
+                        "rgb_seq": seq,
+                        "rgb_age_s": round(time.time() - stamp, 3),
+                        "auto_location": auto_location,
+                        "calibration_corners_px": corner_image_points.astype(float).tolist(),
+                    }
+                )
+            except Exception as exc:
+                self.send_json({"ok": False, "error": str(exc)}, HTTPStatus.BAD_REQUEST)
 
     return Handler
 

@@ -372,6 +372,7 @@ Workflow:
 5. Set YOLO split to val for validation samples and save some validation images.
 6. Click Start YOLO Train.
 7. Click YOLO Train Status to watch the log tail.
+8. After training, click YOLO Detect Table to classify the current rank-4 pieces.
 ```
 
 Label examples:
@@ -399,4 +400,19 @@ Training log:
 
 ```text
 /tmp/hive_robot_chessboard_vision_v2_7/yolo_train.log
+```
+
+The YOLO result table shows:
+
+```text
+Square: board square where the piece was recognized
+Piece: YOLO class, such as white_pawn or black_king
+Conf: YOLO confidence
+Place: assigned opening target square
+```
+
+The default model path used by the web page is:
+
+```text
+runs/chess_piece_yolo/yolo11n_rank4/weights/best.pt
 ```
