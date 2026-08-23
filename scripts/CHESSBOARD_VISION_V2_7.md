@@ -344,3 +344,59 @@ Example placement plan:
   {"pick": "b4", "place": "e8", "piece_class": "black_king", "confidence": 0.88}
 ]
 ```
+
+## Web YOLO training
+
+The v2.7 web verifier can now collect YOLO samples and start training from the browser.
+
+Start it on the Orin:
+
+```bash
+cd /home/nvidia/hive_robot/DM_Control_Python
+python3 scripts/chessboard_vision_v2_7_web_control.py --port 8097
+```
+
+Open:
+
+```text
+http://<orin-ip>:8097/
+```
+
+Workflow:
+
+```text
+1. Put pieces on rank 4.
+2. Enter labels in the YOLO rank-4 labels box, one per line or comma-separated.
+3. Click Save YOLO Sample.
+4. Repeat with different pieces, positions, lighting, and angles.
+5. Set YOLO split to val for validation samples and save some validation images.
+6. Click Start YOLO Train.
+7. Click YOLO Train Status to watch the log tail.
+```
+
+Label examples:
+
+```text
+a4:white_pawn
+b4:white_rook
+c4:black_king
+d4:black_queen
+```
+
+The web server saves the current live RGB frame, uses the active board calibration to create YOLO labels, and writes them under:
+
+```text
+datasets/chess_pieces_yolo
+```
+
+Training runs in the background. If `yolo` is available on the host, it uses it directly. Otherwise it launches the Orin Ultralytics Docker image:
+
+```text
+ultralytics/ultralytics:latest-jetson-jetpack5
+```
+
+Training log:
+
+```text
+/tmp/hive_robot_chessboard_vision_v2_7/yolo_train.log
+```

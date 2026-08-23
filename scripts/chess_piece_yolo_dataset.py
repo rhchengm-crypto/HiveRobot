@@ -44,8 +44,12 @@ def parse_placements(text: str) -> dict[str, str]:
 
 def write_data_yaml(dataset_dir: Path) -> Path:
     path = dataset_dir / "data.yaml"
+    try:
+        dataset_path = dataset_dir.resolve().relative_to(Path.cwd().resolve()).as_posix()
+    except ValueError:
+        dataset_path = dataset_dir.as_posix()
     lines = [
-        f"path: {dataset_dir.as_posix()}",
+        f"path: {dataset_path}",
         "train: images/train",
         "val: images/val",
         "test: images/test",

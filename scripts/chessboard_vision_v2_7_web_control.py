@@ -11,12 +11,16 @@ import argparse
 import html
 import json
 import os
+import shutil
+import subprocess
 import tempfile
 import threading
 import time
+import uuid
 from dataclasses import dataclass
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from typing import Optional
 from urllib.parse import parse_qs, urlparse
 
@@ -34,6 +38,7 @@ from chessboard_vision_v2_7 import (
     save_calibration_from_points,
     square_bounds_mm,
 )
+from chess_piece_yolo_dataset import add_labeled_image, init_dataset, parse_placements, write_data_yaml
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -41,6 +46,8 @@ DEFAULT_CORNERS = "100,428 595,418 520,52 165,58"
 DEFAULT_SQUARES = "all"
 DEFAULT_OUTPUT_DIR = os.path.join(tempfile.gettempdir(), "hive_robot_chessboard_vision_v2_7")
 WEB_VERSION = "v2.7"
+DEFAULT_YOLO_DATASET_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "datasets", "chess_pieces_yolo")
+DEFAULT_YOLO_DOCKER_IMAGE = "ultralytics/ultralytics:latest-jetson-jetpack5"
 
 
 @dataclass
@@ -292,6 +299,68 @@ def merge_temporal_piece_results(sample_results: list) -> dict:
     return merged
 
 
+def read_text_tail(path: str, max_bytes: int = 12000) -> str:
+    if not os.path.exists(path):
+        return ""
+    with open(path, "rb") as f:
+        f.seek(0, os.SEEK_END)
+        size = f.tell()
+        f.seek(max(0, size - max_bytes), os.SEEK_SET)
+        return f.read().decode("utf-8", errors="replace")
+
+
+def repo_root_for_script() -> str:
+    return os.path.dirname(SCRIPT_DIR)
+
+
+def docker_repo_mount(repo_root: str) -> tuple[str, str]:
+    marker = os.path.join("hive_robot", "DM_Control_Python")
+    normalized = repo_root.replace("\\", "/")
+    if normalized.endswith(marker):
+        host_root = repo_root[: -len("DM_Control_Python")].rstrip("\\/")
+        return host_root, "/workspace/hive_robot/DM_Control_Python"
+    return repo_root, "/workspace/hive_robot/DM_Control_Python"
+
+
+def build_yolo_train_command(state: "VisionState") -> list[str]:
+    repo_root = repo_root_for_script()
+    data_yaml = os.path.relpath(os.path.join(state.yolo_dataset_dir, "data.yaml"), repo_root).replace("\\", "/")
+    train_args = [
+        "detect",
+        "train",
+        "model=yolo11n.pt",
+        f"data={data_yaml}",
+        "imgsz=960",
+        "epochs=120",
+        "batch=8",
+        "project=runs/chess_piece_yolo",
+        "name=yolo11n_rank4",
+    ]
+    yolo_exe = shutil.which("yolo")
+    if yolo_exe:
+        return [yolo_exe, *train_args]
+    host_mount, container_repo = docker_repo_mount(repo_root)
+    inner = "cd " + container_repo + " && yolo " + " ".join(train_args)
+    return [
+        "sudo",
+        "docker",
+        "run",
+        "--rm",
+        "--runtime",
+        "nvidia",
+        "--network",
+        "host",
+        "--ipc",
+        "host",
+        "-v",
+        f"{host_mount}:/workspace/hive_robot",
+        state.yolo_docker_image,
+        "bash",
+        "-lc",
+        inner,
+    ]
+
+
 HTML_PAGE = """<!doctype html>
 <html lang="en" translate="no">
 <head>
@@ -435,6 +504,22 @@ HTML_PAGE = """<!doctype html>
         <pre id="result">Ready.</pre>
       </section>
       <section class="panel">
+        <label>YOLO rank-4 labels
+          <textarea id="yoloPlacements" placeholder="a4:white_pawn&#10;b4:black_king&#10;c4:white_rook"></textarea>
+        </label>
+        <label>YOLO split
+          <input id="yoloSplit" value="train">
+        </label>
+        <button onclick="saveYoloSample()">Save YOLO Sample</button>
+        <button onclick="startYoloTrain()">Start YOLO Train</button>
+        <button onclick="refreshYoloStatus()">YOLO Train Status</button>
+        <p class="hint">
+          Place pieces on rank 4, enter square:class labels, save samples, then train.
+          Classes include white_pawn, white_rook, white_knight, white_bishop, white_queen, white_king, and black_*.
+        </p>
+        <pre id="yoloStatus">YOLO training idle.</pre>
+      </section>
+      <section class="panel">
         <pre id="liveStatus">Live status pending.</pre>
       </section>
       <section class="panel">
@@ -527,6 +612,37 @@ HTML_PAGE = """<!doctype html>
         document.getElementById('overlay').src = '/live-overlay.mjpg?ts=' + Date.now();
       }
     }
+
+    async function saveYoloSample() {
+      const status = document.getElementById('yoloStatus');
+      status.textContent = 'Saving YOLO sample...';
+      const params = new URLSearchParams({
+        corners: document.getElementById('corners').value,
+        auto_locate: document.getElementById('autoLocate').checked ? '1' : '0',
+        square_corners: document.getElementById('squareCornerInput').value,
+        placements: document.getElementById('yoloPlacements').value,
+        split: document.getElementById('yoloSplit').value || 'train'
+      });
+      const res = await fetch('/api/yolo/add-sample?' + params.toString());
+      const data = await res.json();
+      status.textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function startYoloTrain() {
+      const status = document.getElementById('yoloStatus');
+      status.textContent = 'Starting YOLO training...';
+      const res = await fetch('/api/yolo/train');
+      const data = await res.json();
+      status.textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function refreshYoloStatus() {
+      const status = document.getElementById('yoloStatus');
+      const res = await fetch('/api/yolo/status?ts=' + Date.now());
+      const data = await res.json();
+      status.textContent = JSON.stringify(data, null, 2);
+    }
+
     async function refreshLiveStatus() {
       try {
         const res = await fetch('/api/status?ts=' + Date.now());
@@ -546,10 +662,24 @@ HTML_PAGE = """<!doctype html>
 
 
 class VisionState:
-    def __init__(self, calibration_path: str, output_dir: str, camera: LiveCameraState, camera_cfg: CameraConfig) -> None:
+    def __init__(
+        self,
+        calibration_path: str,
+        output_dir: str,
+        camera: LiveCameraState,
+        camera_cfg: CameraConfig,
+        yolo_dataset_dir: str,
+        yolo_docker_image: str,
+    ) -> None:
         self.calibration_path = calibration_path
         self.output_dir = output_dir
         self.overlay_path = os.path.join(output_dir, "overlay.jpg")
+        self.yolo_dataset_dir = yolo_dataset_dir
+        self.yolo_docker_image = yolo_docker_image
+        self.yolo_train_log_path = os.path.join(output_dir, "yolo_train.log")
+        self.yolo_train_process = None
+        self.yolo_train_command = []
+        self.yolo_lock = threading.Lock()
         self.camera = camera
         self.camera_cfg = camera_cfg
         self.overlay_lock = threading.Lock()
@@ -560,6 +690,7 @@ class VisionState:
         self.overlay_extra_board_points = np.empty((0, 2), dtype=np.float32)
         self.overlay_extra_image_points = np.empty((0, 2), dtype=np.float32)
         os.makedirs(output_dir, exist_ok=True)
+        init_dataset(Path(self.yolo_dataset_dir))
 
     def set_overlay_config(
         self,
@@ -643,6 +774,15 @@ def make_handler(state: VisionState):
                 return
             if parsed.path == "/api/inspect":
                 self.inspect(parsed.query)
+                return
+            if parsed.path == "/api/yolo/add-sample":
+                self.yolo_add_sample(parsed.query)
+                return
+            if parsed.path == "/api/yolo/train":
+                self.yolo_train()
+                return
+            if parsed.path == "/api/yolo/status":
+                self.yolo_status()
                 return
             self.send_json({"ok": False, "error": "not found"}, HTTPStatus.NOT_FOUND)
 
@@ -815,6 +955,131 @@ def make_handler(state: VisionState):
             except Exception as exc:
                 self.send_json({"ok": False, "error": str(exc)}, HTTPStatus.BAD_REQUEST)
 
+        def yolo_add_sample(self, query: str) -> None:
+            try:
+                params = parse_qs(query)
+                placements_text = params.get("placements", [""])[0]
+                placements = parse_placements(placements_text)
+                split = params.get("split", ["train"])[0].strip().lower() or "train"
+                corners_text = params.get("corners", [DEFAULT_CORNERS])[0]
+                auto_locate = params.get("auto_locate", ["0"])[0].strip().lower() not in ("0", "false", "no", "off")
+                frame, stamp, seq, _depth, _depth_stamp, _depth_seq = state.camera.snapshot()
+                if frame is None:
+                    raise RuntimeError("live RGB frame not received yet")
+                extra_text = params.get("square_corners", [""])[0]
+                extra_board_points, extra_image_points, extra_labels = parse_square_corner_calibration(extra_text)
+                corner_image_points = parse_point_list(corners_text)
+                corner_image_points, auto_location = save_live_calibration(
+                    state.calibration_path,
+                    frame,
+                    corner_image_points,
+                    auto_locate,
+                    extra_board_points,
+                    extra_image_points,
+                    extra_labels,
+                )
+                dataset_dir = Path(state.yolo_dataset_dir)
+                init_dataset(dataset_dir)
+                capture_dir = dataset_dir / "captures"
+                capture_dir.mkdir(parents=True, exist_ok=True)
+                sample_name = params.get("name", [""])[0].strip()
+                if not sample_name:
+                    sample_name = f"rank4_{time.strftime('%Y%m%d_%H%M%S')}_{seq}_{uuid.uuid4().hex[:6]}"
+                image_path = capture_dir / f"{sample_name}.jpg"
+                cv2.imwrite(str(image_path), frame)
+                add_labeled_image(
+                    image_path,
+                    Path(state.calibration_path),
+                    dataset_dir,
+                    split,
+                    placements,
+                    sample_name,
+                    shrink=float(params.get("shrink", ["0.72"])[0]),
+                )
+                self.send_json(
+                    {
+                        "ok": True,
+                        "version": WEB_VERSION,
+                        "dataset_dir": str(dataset_dir),
+                        "data_yaml": str(write_data_yaml(dataset_dir)),
+                        "split": split,
+                        "sample_name": sample_name,
+                        "image_path": str(image_path),
+                        "placements": placements,
+                        "rgb_seq": seq,
+                        "rgb_age_s": round(time.time() - stamp, 3),
+                        "auto_location": auto_location,
+                        "calibration_corners_px": corner_image_points.astype(float).tolist(),
+                    }
+                )
+            except Exception as exc:
+                self.send_json({"ok": False, "error": str(exc)}, HTTPStatus.BAD_REQUEST)
+
+        def yolo_train(self) -> None:
+            try:
+                with state.yolo_lock:
+                    process = state.yolo_train_process
+                    if process is not None and process.poll() is None:
+                        self.send_json(
+                            {
+                                "ok": False,
+                                "error": "YOLO training is already running",
+                                "pid": process.pid,
+                                "log_path": state.yolo_train_log_path,
+                            },
+                            HTTPStatus.CONFLICT,
+                        )
+                        return
+                    init_dataset(Path(state.yolo_dataset_dir))
+                    command = build_yolo_train_command(state)
+                    os.makedirs(os.path.dirname(state.yolo_train_log_path), exist_ok=True)
+                    log = open(state.yolo_train_log_path, "ab", buffering=0)
+                    log.write(("\n\n=== YOLO train started " + time.strftime("%Y-%m-%d %H:%M:%S") + " ===\n").encode("utf-8"))
+                    process = subprocess.Popen(
+                        command,
+                        cwd=repo_root_for_script(),
+                        stdout=log,
+                        stderr=subprocess.STDOUT,
+                    )
+                    state.yolo_train_process = process
+                    state.yolo_train_command = command
+                self.send_json(
+                    {
+                        "ok": True,
+                        "version": WEB_VERSION,
+                        "pid": process.pid,
+                        "command": command,
+                        "dataset_dir": state.yolo_dataset_dir,
+                        "log_path": state.yolo_train_log_path,
+                    }
+                )
+            except Exception as exc:
+                self.send_json({"ok": False, "error": str(exc)}, HTTPStatus.BAD_REQUEST)
+
+        def yolo_status(self) -> None:
+            with state.yolo_lock:
+                process = state.yolo_train_process
+                if process is None:
+                    running = False
+                    returncode = None
+                    pid = None
+                else:
+                    returncode = process.poll()
+                    running = returncode is None
+                    pid = process.pid
+                payload = {
+                    "ok": True,
+                    "version": WEB_VERSION,
+                    "running": running,
+                    "pid": pid,
+                    "returncode": returncode,
+                    "command": state.yolo_train_command,
+                    "dataset_dir": state.yolo_dataset_dir,
+                    "log_path": state.yolo_train_log_path,
+                    "log_tail": read_text_tail(state.yolo_train_log_path),
+                }
+            self.send_json(payload)
+
     return Handler
 
 
@@ -828,6 +1093,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--rgb-topic", default="/ascamera_hp60c/rgb0/image")
     parser.add_argument("--depth-topic", default="/ascamera_hp60c/depth0/image_raw")
     parser.add_argument("--jpeg-quality", type=int, default=85)
+    parser.add_argument("--yolo-dataset-dir", default=DEFAULT_YOLO_DATASET_DIR)
+    parser.add_argument("--yolo-docker-image", default=DEFAULT_YOLO_DOCKER_IMAGE)
     return parser
 
 
@@ -872,7 +1139,7 @@ def main() -> None:
         jpeg_quality=args.jpeg_quality,
     )
     start_ros_camera(camera, args.rgb_topic, args.depth_topic)
-    state = VisionState(args.calibration, args.output_dir, camera, camera_cfg)
+    state = VisionState(args.calibration, args.output_dir, camera, camera_cfg, args.yolo_dataset_dir, args.yolo_docker_image)
     server = ThreadingHTTPServer((args.host, args.port), make_handler(state))
     print(f"Chessboard vision v2.7 web verifier listening on http://{args.host}:{args.port}/", flush=True)
     print("This verifier does not expose arm motion commands.", flush=True)
@@ -880,6 +1147,8 @@ def main() -> None:
     print(f"Live depth topic: {args.depth_topic}", flush=True)
     print(f"Live RGB stream: http://<orin-ip>:{args.port}/live-rgb.mjpg", flush=True)
     print(f"Live overlay stream: http://<orin-ip>:{args.port}/live-overlay.mjpg", flush=True)
+    print(f"YOLO dataset dir: {args.yolo_dataset_dir}", flush=True)
+    print(f"YOLO docker image: {args.yolo_docker_image}", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
