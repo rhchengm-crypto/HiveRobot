@@ -213,3 +213,37 @@ python -m py_compile scripts/chessboard_vision_v2_7.py scripts/chessboard_vision
 ```
 
 Next live test should confirm that `e2` and `f2` return under `depth_rank2_compact_rescue`, while the empty-board `g1` false positive remains suppressed by `matches_empty_board_baseline`.
+
+## 2026-08-23 piece identity layer
+
+The v2.7 detector now reports piece identity fields for detected squares using a standard starting-position square layout.
+
+Example output:
+
+```text
+identified_pieces=a1:white_rook_queen_side,b1:white_knight_queen_side,c1:white_bishop_queen_side,d1:white_queen,e1:white_king,f1:white_bishop_king_side,g1:white_knight_king_side,h1:white_rook_king_side,a2:white_pawn_a,...
+```
+
+Each detected `piece_results[square]` now includes:
+
+```text
+piece_id
+piece_type
+color
+identity_method
+identity_confidence
+```
+
+The top-level JSON also includes:
+
+```text
+identified_pieces
+```
+
+Current limitation:
+
+```text
+identity_method=standard_starting_position
+```
+
+This means identity is assigned from the square when the board is in the standard start layout. After pieces move, identity should be maintained by game-state tracking or replaced by a trained visual/tag classifier. Unknown occupied non-starting squares are reported as `unknown_piece` instead of being guessed.

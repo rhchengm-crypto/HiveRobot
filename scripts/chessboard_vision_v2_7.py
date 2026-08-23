@@ -28,6 +28,36 @@ SQUARE_SIZE_MM = 55.0
 BOARD_FILES = "abcdefgh"
 BOARD_RANKS = "12345678"
 
+STANDARD_STARTING_PIECES = {
+    "a1": {"piece_id": "white_rook_queen_side", "piece_type": "rook", "color": "white"},
+    "b1": {"piece_id": "white_knight_queen_side", "piece_type": "knight", "color": "white"},
+    "c1": {"piece_id": "white_bishop_queen_side", "piece_type": "bishop", "color": "white"},
+    "d1": {"piece_id": "white_queen", "piece_type": "queen", "color": "white"},
+    "e1": {"piece_id": "white_king", "piece_type": "king", "color": "white"},
+    "f1": {"piece_id": "white_bishop_king_side", "piece_type": "bishop", "color": "white"},
+    "g1": {"piece_id": "white_knight_king_side", "piece_type": "knight", "color": "white"},
+    "h1": {"piece_id": "white_rook_king_side", "piece_type": "rook", "color": "white"},
+    "a8": {"piece_id": "black_rook_queen_side", "piece_type": "rook", "color": "black"},
+    "b8": {"piece_id": "black_knight_queen_side", "piece_type": "knight", "color": "black"},
+    "c8": {"piece_id": "black_bishop_queen_side", "piece_type": "bishop", "color": "black"},
+    "d8": {"piece_id": "black_queen", "piece_type": "queen", "color": "black"},
+    "e8": {"piece_id": "black_king", "piece_type": "king", "color": "black"},
+    "f8": {"piece_id": "black_bishop_king_side", "piece_type": "bishop", "color": "black"},
+    "g8": {"piece_id": "black_knight_king_side", "piece_type": "knight", "color": "black"},
+    "h8": {"piece_id": "black_rook_king_side", "piece_type": "rook", "color": "black"},
+}
+for _file in BOARD_FILES:
+    STANDARD_STARTING_PIECES[f"{_file}2"] = {
+        "piece_id": f"white_pawn_{_file}",
+        "piece_type": "pawn",
+        "color": "white",
+    }
+    STANDARD_STARTING_PIECES[f"{_file}7"] = {
+        "piece_id": f"black_pawn_{_file}",
+        "piece_type": "pawn",
+        "color": "black",
+    }
+
 # Empty-board reference captured from live v2.7 inspection.
 # This is a known false-positive baseline: with no pieces on the board, g1 can produce
 # a shallow full-width bottom-band depth blob under the rank-1 constant-depth model.
@@ -211,6 +241,24 @@ def square_center_mm(square: str) -> tuple[float, float]:
     bounds = square_bounds_mm(square)
     center = bounds.mean(axis=0)
     return float(center[0]), float(center[1])
+
+
+def identify_piece_for_square(square: str, layout: Optional[dict] = None) -> dict:
+    square = normalize_square(square)
+    piece_layout = STANDARD_STARTING_PIECES if layout is None else layout
+    identity = piece_layout.get(square)
+    if not identity:
+        return {
+            "piece_id": "unknown_piece",
+            "piece_type": "unknown",
+            "color": "unknown",
+            "identity_method": "square_layout",
+            "identity_confidence": 0.0,
+        }
+    result = dict(identity)
+    result["identity_method"] = "standard_starting_position" if layout is None else "custom_square_layout"
+    result["identity_confidence"] = 1.0
+    return result
 
 
 def board_to_image_points(points_mm: np.ndarray, homography_board_to_image: np.ndarray) -> np.ndarray:
@@ -700,6 +748,7 @@ def draw_squares_overlay_image(
     square_results = {}
     piece_results = {}
     detected_squares = []
+    identified_pieces = {}
     title_parts = []
     compact_detection_overlay = len(square_list) > 16
     for square in square_list:
@@ -732,6 +781,21 @@ def draw_squares_overlay_image(
                 piece = piece_results_override[square]
             else:
                 piece = detect_piece_in_square_image(image, h, square, depth_image=depth_image)
+            if piece.get("detected"):
+                identity = identify_piece_for_square(square)
+                piece.update(identity)
+                identified_pieces[square] = {
+                    "square": square,
+                    "piece_id": piece["piece_id"],
+                    "piece_type": piece["piece_type"],
+                    "color": piece["color"],
+                    "identity_method": piece["identity_method"],
+                    "identity_confidence": piece["identity_confidence"],
+                    "detection_method": piece.get("method", ""),
+                    "detection_confidence": piece.get("confidence", 0.0),
+                    "center_mm": piece.get("center_mm"),
+                    "center_px": piece.get("center_px"),
+                }
             piece_results[square] = piece
             if piece.get("detected"):
                 detected_squares.append(square)
@@ -741,7 +805,7 @@ def draw_squares_overlay_image(
                 cv2.circle(image, piece_xy, 11, (0, 0, 0), 2, cv2.LINE_AA)
                 cv2.putText(
                     image,
-                    square if compact_detection_overlay else "piece " + str(piece.get("method", "")),
+                    str(piece.get("piece_id", square)) if compact_detection_overlay else str(piece.get("piece_id", "piece")),
                     (piece_xy[0] + 9, piece_xy[1] + 15),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.5,
@@ -782,6 +846,7 @@ def draw_squares_overlay_image(
         "roi_px": square_results[first_square]["roi_px"],
         "square_results": square_results,
         "piece_results": piece_results,
+        "identified_pieces": identified_pieces,
         "detected_squares": detected_squares,
         "detected_count": len(detected_squares),
         "image_path": image_path,

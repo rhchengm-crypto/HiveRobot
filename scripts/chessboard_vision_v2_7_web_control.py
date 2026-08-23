@@ -483,9 +483,15 @@ HTML_PAGE = """<!doctype html>
       lastInspectData = data.ok ? data : null;
       if (data.ok && data.piece_results) {
         const detected = data.detected_squares || [];
+        const identities = data.identified_pieces || {};
+        const identityLines = Object.keys(identities).sort().map((square) => {
+          const info = identities[square];
+          return square + ':' + info.piece_id;
+        });
         result.textContent =
           'detected_count=' + detected.length + '\\n' +
           'detected_squares=' + detected.join(',') + '\\n\\n' +
+          'identified_pieces=' + (identityLines.join(',') || 'none') + '\\n\\n' +
           JSON.stringify(data, null, 2);
       } else {
         result.textContent = JSON.stringify(data, null, 2);
@@ -496,6 +502,12 @@ HTML_PAGE = """<!doctype html>
         if (entries.length > 16) {
           lines.push('Whole-board mode: ' + entries.length + ' squares inspected.');
           lines.push('Detected: ' + ((data.detected_squares || []).join(',') || 'none'));
+          if (data.identified_pieces) {
+            const identityLines = Object.keys(data.identified_pieces).sort().map((square) => {
+              return square + ':' + data.identified_pieces[square].piece_id;
+            });
+            lines.push('Pieces: ' + (identityLines.join(', ') || 'none'));
+          }
           squareCornerOutput.textContent = lines.join('\\n');
         } else {
           for (const [square, info] of entries) {
