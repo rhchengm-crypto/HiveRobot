@@ -50,6 +50,7 @@ DEFAULT_OUTPUT_DIR = os.path.join(tempfile.gettempdir(), "hive_robot_chessboard_
 WEB_VERSION = "v2.7"
 DEFAULT_YOLO_DATASET_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "datasets", "chess_pieces_yolo")
 DEFAULT_YOLO_DOCKER_IMAGE = "ultralytics/ultralytics:latest-jetson-jetpack5"
+DEFAULT_WEB_OVERLAY_CONFIG_PATH = os.path.join(SCRIPT_DIR, "data", "chessboard_vision_v2_7_web_overlay_config.json")
 
 
 @dataclass
@@ -367,6 +368,43 @@ def default_yolo_model_path() -> str:
     return os.path.join(repo_root_for_script(), "runs", "chess_piece_yolo", "yolo11n_rank4", "weights", "best.pt")
 
 
+def default_overlay_config() -> dict:
+    return {
+        "corners": DEFAULT_CORNERS,
+        "squares": DEFAULT_SQUARES,
+        "auto_locate": False,
+        "detect_pieces": True,
+        "square_corners": "",
+        "yolo_model": default_yolo_model_path(),
+        "yolo_detect_squares": "a4,b4,c4,d4,e4,f4,g4,h4",
+        "yolo_split": "train",
+    }
+
+
+def load_overlay_config(path: str) -> dict:
+    config = default_overlay_config()
+    if not os.path.exists(path):
+        return config
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            payload = json.load(f)
+        if isinstance(payload, dict):
+            config.update({key: payload[key] for key in config.keys() if key in payload})
+    except Exception as exc:
+        print(f"failed to load overlay config {path}: {exc}", flush=True)
+    return config
+
+
+def save_overlay_config(path: str, config: dict) -> None:
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    payload = default_overlay_config()
+    payload.update({key: config[key] for key in payload.keys() if key in config})
+    payload["updated_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+
+
 HTML_PAGE = """<!doctype html>
 <html lang="en" translate="no">
 <head>
@@ -514,13 +552,13 @@ HTML_PAGE = """<!doctype html>
         <label>Inner board black-line corners in order a1,h1,h8,a8
           <input id="corners" value="__CORNERS__">
         </label>
-        <label><input id="autoLocate" type="checkbox"> Auto locate board from live frame</label>
-        <label><input id="detectPieces" type="checkbox" checked> Detect pieces in selected squares</label>
+        <label><input id="autoLocate" type="checkbox" __AUTO_LOCATE_CHECKED__> Auto locate board from live frame</label>
+        <label><input id="detectPieces" type="checkbox" __DETECT_PIECES_CHECKED__> Detect pieces in selected squares</label>
         <label>Squares
           <input id="squares" value="__SQUARES__">
         </label>
         <label>Square corner calibration
-          <textarea id="squareCornerInput" placeholder="a2: x,y x,y x,y x,y&#10;h2: x,y x,y x,y x,y"></textarea>
+          <textarea id="squareCornerInput" placeholder="a2: x,y x,y x,y x,y&#10;h2: x,y x,y x,y x,y">__SQUARE_CORNERS__</textarea>
         </label>
         <button onclick="showInputFrame()">Show Input Frame</button>
         <button onclick="inspectSquare()">Inspect Square</button>
@@ -539,7 +577,7 @@ HTML_PAGE = """<!doctype html>
           <textarea id="yoloPlacements" placeholder="a4:white_pawn&#10;b4:black_king&#10;c4:white_rook"></textarea>
         </label>
         <label>YOLO split
-          <input id="yoloSplit" value="train">
+          <input id="yoloSplit" value="__YOLO_SPLIT__">
         </label>
         <button onclick="saveYoloSample()">Save YOLO Sample</button>
         <button onclick="startYoloTrain()">Start YOLO Train</button>
@@ -548,7 +586,7 @@ HTML_PAGE = """<!doctype html>
           <input id="yoloModel" value="__YOLO_MODEL__">
         </label>
         <label>YOLO detect squares
-          <input id="yoloDetectSquares" value="a4,b4,c4,d4,e4,f4,g4,h4">
+          <input id="yoloDetectSquares" value="__YOLO_DETECT_SQUARES__">
         </label>
         <button onclick="detectYoloPieces()">YOLO Detect Table</button>
         <p class="hint">
@@ -767,10 +805,13 @@ class VisionState:
         camera_cfg: CameraConfig,
         yolo_dataset_dir: str,
         yolo_docker_image: str,
+        overlay_config_path: str,
     ) -> None:
         self.calibration_path = calibration_path
         self.output_dir = output_dir
         self.overlay_path = os.path.join(output_dir, "overlay.jpg")
+        self.overlay_config_path = overlay_config_path
+        self.overlay_config = load_overlay_config(overlay_config_path)
         self.yolo_dataset_dir = yolo_dataset_dir
         self.yolo_docker_image = yolo_docker_image
         self.yolo_train_log_path = os.path.join(output_dir, "yolo_train.log")
@@ -780,12 +821,23 @@ class VisionState:
         self.camera = camera
         self.camera_cfg = camera_cfg
         self.overlay_lock = threading.Lock()
-        self.overlay_squares = DEFAULT_SQUARES
-        self.overlay_seed_corners = parse_point_list(DEFAULT_CORNERS)
-        self.overlay_auto_locate = False
-        self.overlay_detect_pieces = True
+        self.overlay_squares = str(self.overlay_config.get("squares", DEFAULT_SQUARES))
+        try:
+            self.overlay_seed_corners = parse_point_list(str(self.overlay_config.get("corners", DEFAULT_CORNERS)))
+        except Exception as exc:
+            print(f"failed to load saved overlay corners, using defaults: {exc}", flush=True)
+            self.overlay_config["corners"] = DEFAULT_CORNERS
+            self.overlay_seed_corners = parse_point_list(DEFAULT_CORNERS)
+        self.overlay_auto_locate = bool(self.overlay_config.get("auto_locate", False))
+        self.overlay_detect_pieces = bool(self.overlay_config.get("detect_pieces", True))
         self.overlay_extra_board_points = np.empty((0, 2), dtype=np.float32)
         self.overlay_extra_image_points = np.empty((0, 2), dtype=np.float32)
+        square_corner_text = str(self.overlay_config.get("square_corners", ""))
+        if square_corner_text.strip():
+            try:
+                self.overlay_extra_board_points, self.overlay_extra_image_points, _labels = parse_square_corner_calibration(square_corner_text)
+            except Exception as exc:
+                print(f"failed to load square-corner overlay config: {exc}", flush=True)
         os.makedirs(output_dir, exist_ok=True)
         init_dataset(Path(self.yolo_dataset_dir))
 
@@ -805,6 +857,33 @@ class VisionState:
             self.overlay_detect_pieces = detect_pieces
             self.overlay_extra_board_points = np.asarray(extra_board_points, dtype=np.float32).reshape(-1, 2)
             self.overlay_extra_image_points = np.asarray(extra_image_points, dtype=np.float32).reshape(-1, 2)
+
+    def save_web_config(
+        self,
+        corners_text: str,
+        squares: str,
+        auto_locate: bool,
+        detect_pieces: bool,
+        square_corners_text: str,
+        yolo_model: str = "",
+        yolo_detect_squares: str = "",
+        yolo_split: str = "",
+    ) -> None:
+        config = {
+            "corners": corners_text,
+            "squares": squares,
+            "auto_locate": bool(auto_locate),
+            "detect_pieces": bool(detect_pieces),
+            "square_corners": square_corners_text,
+        }
+        if yolo_model:
+            config["yolo_model"] = yolo_model
+        if yolo_detect_squares:
+            config["yolo_detect_squares"] = yolo_detect_squares
+        if yolo_split:
+            config["yolo_split"] = yolo_split
+        self.overlay_config.update(config)
+        save_overlay_config(self.overlay_config_path, self.overlay_config)
 
     def get_overlay_config(self) -> tuple[str, np.ndarray, bool, bool, np.ndarray, np.ndarray]:
         with self.overlay_lock:
@@ -838,11 +917,17 @@ def make_handler(state: VisionState):
         def do_GET(self) -> None:  # noqa: N802
             parsed = urlparse(self.path)
             if parsed.path == "/":
+                config = state.overlay_config
                 page = (
                     HTML_PAGE
-                    .replace("__CORNERS__", html.escape(DEFAULT_CORNERS, quote=True))
-                    .replace("__SQUARES__", html.escape(DEFAULT_SQUARES, quote=True))
-                    .replace("__YOLO_MODEL__", html.escape(default_yolo_model_path(), quote=True))
+                    .replace("__CORNERS__", html.escape(str(config.get("corners", DEFAULT_CORNERS)), quote=True))
+                    .replace("__SQUARES__", html.escape(str(config.get("squares", DEFAULT_SQUARES)), quote=True))
+                    .replace("__AUTO_LOCATE_CHECKED__", "checked" if config.get("auto_locate", False) else "")
+                    .replace("__DETECT_PIECES_CHECKED__", "checked" if config.get("detect_pieces", True) else "")
+                    .replace("__SQUARE_CORNERS__", html.escape(str(config.get("square_corners", ""))))
+                    .replace("__YOLO_MODEL__", html.escape(str(config.get("yolo_model", default_yolo_model_path())), quote=True))
+                    .replace("__YOLO_DETECT_SQUARES__", html.escape(str(config.get("yolo_detect_squares", "a4,b4,c4,d4,e4,f4,g4,h4")), quote=True))
+                    .replace("__YOLO_SPLIT__", html.escape(str(config.get("yolo_split", "train")), quote=True))
                     .replace("__INITIAL_VIEWER_SRC__", "/live-rgb.mjpg?ts=0")
                 )
                 self.send_bytes(page.encode("utf-8"), "text/html; charset=utf-8")
@@ -867,6 +952,8 @@ def make_handler(state: VisionState):
                     "live_camera": state.camera_cfg.live_camera,
                     "rgb_topic": state.camera_cfg.rgb_topic,
                     "depth_topic": state.camera_cfg.depth_topic,
+                    "overlay_config_path": state.overlay_config_path,
+                    "overlay_config": state.overlay_config,
                     **state.camera.status(),
                 })
                 return
@@ -1052,6 +1139,7 @@ def make_handler(state: VisionState):
                 result["auto_location"] = auto_location
                 result["calibration_corners_px"] = corner_image_points.astype(float).tolist()
                 state.set_overlay_config(squares, parse_point_list(corners_text), auto_locate, detect_pieces, extra_board_points, extra_image_points)
+                state.save_web_config(corners_text, squares, auto_locate, detect_pieces, extra_text)
                 self.send_json({"ok": True, "version": WEB_VERSION, "live_camera": state.camera_cfg.live_camera, **result})
             except Exception as exc:
                 self.send_json({"ok": False, "error": str(exc)}, HTTPStatus.BAD_REQUEST)
@@ -1064,6 +1152,7 @@ def make_handler(state: VisionState):
                 split = params.get("split", ["train"])[0].strip().lower() or "train"
                 corners_text = params.get("corners", [DEFAULT_CORNERS])[0]
                 auto_locate = params.get("auto_locate", ["0"])[0].strip().lower() not in ("0", "false", "no", "off")
+                detect_pieces = True
                 frame, stamp, seq, _depth, _depth_stamp, _depth_seq = state.camera.snapshot()
                 if frame is None:
                     raise RuntimeError("live RGB frame not received yet")
@@ -1088,6 +1177,7 @@ def make_handler(state: VisionState):
                     sample_name = f"rank4_{time.strftime('%Y%m%d_%H%M%S')}_{seq}_{uuid.uuid4().hex[:6]}"
                 image_path = capture_dir / f"{sample_name}.jpg"
                 cv2.imwrite(str(image_path), frame)
+                state.save_web_config(corners_text, state.overlay_squares, auto_locate, detect_pieces, extra_text, yolo_split=split)
                 add_labeled_image(
                     image_path,
                     Path(state.calibration_path),
@@ -1189,6 +1279,7 @@ def make_handler(state: VisionState):
                 allowed_squares = parse_square_list(squares)
                 corners_text = params.get("corners", [DEFAULT_CORNERS])[0]
                 auto_locate = params.get("auto_locate", ["0"])[0].strip().lower() not in ("0", "false", "no", "off")
+                detect_pieces = True
                 frame, stamp, seq, _depth, _depth_stamp, _depth_seq = state.camera.snapshot()
                 if frame is None:
                     raise RuntimeError("live RGB frame not received yet")
@@ -1210,6 +1301,7 @@ def make_handler(state: VisionState):
                 cv2.imwrite(str(image_path), frame)
                 if not os.path.exists(model_path):
                     raise RuntimeError(f"YOLO model not found: {model_path}")
+                state.save_web_config(corners_text, state.overlay_squares, auto_locate, detect_pieces, extra_text, yolo_model=model_path, yolo_detect_squares=squares)
                 detections = run_yolo(model_path, str(image_path), imgsz=int(params.get("imgsz", ["960"])[0]), conf=float(params.get("conf", ["0.25"])[0]))
                 piece_class_results = map_detections_to_squares(detections, state.calibration_path, allowed_squares)
                 placement_plan = assign_opening_targets(piece_class_results)
@@ -1247,6 +1339,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--jpeg-quality", type=int, default=85)
     parser.add_argument("--yolo-dataset-dir", default=DEFAULT_YOLO_DATASET_DIR)
     parser.add_argument("--yolo-docker-image", default=DEFAULT_YOLO_DOCKER_IMAGE)
+    parser.add_argument("--overlay-config", default=DEFAULT_WEB_OVERLAY_CONFIG_PATH)
     return parser
 
 
@@ -1291,7 +1384,7 @@ def main() -> None:
         jpeg_quality=args.jpeg_quality,
     )
     start_ros_camera(camera, args.rgb_topic, args.depth_topic)
-    state = VisionState(args.calibration, args.output_dir, camera, camera_cfg, args.yolo_dataset_dir, args.yolo_docker_image)
+    state = VisionState(args.calibration, args.output_dir, camera, camera_cfg, args.yolo_dataset_dir, args.yolo_docker_image, args.overlay_config)
     server = ThreadingHTTPServer((args.host, args.port), make_handler(state))
     print(f"Chessboard vision v2.7 web verifier listening on http://{args.host}:{args.port}/", flush=True)
     print("This verifier does not expose arm motion commands.", flush=True)
@@ -1301,6 +1394,7 @@ def main() -> None:
     print(f"Live overlay stream: http://<orin-ip>:{args.port}/live-overlay.mjpg", flush=True)
     print(f"YOLO dataset dir: {args.yolo_dataset_dir}", flush=True)
     print(f"YOLO docker image: {args.yolo_docker_image}", flush=True)
+    print(f"Overlay config: {args.overlay_config}", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

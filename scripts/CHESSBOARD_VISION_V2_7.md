@@ -114,6 +114,33 @@ Use `Use Shown Square Corners` to copy the currently projected square corners in
 After editing those square corner pixels, click `Inspect Square` again; the homography is refit from the outer board corners plus the edited square corners.
 Click `Show Input Frame` to return from the overlay snapshot to the live stream.
 
+Overlay grid web parameters are persisted after `Inspect Square`, `Save YOLO Sample`, or `YOLO Detect Table`.
+On restart, the web page reloads the last saved values for:
+
+```text
+corners
+squares
+auto_locate
+detect_pieces
+square_corners
+yolo_model
+yolo_detect_squares
+yolo_split
+```
+
+Default save path:
+
+```text
+scripts/data/chessboard_vision_v2_7_web_overlay_config.json
+```
+
+Override it when needed:
+
+```bash
+python3 scripts/chessboard_vision_v2_7_web_control.py --port 8097 \
+  --overlay-config scripts/data/chessboard_vision_v2_7_web_overlay_config.json
+```
+
 ## 2026-08-21 live piece-detection tuning notes
 
 Starting stable reference with all pawns on ranks 1 and 2:
