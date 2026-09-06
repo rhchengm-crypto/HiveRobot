@@ -11,6 +11,7 @@ import argparse
 import html
 import json
 import os
+import signal
 import shutil
 import subprocess
 import tempfile
@@ -29,15 +30,24 @@ import numpy as np
 
 from chessboard_vision_v2_7 import (
     BOARD_SIZE_MM,
+    CHESS_PIECE_YOLO_CLASSES,
     DEFAULT_CALIBRATION_PATH,
+    DEFAULT_EMPTY_BOARD_BASELINE_PATH,
     annotate_squares_image,
     assign_opening_targets,
     auto_locate_board_corners,
     draw_squares_overlay_image,
+    load_empty_board_depth_baselines,
+    load_empty_board_rgb_baselines,
+    is_rank1_edge_depth_artifact,
+    is_rank1_rgb_artifact,
+    matches_empty_board_depth_baseline,
     parse_point_list,
     parse_square_list,
     save_calibration_from_points,
+    save_empty_board_depth_baselines,
     square_bounds_mm,
+    matches_empty_board_rgb_baseline,
 )
 from chess_piece_yolo_dataset import add_labeled_image, init_dataset, parse_placements, write_data_yaml
 from chess_piece_yolo_infer import map_detections_to_squares, run_yolo
@@ -47,7 +57,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_CORNERS = "100,428 595,418 520,52 165,58"
 DEFAULT_SQUARES = "all"
 DEFAULT_OUTPUT_DIR = os.path.join(tempfile.gettempdir(), "hive_robot_chessboard_vision_v2_7")
-WEB_VERSION = "v2.7"
+WEB_VERSION = "v2.7-rank1-strong-c1-yolo-docker-detect-nms2"
 DEFAULT_YOLO_DATASET_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "datasets", "chess_pieces_yolo")
 DEFAULT_YOLO_DOCKER_IMAGE = "ultralytics/ultralytics:latest-jetson-jetpack5"
 DEFAULT_WEB_OVERLAY_CONFIG_PATH = os.path.join(SCRIPT_DIR, "data", "chessboard_vision_v2_7_web_overlay_config.json")
@@ -267,7 +277,7 @@ def should_temporal_merge(squares: str, detect_pieces: bool) -> bool:
         return False
 
 
-def choose_best_piece_result(results: list) -> dict:
+def choose_best_piece_result(results: list, empty_board_depth_baselines: Optional[dict] = None, empty_board_rgb_baselines: Optional[dict] = None) -> dict:
     detected = [item for item in results if item and item.get("detected")]
     if detected:
         best = max(
@@ -280,6 +290,65 @@ def choose_best_piece_result(results: list) -> dict:
         ).copy()
         best["temporal_votes"] = len(detected)
         best["temporal_samples"] = len(results)
+        if str(best.get("method", "")) == "rgb":
+            square = str(best.get("square", ""))
+            bbox = tuple(best.get("bbox_patch_px", [0, 0, 0, 0]))
+            empty_baseline = matches_empty_board_rgb_baseline(
+                square,
+                float(best.get("area_px", 0.0)),
+                bbox,
+                float(best.get("fill_ratio", 0.0)),
+                best.get("center_patch_px", [0.0, 0.0]),
+                96,
+                empty_board_baselines=empty_board_rgb_baselines,
+            )
+            rank1_rgb_artifact = is_rank1_rgb_artifact(
+                square,
+                float(best.get("area_px", 0.0)),
+                bbox,
+                float(best.get("confidence", 0.0)),
+                best.get("center_patch_px", [0.0, 0.0]),
+                96,
+            )
+            if empty_baseline is not None or rank1_rgb_artifact:
+                best["detected"] = False
+                best["reason"] = "matches_empty_board_rgb_baseline" if empty_baseline is not None else "rank1_rgb_artifact"
+                best["confidence"] = 0.0
+                if empty_baseline is not None:
+                    best["empty_board_baseline"] = empty_baseline
+        method = str(best.get("method", ""))
+        square = str(best.get("square", ""))
+        if method.startswith("depth") and best.get("detected"):
+            bbox = tuple(best.get("bbox_patch_px", [0, 0, 0, 0]))
+            empty_baseline = matches_empty_board_depth_baseline(
+                square,
+                float(best.get("area_px", 0.0)),
+                bbox,
+                float(best.get("median_raise_m", 0.0)),
+                float(best.get("close_threshold_m", 0.0)),
+                96,
+                empty_board_baselines=empty_board_depth_baselines,
+            )
+            low_vote_rank1_artifact = (
+                len(square) == 2
+                and square[1] == "1"
+                and int(best.get("temporal_votes", 0)) < 2
+                and float(best.get("confidence", 0.0)) < 0.25
+            )
+            rank1_edge_artifact = is_rank1_edge_depth_artifact(
+                square,
+                float(best.get("area_px", 0.0)),
+                bbox,
+                float(best.get("confidence", 0.0)),
+                best.get("center_patch_px", [0.0, 0.0]),
+                96,
+            )
+            if empty_baseline is not None or low_vote_rank1_artifact or rank1_edge_artifact:
+                best["detected"] = False
+                best["reason"] = "matches_empty_board_depth_baseline" if empty_baseline is not None else "rank1_edge_depth_artifact"
+                best["confidence"] = 0.0
+                if empty_baseline is not None:
+                    best["empty_board_baseline"] = empty_baseline
         return best
     latest = (results[-1] if results else {"detected": False, "confidence": 0.0}).copy()
     latest["temporal_votes"] = 0
@@ -287,7 +356,11 @@ def choose_best_piece_result(results: list) -> dict:
     return latest
 
 
-def merge_temporal_piece_results(sample_results: list) -> dict:
+def merge_temporal_piece_results(
+    sample_results: list,
+    empty_board_depth_baselines: Optional[dict] = None,
+    empty_board_rgb_baselines: Optional[dict] = None,
+) -> dict:
     if not sample_results:
         return {}
     square_list = sample_results[-1].get("squares", [])
@@ -298,8 +371,92 @@ def merge_temporal_piece_results(sample_results: list) -> dict:
             for sample in sample_results
             if square in sample.get("piece_results", {})
         ]
-        merged[square] = choose_best_piece_result(square_samples)
+        merged[square] = choose_best_piece_result(
+            square_samples,
+            empty_board_depth_baselines=empty_board_depth_baselines,
+            empty_board_rgb_baselines=empty_board_rgb_baselines,
+        )
     return merged
+
+
+def build_empty_board_depth_baselines(piece_results: dict) -> dict:
+    baselines = {}
+    for square, info in sorted(piece_results.items()):
+        if not isinstance(info, dict) or not info.get("detected"):
+            continue
+        method = str(info.get("method", ""))
+        if not method.startswith("depth"):
+            continue
+        bbox = info.get("bbox_patch_px")
+        if not isinstance(bbox, list) or len(bbox) != 4:
+            continue
+        baselines[square] = {
+            "baseline": "empty_board_web_capture",
+            "method": method,
+            "area_px": float(info.get("area_px", 0.0)),
+            "bbox_patch_px": [int(value) for value in bbox],
+            "median_raise_m": float(info.get("median_raise_m", 0.0)),
+            "close_threshold_m": float(info.get("close_threshold_m", 0.0)),
+            "close_area_px": int(info.get("close_area_px", 0)),
+            "board_model": str(info.get("board_model", "")),
+            "confidence": float(info.get("confidence", 0.0)),
+            "center_mm": info.get("center_mm"),
+            "temporal_votes": int(info.get("temporal_votes", 0)),
+            "temporal_samples": int(info.get("temporal_samples", 0)),
+        }
+    return baselines
+
+
+def build_empty_board_rgb_baselines(piece_results: dict) -> dict:
+    baselines = {}
+    for square, info in sorted(piece_results.items()):
+        if not isinstance(info, dict) or not info.get("detected"):
+            continue
+        if str(info.get("method", "")) != "rgb":
+            continue
+        bbox = info.get("bbox_patch_px")
+        if not isinstance(bbox, list) or len(bbox) != 4:
+            continue
+        baselines[square] = {
+            "baseline": "empty_board_web_capture",
+            "method": "rgb",
+            "area_px": float(info.get("area_px", 0.0)),
+            "bbox_patch_px": [int(value) for value in bbox],
+            "fill_ratio": float(info.get("fill_ratio", 0.0)),
+            "confidence": float(info.get("confidence", 0.0)),
+            "center_patch_px": info.get("center_patch_px"),
+            "center_mm": info.get("center_mm"),
+            "temporal_votes": int(info.get("temporal_votes", 0)),
+            "temporal_samples": int(info.get("temporal_samples", 0)),
+        }
+    return baselines
+
+
+def yolo_piece_class_identity(square: str, info: dict) -> dict:
+    piece_class = str(info.get("piece_class", "unknown_piece"))
+    parts = piece_class.split("_", 1)
+    color = parts[0] if len(parts) == 2 and parts[0] in ("white", "black") else "unknown"
+    piece_type = parts[1] if len(parts) == 2 else piece_class
+    return {
+        "square": square,
+        "piece_id": piece_class,
+        "piece_type": piece_type,
+        "color": color,
+        "identity_method": "trained_yolo_model",
+        "identity_confidence": float(info.get("confidence", 0.0)),
+        "detection_method": "yolo",
+        "detection_confidence": float(info.get("confidence", 0.0)),
+        "center_mm": info.get("center_mm"),
+        "center_px": info.get("center_px"),
+    }
+
+
+def build_yolo_identified_pieces(piece_class_results: dict) -> dict:
+    return {
+        square: yolo_piece_class_identity(square, info)
+        for square, info in sorted(piece_class_results.items())
+        if isinstance(info, dict)
+    }
 
 
 def read_text_tail(path: str, max_bytes: int = 12000) -> str:
@@ -325,26 +482,190 @@ def docker_repo_mount(repo_root: str) -> tuple[str, str]:
     return repo_root, "/workspace/hive_robot/DM_Control_Python"
 
 
+def docker_path_for_host_path(host_path: str, host_mount: str) -> str:
+    try:
+        rel_path = os.path.relpath(host_path, host_mount)
+    except ValueError:
+        rel_path = os.path.basename(host_path)
+    rel_path = rel_path.replace("\\", "/")
+    if rel_path == ".":
+        return "/workspace/hive_robot"
+    if rel_path.startswith("../"):
+        return "/workspace/hive_robot/" + os.path.basename(host_path)
+    return "/workspace/hive_robot/" + rel_path
+
+
+def write_yolo_data_yaml_for_path(dataset_dir: str, dataset_path: str, filename: str = "data.yaml") -> str:
+    path = os.path.join(dataset_dir, filename)
+    lines = [
+        f"path: {dataset_path}",
+        "train: images/train",
+        "val: images/val",
+        "test: images/test",
+        "names:",
+    ]
+    for index, name in enumerate(CHESS_PIECE_YOLO_CLASSES):
+        lines.append(f"  {index}: {name}")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+    return path
+
+
+def count_yolo_dataset_split(dataset_dir: str, split: str) -> dict:
+    image_dir = Path(dataset_dir) / "images" / split
+    label_dir = Path(dataset_dir) / "labels" / split
+    image_count = sum(1 for path in image_dir.glob("*") if path.suffix.lower() in (".jpg", ".jpeg", ".png"))
+    label_paths = list(label_dir.glob("*.txt"))
+    class_instances: dict[str, int] = {}
+    for label_path in label_paths:
+        try:
+            with open(label_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    parts = line.strip().split()
+                    if not parts:
+                        continue
+                    class_id = parts[0]
+                    class_instances[class_id] = class_instances.get(class_id, 0) + 1
+        except OSError:
+            continue
+    class_names = {
+        class_id: CHESS_PIECE_YOLO_CLASSES[int(class_id)]
+        for class_id in class_instances
+        if class_id.isdigit() and int(class_id) < len(CHESS_PIECE_YOLO_CLASSES)
+    }
+    return {
+        "images": image_count,
+        "labels": len(label_paths),
+        "class_instances": dict(sorted(class_instances.items(), key=lambda item: int(item[0]) if item[0].isdigit() else item[0])),
+        "class_names": class_names,
+    }
+
+
+def validate_yolo_training_dataset(dataset_dir: str) -> dict:
+    train = count_yolo_dataset_split(dataset_dir, "train")
+    val = count_yolo_dataset_split(dataset_dir, "val")
+    if train["images"] <= 0 or train["labels"] <= 0:
+        raise RuntimeError(
+            "YOLO training dataset is empty: add at least one train sample before starting training."
+        )
+    return {"train": train, "val": val}
+
+
 def build_yolo_train_command(state: "VisionState") -> list[str]:
     repo_root = repo_root_for_script()
-    data_yaml = os.path.relpath(os.path.join(state.yolo_dataset_dir, "data.yaml"), repo_root).replace("\\", "/")
+    data_yaml_host = os.path.join(state.yolo_dataset_dir, "data.yaml")
+    project_host = os.path.join(repo_root, "runs", "chess_piece_yolo")
+    data_yaml = os.path.relpath(data_yaml_host, repo_root).replace("\\", "/")
+    project = os.path.relpath(project_host, repo_root).replace("\\", "/")
+    train_options = [
+        "imgsz=960",
+        "epochs=80",
+        "batch=1",
+        "workers=0",
+        "cache=False",
+        "device=0",
+        "amp=False",
+        "patience=20",
+        "plots=False",
+        "save_period=10",
+    ]
     train_args = [
         "detect",
         "train",
         "model=yolo11n.pt",
         f"data={data_yaml}",
-        "imgsz=960",
-        "epochs=120",
-        "batch=8",
-        "project=runs/chess_piece_yolo",
+        *train_options,
+        f"project={project}",
         "name=yolo11n_rank4",
     ]
     yolo_exe = shutil.which("yolo")
     if yolo_exe:
         return [yolo_exe, *train_args]
     host_mount, container_repo = docker_repo_mount(repo_root)
-    inner = "cd " + container_repo + " && yolo " + " ".join(train_args)
+    dataset_dir_container = docker_path_for_host_path(state.yolo_dataset_dir, host_mount)
+    data_yaml_host = write_yolo_data_yaml_for_path(state.yolo_dataset_dir, dataset_dir_container, "data_docker.yaml")
+    data_yaml_container = docker_path_for_host_path(data_yaml_host, host_mount)
+    project_container = docker_path_for_host_path(project_host, host_mount)
+    docker_train_args = [
+        "detect",
+        "train",
+        "model=yolo11n.pt",
+        f"data={data_yaml_container}",
+        *train_options,
+        f"project={project_container}",
+        "name=yolo11n_rank4",
+    ]
+    inner = "cd " + container_repo + " && yolo " + " ".join(docker_train_args)
     return [
+        "sudo",
+        "docker",
+        "run",
+        "--rm",
+        "--runtime",
+        "nvidia",
+        "--network",
+        "host",
+        "--ipc",
+        "host",
+        "-e",
+        "OMP_NUM_THREADS=1",
+        "-e",
+        "MKL_NUM_THREADS=1",
+        "-e",
+        "NUMEXPR_NUM_THREADS=1",
+        "-v",
+        f"{host_mount}:/workspace/hive_robot",
+        state.yolo_docker_image,
+        "bash",
+        "-lc",
+        inner,
+    ]
+
+
+def build_yolo_train_env() -> dict:
+    env = os.environ.copy()
+    env.setdefault("OMP_NUM_THREADS", "1")
+    env.setdefault("MKL_NUM_THREADS", "1")
+    env.setdefault("NUMEXPR_NUM_THREADS", "1")
+    return env
+
+
+def path_is_within(path: str, root: str) -> bool:
+    try:
+        return os.path.commonpath([os.path.abspath(path), os.path.abspath(root)]) == os.path.abspath(root)
+    except ValueError:
+        return False
+
+
+def docker_mount_path_for_file(path: str, host_mount: str, mount_name: str) -> tuple[list[str], str]:
+    abs_path = os.path.abspath(path)
+    if path_is_within(abs_path, host_mount):
+        return [], docker_path_for_host_path(abs_path, host_mount)
+    parent = os.path.dirname(abs_path)
+    container_dir = f"/workspace/{mount_name}"
+    return ["-v", f"{parent}:{container_dir}"], container_dir + "/" + os.path.basename(abs_path)
+
+
+def run_yolo_with_docker_fallback(state: "VisionState", model_path: str, image_path: str, imgsz: int, conf: float) -> list[dict]:
+    try:
+        return run_yolo(model_path, image_path, imgsz=imgsz, conf=conf)
+    except RuntimeError as exc:
+        if "ultralytics is not available" not in str(exc):
+            raise
+
+    repo_root = repo_root_for_script()
+    host_mount, container_repo = docker_repo_mount(repo_root)
+    model_mount, model_container = docker_mount_path_for_file(model_path, host_mount, "yolo_model")
+    image_mount, image_container = docker_mount_path_for_file(image_path, host_mount, "yolo_detect_image")
+    code = (
+        "import json\n"
+        "from chess_piece_yolo_infer import run_yolo\n"
+        f"detections = run_yolo({json.dumps(model_container)}, {json.dumps(image_container)}, imgsz={int(imgsz)}, conf={float(conf)})\n"
+        "print('HIVE_YOLO_JSON_START')\n"
+        "print(json.dumps({'detections': detections}, ensure_ascii=False))\n"
+        "print('HIVE_YOLO_JSON_END')\n"
+    )
+    command = [
         "sudo",
         "docker",
         "run",
@@ -357,15 +678,69 @@ def build_yolo_train_command(state: "VisionState") -> list[str]:
         "host",
         "-v",
         f"{host_mount}:/workspace/hive_robot",
+        *model_mount,
+        *image_mount,
+        "-w",
+        container_repo,
         state.yolo_docker_image,
-        "bash",
-        "-lc",
-        inner,
+        "python3",
+        "-c",
+        code,
     ]
+    completed = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=120)
+    output = completed.stdout or ""
+    if completed.returncode != 0:
+        raise RuntimeError("YOLO Docker inference failed:\n" + read_inline_tail(output))
+    start = output.find("HIVE_YOLO_JSON_START")
+    end = output.find("HIVE_YOLO_JSON_END")
+    if start < 0 or end < 0 or end <= start:
+        raise RuntimeError("YOLO Docker inference did not return JSON:\n" + read_inline_tail(output))
+    payload_text = output[start + len("HIVE_YOLO_JSON_START"):end].strip()
+    payload = json.loads(payload_text)
+    return list(payload.get("detections", []))
+
+
+def read_inline_tail(text: str, max_chars: int = 4000) -> str:
+    if len(text) <= max_chars:
+        return text
+    return text[-max_chars:]
+
+
+def canonical_yolo_model_path() -> str:
+    return os.path.join(repo_root_for_script(), "runs", "chess_piece_yolo", "yolo11n_rank4", "weights", "best.pt")
+
+
+def find_latest_yolo_model_path() -> str:
+    weights_root = Path(repo_root_for_script()) / "runs" / "chess_piece_yolo"
+    candidates = list(weights_root.glob("*/weights/best.pt"))
+    if not candidates:
+        return canonical_yolo_model_path()
+    latest = max(candidates, key=lambda path: path.stat().st_mtime)
+    return str(latest)
+
+
+def resolved_yolo_model_path(configured_path: str = "") -> str:
+    configured_path = (configured_path or "").strip()
+    latest_path = find_latest_yolo_model_path()
+    if not configured_path:
+        return latest_path
+    if not os.path.exists(configured_path):
+        return latest_path
+    try:
+        if os.path.commonpath([
+            os.path.abspath(configured_path),
+            os.path.abspath(os.path.join(repo_root_for_script(), "runs", "chess_piece_yolo")),
+        ]) != os.path.abspath(os.path.join(repo_root_for_script(), "runs", "chess_piece_yolo")):
+            return configured_path
+        if os.path.getmtime(latest_path) > os.path.getmtime(configured_path):
+            return latest_path
+    except OSError:
+        return configured_path
+    return configured_path
 
 
 def default_yolo_model_path() -> str:
-    return os.path.join(repo_root_for_script(), "runs", "chess_piece_yolo", "yolo11n_rank4", "weights", "best.pt")
+    return find_latest_yolo_model_path()
 
 
 def default_overlay_config() -> dict:
@@ -563,6 +938,7 @@ HTML_PAGE = """<!doctype html>
         <button onclick="showInputFrame()">Show Input Frame</button>
         <button onclick="inspectSquare()">Inspect Square</button>
         <button onclick="detectWholeBoard()">Detect Whole Board</button>
+        <button onclick="captureEmptyBoardBaseline()">Capture Empty Board Baseline</button>
         <button onclick="useShownSquareCorners()">Use Shown Square Corners</button>
         <p class="hint">
           The a-file origin is the black line to the right of the rank numbers, not the outer decorative border.
@@ -581,6 +957,7 @@ HTML_PAGE = """<!doctype html>
         </label>
         <button onclick="saveYoloSample()">Save YOLO Sample</button>
         <button onclick="startYoloTrain()">Start YOLO Train</button>
+        <button onclick="stopYoloTrain()">Stop YOLO Train</button>
         <button onclick="refreshYoloStatus()">YOLO Train Status</button>
         <label>YOLO model
           <input id="yoloModel" value="__YOLO_MODEL__">
@@ -632,26 +1009,76 @@ HTML_PAGE = """<!doctype html>
       document.getElementById('squareCornerInput').value = lines.join('\\n');
     }
 
-    function detectWholeBoard() {
-      document.getElementById('squares').value = 'all';
-      inspectSquare();
+    function mergedIdentifiedPieces(boardData, yoloData) {
+      const merged = Object.assign({}, (boardData && boardData.identified_pieces) || {});
+      const yoloIdentities = (yoloData && yoloData.yolo_identified_pieces) || {};
+      for (const [square, info] of Object.entries(yoloIdentities)) {
+        merged[square] = info;
+      }
+      return merged;
     }
 
-    async function inspectSquare() {
+    function renderWholeBoardSummary(boardData, yoloData) {
+      if (!boardData || !boardData.ok || !boardData.square_results) {
+        return;
+      }
+      const squareCornerOutput = document.getElementById('squareCornerOutput');
+      const entries = Object.entries(boardData.square_results);
+      const lines = [];
+      if (entries.length > 16) {
+        lines.push('Whole-board mode: ' + entries.length + ' squares inspected.');
+        lines.push('Detected: ' + ((boardData.detected_squares || []).join(',') || 'none'));
+        const identities = mergedIdentifiedPieces(boardData, yoloData);
+        const identityLines = Object.keys(identities).sort().map((square) => {
+          return square + ':' + identities[square].piece_id;
+        });
+        lines.push('Pieces: ' + (identityLines.join(', ') || 'none'));
+        squareCornerOutput.textContent = lines.join('\\n');
+      } else {
+        for (const [square, info] of entries) {
+          lines.push(square + ' corners px:');
+          const names = ['bottom-left', 'bottom-right', 'top-right', 'top-left'];
+          info.roi_px.forEach((pt, index) => {
+            lines.push('  ' + names[index] + ': ' + pt[0].toFixed(1) + ',' + pt[1].toFixed(1));
+          });
+          lines.push('  center: ' + info.center_px[0].toFixed(1) + ',' + info.center_px[1].toFixed(1));
+        }
+        squareCornerOutput.textContent = lines.join('\\n');
+      }
+    }
+
+    async function detectWholeBoard() {
+      document.getElementById('squares').value = 'all';
+      await inspectSquare({ runYolo: true });
+    }
+
+    async function inspectSquare(options) {
+      options = options || {};
       const result = document.getElementById('result');
       const squareCornerOutput = document.getElementById('squareCornerOutput');
       result.textContent = 'Running...';
       squareCornerOutput.textContent = 'Running...';
+      const detectPieces = document.getElementById('detectPieces').checked;
+      const runYolo = Boolean(options.runYolo || detectPieces);
       const params = new URLSearchParams({
         corners: document.getElementById('corners').value,
         auto_locate: document.getElementById('autoLocate').checked ? '1' : '0',
-        detect_pieces: document.getElementById('detectPieces').checked ? '1' : '0',
+        detect_pieces: detectPieces ? '1' : '0',
         squares: document.getElementById('squares').value,
-        square_corners: document.getElementById('squareCornerInput').value
+        square_corners: document.getElementById('squareCornerInput').value,
+        run_yolo: runYolo ? '1' : '0',
+        yolo_model: document.getElementById('yoloModel').value
       });
       const res = await fetch('/api/inspect?' + params.toString());
       const data = await res.json();
       lastInspectData = data.ok ? data : null;
+      if (data.ok && data.detected_squares && data.detected_squares.length) {
+        document.getElementById('yoloDetectSquares').value = data.detected_squares.join(',');
+      }
+      if (data.ok && data.yolo_result) {
+        renderYoloPieceTable(data.yolo_result);
+        document.getElementById('yoloStatus').textContent = JSON.stringify(data.yolo_result, null, 2);
+      }
       if (data.ok && data.piece_results) {
         const detected = data.detected_squares || [];
         const identities = data.identified_pieces || {};
@@ -668,34 +1095,37 @@ HTML_PAGE = """<!doctype html>
         result.textContent = JSON.stringify(data, null, 2);
       }
       if (data.ok && data.square_results) {
-        const entries = Object.entries(data.square_results);
-        const lines = [];
-        if (entries.length > 16) {
-          lines.push('Whole-board mode: ' + entries.length + ' squares inspected.');
-          lines.push('Detected: ' + ((data.detected_squares || []).join(',') || 'none'));
-          if (data.identified_pieces) {
-            const identityLines = Object.keys(data.identified_pieces).sort().map((square) => {
-              return square + ':' + data.identified_pieces[square].piece_id;
-            });
-            lines.push('Pieces: ' + (identityLines.join(', ') || 'none'));
-          }
-          squareCornerOutput.textContent = lines.join('\\n');
-        } else {
-          for (const [square, info] of entries) {
-            lines.push(square + ' corners px:');
-            const names = ['bottom-left', 'bottom-right', 'top-right', 'top-left'];
-            info.roi_px.forEach((pt, index) => {
-              lines.push('  ' + names[index] + ': ' + pt[0].toFixed(1) + ',' + pt[1].toFixed(1));
-            });
-            lines.push('  center: ' + info.center_px[0].toFixed(1) + ',' + info.center_px[1].toFixed(1));
-          }
-          squareCornerOutput.textContent = lines.join('\\n');
-        }
+        renderWholeBoardSummary(data);
       } else {
         squareCornerOutput.textContent = data.error || 'No square corner data.';
       }
       if (data.ok) {
         document.getElementById('overlay').src = '/live-overlay.mjpg?ts=' + Date.now();
+      }
+      return data;
+    }
+
+    async function captureEmptyBoardBaseline() {
+      const result = document.getElementById('result');
+      result.textContent = 'Capturing empty-board baseline... Make sure the board has no pieces.';
+      const params = new URLSearchParams({
+        corners: document.getElementById('corners').value,
+        auto_locate: document.getElementById('autoLocate').checked ? '1' : '0',
+        square_corners: document.getElementById('squareCornerInput').value
+      });
+      const res = await fetch('/api/empty-board/capture?' + params.toString());
+      const data = await res.json();
+      if (data.ok) {
+        result.textContent =
+          'empty_board_baseline_saved=true\\n' +
+          'depth_baseline_count=' + (data.depth_baseline_count || 0) + '\\n' +
+          'depth_baseline_squares=' + ((data.depth_baseline_squares || []).join(',') || 'none') + '\\n' +
+          'rgb_baseline_count=' + (data.rgb_baseline_count || 0) + '\\n' +
+          'rgb_baseline_squares=' + ((data.rgb_baseline_squares || []).join(',') || 'none') + '\\n\\n' +
+          JSON.stringify(data, null, 2);
+        document.getElementById('overlay').src = '/live-overlay.mjpg?ts=' + Date.now();
+      } else {
+        result.textContent = JSON.stringify(data, null, 2);
       }
     }
 
@@ -720,11 +1150,25 @@ HTML_PAGE = """<!doctype html>
       const res = await fetch('/api/yolo/train');
       const data = await res.json();
       status.textContent = JSON.stringify(data, null, 2);
+      setTimeout(refreshYoloStatus, 1000);
     }
 
     async function refreshYoloStatus() {
       const status = document.getElementById('yoloStatus');
-      const res = await fetch('/api/yolo/status?ts=' + Date.now());
+      status.textContent = 'Refreshing YOLO training status...';
+      try {
+        const res = await fetch('/api/yolo/status?ts=' + Date.now());
+        const data = await res.json();
+        status.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        status.textContent = 'YOLO status request failed: ' + String(err);
+      }
+    }
+
+    async function stopYoloTrain() {
+      const status = document.getElementById('yoloStatus');
+      status.textContent = 'Stopping YOLO training...';
+      const res = await fetch('/api/yolo/stop?ts=' + Date.now());
       const data = await res.json();
       status.textContent = JSON.stringify(data, null, 2);
     }
@@ -762,7 +1206,8 @@ HTML_PAGE = """<!doctype html>
       }
     }
 
-    async function detectYoloPieces() {
+    async function detectYoloPieces(options) {
+      options = options || {};
       const status = document.getElementById('yoloStatus');
       status.textContent = 'Running YOLO detection...';
       const params = new URLSearchParams({
@@ -770,12 +1215,34 @@ HTML_PAGE = """<!doctype html>
         auto_locate: document.getElementById('autoLocate').checked ? '1' : '0',
         square_corners: document.getElementById('squareCornerInput').value,
         model: document.getElementById('yoloModel').value,
-        squares: document.getElementById('yoloDetectSquares').value
+        squares: options.squares || document.getElementById('yoloDetectSquares').value,
+        occupied_targets: options.occupiedTargets || ((lastInspectData && lastInspectData.detected_squares) ? lastInspectData.detected_squares.join(',') : '')
       });
       const res = await fetch('/api/yolo/detect?' + params.toString());
       const data = await res.json();
       renderYoloPieceTable(data);
       status.textContent = JSON.stringify(data, null, 2);
+      if (data.ok && lastInspectData && lastInspectData.ok) {
+        const result = document.getElementById('result');
+        const yoloIdentities = data.yolo_identified_pieces || {};
+        lastInspectData.identified_pieces = mergedIdentifiedPieces(lastInspectData, data);
+        renderWholeBoardSummary(lastInspectData, data);
+        const classes = Object.keys(data.piece_class_results || {}).sort().map((square) => {
+          const info = data.piece_class_results[square];
+          return square + ':' + info.piece_class + '(' + Number(info.confidence || 0).toFixed(2) + ')';
+        });
+        const identityLines = Object.keys(yoloIdentities).sort().map((square) => {
+          return square + ':' + yoloIdentities[square].piece_id;
+        });
+        result.textContent =
+          'whole_board_detected_count=' + ((lastInspectData.detected_squares || []).length) + '\\n' +
+          'whole_board_detected_squares=' + ((lastInspectData.detected_squares || []).join(',') || 'none') + '\\n\\n' +
+          'identified_pieces=' + (identityLines.join(',') || 'none') + '\\n\\n' +
+          'yolo_classified=' + (classes.join(',') || 'none') + '\\n\\n' +
+          'placement_plan=' + JSON.stringify(data.placement_plan || [], null, 2) + '\\n\\n' +
+          JSON.stringify({ whole_board: lastInspectData, yolo: data }, null, 2);
+      }
+      return data;
     }
 
     async function refreshLiveStatus() {
@@ -811,6 +1278,7 @@ class VisionState:
         self.output_dir = output_dir
         self.overlay_path = os.path.join(output_dir, "overlay.jpg")
         self.overlay_config_path = overlay_config_path
+        self.empty_board_baseline_path = DEFAULT_EMPTY_BOARD_BASELINE_PATH
         self.overlay_config = load_overlay_config(overlay_config_path)
         self.yolo_dataset_dir = yolo_dataset_dir
         self.yolo_docker_image = yolo_docker_image
@@ -832,6 +1300,7 @@ class VisionState:
         self.overlay_detect_pieces = bool(self.overlay_config.get("detect_pieces", True))
         self.overlay_extra_board_points = np.empty((0, 2), dtype=np.float32)
         self.overlay_extra_image_points = np.empty((0, 2), dtype=np.float32)
+        self.latest_yolo_identified_pieces = {}
         square_corner_text = str(self.overlay_config.get("square_corners", ""))
         if square_corner_text.strip():
             try:
@@ -896,6 +1365,18 @@ class VisionState:
                 self.overlay_extra_image_points.copy(),
             )
 
+    def set_latest_yolo_identified_pieces(self, identities: dict) -> None:
+        with self.overlay_lock:
+            self.latest_yolo_identified_pieces = {
+                square: dict(info)
+                for square, info in identities.items()
+                if isinstance(info, dict)
+            }
+
+    def get_latest_yolo_identified_pieces(self) -> dict:
+        with self.overlay_lock:
+            return {square: dict(info) for square, info in self.latest_yolo_identified_pieces.items()}
+
 
 def make_handler(state: VisionState):
     class Handler(BaseHTTPRequestHandler):
@@ -925,7 +1406,7 @@ def make_handler(state: VisionState):
                     .replace("__AUTO_LOCATE_CHECKED__", "checked" if config.get("auto_locate", False) else "")
                     .replace("__DETECT_PIECES_CHECKED__", "checked" if config.get("detect_pieces", True) else "")
                     .replace("__SQUARE_CORNERS__", html.escape(str(config.get("square_corners", ""))))
-                    .replace("__YOLO_MODEL__", html.escape(str(config.get("yolo_model", default_yolo_model_path())), quote=True))
+                    .replace("__YOLO_MODEL__", html.escape(resolved_yolo_model_path(str(config.get("yolo_model", ""))), quote=True))
                     .replace("__YOLO_DETECT_SQUARES__", html.escape(str(config.get("yolo_detect_squares", "a4,b4,c4,d4,e4,f4,g4,h4")), quote=True))
                     .replace("__YOLO_SPLIT__", html.escape(str(config.get("yolo_split", "train")), quote=True))
                     .replace("__INITIAL_VIEWER_SRC__", "/live-rgb.mjpg?ts=0")
@@ -954,17 +1435,26 @@ def make_handler(state: VisionState):
                     "depth_topic": state.camera_cfg.depth_topic,
                     "overlay_config_path": state.overlay_config_path,
                     "overlay_config": state.overlay_config,
+                    "empty_board_baseline_path": state.empty_board_baseline_path,
+                    "empty_board_depth_baseline_squares": sorted(load_empty_board_depth_baselines(state.empty_board_baseline_path).keys()),
+                    "empty_board_rgb_baseline_squares": sorted(load_empty_board_rgb_baselines(state.empty_board_baseline_path).keys()),
                     **state.camera.status(),
                 })
                 return
             if parsed.path == "/api/inspect":
                 self.inspect(parsed.query)
                 return
+            if parsed.path == "/api/empty-board/capture":
+                self.capture_empty_board_baseline(parsed.query)
+                return
             if parsed.path == "/api/yolo/add-sample":
                 self.yolo_add_sample(parsed.query)
                 return
             if parsed.path == "/api/yolo/train":
                 self.yolo_train()
+                return
+            if parsed.path == "/api/yolo/stop":
+                self.yolo_stop()
                 return
             if parsed.path == "/api/yolo/status":
                 self.yolo_status()
@@ -1033,6 +1523,7 @@ def make_handler(state: VisionState):
                         image_path="live",
                         detect_pieces=detect_pieces,
                         depth_image=depth,
+                        identity_overrides=state.get_latest_yolo_identified_pieces(),
                     )
                     draw_live_status(frame, seq, stamp)
                     if depth is not None:
@@ -1066,6 +1557,11 @@ def make_handler(state: VisionState):
                 auto_locate = params.get("auto_locate", ["1"])[0].strip().lower() not in ("0", "false", "no", "off")
                 detect_pieces = params.get("detect_pieces", ["1"])[0].strip().lower() not in ("0", "false", "no", "off")
                 squares = params.get("squares", params.get("square", [DEFAULT_SQUARES]))[0]
+                default_run_yolo = "1" if detect_pieces else "0"
+                run_yolo = params.get("run_yolo", [default_run_yolo])[0].strip().lower() not in ("0", "false", "no", "off")
+                yolo_model_path = resolved_yolo_model_path(
+                    params.get("yolo_model", [state.overlay_config.get("yolo_model", "")])[0]
+                )
                 corner_image_points = parse_point_list(corners_text)
                 frame, stamp, seq, depth, depth_stamp, depth_seq = state.camera.snapshot()
                 if frame is None:
@@ -1107,6 +1603,7 @@ def make_handler(state: VisionState):
                         )
                     piece_results_override = merge_temporal_piece_results(sample_results)
                     frame, stamp, seq, depth, depth_stamp, depth_seq = samples[-1]
+                    yolo_frame = frame.copy()
                     result = annotate_squares_image(
                         frame,
                         state.calibration_path,
@@ -1120,6 +1617,7 @@ def make_handler(state: VisionState):
                     result["temporal_inspect"] = True
                     result["temporal_samples"] = len(samples)
                 else:
+                    yolo_frame = frame.copy()
                     result = annotate_squares_image(
                         frame,
                         state.calibration_path,
@@ -1138,9 +1636,169 @@ def make_handler(state: VisionState):
                 result["depth_topic"] = state.camera_cfg.depth_topic
                 result["auto_location"] = auto_location
                 result["calibration_corners_px"] = corner_image_points.astype(float).tolist()
+                result["empty_board_baseline_path"] = state.empty_board_baseline_path
+                result["empty_board_depth_baseline_squares"] = sorted(load_empty_board_depth_baselines(state.empty_board_baseline_path).keys())
+                result["empty_board_rgb_baseline_squares"] = sorted(load_empty_board_rgb_baselines(state.empty_board_baseline_path).keys())
+                if run_yolo and result.get("detected_squares"):
+                    if not os.path.exists(yolo_model_path):
+                        raise RuntimeError(f"YOLO model not found: {yolo_model_path}")
+                    capture_dir = Path(state.output_dir) / "yolo_detect"
+                    capture_dir.mkdir(parents=True, exist_ok=True)
+                    yolo_image_path = capture_dir / f"whole_board_{time.strftime('%Y%m%d_%H%M%S')}_{seq}_{uuid.uuid4().hex[:6]}.jpg"
+                    cv2.imwrite(str(yolo_image_path), yolo_frame)
+                    yolo_squares = list(result.get("detected_squares", []))
+                    detections = run_yolo_with_docker_fallback(
+                        state,
+                        yolo_model_path,
+                        str(yolo_image_path),
+                        imgsz=int(params.get("imgsz", ["960"])[0]),
+                        conf=float(params.get("conf", ["0.25"])[0]),
+                    )
+                    piece_class_results = map_detections_to_squares(detections, state.calibration_path, yolo_squares)
+                    yolo_identified_pieces = build_yolo_identified_pieces(piece_class_results)
+                    if yolo_identified_pieces:
+                        state.set_latest_yolo_identified_pieces(yolo_identified_pieces)
+                    placement_plan = assign_opening_targets(piece_class_results)
+                    if yolo_identified_pieces:
+                        result["identified_pieces"].update(yolo_identified_pieces)
+                        for square, identity in yolo_identified_pieces.items():
+                            if square in result.get("piece_results", {}):
+                                result["piece_results"][square].update(
+                                    {
+                                        "piece_id": identity["piece_id"],
+                                        "piece_type": identity["piece_type"],
+                                        "color": identity["color"],
+                                        "identity_method": identity["identity_method"],
+                                        "identity_confidence": identity["identity_confidence"],
+                                    }
+                                )
+                    result["yolo_identified_pieces"] = yolo_identified_pieces
+                    result["yolo_result"] = {
+                        "ok": True,
+                        "version": WEB_VERSION,
+                        "model": yolo_model_path,
+                        "image_path": str(yolo_image_path),
+                        "squares": yolo_squares,
+                        "detections": detections,
+                        "detection_count": len(detections),
+                        "piece_class_results": piece_class_results,
+                        "mapped_square_count": len(piece_class_results),
+                        "yolo_identified_pieces": yolo_identified_pieces,
+                        "occupied_targets": [],
+                        "placement_plan": placement_plan,
+                    }
                 state.set_overlay_config(squares, parse_point_list(corners_text), auto_locate, detect_pieces, extra_board_points, extra_image_points)
-                state.save_web_config(corners_text, squares, auto_locate, detect_pieces, extra_text)
+                state.save_web_config(corners_text, squares, auto_locate, detect_pieces, extra_text, yolo_model=yolo_model_path)
                 self.send_json({"ok": True, "version": WEB_VERSION, "live_camera": state.camera_cfg.live_camera, **result})
+            except Exception as exc:
+                self.send_json({"ok": False, "error": str(exc)}, HTTPStatus.BAD_REQUEST)
+
+        def capture_empty_board_baseline(self, query: str) -> None:
+            try:
+                params = parse_qs(query)
+                corners_text = params.get("corners", [DEFAULT_CORNERS])[0]
+                auto_locate = params.get("auto_locate", ["1"])[0].strip().lower() not in ("0", "false", "no", "off")
+                extra_text = params.get("square_corners", [""])[0]
+                extra_board_points, extra_image_points, extra_labels = parse_square_corner_calibration(extra_text)
+                corner_image_points = parse_point_list(corners_text)
+                frame, stamp, seq, depth, depth_stamp, depth_seq = state.camera.snapshot()
+                if frame is None:
+                    raise RuntimeError("live RGB frame not received yet")
+                if depth is None:
+                    raise RuntimeError("live depth frame not received yet")
+                corner_image_points, auto_location = save_live_calibration(
+                    state.calibration_path,
+                    frame,
+                    corner_image_points,
+                    auto_locate,
+                    extra_board_points,
+                    extra_image_points,
+                    extra_labels,
+                )
+                samples = [(frame, stamp, seq, depth, depth_stamp, depth_seq)]
+                sample_count = 7
+                last_seq = seq
+                for _index in range(sample_count - 1):
+                    next_frame, next_stamp, next_seq = state.camera.wait_for_newer(last_seq, timeout_s=0.18)
+                    if next_frame is None or next_seq == last_seq:
+                        break
+                    _rgb, _rgb_stamp, _rgb_seq, next_depth, next_depth_stamp, next_depth_seq = state.camera.snapshot()
+                    if next_depth is None:
+                        break
+                    samples.append((next_frame, next_stamp, next_seq, next_depth, next_depth_stamp, next_depth_seq))
+                    last_seq = next_seq
+                sample_results = []
+                for sample_frame, _sample_stamp, _sample_seq, sample_depth, _sample_depth_stamp, _sample_depth_seq in samples:
+                    sample_results.append(
+                        draw_squares_overlay_image(
+                            sample_frame.copy(),
+                            state.calibration_path,
+                            "all",
+                            image_path="live",
+                            detect_pieces=True,
+                            depth_image=sample_depth,
+                            empty_board_depth_baselines={},
+                            empty_board_rgb_baselines={},
+                        )
+                    )
+                piece_results = merge_temporal_piece_results(
+                    sample_results,
+                    empty_board_depth_baselines={},
+                    empty_board_rgb_baselines={},
+                )
+                depth_baselines = build_empty_board_depth_baselines(piece_results)
+                rgb_baselines = build_empty_board_rgb_baselines(piece_results)
+                payload = save_empty_board_depth_baselines(
+                    state.empty_board_baseline_path,
+                    depth_baselines,
+                    metadata={
+                        "captured_from": "web-control-v2.7",
+                        "sample_count": len(samples),
+                        "rgb_seq": seq,
+                        "depth_seq": depth_seq,
+                        "auto_location": auto_location,
+                        "calibration_corners_px": corner_image_points.astype(float).tolist(),
+                        "empty_piece_results": piece_results,
+                    },
+                    rgb_baselines=rgb_baselines,
+                )
+                latest_frame, latest_stamp, latest_seq, latest_depth, latest_depth_stamp, latest_depth_seq = samples[-1]
+                result = annotate_squares_image(
+                    latest_frame,
+                    state.calibration_path,
+                    "all",
+                    state.overlay_path,
+                    image_path="live",
+                    detect_pieces=True,
+                    depth_image=latest_depth,
+                    piece_results_override=piece_results,
+                    empty_board_depth_baselines={},
+                    empty_board_rgb_baselines={},
+                )
+                state.set_overlay_config("all", parse_point_list(corners_text), auto_locate, True, extra_board_points, extra_image_points)
+                state.save_web_config(corners_text, "all", auto_locate, True, extra_text)
+                self.send_json(
+                    {
+                        "ok": True,
+                        "version": WEB_VERSION,
+                        "empty_board_baseline_path": state.empty_board_baseline_path,
+                        "baseline_false_positive_squares": sorted(set(depth_baselines.keys()) | set(rgb_baselines.keys())),
+                        "baseline_false_positive_count": len(set(depth_baselines.keys()) | set(rgb_baselines.keys())),
+                        "depth_baseline_squares": sorted(depth_baselines.keys()),
+                        "depth_baseline_count": len(depth_baselines),
+                        "rgb_baseline_squares": sorted(rgb_baselines.keys()),
+                        "rgb_baseline_count": len(rgb_baselines),
+                        "payload": payload,
+                        "detected_squares_when_captured": result.get("detected_squares", []),
+                        "piece_results": piece_results,
+                        "rgb_age_s": round(time.time() - latest_stamp, 3),
+                        "rgb_seq": latest_seq,
+                        "depth_age_s": round(time.time() - latest_depth_stamp, 3),
+                        "depth_seq": latest_depth_seq,
+                        "auto_location": auto_location,
+                        "calibration_corners_px": corner_image_points.astype(float).tolist(),
+                    }
+                )
             except Exception as exc:
                 self.send_json({"ok": False, "error": str(exc)}, HTTPStatus.BAD_REQUEST)
 
@@ -1222,6 +1880,7 @@ def make_handler(state: VisionState):
                         )
                         return
                     init_dataset(Path(state.yolo_dataset_dir))
+                    dataset_counts = validate_yolo_training_dataset(state.yolo_dataset_dir)
                     command = build_yolo_train_command(state)
                     os.makedirs(os.path.dirname(state.yolo_train_log_path), exist_ok=True)
                     log = open(state.yolo_train_log_path, "ab", buffering=0)
@@ -1231,6 +1890,8 @@ def make_handler(state: VisionState):
                         cwd=repo_root_for_script(),
                         stdout=log,
                         stderr=subprocess.STDOUT,
+                        env=build_yolo_train_env(),
+                        start_new_session=True,
                     )
                     state.yolo_train_process = process
                     state.yolo_train_command = command
@@ -1241,11 +1902,63 @@ def make_handler(state: VisionState):
                         "pid": process.pid,
                         "command": command,
                         "dataset_dir": state.yolo_dataset_dir,
+                        "dataset_counts": dataset_counts,
+                        "latest_model_path": find_latest_yolo_model_path(),
+                        "resolved_model_path": resolved_yolo_model_path(str(state.overlay_config.get("yolo_model", ""))),
                         "log_path": state.yolo_train_log_path,
                     }
                 )
             except Exception as exc:
                 self.send_json({"ok": False, "error": str(exc)}, HTTPStatus.BAD_REQUEST)
+
+        def yolo_stop(self) -> None:
+            with state.yolo_lock:
+                process = state.yolo_train_process
+                if process is None:
+                    self.send_json(
+                        {
+                            "ok": True,
+                            "version": WEB_VERSION,
+                            "running": False,
+                            "stopped": False,
+                            "message": "YOLO training is not running",
+                            "log_path": state.yolo_train_log_path,
+                            "log_tail": read_text_tail(state.yolo_train_log_path),
+                        }
+                    )
+                    return
+                returncode = process.poll()
+                if returncode is not None:
+                    self.send_json(
+                        {
+                            "ok": True,
+                            "version": WEB_VERSION,
+                            "running": False,
+                            "stopped": False,
+                            "pid": process.pid,
+                            "returncode": returncode,
+                            "log_path": state.yolo_train_log_path,
+                            "log_tail": read_text_tail(state.yolo_train_log_path),
+                        }
+                    )
+                    return
+                try:
+                    os.killpg(process.pid, signal.SIGTERM)
+                    stopped = True
+                except Exception:
+                    process.terminate()
+                    stopped = True
+                payload = {
+                    "ok": True,
+                    "version": WEB_VERSION,
+                    "running": False,
+                    "stopped": stopped,
+                    "pid": process.pid,
+                    "command": state.yolo_train_command,
+                    "log_path": state.yolo_train_log_path,
+                    "log_tail": read_text_tail(state.yolo_train_log_path),
+                }
+            self.send_json(payload)
 
         def yolo_status(self) -> None:
             with state.yolo_lock:
@@ -1266,6 +1979,16 @@ def make_handler(state: VisionState):
                     "returncode": returncode,
                     "command": state.yolo_train_command,
                     "dataset_dir": state.yolo_dataset_dir,
+                    "dataset_counts": {
+                        "train": count_yolo_dataset_split(state.yolo_dataset_dir, "train"),
+                        "val": count_yolo_dataset_split(state.yolo_dataset_dir, "val"),
+                    },
+                    "expected_model_path": default_yolo_model_path(),
+                    "expected_model_exists": os.path.exists(default_yolo_model_path()),
+                    "latest_model_path": find_latest_yolo_model_path(),
+                    "latest_model_exists": os.path.exists(find_latest_yolo_model_path()),
+                    "configured_model_path": state.overlay_config.get("yolo_model", ""),
+                    "resolved_model_path": resolved_yolo_model_path(str(state.overlay_config.get("yolo_model", ""))),
                     "log_path": state.yolo_train_log_path,
                     "log_tail": read_text_tail(state.yolo_train_log_path),
                 }
@@ -1274,9 +1997,11 @@ def make_handler(state: VisionState):
         def yolo_detect(self, query: str) -> None:
             try:
                 params = parse_qs(query)
-                model_path = params.get("model", [default_yolo_model_path()])[0].strip()
+                model_path = resolved_yolo_model_path(params.get("model", [state.overlay_config.get("yolo_model", "")])[0])
                 squares = params.get("squares", ["a4,b4,c4,d4,e4,f4,g4,h4"])[0]
                 allowed_squares = parse_square_list(squares)
+                occupied_targets_text = params.get("occupied_targets", [""])[0].strip()
+                occupied_targets = [] if not occupied_targets_text else parse_square_list(occupied_targets_text)
                 corners_text = params.get("corners", [DEFAULT_CORNERS])[0]
                 auto_locate = params.get("auto_locate", ["0"])[0].strip().lower() not in ("0", "false", "no", "off")
                 detect_pieces = True
@@ -1302,9 +2027,18 @@ def make_handler(state: VisionState):
                 if not os.path.exists(model_path):
                     raise RuntimeError(f"YOLO model not found: {model_path}")
                 state.save_web_config(corners_text, state.overlay_squares, auto_locate, detect_pieces, extra_text, yolo_model=model_path, yolo_detect_squares=squares)
-                detections = run_yolo(model_path, str(image_path), imgsz=int(params.get("imgsz", ["960"])[0]), conf=float(params.get("conf", ["0.25"])[0]))
+                detections = run_yolo_with_docker_fallback(
+                    state,
+                    model_path,
+                    str(image_path),
+                    imgsz=int(params.get("imgsz", ["960"])[0]),
+                    conf=float(params.get("conf", ["0.25"])[0]),
+                )
                 piece_class_results = map_detections_to_squares(detections, state.calibration_path, allowed_squares)
-                placement_plan = assign_opening_targets(piece_class_results)
+                yolo_identified_pieces = build_yolo_identified_pieces(piece_class_results)
+                if yolo_identified_pieces:
+                    state.set_latest_yolo_identified_pieces(yolo_identified_pieces)
+                placement_plan = assign_opening_targets(piece_class_results, occupied_targets=occupied_targets)
                 self.send_json(
                     {
                         "ok": True,
@@ -1314,6 +2048,8 @@ def make_handler(state: VisionState):
                         "squares": allowed_squares,
                         "detections": detections,
                         "piece_class_results": piece_class_results,
+                        "yolo_identified_pieces": yolo_identified_pieces,
+                        "occupied_targets": occupied_targets,
                         "placement_plan": placement_plan,
                         "rgb_seq": seq,
                         "rgb_age_s": round(time.time() - stamp, 3),

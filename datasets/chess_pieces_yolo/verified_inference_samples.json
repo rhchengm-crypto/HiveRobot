@@ -1,0 +1,72 @@
+{
+  "description": "Verified HiveRobot chess-piece YOLO inference samples. These records capture correctly recognized pieces for later dataset expansion and training checks.",
+  "schema_version": 1,
+  "samples": [
+    {
+      "verified_at_local": "2026-09-05",
+      "verification_note": "User confirmed white king was recognized correctly on d4.",
+      "version": "v2.7-rank1-strong-c1-yolo-docker-detect-nms2",
+      "model": "/home/nvidia/hive_robot/runs/chess_piece_yolo/yolo11n_rank4-7/weights/best.pt",
+      "image_path": "/tmp/hive_robot_chessboard_vision_v2_7/yolo_detect/whole_board_20260905_200516_119_ce2d0c.jpg",
+      "square": "d4",
+      "piece_class": "white_king",
+      "class_id": 5,
+      "piece_type": "king",
+      "color": "white",
+      "confidence": 0.9287429451942444,
+      "bbox_xyxy": [
+        297.74267578125,
+        174.9549560546875,
+        336.48785400390625,
+        207.5799560546875
+      ],
+      "center_px": [
+        317.1152648925781,
+        191.2674560546875
+      ],
+      "center_mm": [
+        193.4140625,
+        191.18016052246094
+      ],
+      "placement_plan": {
+        "pick": "d4",
+        "place": "e1",
+        "piece_class": "white_king",
+        "confidence": 0.9287429451942444
+      }
+    },
+    {
+      "verified_at_local": "2026-09-05",
+      "verification_note": "User confirmed white queen was recognized correctly on d4.",
+      "version": "v2.7-rank1-strong-c1-yolo-docker-detect-nms2",
+      "model": "/home/nvidia/hive_robot/runs/chess_piece_yolo/yolo11n_rank4-7/weights/best.pt",
+      "image_path": "/tmp/hive_robot_chessboard_vision_v2_7/yolo_detect/whole_board_20260905_200629_1908_5f9778.jpg",
+      "square": "d4",
+      "piece_class": "white_queen",
+      "class_id": 4,
+      "piece_type": "queen",
+      "color": "white",
+      "confidence": 0.9944300055503845,
+      "bbox_xyxy": [
+        298.1280517578125,
+        175.667724609375,
+        336.88580322265625,
+        208.37997436523438
+      ],
+      "center_px": [
+        317.5069274902344,
+        192.0238494873047
+      ],
+      "center_mm": [
+        193.80543518066406,
+        190.1980743408203
+      ],
+      "placement_plan": {
+        "pick": "d4",
+        "place": "d1",
+        "piece_class": "white_queen",
+        "confidence": 0.9944300055503845
+      }
+    }
+  ]
+}

@@ -14,6 +14,7 @@ import json
 import math
 import os
 import re
+import time
 from typing import Iterable, Optional
 
 import cv2
@@ -23,6 +24,7 @@ import numpy as np
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(SCRIPT_DIR, "data")
 DEFAULT_CALIBRATION_PATH = os.path.join(DATA_DIR, "chessboard_vision_v2_7_calibration.json")
+DEFAULT_EMPTY_BOARD_BASELINE_PATH = os.path.join(DATA_DIR, "chessboard_vision_v2_7_empty_board_baseline.json")
 BOARD_SIZE_MM = 440.0
 SQUARE_SIZE_MM = 55.0
 BOARD_FILES = "abcdefgh"
@@ -108,6 +110,115 @@ EMPTY_BOARD_DEPTH_BASELINES = {
         "center_mm": [355.7851257324219, 15.022212028503418],
     }
 }
+
+EMPTY_BOARD_RGB_BASELINES = {
+    "f1": {
+        "baseline": "empty_board_f1_rgb_2026_08_23",
+        "method": "rgb",
+        "confidence": 0.9,
+        "area_px": 816.0,
+        "bbox_patch_px": [59, 31, 25, 52],
+        "fill_ratio": 0.65,
+        "center_patch_px": [72.2, 60.3],
+        "center_mm": [316.9, 20.5],
+        "note": "Observed empty-board RGB texture/shadow false positive on f1.",
+    }
+}
+_EMPTY_BOARD_BASELINE_CACHE = {"path": None, "mtime": None, "depth_baselines": None, "rgb_baselines": None}
+
+
+def load_empty_board_depth_baselines(path: Optional[str] = None) -> dict:
+    baseline_path = path or DEFAULT_EMPTY_BOARD_BASELINE_PATH
+    baselines = dict(EMPTY_BOARD_DEPTH_BASELINES)
+    try:
+        mtime = os.path.getmtime(baseline_path)
+    except OSError:
+        return baselines
+    if (
+        _EMPTY_BOARD_BASELINE_CACHE["path"] == baseline_path
+        and _EMPTY_BOARD_BASELINE_CACHE["mtime"] == mtime
+        and isinstance(_EMPTY_BOARD_BASELINE_CACHE["depth_baselines"], dict)
+    ):
+        loaded = _EMPTY_BOARD_BASELINE_CACHE["depth_baselines"]
+    else:
+        try:
+            with open(baseline_path, "r", encoding="utf-8") as f:
+                payload = json.load(f)
+            loaded = payload.get("depth_baselines", {}) if isinstance(payload, dict) else {}
+        except Exception:
+            loaded = {}
+        _EMPTY_BOARD_BASELINE_CACHE.update({"path": baseline_path, "mtime": mtime, "depth_baselines": loaded})
+    if isinstance(loaded, dict):
+        for square, info in loaded.items():
+            try:
+                baselines[normalize_square(square)] = dict(info)
+            except Exception:
+                continue
+    return baselines
+
+
+def load_empty_board_rgb_baselines(path: Optional[str] = None) -> dict:
+    baseline_path = path or DEFAULT_EMPTY_BOARD_BASELINE_PATH
+    baselines = dict(EMPTY_BOARD_RGB_BASELINES)
+    try:
+        mtime = os.path.getmtime(baseline_path)
+    except OSError:
+        return baselines
+    if (
+        _EMPTY_BOARD_BASELINE_CACHE["path"] == baseline_path
+        and _EMPTY_BOARD_BASELINE_CACHE["mtime"] == mtime
+        and isinstance(_EMPTY_BOARD_BASELINE_CACHE["rgb_baselines"], dict)
+    ):
+        loaded = _EMPTY_BOARD_BASELINE_CACHE["rgb_baselines"]
+    else:
+        try:
+            with open(baseline_path, "r", encoding="utf-8") as f:
+                payload = json.load(f)
+        except Exception:
+            payload = {}
+        loaded = payload.get("rgb_baselines", {}) if isinstance(payload, dict) else {}
+        if not loaded and isinstance(payload, dict):
+            empty_results = payload.get("metadata", {}).get("empty_piece_results", {})
+            loaded = {
+                square: info
+                for square, info in empty_results.items()
+                if isinstance(info, dict) and info.get("detected") and str(info.get("method", "")) == "rgb"
+            }
+        _EMPTY_BOARD_BASELINE_CACHE.update({"path": baseline_path, "mtime": mtime, "rgb_baselines": loaded})
+    if isinstance(loaded, dict):
+        for square, info in loaded.items():
+            try:
+                baselines[normalize_square(square)] = dict(info)
+            except Exception:
+                continue
+    return baselines
+
+
+def save_empty_board_depth_baselines(path: str, depth_baselines: dict, metadata: Optional[dict] = None, rgb_baselines: Optional[dict] = None) -> dict:
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    payload = {
+        "type": "chessboard_vision_v2_7_empty_board_baseline",
+        "updated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "note": "Captured with no chess pieces on the board. Used to suppress empty-board depth artifacts.",
+        "metadata": metadata or {},
+        "depth_baselines": depth_baselines,
+        "rgb_baselines": rgb_baselines or {},
+    }
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    try:
+        _EMPTY_BOARD_BASELINE_CACHE.update(
+            {
+                "path": path,
+                "mtime": os.path.getmtime(path),
+                "depth_baselines": dict(depth_baselines),
+                "rgb_baselines": dict(rgb_baselines or {}),
+            }
+        )
+    except OSError:
+        pass
+    return payload
 
 
 def parse_point_list(text: str) -> np.ndarray:
@@ -445,24 +556,84 @@ def normalize_depth_patch(depth_patch: np.ndarray) -> np.ndarray:
     return depth
 
 
-def matches_empty_board_depth_baseline(square: str, area: float, bbox: tuple, median_raise: float, close_threshold_m: float, patch_size: int) -> Optional[dict]:
-    baseline = EMPTY_BOARD_DEPTH_BASELINES.get(square)
+def matches_empty_board_depth_baseline(
+    square: str,
+    area: float,
+    bbox: tuple,
+    median_raise: float,
+    close_threshold_m: float,
+    patch_size: int,
+    empty_board_baselines: Optional[dict] = None,
+) -> Optional[dict]:
+    baselines = load_empty_board_depth_baselines() if empty_board_baselines is None else empty_board_baselines
+    baseline = baselines.get(square)
     if baseline is None:
         return None
     bx, by, bw, bh = baseline["bbox_patch_px"]
     x, y, w, h = bbox
-    full_width_band = w >= patch_size * 0.68 and y >= patch_size * 0.48 and h >= patch_size * 0.30
-    area_close = abs(area - float(baseline["area_px"])) <= 420.0
-    bbox_close = abs(x - bx) <= 5 and abs(y - by) <= 6 and abs(w - bw) <= 8 and abs(h - bh) <= 8
-    raise_close = abs(median_raise - float(baseline["median_raise_m"])) <= 0.006
-    threshold_close = close_threshold_m <= 0.012
-    if full_width_band and area_close and bbox_close and raise_close and threshold_close:
+    area_tolerance = max(120.0, float(baseline["area_px"]) * 0.28)
+    bbox_tolerance = max(7.0, patch_size * 0.08)
+    raise_tolerance = max(0.004, min(0.010, float(baseline.get("median_raise_m", 0.0)) * 0.55))
+    area_close = abs(area - float(baseline["area_px"])) <= area_tolerance
+    bbox_close = (
+        abs(x - bx) <= bbox_tolerance
+        and abs(y - by) <= bbox_tolerance
+        and abs(w - bw) <= bbox_tolerance
+        and abs(h - bh) <= bbox_tolerance
+    )
+    raise_close = abs(median_raise - float(baseline["median_raise_m"])) <= raise_tolerance
+    threshold_close = abs(close_threshold_m - float(baseline.get("close_threshold_m", close_threshold_m))) <= 0.006
+    if area_close and bbox_close and raise_close and threshold_close:
         return {
             "square": square,
-            "baseline": "empty_board_g1_2026_08_21",
+            "baseline": str(baseline.get("baseline", "empty_board_web_capture")),
             "baseline_area_px": float(baseline["area_px"]),
             "baseline_bbox_patch_px": list(baseline["bbox_patch_px"]),
             "baseline_median_raise_m": float(baseline["median_raise_m"]),
+            "baseline_close_threshold_m": float(baseline.get("close_threshold_m", close_threshold_m)),
+        }
+    return None
+
+
+def matches_empty_board_rgb_baseline(
+    square: str,
+    area: float,
+    bbox: tuple,
+    fill_ratio: float,
+    center_patch: np.ndarray,
+    patch_size: int,
+    empty_board_baselines: Optional[dict] = None,
+) -> Optional[dict]:
+    baselines = load_empty_board_rgb_baselines() if empty_board_baselines is None else empty_board_baselines
+    baseline = baselines.get(square)
+    if baseline is None:
+        return None
+    bx, by, bw, bh = baseline["bbox_patch_px"]
+    x, y, w, h = bbox
+    area_tolerance = max(120.0, float(baseline["area_px"]) * 0.38)
+    bbox_tolerance = max(12.0, patch_size * 0.14)
+    fill_tolerance = 0.28
+    area_close = abs(area - float(baseline["area_px"])) <= area_tolerance
+    bbox_close = (
+        abs(x - bx) <= bbox_tolerance
+        and abs(y - by) <= bbox_tolerance
+        and abs(w - bw) <= bbox_tolerance
+        and abs(h - bh) <= bbox_tolerance
+    )
+    fill_close = abs(fill_ratio - float(baseline.get("fill_ratio", fill_ratio))) <= fill_tolerance
+    center_close = bbox_close
+    baseline_center = baseline.get("center_patch_px")
+    if isinstance(baseline_center, list) and len(baseline_center) == 2:
+        center_close = float(np.linalg.norm(np.asarray(center_patch, dtype=np.float32) - np.asarray(baseline_center, dtype=np.float32))) <= patch_size * 0.16
+    shape_close = bbox_close or center_close
+    if area_close and shape_close and fill_close:
+        return {
+            "square": square,
+            "baseline": str(baseline.get("baseline", "empty_board_web_capture")),
+            "baseline_area_px": float(baseline["area_px"]),
+            "baseline_bbox_patch_px": list(baseline["bbox_patch_px"]),
+            "baseline_fill_ratio": float(baseline.get("fill_ratio", fill_ratio)),
+            "baseline_center_patch_px": baseline_center,
         }
     return None
 
@@ -479,7 +650,52 @@ def is_rank2_compact_depth_rescue(square: str, area: float, bbox: tuple, median_
     return compact and enough_shape and enough_raise and strong_peak and not_edge_band
 
 
-def detect_piece_in_square_image(image, homography_board_to_image: np.ndarray, square: str, depth_image=None) -> dict:
+def is_rank1_compact_depth_rescue(square: str, area: float, bbox: tuple, median_raise: float, close_threshold_m: float, max_raise: float, patch_size: int) -> bool:
+    if square[1] != "1":
+        return False
+    _x, y, w, h = bbox
+    compact = 5 <= w <= patch_size * 0.48 and 5 <= h <= patch_size * 0.48
+    enough_shape = 45.0 <= area <= 900.0
+    upper_half = y <= patch_size * 0.38
+    enough_raise = median_raise >= max(0.012, close_threshold_m * 0.85)
+    strong_peak = max_raise >= 0.08
+    not_edge_band = not (w >= patch_size * 0.62 or h >= patch_size * 0.62)
+    return compact and enough_shape and upper_half and enough_raise and strong_peak and not_edge_band
+
+
+def is_rank1_edge_depth_artifact(square: str, area: float, bbox: tuple, confidence: float, center_patch: np.ndarray, patch_size: int) -> bool:
+    if square[1] != "1":
+        return False
+    _x, y, w, h = bbox
+    center = np.asarray(center_patch, dtype=np.float32).reshape(2)
+    lower_band = y >= patch_size * 0.45 or center[1] >= patch_size * 0.58
+    full_width_band = w >= patch_size * 0.62 and h >= patch_size * 0.25 and area >= 850.0
+    near_bottom_edge = y >= patch_size * 0.62 or center[1] >= patch_size * 0.72
+    short_or_thin = h <= patch_size * 0.24 or w <= patch_size * 0.34
+    small_edge_blob = area <= 520.0 and confidence < 0.45
+    return (lower_band and full_width_band) or (near_bottom_edge and short_or_thin and small_edge_blob)
+
+
+def is_rank1_rgb_artifact(square: str, area: float, bbox: tuple, confidence: float, center_patch: np.ndarray, patch_size: int) -> bool:
+    if square[1] != "1":
+        return False
+    _x, y, w, h = bbox
+    center = np.asarray(center_patch, dtype=np.float32).reshape(2)
+    low_confidence = confidence < 0.42
+    lower_blob = y >= patch_size * 0.48 or center[1] >= patch_size * 0.60
+    compact_blob = area <= 700.0 and w <= patch_size * 0.50 and h <= patch_size * 0.50
+    return low_confidence and lower_blob and compact_blob
+
+
+def detect_piece_in_square_image(
+    image,
+    homography_board_to_image: np.ndarray,
+    square: str,
+    depth_image=None,
+    empty_board_baselines: Optional[dict] = None,
+    empty_board_depth_baselines: Optional[dict] = None,
+    empty_board_rgb_baselines: Optional[dict] = None,
+) -> dict:
     square = normalize_square(square)
     bounds = square_bounds_mm(square)
     x0, y0 = bounds[0]
@@ -492,9 +708,19 @@ def detect_piece_in_square_image(image, homography_board_to_image: np.ndarray, s
     image_to_patch = cv2.getPerspectiveTransform(src, dst)
     patch = cv2.warpPerspective(image, image_to_patch, (patch_size, patch_size))
     depth_result = None
+    depth_baselines = empty_board_depth_baselines if empty_board_depth_baselines is not None else empty_board_baselines
+    rgb_baselines = empty_board_rgb_baselines if empty_board_rgb_baselines is not None else empty_board_baselines
     if depth_image is not None:
         depth_patch = cv2.warpPerspective(depth_image.astype(np.float32), image_to_patch, (patch_size, patch_size))
-        depth_result = detect_piece_in_square_depth_patch(depth_patch, square, x0, y0, homography_board_to_image, patch_size)
+        depth_result = detect_piece_in_square_depth_patch(
+            depth_patch,
+            square,
+            x0,
+            y0,
+            homography_board_to_image,
+            patch_size,
+            empty_board_baselines=depth_baselines,
+        )
         if depth_result["detected"]:
             return depth_result
         if depth_result.get("reason") != "insufficient_valid_depth" and float(depth_result.get("max_raise_m", 0.0)) < 0.006:
@@ -576,10 +802,54 @@ def detect_piece_in_square_image(image, homography_board_to_image: np.ndarray, s
     }
     if depth_result is not None:
         result["depth_fallback"] = depth_result
+    empty_board_baseline = matches_empty_board_rgb_baseline(
+        square,
+        area,
+        bbox,
+        fill_ratio,
+        center_patch,
+        patch_size,
+        empty_board_baselines=rgb_baselines,
+    )
+    if empty_board_baseline is not None:
+        result.update(
+            {
+                "detected": False,
+                "reason": "matches_empty_board_rgb_baseline",
+                "confidence": 0.0,
+                "empty_board_baseline": empty_board_baseline,
+            }
+        )
+    elif is_rank1_rgb_artifact(square, area, bbox, confidence, center_patch, patch_size):
+        result.update(
+            {
+                "detected": False,
+                "reason": "rank1_rgb_artifact",
+                "confidence": 0.0,
+            }
+        )
+    else:
+        loaded_rgb_baselines = rgb_baselines if rgb_baselines is not None else load_empty_board_rgb_baselines()
+        baseline = loaded_rgb_baselines.get(square) if isinstance(loaded_rgb_baselines, dict) else None
+        if isinstance(baseline, dict):
+            result["empty_board_rgb_baseline_candidate"] = {
+                "baseline_area_px": baseline.get("area_px"),
+                "baseline_bbox_patch_px": baseline.get("bbox_patch_px"),
+                "baseline_fill_ratio": baseline.get("fill_ratio"),
+                "baseline_center_patch_px": baseline.get("center_patch_px"),
+            }
     return result
 
 
-def detect_piece_in_square_depth_patch(depth_patch: np.ndarray, square: str, x0: float, y0: float, homography_board_to_image: np.ndarray, patch_size: int) -> dict:
+def detect_piece_in_square_depth_patch(
+    depth_patch: np.ndarray,
+    square: str,
+    x0: float,
+    y0: float,
+    homography_board_to_image: np.ndarray,
+    patch_size: int,
+    empty_board_baselines: Optional[dict] = None,
+) -> dict:
     depth = normalize_depth_patch(depth_patch)
     finite = np.isfinite(depth) & (depth > 0)
     border = int(patch_size * 0.12)
@@ -726,7 +996,15 @@ def detect_piece_in_square_depth_patch(depth_patch: np.ndarray, square: str, x0:
         dtype=np.float32,
     )
     center_px = board_to_image_points(center_mm, homography_board_to_image)[0]
-    empty_board_baseline = matches_empty_board_depth_baseline(square, area, bbox, median_raise, close_threshold_m, patch_size)
+    empty_board_baseline = matches_empty_board_depth_baseline(
+        square,
+        area,
+        bbox,
+        median_raise,
+        close_threshold_m,
+        patch_size,
+        empty_board_baselines=empty_board_baselines,
+    )
     if empty_board_baseline is not None:
         return {
             "detected": False,
@@ -758,6 +1036,36 @@ def detect_piece_in_square_depth_patch(depth_patch: np.ndarray, square: str, x0:
     rank2_rescue = is_rank2_compact_depth_rescue(square, area, bbox, median_raise, close_threshold_m, max_raise, patch_size)
     if rank2_rescue:
         confidence = max(confidence, min(1.0, 0.22 + area / 600.0 + median_raise / 0.08))
+    rank1_rescue = is_rank1_compact_depth_rescue(square, area, bbox, median_raise, close_threshold_m, max_raise, patch_size)
+    if rank1_rescue:
+        confidence = max(confidence, min(1.0, 0.18 + area / 700.0 + median_raise / 0.09))
+    rank1_edge_artifact = is_rank1_edge_depth_artifact(square, area, bbox, confidence, center_patch, patch_size)
+    if rank1_edge_artifact:
+        return {
+            "detected": False,
+            "square": square,
+            "method": "depth",
+            "reason": "rank1_edge_depth_artifact",
+            "confidence": 0.0,
+            "area_px": area,
+            "bbox_patch_px": [int(v) for v in bbox],
+            "median_raise_m": median_raise,
+            "board_depth_m": board_depth,
+            "board_depth_all_m": board_depth_all,
+            "board_depth_outer_m": board_depth_outer,
+            "board_model": board_model,
+            "plane_depth_center_m": float(plane_depth[int(round(center_xy)), int(round(center_xy))]),
+            "plane_sample_depth_samples": int(np.count_nonzero(plane_sample)),
+            "plane_rmse_m": plane_rmse_m,
+            "valid_depth_samples": int(np.count_nonzero(valid_bool)),
+            "board_sample_depth_samples": int(np.count_nonzero(board_sample)),
+            "max_raise_m": max_raise,
+            "close_threshold_m": close_threshold_m,
+            "close_area_px": int(np.count_nonzero(close_mask)),
+            "center_patch_px": center_patch.astype(float).tolist(),
+            "center_mm": center_mm[0].astype(float).tolist(),
+            "center_px": center_px.astype(float).tolist(),
+        }
     if confidence < 0.12:
         return {
             "detected": False,
@@ -787,7 +1095,7 @@ def detect_piece_in_square_depth_patch(depth_patch: np.ndarray, square: str, x0:
     return {
         "detected": True,
         "square": square,
-        "method": "depth_rank2_compact_rescue" if rank2_rescue else "depth",
+        "method": "depth_rank2_compact_rescue" if rank2_rescue else ("depth_rank1_compact_rescue" if rank1_rescue else "depth"),
         "confidence": float(confidence),
         "area_px": area,
         "bbox_patch_px": [int(v) for v in bbox],
@@ -814,6 +1122,174 @@ def annotate_square_image(image, calibration_path: str, square: str, output_path
     return annotate_squares_image(image, calibration_path, square, output_path, image_path=image_path)
 
 
+def square_file_rank(square: str) -> tuple[int, int]:
+    return ord(square[0].lower()) - ord("a"), int(square[1])
+
+
+def adjacent_square(a: str, b: str) -> bool:
+    af, ar = square_file_rank(a)
+    bf, br = square_file_rank(b)
+    return abs(af - bf) + abs(ar - br) == 1
+
+
+def same_file_adjacent_square(a: str, b: str) -> bool:
+    af, ar = square_file_rank(a)
+    bf, br = square_file_rank(b)
+    return af == bf and abs(ar - br) == 1
+
+
+def piece_detection_strength(piece: dict) -> float:
+    confidence = float(piece.get("confidence", 0.0) or 0.0)
+    area = float(piece.get("area_px", 0.0) or 0.0)
+    return confidence * max(1.0, min(area, 1200.0) / 250.0)
+
+
+def center_edge_margin_mm(square: str, piece: dict) -> float:
+    center = piece.get("center_mm")
+    if not center or len(center) < 2:
+        return 999.0
+    bounds = square_bounds_mm(square)
+    xs = bounds[:, 0]
+    ys = bounds[:, 1]
+    x = float(center[0])
+    y = float(center[1])
+    return min(abs(x - float(xs.min())), abs(x - float(xs.max())), abs(y - float(ys.min())), abs(y - float(ys.max())))
+
+
+def center_delta_mm(a: dict, b: dict) -> tuple[float, float]:
+    ca = a.get("center_mm")
+    cb = b.get("center_mm")
+    if not ca or not cb or len(ca) < 2 or len(cb) < 2:
+        return 999.0, 999.0
+    return abs(float(ca[0]) - float(cb[0])), abs(float(ca[1]) - float(cb[1]))
+
+
+def is_depth_detection_method(method: str) -> bool:
+    return method.startswith("depth")
+
+
+def vertical_depth_projection_duplicate_loser(a: str, pa: dict, b: str, pb: dict) -> Optional[str]:
+    if not same_file_adjacent_square(a, b):
+        return None
+    if not is_depth_detection_method(str(pa.get("method", ""))) or not is_depth_detection_method(str(pb.get("method", ""))):
+        return None
+    _, ar = square_file_rank(a)
+    _, br = square_file_rank(b)
+    lower_square, lower_piece = (a, pa) if ar < br else (b, pb)
+    upper_square, upper_piece = (b, pb) if ar < br else (a, pa)
+    lower_center = lower_piece.get("center_mm")
+    upper_center = upper_piece.get("center_mm")
+    if not lower_center or not upper_center or len(lower_center) < 2 or len(upper_center) < 2:
+        return None
+    lower_bounds = square_bounds_mm(lower_square)
+    upper_bounds = square_bounds_mm(upper_square)
+    lower_y_to_shared_edge = abs(float(lower_bounds[:, 1].max()) - float(lower_center[1]))
+    upper_y_to_shared_edge = abs(float(upper_center[1]) - float(upper_bounds[:, 1].min()))
+    dx_mm, dy_mm = center_delta_mm(lower_piece, upper_piece)
+    lower_area = float(lower_piece.get("area_px", 0.0) or 0.0)
+    upper_area = float(upper_piece.get("area_px", 0.0) or 0.0)
+    upper_bbox = upper_piece.get("bbox_patch_px") or []
+    upper_w = float(upper_bbox[2]) if len(upper_bbox) >= 4 else 999.0
+    upper_h = float(upper_bbox[3]) if len(upper_bbox) >= 4 else 999.0
+    comparable_blob_size = lower_area > 0.0 and upper_area > 0.0 and min(lower_area, upper_area) >= max(lower_area, upper_area) * 0.55
+    both_touch_shared_edge = lower_y_to_shared_edge <= 18.0 and upper_y_to_shared_edge <= 18.0
+    same_column_blob = dx_mm <= 20.0 and dy_mm <= 58.0
+    if both_touch_shared_edge and same_column_blob and comparable_blob_size:
+        return upper_square
+    upper_tiny_shard = upper_area <= 90.0 and (upper_h <= 8.0 or upper_w <= 12.0)
+    lower_stable_blob = lower_area >= 180.0 and float(lower_piece.get("confidence", 0.0) or 0.0) >= 0.18
+    near_lower_projection = dx_mm <= 22.0 and dy_mm <= 65.0 and lower_y_to_shared_edge <= 22.0 and upper_y_to_shared_edge <= 30.0
+    if upper_tiny_shard and lower_stable_blob and near_lower_projection:
+        return upper_square
+    return None
+
+
+def suppress_piece_detection(filtered: dict, square: str, reason: str) -> None:
+    piece = filtered[square]
+    piece["detected"] = False
+    piece["confidence"] = 0
+    piece["reason"] = reason
+    piece["suppressed_detection"] = {
+        key: piece.get(key)
+        for key in ("method", "area_px", "bbox_patch_px", "center_mm", "center_px", "temporal_votes", "temporal_samples")
+        if key in piece
+    }
+
+
+def suppress_adjacent_duplicate_detections(piece_results: dict) -> tuple[dict, list[str], dict]:
+    filtered = {square: dict(piece) for square, piece in piece_results.items()}
+    detected = [square for square, piece in filtered.items() if piece.get("detected")]
+    suppress_reasons = {}
+    for square in detected:
+        piece = filtered[square]
+        samples = int(piece.get("temporal_samples", 0) or 0)
+        votes = int(piece.get("temporal_votes", 0) or 0)
+        confidence = float(piece.get("confidence", 0.0) or 0.0)
+        if samples >= 5 and votes < 3 and confidence < 0.75:
+            suppress_reasons[square] = "low_temporal_votes_full_board"
+    for i, a in enumerate(detected):
+        if a in suppress_reasons:
+            continue
+        for b in detected[i + 1 :]:
+            if b in suppress_reasons or not adjacent_square(a, b):
+                continue
+            pa = filtered[a]
+            pb = filtered[b]
+            method_a = str(pa.get("method", ""))
+            method_b = str(pb.get("method", ""))
+            if same_file_adjacent_square(a, b):
+                dx_mm, dy_mm = center_delta_mm(pa, pb)
+                votes_a = int(pa.get("temporal_votes", 0) or 0)
+                votes_b = int(pb.get("temporal_votes", 0) or 0)
+                if dx_mm <= 18.0 and dy_mm <= 50.0:
+                    if is_depth_detection_method(method_a) and method_b == "rgb" and votes_a >= 3:
+                        suppress_reasons[b] = "adjacent_rgb_duplicate_of_depth_piece"
+                        continue
+                    if is_depth_detection_method(method_b) and method_a == "rgb" and votes_b >= 3:
+                        suppress_reasons[a] = "adjacent_rgb_duplicate_of_depth_piece"
+                        break
+                projection_loser = vertical_depth_projection_duplicate_loser(a, pa, b, pb)
+                if projection_loser is not None:
+                    suppress_reasons[projection_loser] = "adjacent_depth_projection_artifact"
+                    if projection_loser == a:
+                        break
+                    continue
+            margin_a = center_edge_margin_mm(a, pa)
+            margin_b = center_edge_margin_mm(b, pb)
+            strength_a = piece_detection_strength(pa)
+            strength_b = piece_detection_strength(pb)
+            loser = None
+            if margin_a <= 14.0 and strength_b >= strength_a * 1.25:
+                loser = a
+            elif margin_b <= 14.0 and strength_a >= strength_b * 1.25:
+                loser = b
+            if loser is not None:
+                suppress_reasons[loser] = "adjacent_square_duplicate_artifact"
+    for square, reason in suppress_reasons.items():
+        suppress_piece_detection(filtered, square, reason)
+    detected_squares = [square for square, piece in filtered.items() if piece.get("detected")]
+    identified_pieces = {}
+    for square in detected_squares:
+        piece = filtered[square]
+        identity = {k: piece.get(k) for k in ("piece_id", "piece_type", "color", "identity_method", "identity_confidence")}
+        if not identity.get("piece_id"):
+            identity = identify_piece_for_square(square)
+            piece.update(identity)
+        identified_pieces[square] = {
+            "square": square,
+            "piece_id": piece["piece_id"],
+            "piece_type": piece["piece_type"],
+            "color": piece["color"],
+            "identity_method": piece["identity_method"],
+            "identity_confidence": piece["identity_confidence"],
+            "detection_method": piece.get("method", ""),
+            "detection_confidence": piece.get("confidence", 0.0),
+            "center_mm": piece.get("center_mm"),
+            "center_px": piece.get("center_px"),
+        }
+    return filtered, detected_squares, identified_pieces
+
+
 def draw_squares_overlay_image(
     image,
     calibration_path: str,
@@ -822,6 +1298,10 @@ def draw_squares_overlay_image(
     detect_pieces: bool = False,
     depth_image=None,
     piece_results_override: Optional[dict] = None,
+    empty_board_baselines: Optional[dict] = None,
+    empty_board_depth_baselines: Optional[dict] = None,
+    empty_board_rgb_baselines: Optional[dict] = None,
+    identity_overrides: Optional[dict] = None,
 ) -> dict:
     if image is None:
         raise RuntimeError("missing image frame")
@@ -836,6 +1316,7 @@ def draw_squares_overlay_image(
     identified_pieces = {}
     title_parts = []
     compact_detection_overlay = len(square_list) > 16
+    identity_overrides = identity_overrides or {}
     for square in square_list:
         roi_mm = square_bounds_mm(square)
         roi_px = board_to_image_points(roi_mm, h)
@@ -865,9 +1346,17 @@ def draw_squares_overlay_image(
             if piece_results_override is not None and square in piece_results_override:
                 piece = piece_results_override[square]
             else:
-                piece = detect_piece_in_square_image(image, h, square, depth_image=depth_image)
+                piece = detect_piece_in_square_image(
+                    image,
+                    h,
+                    square,
+                    depth_image=depth_image,
+                    empty_board_baselines=empty_board_baselines,
+                    empty_board_depth_baselines=empty_board_depth_baselines,
+                    empty_board_rgb_baselines=empty_board_rgb_baselines,
+                )
             if piece.get("detected"):
-                identity = identify_piece_for_square(square)
+                identity = dict(identity_overrides.get(square) or identify_piece_for_square(square))
                 piece.update(identity)
                 identified_pieces[square] = {
                     "square": square,
@@ -882,7 +1371,7 @@ def draw_squares_overlay_image(
                     "center_px": piece.get("center_px"),
                 }
             piece_results[square] = piece
-            if piece.get("detected"):
+            if piece.get("detected") and not compact_detection_overlay:
                 detected_squares.append(square)
                 draw_polyline(image, roi_px, (0, 255, 0), 2 if compact_detection_overlay else 3)
                 piece_xy = tuple(np.round(piece["center_px"]).astype(int))
@@ -912,6 +1401,57 @@ def draw_squares_overlay_image(
                     cv2.LINE_AA,
                 )
         title_parts.append(square)
+    if detect_pieces and compact_detection_overlay:
+        piece_results, detected_squares, identified_pieces = suppress_adjacent_duplicate_detections(piece_results)
+        if identity_overrides:
+            yolo_squares = set(identity_overrides.keys())
+            for square in list(detected_squares):
+                if square in yolo_squares:
+                    continue
+                if any(adjacent_square(square, yolo_square) for yolo_square in yolo_squares):
+                    suppress_piece_detection(piece_results, square, "adjacent_to_yolo_identity_artifact")
+                    identified_pieces.pop(square, None)
+            detected_squares = [square for square in detected_squares if piece_results.get(square, {}).get("detected")]
+        for square in detected_squares:
+            piece = piece_results[square]
+            identity = identity_overrides.get(square)
+            if isinstance(identity, dict):
+                piece.update(
+                    {
+                        "piece_id": identity.get("piece_id", piece.get("piece_id", square)),
+                        "piece_type": identity.get("piece_type", piece.get("piece_type", "unknown")),
+                        "color": identity.get("color", piece.get("color", "unknown")),
+                        "identity_method": identity.get("identity_method", piece.get("identity_method", "unknown")),
+                        "identity_confidence": identity.get("identity_confidence", piece.get("identity_confidence", 0.0)),
+                    }
+                )
+                identified_pieces[square] = {
+                    "square": square,
+                    "piece_id": piece["piece_id"],
+                    "piece_type": piece["piece_type"],
+                    "color": piece["color"],
+                    "identity_method": piece["identity_method"],
+                    "identity_confidence": piece["identity_confidence"],
+                    "detection_method": piece.get("method", ""),
+                    "detection_confidence": piece.get("confidence", 0.0),
+                    "center_mm": piece.get("center_mm"),
+                    "center_px": piece.get("center_px"),
+                }
+            roi_px = np.asarray(square_results[square]["roi_px"], dtype=np.float32)
+            draw_polyline(image, roi_px, (0, 255, 0), 2)
+            piece_xy = tuple(np.round(piece["center_px"]).astype(int))
+            cv2.circle(image, piece_xy, 7, (0, 255, 0), -1, cv2.LINE_AA)
+            cv2.circle(image, piece_xy, 11, (0, 0, 0), 2, cv2.LINE_AA)
+            cv2.putText(
+                image,
+                str(piece.get("piece_id", square)),
+                (piece_xy[0] + 9, piece_xy[1] + 15),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                (0, 255, 0),
+                2,
+                cv2.LINE_AA,
+            )
     cv2.putText(
         image,
         ("detected=" + ",".join(detected_squares)) if compact_detection_overlay else "squares=" + ",".join(title_parts),
@@ -947,6 +1487,10 @@ def annotate_squares_image(
     detect_pieces: bool = False,
     depth_image=None,
     piece_results_override: Optional[dict] = None,
+    empty_board_baselines: Optional[dict] = None,
+    empty_board_depth_baselines: Optional[dict] = None,
+    empty_board_rgb_baselines: Optional[dict] = None,
+    identity_overrides: Optional[dict] = None,
 ) -> dict:
     result = draw_squares_overlay_image(
         image,
@@ -956,6 +1500,10 @@ def annotate_squares_image(
         detect_pieces=detect_pieces,
         depth_image=depth_image,
         piece_results_override=piece_results_override,
+        empty_board_baselines=empty_board_baselines,
+        empty_board_depth_baselines=empty_board_depth_baselines,
+        empty_board_rgb_baselines=empty_board_rgb_baselines,
+        identity_overrides=identity_overrides,
     )
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
     cv2.imwrite(output_path, image)

@@ -105,6 +105,18 @@ The default detection input is `all`, which inspects all 64 squares.
 `Auto locate board from live frame` is experimental and is off by default.
 Leave it off for the current stable manually calibrated grid.
 `Detect pieces in selected squares` marks detected piece centers in green and returns `piece_results`.
+`Detect Whole Board` now chains the full-board occupancy pass into YOLO classification:
+
+```text
+1. it sets Squares to all and inspects the board
+2. it sends `run_yolo=1` plus the selected YOLO model to `/api/inspect`
+3. the server runs YOLO on the occupied `detected_squares`
+4. YOLO identities replace non-starting-square `unknown_piece` entries in `identified_pieces`
+5. it also returns `yolo_result`, including `piece_class_results` and `placement_plan`
+```
+
+The result panel then shows both the geometry/depth whole-board result and the YOLO `piece_class_results` plus `placement_plan`.
+If calling the API directly, use `/api/inspect?...&squares=all&run_yolo=1&yolo_model=/path/to/best.pt`.
 When valid depth exists for a square, depth is trusted first: a raised depth blob means piece present, and no raised depth blob means empty.
 RGB detection is only a fallback when that square does not have enough valid depth samples.
 Use `/api/status` or the Live status panel to confirm `has_depth: true`, increasing `depth_seq`, and a small `depth_age_s`.
@@ -276,6 +288,12 @@ identity_method=standard_starting_position
 This means identity is assigned from the square when the board is in the standard start layout. After pieces move, identity should be maintained by game-state tracking or replaced by a trained visual/tag classifier. Unknown occupied non-starting squares are reported as `unknown_piece` instead of being guessed.
 
 ## 2026-08-23 YOLO chess-piece training path
+
+Current step-by-step training and validation guide:
+
+```text
+scripts/CHESSBOARD_YOLO_TRAINING_WORKFLOW.md
+```
 
 The project now uses YOLO as the long-term piece classifier. The fixed class set is:
 
