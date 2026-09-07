@@ -23,7 +23,7 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Optional
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlparse, quote
 
 import cv2
 import numpy as np
@@ -34,6 +34,7 @@ from chessboard_vision_v2_7 import (
     DEFAULT_CALIBRATION_PATH,
     DEFAULT_EMPTY_BOARD_BASELINE_PATH,
     annotate_squares_image,
+    reconcile_yolo_projection_result,
     assign_opening_targets,
     auto_locate_board_corners,
     draw_squares_overlay_image,
@@ -50,14 +51,15 @@ from chessboard_vision_v2_7 import (
     matches_empty_board_rgb_baseline,
 )
 from chess_piece_yolo_dataset import add_labeled_image, init_dataset, parse_placements, write_data_yaml
-from chess_piece_yolo_infer import map_detections_to_squares, run_yolo
+from chess_piece_yolo_infer import map_detections_to_squares, run_yolo, save_prediction_image
+from chess_piece_yolo_labels import handle_get as labels_get, handle_post as labels_post, require_reviewed_labels
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_CORNERS = "100,428 595,418 520,52 165,58"
 DEFAULT_SQUARES = "all"
 DEFAULT_OUTPUT_DIR = os.path.join(tempfile.gettempdir(), "hive_robot_chessboard_vision_v2_7")
-WEB_VERSION = "v2.7-rank1-strong-c1-yolo-docker-detect-nms2"
+WEB_VERSION = "v2.7-full-board-crown-projection-v2-grid-boxes"
 DEFAULT_YOLO_DATASET_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "datasets", "chess_pieces_yolo")
 DEFAULT_YOLO_DOCKER_IMAGE = "ultralytics/ultralytics:latest-jetson-jetpack5"
 DEFAULT_WEB_OVERLAY_CONFIG_PATH = os.path.join(SCRIPT_DIR, "data", "chessboard_vision_v2_7_web_overlay_config.json")
@@ -548,6 +550,7 @@ def validate_yolo_training_dataset(dataset_dir: str) -> dict:
         raise RuntimeError(
             "YOLO training dataset is empty: add at least one train sample before starting training."
         )
+    require_reviewed_labels(dataset_dir)
     return {"train": train, "val": val}
 
 
@@ -921,6 +924,7 @@ HTML_PAGE = """<!doctype html>
   <main>
     <section class="viewer">
       <img id="overlay" src="__INITIAL_VIEWER_SRC__" alt="chessboard vision viewer">
+      <p id="predictionNote" class="hint" hidden>本次识别静态图：黄色棋盘网格、绿色预测框、预测类别与置信度。绿色不代表识别正确。<a id="predictionLink" target="_blank" rel="noopener">打开识别图</a></p>
     </section>
     <aside>
       <section class="panel">
@@ -936,6 +940,8 @@ HTML_PAGE = """<!doctype html>
           <textarea id="squareCornerInput" placeholder="a2: x,y x,y x,y x,y&#10;h2: x,y x,y x,y x,y">__SQUARE_CORNERS__</textarea>
         </label>
         <button onclick="showInputFrame()">Show Input Frame</button>
+        <button onclick="showOverlayGrid()">Show Overlay Grid</button>
+        <button id="showPredictionButton" onclick="showPredictionImage(lastPredictionData)" disabled>Show Prediction Frame</button>
         <button onclick="inspectSquare()">Inspect Square</button>
         <button onclick="detectWholeBoard()">Detect Whole Board</button>
         <button onclick="captureEmptyBoardBaseline()">Capture Empty Board Baseline</button>
@@ -956,6 +962,7 @@ HTML_PAGE = """<!doctype html>
           <input id="yoloSplit" value="__YOLO_SPLIT__">
         </label>
         <button onclick="saveYoloSample()">Save YOLO Sample</button>
+        <a href="/yolo-labels" target="_blank" rel="noopener" style="color:#7dd3fc">Review YOLO Labels / 复核完整棋子框</a>
         <button onclick="startYoloTrain()">Start YOLO Train</button>
         <button onclick="stopYoloTrain()">Stop YOLO Train</button>
         <button onclick="refreshYoloStatus()">YOLO Train Status</button>
@@ -992,9 +999,31 @@ HTML_PAGE = """<!doctype html>
   </main>
   <script>
     let lastInspectData = null;
+    let lastPredictionData = null;
+
+    function showOverlayGrid() {
+      if (showPredictionImage(lastPredictionData)) return;
+      document.getElementById('predictionNote').hidden = true;
+      document.getElementById('overlay').src = '/live-overlay.mjpg?ts=' + Date.now();
+    }
+
+    function rememberPrediction(data) {
+      lastPredictionData = data && data.prediction_image_url ? data : null;
+      document.getElementById('showPredictionButton').disabled = !lastPredictionData;
+    }
 
     function showInputFrame() {
+      document.getElementById('predictionNote').hidden = true;
       document.getElementById('overlay').src = '/live-rgb.mjpg?ts=' + Date.now();
+    }
+
+    function showPredictionImage(data) {
+      if (!data || !data.prediction_image_url) return false;
+      rememberPrediction(data);
+      document.getElementById('overlay').src = data.prediction_image_url;
+      document.getElementById('predictionLink').href = data.prediction_image_url;
+      document.getElementById('predictionNote').hidden = false;
+      return true;
     }
 
     function useShownSquareCorners() {
@@ -1049,7 +1078,7 @@ HTML_PAGE = """<!doctype html>
 
     async function detectWholeBoard() {
       document.getElementById('squares').value = 'all';
-      await inspectSquare({ runYolo: true });
+      await inspectSquare({ runYolo: true, showPrediction: true });
     }
 
     async function inspectSquare(options) {
@@ -1100,7 +1129,8 @@ HTML_PAGE = """<!doctype html>
         squareCornerOutput.textContent = data.error || 'No square corner data.';
       }
       if (data.ok) {
-        document.getElementById('overlay').src = '/live-overlay.mjpg?ts=' + Date.now();
+        rememberPrediction(data.yolo_result);
+        if (!showPredictionImage(data.yolo_result)) showOverlayGrid();
       }
       return data;
     }
@@ -1142,6 +1172,7 @@ HTML_PAGE = """<!doctype html>
       const res = await fetch('/api/yolo/add-sample?' + params.toString());
       const data = await res.json();
       status.textContent = JSON.stringify(data, null, 2);
+      if (data.ok) status.textContent += '\\n样本框待复核：请打开「Review YOLO Labels」重画完整棋子框并保存。';
     }
 
     async function startYoloTrain() {
@@ -1221,6 +1252,7 @@ HTML_PAGE = """<!doctype html>
       const res = await fetch('/api/yolo/detect?' + params.toString());
       const data = await res.json();
       renderYoloPieceTable(data);
+      if (data.ok) showPredictionImage(data);
       status.textContent = JSON.stringify(data, null, 2);
       if (data.ok && lastInspectData && lastInspectData.ok) {
         const result = document.getElementById('result');
@@ -1395,8 +1427,26 @@ def make_handler(state: VisionState):
         def send_json(self, payload: dict, status: HTTPStatus = HTTPStatus.OK) -> None:
             self.send_bytes(json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8"), "application/json; charset=utf-8", status)
 
+        def do_POST(self) -> None:  # noqa: N802
+            with state.yolo_lock:
+                if state.yolo_train_process is not None and state.yolo_train_process.poll() is None:
+                    self.send_json({"error": "Stop YOLO training before editing labels"}, HTTPStatus.CONFLICT)
+                    return
+                labels_post(self, state.yolo_dataset_dir)
+
         def do_GET(self) -> None:  # noqa: N802
+            if labels_get(self, state.yolo_dataset_dir):
+                return
             parsed = urlparse(self.path)
+            if parsed.path == "/yolo-prediction.jpg":
+                name = parse_qs(parsed.query).get("name", [""])[0]
+                folder = (Path(state.output_dir) / "yolo_detect").resolve()
+                target = (folder / name).resolve()
+                if target.parent != folder or not name.endswith("_pred.jpg") or not target.is_file():
+                    self.send_json({"error": "Prediction image not found"}, HTTPStatus.NOT_FOUND)
+                    return
+                self.send_bytes(target.read_bytes(), "image/jpeg")
+                return
             if parsed.path == "/":
                 config = state.overlay_config
                 page = (
@@ -1655,9 +1705,10 @@ def make_handler(state: VisionState):
                         conf=float(params.get("conf", ["0.25"])[0]),
                     )
                     piece_class_results = map_detections_to_squares(detections, state.calibration_path, yolo_squares)
+                    prediction_path = save_prediction_image(str(yolo_image_path), detections, state.calibration_path)
+                    reconcile_yolo_projection_result(result, piece_class_results)
                     yolo_identified_pieces = build_yolo_identified_pieces(piece_class_results)
-                    if yolo_identified_pieces:
-                        state.set_latest_yolo_identified_pieces(yolo_identified_pieces)
+                    state.set_latest_yolo_identified_pieces(yolo_identified_pieces)
                     placement_plan = assign_opening_targets(piece_class_results)
                     if yolo_identified_pieces:
                         result["identified_pieces"].update(yolo_identified_pieces)
@@ -1678,6 +1729,8 @@ def make_handler(state: VisionState):
                         "version": WEB_VERSION,
                         "model": yolo_model_path,
                         "image_path": str(yolo_image_path),
+                        "prediction_image_path": prediction_path,
+                        "prediction_image_url": "/yolo-prediction.jpg?name=" + quote(Path(prediction_path).name),
                         "squares": yolo_squares,
                         "detections": detections,
                         "detection_count": len(detections),
@@ -1855,6 +1908,8 @@ def make_handler(state: VisionState):
                         "sample_name": sample_name,
                         "image_path": str(image_path),
                         "placements": placements,
+                        "labels_need_review": True,
+                        "label_editor_url": "/yolo-labels",
                         "rgb_seq": seq,
                         "rgb_age_s": round(time.time() - stamp, 3),
                         "auto_location": auto_location,
@@ -2035,6 +2090,7 @@ def make_handler(state: VisionState):
                     conf=float(params.get("conf", ["0.25"])[0]),
                 )
                 piece_class_results = map_detections_to_squares(detections, state.calibration_path, allowed_squares)
+                prediction_path = save_prediction_image(str(image_path), detections, state.calibration_path)
                 yolo_identified_pieces = build_yolo_identified_pieces(piece_class_results)
                 if yolo_identified_pieces:
                     state.set_latest_yolo_identified_pieces(yolo_identified_pieces)
@@ -2046,6 +2102,8 @@ def make_handler(state: VisionState):
                         "model": model_path,
                         "image_path": str(image_path),
                         "squares": allowed_squares,
+                        "prediction_image_path": prediction_path,
+                        "prediction_image_url": "/yolo-prediction.jpg?name=" + quote(Path(prediction_path).name),
                         "detections": detections,
                         "piece_class_results": piece_class_results,
                         "yolo_identified_pieces": yolo_identified_pieces,

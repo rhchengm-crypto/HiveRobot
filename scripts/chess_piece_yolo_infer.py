@@ -17,6 +17,7 @@ from chessboard_vision_v2_7 import (
     board_point_to_square,
     image_to_board_points,
     load_calibration,
+    draw_board_grid,
     parse_square_list,
 )
 
@@ -49,13 +50,52 @@ def run_yolo(model_path: str, image_path: str, imgsz: int, conf: float) -> list[
     return detections
 
 
+def save_prediction_image(image_path: str, detections: list[dict], calibration_path: str | None = None) -> str:
+    """Draw actual model boxes on the exact saved input, leaving it unchanged."""
+    source = Path(image_path)
+    frame = cv2.imread(str(source))
+    if frame is None:
+        raise RuntimeError(f"failed to read prediction input: {source}")
+    height, width = frame.shape[:2]
+    if calibration_path is not None:
+        draw_board_grid(frame, load_calibration(calibration_path)["homography_board_to_image"])
+    for detection in detections:
+        box = np.asarray(detection["bbox_xyxy"], dtype=float)
+        if box.shape != (4,) or not np.isfinite(box).all() or box[2] <= box[0] or box[3] <= box[1]:
+            continue
+        x1, y1, x2, y2 = np.rint(box).astype(int)
+        x1, x2 = np.clip([x1, x2], 0, width - 1)
+        y1, y2 = np.clip([y1, y2], 0, height - 1)
+        color = (0, 255, 0)
+        cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+        label = f"{detection['piece_class']} {detection['confidence']:.1%}"
+        (tw, th), baseline = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, .45, 1)
+        tx = max(0, min(int(x1), width - tw - 4))
+        ty = int(y1) - 6 if y1 >= th + 8 else min(height - baseline - 1, int(y1) + th + 5)
+        cv2.rectangle(frame, (tx, max(0, ty-th-3)), (min(width-1, tx+tw+3), ty+baseline), (0, 0, 0), -1)
+        cv2.putText(frame, label, (tx+1, ty), cv2.FONT_HERSHEY_SIMPLEX, .45, color, 1, cv2.LINE_AA)
+    if not detections:
+        cv2.putText(frame, "No YOLO detections", (10, 25), cv2.FONT_HERSHEY_SIMPLEX, .6, (0,255,0), 1, cv2.LINE_AA)
+    target = source.with_name(source.stem + "_pred.jpg")
+    if not cv2.imwrite(str(target), frame):
+        raise RuntimeError(f"failed to save prediction image: {target}")
+    return str(target)
+
+
 def map_detections_to_squares(detections: list[dict], calibration_path: str, allowed_squares: list[str]) -> dict:
     calibration = load_calibration(calibration_path)
     h = calibration["homography_board_to_image"]
     allowed = set(allowed_squares)
     mapped = {}
     for detection in detections:
-        board_xy = image_to_board_points(np.array([detection["center_px"]], dtype=np.float32), h)[0]
+        # The center of a tall piece projects into the square behind its base.
+        # Use a point near the bottom of the full-piece box for square assignment.
+        # This assumes the deployed upright camera view (crowns above bases).
+        x1, y1, x2, y2 = detection["bbox_xyxy"]
+        base_px = [(x1 + x2) * 0.5, y2 - 0.1 * (y2 - y1)]
+        if not np.isfinite([x1, y1, x2, y2]).all() or x2 <= x1 or y2 <= y1:
+            continue
+        board_xy = image_to_board_points(np.array([base_px], dtype=np.float32), h)[0]
         square = board_point_to_square(float(board_xy[0]), float(board_xy[1]))
         if square is None or square not in allowed:
             continue
@@ -63,6 +103,9 @@ def map_detections_to_squares(detections: list[dict], calibration_path: str, all
         if current is not None and float(current.get("confidence", 0.0)) >= float(detection["confidence"]):
             continue
         item = dict(detection)
+        item["bbox_center_px"] = detection["center_px"]
+        item["center_px"] = base_px
+        item["square_anchor"] = "bbox_base_90_percent"
         item["square"] = square
         item["center_mm"] = board_xy.astype(float).tolist()
         mapped[square] = item
@@ -88,11 +131,13 @@ def main() -> None:
     allowed_squares = parse_square_list(args.squares)
     occupied_targets = [] if not args.occupied_targets.strip() else parse_square_list(args.occupied_targets)
     detections = run_yolo(args.model, args.image, args.imgsz, args.conf)
+    prediction_path = save_prediction_image(args.image, detections, args.calibration)
     piece_class_results = map_detections_to_squares(detections, args.calibration, allowed_squares)
     payload = {
         "ok": True,
         "model": args.model,
         "image": args.image,
+        "prediction_image_path": prediction_path,
         "squares": allowed_squares,
         "detections": detections,
         "piece_class_results": piece_class_results,

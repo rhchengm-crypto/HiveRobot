@@ -1216,6 +1216,63 @@ def suppress_piece_detection(filtered: dict, square: str, reason: str) -> None:
     }
 
 
+def suppress_yolo_projection_artifacts(piece_results: dict, yolo_pieces: dict) -> dict:
+    """Reject weak depth ghosts inside a known piece's crown, anywhere on board.
+
+    Stable unknown neighbors are deliberately retained: YOLO absence alone is
+    not evidence of an empty square. Call with matching-frame YOLO evidence.
+    """
+    filtered = {square: dict(piece) for square, piece in piece_results.items()}
+    for square, piece in filtered.items():
+        if not piece.get("detected") or square in yolo_pieces:
+            continue
+        if not str(piece.get("method", "")).startswith("depth"):
+            continue
+        samples = int(piece.get("temporal_samples", 0) or 0)
+        votes = int(piece.get("temporal_votes", 0) or 0)
+        # Require a strict minority across the actual window, not a fixed
+        # number of votes (3/7 is still intermittent, unlike 3/5).
+        if samples < 5 or votes < 0 or votes * 2 >= samples:
+            continue
+        center = piece.get("center_px")
+        if center is None or not np.isfinite(center).all():
+            continue
+        for owner, identity in yolo_pieces.items():
+            source = filtered.get(owner, {})
+            if not source.get("detected") or not adjacent_square(square, owner):
+                continue
+            source_samples = int(source.get("temporal_samples", 0) or 0)
+            source_votes = int(source.get("temporal_votes", 0) or 0)
+            if source_samples < 5 or source_votes * 2 <= source_samples:
+                continue
+            confidence = float(identity.get("confidence", identity.get("identity_confidence", 0)) or 0)
+            box = identity.get("bbox_xyxy")
+            if confidence < .6 or box is None or len(box) != 4 or not np.isfinite(box).all():
+                continue
+            x1, y1, x2, y2 = box
+            if x2 <= x1 or y2 <= y1:
+                continue
+            # Crown/body projection, not a second base near the box bottom.
+            if not (x1 <= center[0] <= x2 and y1 <= center[1] <= y1 + .6 * (y2-y1)):
+                continue
+            source_raise = float(source.get("median_raise_m", 0) or 0)
+            ghost_raise = float(piece.get("median_raise_m", 0) or 0)
+            if source_raise <= 0 or ghost_raise < source_raise + .02:
+                continue
+            suppress_piece_detection(filtered, square, "yolo_crown_depth_projection")
+            piece["projection_owner_square"] = owner
+            piece["projection_bbox_xyxy"] = list(box)
+            break
+    return filtered
+
+
+def reconcile_yolo_projection_result(result: dict, yolo_pieces: dict) -> None:
+    result["piece_results"] = suppress_yolo_projection_artifacts(result.get("piece_results", {}), yolo_pieces)
+    result["detected_squares"] = [s for s, p in result["piece_results"].items() if p.get("detected")]
+    result["detected_count"] = len(result["detected_squares"])
+    result["identified_pieces"] = {s: p for s, p in result.get("identified_pieces", {}).items() if s in result["detected_squares"]}
+
+
 def suppress_adjacent_duplicate_detections(piece_results: dict) -> tuple[dict, list[str], dict]:
     filtered = {square: dict(piece) for square, piece in piece_results.items()}
     detected = [square for square, piece in filtered.items() if piece.get("detected")]
@@ -1403,15 +1460,8 @@ def draw_squares_overlay_image(
         title_parts.append(square)
     if detect_pieces and compact_detection_overlay:
         piece_results, detected_squares, identified_pieces = suppress_adjacent_duplicate_detections(piece_results)
-        if identity_overrides:
-            yolo_squares = set(identity_overrides.keys())
-            for square in list(detected_squares):
-                if square in yolo_squares:
-                    continue
-                if any(adjacent_square(square, yolo_square) for yolo_square in yolo_squares):
-                    suppress_piece_detection(piece_results, square, "adjacent_to_yolo_identity_artifact")
-                    identified_pieces.pop(square, None)
-            detected_squares = [square for square in detected_squares if piece_results.get(square, {}).get("detected")]
+        # Cached identities are for display only. Never delete a neighboring
+        # occupant solely because an earlier YOLO frame had no identity there.
         for square in detected_squares:
             piece = piece_results[square]
             identity = identity_overrides.get(square)

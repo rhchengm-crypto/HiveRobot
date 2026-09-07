@@ -99,6 +99,10 @@ def add_labeled_image(
 ) -> None:
     if split not in ("train", "val", "test"):
         raise ValueError("split must be train, val, or test")
+    if not name or Path(name).name != name or "\\" in name or name in (".", ".."):
+        raise ValueError("Sample name must be a filename without directories")
+    if not np.isfinite(shrink) or not 0 < shrink <= 1:
+        raise ValueError("shrink must be between 0 (exclusive) and 1")
     image = cv2.imread(str(image_path))
     if image is None:
         raise RuntimeError(f"failed to read image: {image_path}")
@@ -110,11 +114,19 @@ def add_labeled_image(
     dst_label = dataset_dir / "labels" / split / label_name
     dst_image.parent.mkdir(parents=True, exist_ok=True)
     dst_label.parent.mkdir(parents=True, exist_ok=True)
+    if dst_image.exists() or dst_label.exists():
+        raise ValueError(f"Sample already exists: {name}; use a new name or the label editor")
     shutil.copy2(image_path, dst_image)
     rows = []
     for square, piece_class in sorted(placements.items()):
         class_id = CHESS_PIECE_YOLO_CLASSES.index(piece_class)
         cx, cy, bw, bh = square_yolo_box(square, h, image.shape, shrink)
+        # A square describes the base footprint, not the full piece silhouette.
+        # Suggest an upward extension for this upright camera view. These are
+        # drafts ONLY: the label editor must verify the real crown and base.
+        bottom = cy + bh * 0.5
+        top = max(0.0, cy - bh * 1.3)
+        cy, bh = (top + bottom) * 0.5, bottom - top
         rows.append(f"{class_id} {cx:.6f} {cy:.6f} {bw:.6f} {bh:.6f}")
     dst_label.write_text("\n".join(rows) + "\n", encoding="utf-8")
 
@@ -133,7 +145,7 @@ def build_parser() -> argparse.ArgumentParser:
     add.add_argument("--split", default="train", choices=["train", "val", "test"])
     add.add_argument("--placements", required=True, help="comma separated square:class labels, e.g. a4:white_pawn,b4:black_king")
     add.add_argument("--name", default="", help="dataset item basename; defaults to image stem")
-    add.add_argument("--shrink", type=float, default=0.72, help="shrink each square ROI before writing YOLO bbox")
+    add.add_argument("--shrink", type=float, default=0.72, help="base footprint shrink; generated full-piece suggestions require visual review")
     return parser
 
 

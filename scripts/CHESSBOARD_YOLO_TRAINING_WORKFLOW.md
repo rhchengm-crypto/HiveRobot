@@ -1,5 +1,10 @@
 # Chessboard YOLO Training Workflow
 
+> 2026-09-06 更新：新样本参考框必须在 Review YOLO Labels 页面复核完整棋子范围后再训练。
+> 旧的格子缩小框可能漏掉棋冠。最新修框、预测图和部署流程见
+> [CHESS_PIECE_LABEL_REPAIR.md](CHESS_PIECE_LABEL_REPAIR.md)，当天实测见
+> [工作记录](../chessboard_yolo_work_log_20260906.md)。下文历史参数示例应以当前代码为准。
+
 本文档记录 HiveRobot 棋盘视觉 v2.7 的 YOLO 棋子识别训练流程。当前设计是：
 
 ```text
@@ -40,7 +45,7 @@ cd /home/nvidia/hive_robot/DM_Control_Python
 启动 v2.7 Web verifier：
 
 ```bash
-python3 scripts/chessboard_vision_v2_7_web_control.py --port 8097
+python3 chessboard_vision_v2_7_web_control.py --port 8097
 ```
 
 Windows 浏览器打开：
@@ -84,7 +89,7 @@ roslaunch ascamera hp60c.launch
 ```bash
 cd /home/nvidia/hive_robot/DM_Control_Python
 source ~/.bashrc
-python3 scripts/chessboard_vision_v2_7_web_control.py --port 8097
+python3 chessboard_vision_v2_7_web_control.py --port 8097
 ```
 
 终端启动成功后会打印：
