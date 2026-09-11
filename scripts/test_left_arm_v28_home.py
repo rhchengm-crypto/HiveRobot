@@ -145,6 +145,41 @@ class HomeWrapperTests(unittest.TestCase):
         }
         self.assertEqual(arm.call[2]["hold_tau"], expected_tau)
 
+    def test_wrist_side_fine_correction_retries_small_under_travel(self):
+        import math
+
+        class Arm:
+            def __init__(self):
+                self.current = {joint: 0.0 for joint in JOINTS}
+                self.calls = []
+
+            def positions(self, names):
+                return {name: self.current[name] for name in names}
+
+            def read_status(self, names):
+                return {
+                    name: {"pos": self.current[name], "vel": 0.0, "tau": 0.1}
+                    for name in names
+                }
+
+            def move_target_with_holds(self, name, target, **kwargs):
+                self.calls.append((name, target, kwargs))
+                remaining_error_deg = 0.6 if len(self.calls) == 1 else 0.0
+                self.current[name] = nominal[name] - math.radians(remaining_error_deg)
+
+        nominal = {joint: 0.0 for joint in JOINTS}
+        nominal["wrist_side"] = math.radians(1.5)
+        legacy = types.SimpleNamespace(
+            DEFAULT_JOINTS=list(JOINTS),
+            CLEARANCE_HOLD_GAINS={joint: {"kp": 2.0, "kd": 1.0} for joint in JOINTS},
+            CLEARANCE_BASE_HOLD_GAINS={joint: {"kp": 1.0, "kd": 1.0} for joint in JOINTS},
+            COUPLED_CLEARANCE_CONTROL_DT=0.01,
+        )
+        arm = Arm()
+        result = fine_correct_clearance_wrist_side(arm, nominal, list(JOINTS), legacy)
+        self.assertEqual(len(arm.calls), 2)
+        self.assertAlmostEqual(result["wrist_side"], nominal["wrist_side"])
+
 
 if __name__ == "__main__":
     unittest.main()

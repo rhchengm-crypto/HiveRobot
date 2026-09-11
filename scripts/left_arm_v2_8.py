@@ -3,7 +3,7 @@
 
 The v2.6 controller remains unchanged. For a Home command that uses pre-home
 clearance, this wrapper guarantees that every selected joint participates in
-the formal Home phase, then performs one bounded correction pass using fresh
+the formal Home phase, then performs bounded correction passes using fresh
 joint positions.
 """
 from __future__ import annotations
@@ -27,6 +27,7 @@ CLEARANCE_FINE_JOINTS = ("wrist_side",)
 CLEARANCE_FINE_MAX_ERROR_DEG = 5.0
 CLEARANCE_FINE_MAX_BIAS_DEG = 1.5
 CLEARANCE_FINE_SECONDS = 6.0
+CLEARANCE_FINE_MAX_ATTEMPTS = 2
 CLEARANCE_FINE_GAINS = {
     "wrist_side": {"kp": 24.0, "kd": 3.0},
 }
@@ -89,67 +90,85 @@ def ensure_clearance_best_snapshot(local):
 
 
 def fine_correct_clearance_wrist_side(arm, nominal, validation_joints, legacy):
-    start_status = arm.read_status(legacy.DEFAULT_JOINTS)
-    current_all = {joint: start_status[joint]["pos"] for joint in legacy.DEFAULT_JOINTS}
+    current_all = arm.positions(legacy.DEFAULT_JOINTS)
     current = {joint: current_all[joint] for joint in validation_joints}
     errors = clearance_errors_deg(nominal, current, validation_joints)
     corrected = []
     for name in CLEARANCE_FINE_JOINTS:
-        error_deg = errors.get(name, 0.0)
-        if abs(error_deg) <= CLEARANCE_TOLERANCE_DEG + 0.011:
-            continue
-        if abs(error_deg) > CLEARANCE_FINE_MAX_ERROR_DEG:
-            print(
-                "v2.8 Clearance residual fine skip unsafe error=",
-                json.dumps({name: error_deg}, ensure_ascii=False),
-                flush=True,
+        for attempt in range(1, CLEARANCE_FINE_MAX_ATTEMPTS + 1):
+            # Refresh position and load before every pass. The second pass is
+            # only used to remove small under-travel left by the first pass.
+            start_status = arm.read_status(legacy.DEFAULT_JOINTS)
+            current_all = {
+                joint: start_status[joint]["pos"] for joint in legacy.DEFAULT_JOINTS
+            }
+            current = {joint: current_all[joint] for joint in validation_joints}
+            errors = clearance_errors_deg(nominal, current, validation_joints)
+            error_deg = errors.get(name, 0.0)
+            if abs(error_deg) <= CLEARANCE_TOLERANCE_DEG + 0.011:
+                break
+            if abs(error_deg) > CLEARANCE_FINE_MAX_ERROR_DEG:
+                print(
+                    "v2.8 Clearance residual fine skip unsafe error=",
+                    json.dumps({name: error_deg, "attempt": attempt}, ensure_ascii=False),
+                    flush=True,
+                )
+                break
+            bias_deg = max(
+                -CLEARANCE_FINE_MAX_BIAS_DEG,
+                min(CLEARANCE_FINE_MAX_BIAS_DEG, error_deg),
             )
-            continue
-        bias_deg = max(-CLEARANCE_FINE_MAX_BIAS_DEG, min(CLEARANCE_FINE_MAX_BIAS_DEG, error_deg))
-        target = float(nominal[name]) + math.radians(bias_deg)
-        hold_targets = {joint: current_all[joint] for joint in legacy.DEFAULT_JOINTS if joint != name}
-        hold_gains = {
-            joint: legacy.CLEARANCE_HOLD_GAINS.get(
-                joint, legacy.CLEARANCE_BASE_HOLD_GAINS[joint]
+            target = float(nominal[name]) + math.radians(bias_deg)
+            hold_targets = {
+                joint: current_all[joint]
+                for joint in legacy.DEFAULT_JOINTS if joint != name
+            }
+            hold_gains = {
+                joint: legacy.CLEARANCE_HOLD_GAINS.get(
+                    joint, legacy.CLEARANCE_BASE_HOLD_GAINS[joint]
+                )
+                for joint in hold_targets
+            }
+            # Preserve the exact load observed immediately before each pass.
+            hold_tau = {joint: start_status[joint]["tau"] for joint in hold_targets}
+            gains = CLEARANCE_FINE_GAINS[name]
+            print("v2.8 Clearance residual fine=", json.dumps({
+                "joint": name,
+                "attempt": attempt,
+                "max_attempts": CLEARANCE_FINE_MAX_ATTEMPTS,
+                "nominal_error_deg": error_deg,
+                "bias_deg": bias_deg,
+                "target_rad": target,
+                "seconds": CLEARANCE_FINE_SECONDS,
+                "kp": gains["kp"],
+                "kd": gains["kd"],
+                "hold_targets_rad": hold_targets,
+                "inherited_hold_tau": hold_tau,
+            }, ensure_ascii=False), flush=True)
+            arm.move_target_with_holds(
+                name,
+                target,
+                seconds_per_step=CLEARANCE_FINE_SECONDS,
+                kp=gains["kp"],
+                kd=gains["kd"],
+                hold_targets=hold_targets,
+                hold_gains=hold_gains,
+                fallback_kp=3.0,
+                fallback_kd=0.3,
+                hold_tau=hold_tau,
+                active_tau=0.0,
+                control_dt=legacy.COUPLED_CLEARANCE_CONTROL_DT,
+                active_velocity_ff=False,
+                step_deg=0.0,
             )
-            for joint in hold_targets
-        }
-        # Preserve the exact load observed immediately before the correction.
-        # Generic clearance feed-forward values are calibrated for the earlier
-        # trajectory and caused elbow/wrist to drop during this extra phase.
-        hold_tau = {joint: start_status[joint]["tau"] for joint in hold_targets}
-        gains = CLEARANCE_FINE_GAINS[name]
-        print("v2.8 Clearance residual fine=", json.dumps({
-            "joint": name,
-            "nominal_error_deg": error_deg,
-            "bias_deg": bias_deg,
-            "target_rad": target,
-            "seconds": CLEARANCE_FINE_SECONDS,
-            "kp": gains["kp"],
-            "kd": gains["kd"],
-            "hold_targets_rad": hold_targets,
-            "inherited_hold_tau": hold_tau,
-        }, ensure_ascii=False), flush=True)
-        arm.move_target_with_holds(
-            name,
-            target,
-            seconds_per_step=CLEARANCE_FINE_SECONDS,
-            kp=gains["kp"],
-            kd=gains["kd"],
-            hold_targets=hold_targets,
-            hold_gains=hold_gains,
-            fallback_kp=3.0,
-            fallback_kd=0.3,
-            hold_tau=hold_tau,
-            active_tau=0.0,
-            control_dt=legacy.COUPLED_CLEARANCE_CONTROL_DT,
-            active_velocity_ff=False,
-            step_deg=0.0,
-        )
-        current_all = arm.positions(legacy.DEFAULT_JOINTS)
-        current = {joint: current_all[joint] for joint in validation_joints}
-        errors = clearance_errors_deg(nominal, current, validation_joints)
-        corrected.append({"joint": name, "final_error_deg": errors[name]})
+            current_all = arm.positions(legacy.DEFAULT_JOINTS)
+            current = {joint: current_all[joint] for joint in validation_joints}
+            errors = clearance_errors_deg(nominal, current, validation_joints)
+            corrected.append({
+                "joint": name,
+                "attempt": attempt,
+                "final_error_deg": errors[name],
+            })
     if corrected:
         print("v2.8 Clearance residual fine result=", json.dumps(corrected, ensure_ascii=False), flush=True)
     return current
