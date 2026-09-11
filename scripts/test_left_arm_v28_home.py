@@ -114,6 +114,12 @@ class HomeWrapperTests(unittest.TestCase):
             def positions(self, names):
                 return {name: self.current[name] for name in names}
 
+            def read_status(self, names):
+                return {
+                    name: {"pos": self.current[name], "vel": 0.0, "tau": float(index + 1)}
+                    for index, name in enumerate(names)
+                }
+
             def move_target_with_holds(self, name, target, **kwargs):
                 self.call = (name, target, kwargs)
                 self.current[name] = math.radians(1.0)
@@ -133,6 +139,11 @@ class HomeWrapperTests(unittest.TestCase):
         self.assertAlmostEqual(result["wrist_side"], nominal["wrist_side"])
         self.assertEqual(arm.call[0], "wrist_side")
         self.assertEqual(set(arm.call[2]["hold_targets"]), set(JOINTS) - {"wrist_side"})
+        expected_tau = {
+            joint: float(JOINTS.index(joint) + 1)
+            for joint in JOINTS if joint != "wrist_side"
+        }
+        self.assertEqual(arm.call[2]["hold_tau"], expected_tau)
 
 
 if __name__ == "__main__":

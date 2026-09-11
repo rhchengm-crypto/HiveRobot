@@ -28,7 +28,7 @@ CLEARANCE_FINE_MAX_ERROR_DEG = 5.0
 CLEARANCE_FINE_MAX_BIAS_DEG = 1.5
 CLEARANCE_FINE_SECONDS = 6.0
 CLEARANCE_FINE_GAINS = {
-    "wrist_side": {"kp": 16.0, "kd": 2.2},
+    "wrist_side": {"kp": 24.0, "kd": 3.0},
 }
 
 
@@ -89,7 +89,8 @@ def ensure_clearance_best_snapshot(local):
 
 
 def fine_correct_clearance_wrist_side(arm, nominal, validation_joints, legacy):
-    current_all = arm.positions(legacy.DEFAULT_JOINTS)
+    start_status = arm.read_status(legacy.DEFAULT_JOINTS)
+    current_all = {joint: start_status[joint]["pos"] for joint in legacy.DEFAULT_JOINTS}
     current = {joint: current_all[joint] for joint in validation_joints}
     errors = clearance_errors_deg(nominal, current, validation_joints)
     corrected = []
@@ -113,10 +114,10 @@ def fine_correct_clearance_wrist_side(arm, nominal, validation_joints, legacy):
             )
             for joint in hold_targets
         }
-        hold_tau = {
-            joint: legacy.CLEARANCE_JOINT_HOLD_TAU.get(joint, 0.0)
-            for joint in hold_targets
-        }
+        # Preserve the exact load observed immediately before the correction.
+        # Generic clearance feed-forward values are calibrated for the earlier
+        # trajectory and caused elbow/wrist to drop during this extra phase.
+        hold_tau = {joint: start_status[joint]["tau"] for joint in hold_targets}
         gains = CLEARANCE_FINE_GAINS[name]
         print("v2.8 Clearance residual fine=", json.dumps({
             "joint": name,
@@ -127,6 +128,7 @@ def fine_correct_clearance_wrist_side(arm, nominal, validation_joints, legacy):
             "kp": gains["kp"],
             "kd": gains["kd"],
             "hold_targets_rad": hold_targets,
+            "inherited_hold_tau": hold_tau,
         }, ensure_ascii=False), flush=True)
         arm.move_target_with_holds(
             name,
