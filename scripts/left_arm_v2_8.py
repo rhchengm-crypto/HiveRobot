@@ -156,37 +156,10 @@ def run_trained_clearance(original: List[str], legacy) -> None:
         )
 
 
-def run_guarded_claw_close(original: List[str], legacy) -> None:
-    from left_arm_v2_8_claw import guarded_pressure_close
-
-    parsed = legacy.build_parser().parse_args(original)
-    home = legacy.load_pose(parsed.claw_home_file)
-    if "claw" not in home:
-        raise RuntimeError("invalid claw home file: missing claw")
-    if not parsed.execute:
-        legacy.main()
-        return
-    arm = legacy.LeftArmV2()
-    try:
-        print("Serial port is open", flush=True)
-        arm.enable(["claw"])
-        guarded_pressure_close(
-            arm,
-            parsed.close_offset,
-            hold_after=not parsed.no_hold,
-            label="v2.8 standalone claw",
-        )
-    finally:
-        arm.close()
-
-
 def main() -> None:
     import left_arm_v2_6 as legacy
 
     original = list(sys.argv[1:])
-    if original and original[0] == "claw-close":
-        run_guarded_claw_close(original, legacy)
-        return
     if original and original[0] == "clearance":
         run_trained_clearance(original, legacy)
         return
