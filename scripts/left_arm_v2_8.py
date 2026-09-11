@@ -100,7 +100,13 @@ def run_trained_clearance(original: List[str], legacy) -> None:
     # A failed payload carry must not poison the shared clearance target used
     # by the next pre-replay clearance command.
     rollback_rejected_placement1_learning(local)
-    recover_placement1_shared_clearance_contamination(local)
+    recovered = recover_placement1_shared_clearance_contamination(local)
+    if recovered:
+        print(
+            "v2.8 Clearance history restored only; no motor controller was opened and no motion was issued.",
+            flush=True,
+        )
+        return
     biased = dict(nominal)
     applied_bias_deg = {}
     for name in validation_joints:

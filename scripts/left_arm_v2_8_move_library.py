@@ -48,7 +48,7 @@ HOLD_BIAS_MIN_STEP_SCALE = 0.25
 HOLD_BIAS_LIMIT_DEG = 3.0
 PLACEMENT1_MOVE_NAME = "bishop01"
 PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 5.0
-PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID = "remove-placement1-shared-clearance-20260911-v1"
+PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID = "restore-pre-placement1-clearance-20260911-v2"
 PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR = "8b20a284d5592a0c"
 # Values printed immediately before the first Placement1 run.  Placement1
 # subsequently wrote arm_roll, wrist_side and wrist into this shared anchor.
@@ -226,7 +226,12 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         "clearance:" + Path(clearance_file).name,
     )
     rollback_rejected_placement1_learning(shared)
-    recover_placement1_shared_clearance_contamination(shared)
+    recovered_shared = recover_placement1_shared_clearance_contamination(shared)
+    if recovered_shared:
+        raise RuntimeError(
+            "v2.8 restored the pre-Placement1 shared Clearance history without moving; "
+            "run the requested action again only after reviewing the restored values"
+        )
     local = LocalTargetBias(
         PLACEMENT1_CLEARANCE_BIAS_PATH,
         nominal,

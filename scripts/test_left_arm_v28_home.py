@@ -1,4 +1,8 @@
 import unittest
+import tempfile
+import types
+from pathlib import Path
+from unittest.mock import patch
 
 from left_arm_v2_8 import (
     clearance_errors_deg,
@@ -8,7 +12,9 @@ from left_arm_v2_8 import (
     option_value,
     remove_flag,
     replace_option,
+    run_trained_clearance,
 )
+from left_arm_v2_8_move_library import JOINTS
 
 
 class HomeWrapperTests(unittest.TestCase):
@@ -51,6 +57,36 @@ class HomeWrapperTests(unittest.TestCase):
         original = ["clearance", "--max-delta-deg", "120", "--execute"]
         expanded = replace_option(original, "--max-delta-deg", str(120.0 + 5.0))
         self.assertEqual(option_value(expanded, "--max-delta-deg", "missing"), "125.0")
+
+    def test_history_recovery_returns_before_opening_motor_controller(self):
+        target = {
+            "shoulder_front": 1.9357976913452148,
+            "shoulder_side": -2.7143893241882324,
+            "elbow": 0.8165484070777893,
+            "shoulder_rotate": 1.9323643445968628,
+            "arm_roll": -2.649538516998291,
+            "wrist_side": 0.3057526648044586,
+            "wrist": -1.0313191413879395,
+        }
+        called = []
+        parsed = types.SimpleNamespace(
+            max_delta_deg=120.0,
+            clearance_file="clearance.json",
+            joints=",".join(JOINTS),
+        )
+        parser = types.SimpleNamespace(parse_args=lambda argv: parsed)
+        legacy = types.SimpleNamespace(
+            build_parser=lambda: parser,
+            load_pose=lambda path: target,
+            parse_joints=lambda value: list(JOINTS),
+            CLEARANCE_JOINT_DEADBANDS_DEG={joint: 0.0 for joint in JOINTS},
+            main=lambda: called.append("motor-controller-opened"),
+        )
+        with tempfile.TemporaryDirectory() as directory, patch(
+            "left_arm_v2_8.CLEARANCE_BIAS_PATH", Path(directory) / "bias.json"
+        ):
+            run_trained_clearance(["clearance", "--execute"], legacy)
+        self.assertEqual(called, [])
 
 
 if __name__ == "__main__":
