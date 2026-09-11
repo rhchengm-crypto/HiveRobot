@@ -11,7 +11,9 @@ from __future__ import annotations
 import json
 import math
 import os
+import copy
 import sys
+import time
 from pathlib import Path
 from typing import Iterable, List
 
@@ -21,6 +23,13 @@ CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_clearance_bias.json"
 CLEARANCE_TOLERANCE_DEG = 0.5
 HOME_CAPTURED_TRANSITION_MARGIN_DEG = 5.0
 CLEARANCE_COMMAND_MARGIN_DEG = 5.0
+CLEARANCE_FINE_JOINTS = ("wrist_side",)
+CLEARANCE_FINE_MAX_ERROR_DEG = 5.0
+CLEARANCE_FINE_MAX_BIAS_DEG = 1.5
+CLEARANCE_FINE_SECONDS = 6.0
+CLEARANCE_FINE_GAINS = {
+    "wrist_side": {"kp": 16.0, "kd": 2.2},
+}
 
 
 def option_value(argv: List[str], option: str, default: str) -> str:
@@ -65,6 +74,85 @@ def clearance_errors_deg(target, current, joints: Iterable[str]):
     }
 
 
+def ensure_clearance_best_snapshot(local):
+    snapshots = local.anchor.setdefault("best_snapshots", {})
+    if "clearance" in snapshots:
+        return False
+    snapshots["clearance"] = {
+        "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "hold_bias": copy.deepcopy(local.anchor.get("hold_bias", {}).get("clearance", {})),
+        "source": "active shared Clearance parameters before transactional verification",
+    }
+    local.anchor["updated_at"] = snapshots["clearance"]["created_at"]
+    local._save()
+    return True
+
+
+def fine_correct_clearance_wrist_side(arm, nominal, validation_joints, legacy):
+    current_all = arm.positions(legacy.DEFAULT_JOINTS)
+    current = {joint: current_all[joint] for joint in validation_joints}
+    errors = clearance_errors_deg(nominal, current, validation_joints)
+    corrected = []
+    for name in CLEARANCE_FINE_JOINTS:
+        error_deg = errors.get(name, 0.0)
+        if abs(error_deg) <= CLEARANCE_TOLERANCE_DEG + 0.011:
+            continue
+        if abs(error_deg) > CLEARANCE_FINE_MAX_ERROR_DEG:
+            print(
+                "v2.8 Clearance residual fine skip unsafe error=",
+                json.dumps({name: error_deg}, ensure_ascii=False),
+                flush=True,
+            )
+            continue
+        bias_deg = max(-CLEARANCE_FINE_MAX_BIAS_DEG, min(CLEARANCE_FINE_MAX_BIAS_DEG, error_deg))
+        target = float(nominal[name]) + math.radians(bias_deg)
+        hold_targets = {joint: current_all[joint] for joint in legacy.DEFAULT_JOINTS if joint != name}
+        hold_gains = {
+            joint: legacy.CLEARANCE_HOLD_GAINS.get(
+                joint, legacy.CLEARANCE_BASE_HOLD_GAINS[joint]
+            )
+            for joint in hold_targets
+        }
+        hold_tau = {
+            joint: legacy.CLEARANCE_JOINT_HOLD_TAU.get(joint, 0.0)
+            for joint in hold_targets
+        }
+        gains = CLEARANCE_FINE_GAINS[name]
+        print("v2.8 Clearance residual fine=", json.dumps({
+            "joint": name,
+            "nominal_error_deg": error_deg,
+            "bias_deg": bias_deg,
+            "target_rad": target,
+            "seconds": CLEARANCE_FINE_SECONDS,
+            "kp": gains["kp"],
+            "kd": gains["kd"],
+            "hold_targets_rad": hold_targets,
+        }, ensure_ascii=False), flush=True)
+        arm.move_target_with_holds(
+            name,
+            target,
+            seconds_per_step=CLEARANCE_FINE_SECONDS,
+            kp=gains["kp"],
+            kd=gains["kd"],
+            hold_targets=hold_targets,
+            hold_gains=hold_gains,
+            fallback_kp=3.0,
+            fallback_kd=0.3,
+            hold_tau=hold_tau,
+            active_tau=0.0,
+            control_dt=legacy.COUPLED_CLEARANCE_CONTROL_DT,
+            active_velocity_ff=False,
+            step_deg=0.0,
+        )
+        current_all = arm.positions(legacy.DEFAULT_JOINTS)
+        current = {joint: current_all[joint] for joint in validation_joints}
+        errors = clearance_errors_deg(nominal, current, validation_joints)
+        corrected.append({"joint": name, "final_error_deg": errors[name]})
+    if corrected:
+        print("v2.8 Clearance residual fine result=", json.dumps(corrected, ensure_ascii=False), flush=True)
+    return current
+
+
 def captured_home_transition_limit(requested_limit_deg: float,
                                    transition_deltas_deg: Iterable[float]) -> float:
     largest = max((abs(float(value)) for value in transition_deltas_deg), default=0.0)
@@ -107,6 +195,7 @@ def run_trained_clearance(original: List[str], legacy) -> None:
             flush=True,
         )
         return
+    snapshot_created = ensure_clearance_best_snapshot(local)
     biased = dict(nominal)
     applied_bias_deg = {}
     for name in validation_joints:
@@ -126,7 +215,12 @@ def run_trained_clearance(original: List[str], legacy) -> None:
         return original_load_pose(path)
 
     def capture_status(arm, joints):
-        final_positions.update(arm.positions(joints))
+        if parsed.execute:
+            final_positions.update(
+                fine_correct_clearance_wrist_side(arm, nominal, validation_joints, legacy)
+            )
+        else:
+            final_positions.update(arm.positions(joints))
         return original_print_status(arm, joints)
 
     print("v2.8 clearance local correction=", json.dumps({
@@ -138,6 +232,7 @@ def run_trained_clearance(original: List[str], legacy) -> None:
         "validation_joints": validation_joints,
         "requested_max_delta_deg": parsed.max_delta_deg,
         "effective_max_delta_deg": parsed.max_delta_deg + CLEARANCE_COMMAND_MARGIN_DEG,
+        "best_snapshot_created": snapshot_created,
     }, ensure_ascii=False), flush=True)
     legacy.load_pose = load_biased_pose
     legacy.LeftArmV2.print_status = capture_status
@@ -151,17 +246,17 @@ def run_trained_clearance(original: List[str], legacy) -> None:
     if not parsed.execute or not final_positions:
         return
     errors = clearance_errors_deg(nominal, final_positions, validation_joints)
-    updates = local.update_hold_bias("clearance", errors, label="clearance-final")
     validation = local.record_move_validation(errors)
     print("v2.8 clearance final verification=", json.dumps(validation, ensure_ascii=False), flush=True)
-    if updates:
-        print("v2.8 clearance local learning update=", json.dumps(updates, ensure_ascii=False), flush=True)
     blockers = final_blocking_joint_errors(errors, CLEARANCE_TOLERANCE_DEG)
     if blockers:
         raise RuntimeError(
-            "v2.8 clearance training incomplete: joints exceed 0.5deg; learned data was saved; "
-            "run clearance again before Home or Replay: " + json.dumps(blockers, ensure_ascii=False)
+            "v2.8 clearance verification failed: joints exceed 0.5deg; active learned biases "
+            "were not changed and the best snapshot was retained: " + json.dumps(blockers, ensure_ascii=False)
         )
+    updates = local.update_hold_bias("clearance", errors, label="clearance-validated")
+    if updates:
+        print("v2.8 clearance validated learning update=", json.dumps(updates, ensure_ascii=False), flush=True)
 
 
 def restore_clearance_history(original: List[str], legacy) -> None:
@@ -178,6 +273,14 @@ def restore_clearance_history(original: List[str], legacy) -> None:
         "clearance:" + Path(clearance_file).name,
     )
     recovered = recover_placement1_shared_clearance_contamination(local, force=True)
+    local.anchor.pop("best_snapshots", None)
+    ensure_clearance_best_snapshot(local)
+    backup_path = Path(str(CLEARANCE_BIAS_PATH) + ".pre_placement1_restored.json")
+    if not backup_path.exists():
+        backup_path.write_text(
+            json.dumps(local.data, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
     print("v2.8 explicit Clearance history restore=", json.dumps({
         "ok": True,
         "clearance_file": os.path.abspath(clearance_file),
@@ -185,6 +288,7 @@ def restore_clearance_history(original: List[str], legacy) -> None:
         "restored": recovered,
         "motor_controller_opened": False,
         "motion_issued": False,
+        "immutable_backup_path": str(backup_path),
     }, ensure_ascii=False), flush=True)
 
 

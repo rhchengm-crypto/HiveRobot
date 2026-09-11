@@ -8,6 +8,8 @@ from left_arm_v2_8 import (
     clearance_errors_deg,
     clearance_validation_joints,
     captured_home_transition_limit,
+    ensure_clearance_best_snapshot,
+    fine_correct_clearance_wrist_side,
     is_fixed_prehome,
     option_value,
     remove_flag,
@@ -15,6 +17,7 @@ from left_arm_v2_8 import (
     run_trained_clearance,
 )
 from left_arm_v2_8_move_library import JOINTS
+from left_arm_v2_8_move_library import LocalTargetBias
 
 
 class HomeWrapperTests(unittest.TestCase):
@@ -87,6 +90,49 @@ class HomeWrapperTests(unittest.TestCase):
         ):
             run_trained_clearance(["clearance", "--execute"], legacy)
         self.assertEqual(called, [])
+
+    def test_best_snapshot_is_created_once(self):
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(Path(directory) / "bias.json", {
+                joint: 0.0 for joint in JOINTS
+            }, "clearance:test")
+            local.anchor.setdefault("hold_bias", {}).setdefault("clearance", {})["wrist_side"] = {
+                "bias_deg": 0.65
+            }
+            self.assertTrue(ensure_clearance_best_snapshot(local))
+            local.anchor["hold_bias"]["clearance"]["wrist_side"]["bias_deg"] = 1.2
+            self.assertFalse(ensure_clearance_best_snapshot(local))
+            saved = local.anchor["best_snapshots"]["clearance"]["hold_bias"]
+            self.assertEqual(saved["wrist_side"]["bias_deg"], 0.65)
+
+    def test_wrist_side_fine_correction_holds_every_other_joint(self):
+        class Arm:
+            def __init__(self):
+                self.current = {joint: 0.0 for joint in JOINTS}
+                self.call = None
+
+            def positions(self, names):
+                return {name: self.current[name] for name in names}
+
+            def move_target_with_holds(self, name, target, **kwargs):
+                self.call = (name, target, kwargs)
+                self.current[name] = math.radians(1.0)
+
+        import math
+        arm = Arm()
+        nominal = {joint: 0.0 for joint in JOINTS}
+        nominal["wrist_side"] = math.radians(1.0)
+        legacy = types.SimpleNamespace(
+            DEFAULT_JOINTS=list(JOINTS),
+            CLEARANCE_HOLD_GAINS={joint: {"kp": 2.0, "kd": 1.0} for joint in JOINTS},
+            CLEARANCE_BASE_HOLD_GAINS={joint: {"kp": 1.0, "kd": 1.0} for joint in JOINTS},
+            CLEARANCE_JOINT_HOLD_TAU={},
+            COUPLED_CLEARANCE_CONTROL_DT=0.01,
+        )
+        result = fine_correct_clearance_wrist_side(arm, nominal, list(JOINTS), legacy)
+        self.assertAlmostEqual(result["wrist_side"], nominal["wrist_side"])
+        self.assertEqual(arm.call[0], "wrist_side")
+        self.assertEqual(set(arm.call[2]["hold_targets"]), set(JOINTS) - {"wrist_side"})
 
 
 if __name__ == "__main__":
