@@ -164,10 +164,37 @@ def run_trained_clearance(original: List[str], legacy) -> None:
         )
 
 
+def restore_clearance_history(original: List[str], legacy) -> None:
+    from left_arm_v2_8_move_library import (
+        LocalTargetBias,
+        recover_placement1_shared_clearance_contamination,
+    )
+
+    clearance_file = option_value(original, "--clearance-file", legacy.TABLE_CLEARANCE_PATH)
+    nominal = legacy.load_pose(clearance_file)
+    local = LocalTargetBias(
+        CLEARANCE_BIAS_PATH,
+        nominal,
+        "clearance:" + Path(clearance_file).name,
+    )
+    recovered = recover_placement1_shared_clearance_contamination(local, force=True)
+    print("v2.8 explicit Clearance history restore=", json.dumps({
+        "ok": True,
+        "clearance_file": os.path.abspath(clearance_file),
+        "anchor_id": local.anchor_id,
+        "restored": recovered,
+        "motor_controller_opened": False,
+        "motion_issued": False,
+    }, ensure_ascii=False), flush=True)
+
+
 def main() -> None:
     import left_arm_v2_6 as legacy
 
     original = list(sys.argv[1:])
+    if original and original[0] == "restore-clearance-history":
+        restore_clearance_history(original, legacy)
+        return
     if original and original[0] == "clearance":
         run_trained_clearance(original, legacy)
         return

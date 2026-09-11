@@ -125,6 +125,8 @@ class LocalBiasTests(unittest.TestCase):
             for joint, expected in PLACEMENT1_PRECONTAMINATION_CLEARANCE_BIASES_DEG.items():
                 self.assertAlmostEqual(math.degrees(local.hold_bias_rad("clearance", joint)), expected)
             self.assertEqual(recover_placement1_shared_clearance_contamination(local), {})
+            forced = recover_placement1_shared_clearance_contamination(local, force=True)
+            self.assertEqual(set(forced), {"arm_roll", "wrist_side", "wrist"})
 
     def test_gross_placement_failure_rolls_back_its_clearance_learning(self):
         with tempfile.TemporaryDirectory() as directory:

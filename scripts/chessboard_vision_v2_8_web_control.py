@@ -39,6 +39,19 @@ body{margin:0;background:#101821;color:#eee;font:16px system-ui}header{padding:1
 def build_arm_page() -> str:
     """Add the v2.8 replay/claw option without changing the v2.6 page."""
     page = arm.HTML_PAGE
+    capture_clearance_button = '          <button type="button" onclick="runAction(\'capture-clearance\')">Capture New Clearance</button>'
+    restore_button = capture_clearance_button + "\n" + (
+        '          <button type="button" onclick="runAction(\'restore-clearance-history\')">'
+        'Restore Pre-Placement1 Clearance Data</button>'
+    )
+    if capture_clearance_button not in page:
+        raise RuntimeError("v2.8 arm page injection failed: Capture New Clearance button was not found")
+    page = page.replace(capture_clearance_button, restore_button, 1)
+    action_name = "      'capture-clearance': 'Capture New Clearance',"
+    restore_action_name = action_name + "\n      'restore-clearance-history': 'Restore Pre-Placement1 Clearance Data',"
+    if action_name not in page:
+        raise RuntimeError("v2.8 arm page injection failed: action name map was not found")
+    page = page.replace(action_name, restore_action_name, 1)
     replay_button = '            <button type="button" class="primary" onclick="replayMove()">Replay</button>'
     replay_controls = replay_button + """
             <label class="inline-option" title="Replay 命令结束后调用现有 Claw Close 压力停止流程">
@@ -198,6 +211,11 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
             return arm_handler.send_json(self, payload, status)
 
         def start_action(self, action):
+            if action == 'restore-clearance-history':
+                cmd = [ctrl_cfg.python_bin, '-u', ctrl_cfg.arm_script, 'restore-clearance-history']
+                payload = run_state.start(action, cmd, popen_kwargs={})
+                status = HTTPStatus.OK if payload.get('ok') else HTTPStatus.CONFLICT
+                return self.send_json(payload, status)
             if action != 'claw-home':
                 return arm_handler.start_action(self, action)
             cmd = arm.build_arm_command(ctrl_cfg, action)

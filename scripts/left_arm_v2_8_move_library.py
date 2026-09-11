@@ -160,7 +160,7 @@ def rollback_rejected_placement1_learning(local):
     return rolled_back
 
 
-def recover_placement1_shared_clearance_contamination(local):
+def recover_placement1_shared_clearance_contamination(local, force=False):
     """Restore the shared clearance anchor once, using pre-Placement1 evidence.
 
     The first Placement1 implementation reused the ordinary clearance learner.
@@ -171,7 +171,7 @@ def recover_placement1_shared_clearance_contamination(local):
     if local.anchor_id != PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR:
         return {}
     migrations = local.anchor.setdefault("migrations", {})
-    if migrations.get(PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID):
+    if migrations.get(PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID) and not force:
         return {}
     rules = local.anchor.setdefault("hold_bias", {}).setdefault("clearance", {})
     recovered = {}

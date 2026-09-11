@@ -55,6 +55,7 @@ class IntegrationTests(unittest.TestCase):
                 self.assertIn('id="closeClawAfterReplay"',arm_page)
                 self.assertIn('id="placement1AfterReplay"',arm_page)
                 self.assertIn("await runAction('claw-close', true)",arm_page)
+                self.assertIn("Restore Pre-Placement1 Clearance Data", arm_page)
                 self.assertIn("waitForRunIdle('replay-move:' + name",arm_page)
                 self.assertNotIn("finished.returncode",arm_page)
                 self.assertIn("onclick=\"runAction('home')\">Home Move</button>",arm_page)
