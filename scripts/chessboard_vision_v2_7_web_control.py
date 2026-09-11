@@ -53,13 +53,16 @@ from chessboard_vision_v2_7 import (
 from chess_piece_yolo_dataset import add_labeled_image, init_dataset, parse_placements, write_data_yaml
 from chess_piece_yolo_infer import map_detections_to_squares, run_yolo, save_prediction_image
 from chess_piece_yolo_labels import handle_get as labels_get, handle_post as labels_post, require_reviewed_labels
+from chess_piece_height_samples import height_dataset_dir, height_sample_stats, save_height_sample
+from chess_piece_height_model import analyze_live
+from chess_piece_height_web import HEIGHT_PAGE, handle_height_action
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_CORNERS = "100,428 595,418 520,52 165,58"
 DEFAULT_SQUARES = "all"
 DEFAULT_OUTPUT_DIR = os.path.join(tempfile.gettempdir(), "hive_robot_chessboard_vision_v2_7")
-WEB_VERSION = "v2.7-full-board-crown-projection-v2-grid-boxes"
+WEB_VERSION = "v2.7-metric-height-assisted-yolo"
 DEFAULT_YOLO_DATASET_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "datasets", "chess_pieces_yolo")
 DEFAULT_YOLO_DOCKER_IMAGE = "ultralytics/ultralytics:latest-jetson-jetpack5"
 DEFAULT_WEB_OVERLAY_CONFIG_PATH = os.path.join(SCRIPT_DIR, "data", "chessboard_vision_v2_7_web_overlay_config.json")
@@ -82,19 +85,24 @@ class LiveCameraState:
         self.depth = None
         self.depth_stamp = 0.0
         self.depth_seq = 0
+        self.rgb_metadata = {}
+        self.depth_metadata = {}
+        self.camera_info = {}
 
-    def set_rgb(self, frame) -> None:
+    def set_rgb(self, frame, metadata=None) -> None:
         with self.condition:
             self.rgb = frame.copy()
             self.rgb_stamp = time.time()
             self.rgb_seq += 1
+            self.rgb_metadata = dict(metadata or {})
             self.condition.notify_all()
 
-    def set_depth(self, frame) -> None:
+    def set_depth(self, frame, metadata=None) -> None:
         with self.condition:
             self.depth = frame.copy()
             self.depth_stamp = time.time()
             self.depth_seq += 1
+            self.depth_metadata = dict(metadata or {})
             self.condition.notify_all()
 
     def snapshot(self):
@@ -102,6 +110,20 @@ class LiveCameraState:
             rgb = None if self.rgb is None else self.rgb.copy()
             depth = None if self.depth is None else self.depth.copy()
             return rgb, self.rgb_stamp, self.rgb_seq, depth, self.depth_stamp, self.depth_seq
+
+    def height_snapshot(self):
+        with self.condition:
+            return {'rgb':None if self.rgb is None else self.rgb.copy(),
+                    'captured_at':time.time(),
+                    'depth':None if self.depth is None else self.depth.copy(),
+                    'rgb_received_at':self.rgb_stamp,'depth_received_at':self.depth_stamp,
+                    'rgb_seq':self.rgb_seq,'depth_seq':self.depth_seq,
+                    'rgb_metadata':dict(self.rgb_metadata),'depth_metadata':dict(self.depth_metadata),
+                    'camera_info':dict(self.camera_info)}
+
+    def set_camera_info(self, kind, info):
+        with self.condition:
+            self.camera_info[kind] = dict(info)
 
     def wait_for_newer(self, last_seq: int, timeout_s: float = 1.0):
         deadline = time.time() + timeout_s
@@ -127,6 +149,16 @@ class LiveCameraState:
                 "depth_age_s": None if self.depth is None else round(time.time() - self.depth_stamp, 3),
                 "depth_shape": None if self.depth is None else list(self.depth.shape),
             }
+
+
+def height_capture_tuple(capture):
+    return (capture['rgb'],capture['rgb_received_at'],capture['rgb_seq'],capture['depth'],capture['depth_received_at'],capture['depth_seq'])
+
+
+def height_render_detections(detections, mapped):
+    # Render the same final per-square decisions used by identities/plans.
+    # Raw alternative classes can overlap and hide the selected label.
+    return list(mapped.values())
 
 
 def encode_jpeg(frame, quality: int) -> bytes:
@@ -444,7 +476,10 @@ def yolo_piece_class_identity(square: str, info: dict) -> dict:
         "piece_id": piece_class,
         "piece_type": piece_type,
         "color": color,
-        "identity_method": "trained_yolo_model",
+        "identity_method": info.get("identity_method", "trained_yolo_model"),
+        "height": info.get("height"),
+        "rgb_piece_class": info.get("rgb_piece_class", piece_class),
+        "confidence_semantics": info.get("confidence_semantics", "rgb_model_score"),
         "identity_confidence": float(info.get("confidence", 0.0)),
         "detection_method": "yolo",
         "detection_confidence": float(info.get("confidence", 0.0)),
@@ -459,6 +494,33 @@ def build_yolo_identified_pieces(piece_class_results: dict) -> dict:
         for square, info in sorted(piece_class_results.items())
         if isinstance(info, dict)
     }
+
+
+def merge_yolo_inspection(result: dict, mapped: dict) -> dict:
+    """Fuse same-frame YOLO occupants, including squares missed by geometry."""
+    identities = build_yolo_identified_pieces(mapped)
+    pieces = result.setdefault("piece_results", {})
+    for square, identity in identities.items():
+        previous = pieces.get(square, {})
+        piece = dict(previous)
+        if not previous.get("detected"):
+            piece = {
+                "square": square,
+                "detected": True,
+                "method": "yolo",
+                "confidence": identity["identity_confidence"],
+                "center_px": identity["center_px"],
+                "center_mm": identity["center_mm"],
+                "geometry_detection": dict(previous),
+                "reason": "recovered_by_yolo",
+            }
+        piece.update({key: identity[key] for key in ("piece_id", "piece_type", "color", "identity_method", "identity_confidence")})
+        piece['height']=identity.get('height')
+        piece['confidence_semantics']=identity.get('confidence_semantics','rgb_model_score')
+        pieces[square] = piece
+    result.setdefault("identified_pieces", {}).update(identities)
+    reconcile_yolo_projection_result(result, mapped)
+    return identities
 
 
 def read_text_tail(path: str, max_bytes: int = 12000) -> str:
@@ -955,6 +1017,22 @@ HTML_PAGE = """<!doctype html>
         <pre id="result">Ready.</pre>
       </section>
       <section class="panel">
+        <h3>Height Samples / 棋子高度采样</h3>
+        <p class="hint">先完成三维标定。每次只放一枚棋子并保持静止；保存时自动估高，尺量值可用于验证测量误差。</p>
+        <a href="/height-setup" target="_blank" rel="noopener" style="color:#7dd3fc">高度标定 / 建立高度模型 / 验证报告</a>
+        <label>棋子类别（黑白全部 12 类）<select id="heightClass">__HEIGHT_CLASS_OPTIONS__</select></label>
+        <label>格子<input id="heightSquare" value="d5"></label>
+        <label>尺量高度 mm（可选；每类至少留一次校验）<input id="heightMm" type="number" min="1" max="250" step="0.1" placeholder="自动估高，尺量值用于校验"></label>
+        <label>实物编号（可选，区分同类不同棋子）<input id="heightPieceId" placeholder="例如 white_bishop_1"></label>
+        <label>朝向<select id="heightOrientation"><option value="front">正面</option><option value="back">背面</option><option value="left">左侧</option><option value="right">右侧</option><option value="other">其他</option></select></label>
+        <label>用途<select id="heightSplit"><option value="train">train</option><option value="val">val</option><option value="test">test</option></select></label>
+        <label>备注<input id="heightNotes" placeholder="光照、轻微偏移等"></label>
+        <button id="heightSave" onclick="saveHeightSample()">Save Height Sample / 保存高度样本</button>
+        <button onclick="refreshHeightSamples()">Height Sample Counts / 各类数量</button>
+        <pre id="heightStatus">先完成空棋盘三维标定，再采样并建立高度模型。验证通过的类别会自动参与识别。</pre>
+        <div class="tableWrap"><table><thead><tr><th>类别</th><th>train</th><th>val</th><th>test</th><th>总数</th><th>尺量高度 mm</th></tr></thead><tbody id="heightCounts"></tbody></table></div>
+      </section>
+      <section class="panel">
         <label>YOLO rank-4 labels
           <textarea id="yoloPlacements" placeholder="a4:white_pawn&#10;b4:black_king&#10;c4:white_rook"></textarea>
         </label>
@@ -1000,6 +1078,42 @@ HTML_PAGE = """<!doctype html>
   <script>
     let lastInspectData = null;
     let lastPredictionData = null;
+
+    async function refreshHeightSamples() {
+      try {
+        const response = await fetch('/api/height/status');
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || '读取失败');
+        const body = document.getElementById('heightCounts'); body.replaceChildren();
+        for (const [name, item] of Object.entries(data.classes)) {
+          const row = document.createElement('tr');
+          const range = item.min_height_mm !== null ? item.min_height_mm + '–' + item.max_height_mm : '未填尺量值';
+          for (const value of [name,item.train,item.val,item.test,item.total,range]) {
+            const cell = document.createElement('td'); cell.textContent = value; row.appendChild(cell);
+          }
+          body.appendChild(row);
+        }
+        if (data.errors.length) document.getElementById('heightStatus').textContent = JSON.stringify(data.errors,null,2);
+      } catch (error) { document.getElementById('heightStatus').textContent = error.message; }
+    }
+
+    async function saveHeightSample() {
+      const button = document.getElementById('heightSave'), status = document.getElementById('heightStatus');
+      button.disabled = true; status.textContent = '正在采集 RGB/depth…';
+      try {
+        const response = await fetch('/api/height/capture', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+          piece_class:document.getElementById('heightClass').value,square:document.getElementById('heightSquare').value,
+          measured_height_mm:document.getElementById('heightMm').value,piece_id:document.getElementById('heightPieceId').value,
+          orientation:document.getElementById('heightOrientation').value,split:document.getElementById('heightSplit').value,
+          notes:document.getElementById('heightNotes').value
+        })});
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || '保存失败');
+        status.textContent = '保存成功；新增样本后请重新建立高度模型。' + JSON.stringify(data,null,2);
+        await refreshHeightSamples();
+      } catch (error) { status.textContent = error.message; }
+      finally { button.disabled = false; }
+    }
 
     function showOverlayGrid() {
       if (showPredictionImage(lastPredictionData)) return;
@@ -1231,7 +1345,7 @@ HTML_PAGE = """<!doctype html>
         row.innerHTML =
           '<td>' + square + '</td>' +
           '<td>' + String(info.piece_class || '') + '</td>' +
-          '<td>' + Number(info.confidence || 0).toFixed(2) + '</td>' +
+          '<td>' + (info.identity_method === 'height_assisted_yolo' ? '高度辅助；原 RGB ' : '') + Number(info.confidence || 0).toFixed(2) + '</td>' +
           '<td>' + String(plan.place || plan.reason || '') + '</td>';
         tbody.appendChild(row);
       }
@@ -1287,6 +1401,11 @@ HTML_PAGE = """<!doctype html>
       }
     }
     showInputFrame();
+    refreshHeightSamples();
+    document.getElementById('heightClass').addEventListener('change', () => {
+      document.getElementById('heightMm').value = '';
+      document.getElementById('heightPieceId').value = '';
+    });
     refreshLiveStatus();
     setInterval(refreshLiveStatus, 1000);
   </script>
@@ -1318,6 +1437,8 @@ class VisionState:
         self.yolo_train_process = None
         self.yolo_train_command = []
         self.yolo_lock = threading.Lock()
+        self.height_lock = threading.Lock()
+        self.height_previews = {}
         self.camera = camera
         self.camera_cfg = camera_cfg
         self.overlay_lock = threading.Lock()
@@ -1428,6 +1549,20 @@ def make_handler(state: VisionState):
             self.send_bytes(json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8"), "application/json; charset=utf-8", status)
 
         def do_POST(self) -> None:  # noqa: N802
+            action=urlparse(self.path).path[len('/api/height/'):]
+            if urlparse(self.path).path.startswith('/api/height/') and action in ('preview','calibrate','build','report'):
+                try:
+                    size=int(self.headers.get('Content-Length','0'))
+                    if not 0<size<=16000:raise ValueError('无效请求')
+                    data=json.loads(self.rfile.read(size))
+                    if not isinstance(data,dict):raise ValueError('无效参数')
+                    self.send_json(handle_height_action(state,action,data))
+                except (ValueError,OSError,KeyError,TypeError,np.linalg.LinAlgError) as exc:
+                    self.send_json({'ok':False,'error':str(exc)},HTTPStatus.BAD_REQUEST)
+                return
+            if urlparse(self.path).path == '/api/height/capture':
+                self.capture_height_sample()
+                return
             with state.yolo_lock:
                 if state.yolo_train_process is not None and state.yolo_train_process.poll() is None:
                     self.send_json({"error": "Stop YOLO training before editing labels"}, HTTPStatus.CONFLICT)
@@ -1438,6 +1573,12 @@ def make_handler(state: VisionState):
             if labels_get(self, state.yolo_dataset_dir):
                 return
             parsed = urlparse(self.path)
+            if parsed.path == '/height-setup':
+                self.send_bytes(HEIGHT_PAGE.encode('utf-8'),'text/html; charset=utf-8')
+                return
+            if parsed.path == '/api/height/status':
+                self.send_json(height_sample_stats(height_dataset_dir(state.yolo_dataset_dir)))
+                return
             if parsed.path == "/yolo-prediction.jpg":
                 name = parse_qs(parsed.query).get("name", [""])[0]
                 folder = (Path(state.output_dir) / "yolo_detect").resolve()
@@ -1451,6 +1592,7 @@ def make_handler(state: VisionState):
                 config = state.overlay_config
                 page = (
                     HTML_PAGE
+                    .replace('__HEIGHT_CLASS_OPTIONS__', ''.join('<option value="'+c+'">'+c+'</option>' for c in CHESS_PIECE_YOLO_CLASSES))
                     .replace("__CORNERS__", html.escape(str(config.get("corners", DEFAULT_CORNERS)), quote=True))
                     .replace("__SQUARES__", html.escape(str(config.get("squares", DEFAULT_SQUARES)), quote=True))
                     .replace("__AUTO_LOCATE_CHECKED__", "checked" if config.get("auto_locate", False) else "")
@@ -1513,6 +1655,22 @@ def make_handler(state: VisionState):
                 self.yolo_detect(parsed.query)
                 return
             self.send_json({"ok": False, "error": "not found"}, HTTPStatus.NOT_FOUND)
+
+        def capture_height_sample(self) -> None:
+            try:
+                size = int(self.headers.get('Content-Length','0'))
+                if not 0 < size <= 16000:
+                    raise ValueError('无效采样请求')
+                payload = json.loads(self.rfile.read(size))
+                if not isinstance(payload, dict):
+                    raise ValueError('无效采样参数')
+                capture = state.camera.height_snapshot()
+                with open(state.calibration_path, encoding='utf-8') as file:
+                    calibration = json.load(file)
+                saved = save_height_sample(height_dataset_dir(state.yolo_dataset_dir),capture,payload,calibration)
+                self.send_json(saved)
+            except (OSError, ValueError, TypeError, KeyError) as exc:
+                self.send_json({'ok':False,'error':str(exc)}, HTTPStatus.BAD_REQUEST)
 
         def stream_live_rgb(self) -> None:
             self.send_response(HTTPStatus.OK)
@@ -1613,7 +1771,8 @@ def make_handler(state: VisionState):
                     params.get("yolo_model", [state.overlay_config.get("yolo_model", "")])[0]
                 )
                 corner_image_points = parse_point_list(corners_text)
-                frame, stamp, seq, depth, depth_stamp, depth_seq = state.camera.snapshot()
+                height_capture = state.camera.height_snapshot()
+                frame, stamp, seq, depth, depth_stamp, depth_seq = height_capture_tuple(height_capture)
                 if frame is None:
                     raise RuntimeError("live RGB frame not received yet")
                 extra_text = params.get("square_corners", [""])[0]
@@ -1637,7 +1796,8 @@ def make_handler(state: VisionState):
                         next_frame, next_stamp, next_seq = state.camera.wait_for_newer(last_seq, timeout_s=0.18)
                         if next_frame is None or next_seq == last_seq:
                             break
-                        _rgb, _rgb_stamp, _rgb_seq, next_depth, next_depth_stamp, next_depth_seq = state.camera.snapshot()
+                        height_capture = state.camera.height_snapshot()
+                        next_frame, next_stamp, next_seq, next_depth, next_depth_stamp, next_depth_seq = height_capture_tuple(height_capture)
                         samples.append((next_frame, next_stamp, next_seq, next_depth, next_depth_stamp, next_depth_seq))
                         last_seq = next_seq
                     for sample_frame, _sample_stamp, _sample_seq, sample_depth, _sample_depth_stamp, _sample_depth_seq in samples:
@@ -1689,14 +1849,14 @@ def make_handler(state: VisionState):
                 result["empty_board_baseline_path"] = state.empty_board_baseline_path
                 result["empty_board_depth_baseline_squares"] = sorted(load_empty_board_depth_baselines(state.empty_board_baseline_path).keys())
                 result["empty_board_rgb_baseline_squares"] = sorted(load_empty_board_rgb_baselines(state.empty_board_baseline_path).keys())
-                if run_yolo and result.get("detected_squares"):
+                if run_yolo:
                     if not os.path.exists(yolo_model_path):
                         raise RuntimeError(f"YOLO model not found: {yolo_model_path}")
                     capture_dir = Path(state.output_dir) / "yolo_detect"
                     capture_dir.mkdir(parents=True, exist_ok=True)
                     yolo_image_path = capture_dir / f"whole_board_{time.strftime('%Y%m%d_%H%M%S')}_{seq}_{uuid.uuid4().hex[:6]}.jpg"
                     cv2.imwrite(str(yolo_image_path), yolo_frame)
-                    yolo_squares = list(result.get("detected_squares", []))
+                    yolo_squares = parse_square_list(squares)
                     detections = run_yolo_with_docker_fallback(
                         state,
                         yolo_model_path,
@@ -1705,24 +1865,15 @@ def make_handler(state: VisionState):
                         conf=float(params.get("conf", ["0.25"])[0]),
                     )
                     piece_class_results = map_detections_to_squares(detections, state.calibration_path, yolo_squares)
-                    prediction_path = save_prediction_image(str(yolo_image_path), detections, state.calibration_path)
-                    reconcile_yolo_projection_result(result, piece_class_results)
-                    yolo_identified_pieces = build_yolo_identified_pieces(piece_class_results)
+                    piece_class_results = analyze_live(height_dataset_dir(state.yolo_dataset_dir), height_capture, piece_class_results)
+                    prediction_path = save_prediction_image(str(yolo_image_path), height_render_detections(detections,piece_class_results), state.calibration_path)
+                    yolo_identified_pieces = merge_yolo_inspection(result, piece_class_results)
                     state.set_latest_yolo_identified_pieces(yolo_identified_pieces)
                     placement_plan = assign_opening_targets(piece_class_results)
-                    if yolo_identified_pieces:
-                        result["identified_pieces"].update(yolo_identified_pieces)
-                        for square, identity in yolo_identified_pieces.items():
-                            if square in result.get("piece_results", {}):
-                                result["piece_results"][square].update(
-                                    {
-                                        "piece_id": identity["piece_id"],
-                                        "piece_type": identity["piece_type"],
-                                        "color": identity["color"],
-                                        "identity_method": identity["identity_method"],
-                                        "identity_confidence": identity["identity_confidence"],
-                                    }
-                                )
+                    for action in placement_plan:
+                        info=piece_class_results.get(action['pick'],{})
+                        if info.get('identity_method')=='height_assisted_yolo':
+                            action.update(identity_method=info['identity_method'],rgb_piece_class=info['rgb_piece_class'],confidence_semantics=info['confidence_semantics'])
                     result["yolo_identified_pieces"] = yolo_identified_pieces
                     result["yolo_result"] = {
                         "ok": True,
@@ -2060,7 +2211,8 @@ def make_handler(state: VisionState):
                 corners_text = params.get("corners", [DEFAULT_CORNERS])[0]
                 auto_locate = params.get("auto_locate", ["0"])[0].strip().lower() not in ("0", "false", "no", "off")
                 detect_pieces = True
-                frame, stamp, seq, _depth, _depth_stamp, _depth_seq = state.camera.snapshot()
+                height_capture = state.camera.height_snapshot()
+                frame, stamp, seq, _depth, _depth_stamp, _depth_seq = height_capture_tuple(height_capture)
                 if frame is None:
                     raise RuntimeError("live RGB frame not received yet")
                 extra_text = params.get("square_corners", [""])[0]
@@ -2090,11 +2242,16 @@ def make_handler(state: VisionState):
                     conf=float(params.get("conf", ["0.25"])[0]),
                 )
                 piece_class_results = map_detections_to_squares(detections, state.calibration_path, allowed_squares)
-                prediction_path = save_prediction_image(str(image_path), detections, state.calibration_path)
+                piece_class_results = analyze_live(height_dataset_dir(state.yolo_dataset_dir), height_capture, piece_class_results)
+                prediction_path = save_prediction_image(str(image_path), height_render_detections(detections,piece_class_results), state.calibration_path)
                 yolo_identified_pieces = build_yolo_identified_pieces(piece_class_results)
                 if yolo_identified_pieces:
                     state.set_latest_yolo_identified_pieces(yolo_identified_pieces)
                 placement_plan = assign_opening_targets(piece_class_results, occupied_targets=occupied_targets)
+                for action in placement_plan:
+                    info=piece_class_results.get(action['pick'],{})
+                    if info.get('identity_method')=='height_assisted_yolo':
+                        action.update(identity_method=info['identity_method'],rgb_piece_class=info['rgb_piece_class'],confidence_semantics=info['confidence_semantics'])
                 self.send_json(
                     {
                         "ok": True,
@@ -2140,12 +2297,16 @@ def build_parser() -> argparse.ArgumentParser:
 def start_ros_camera(camera: LiveCameraState, rgb_topic: str, depth_topic: str) -> None:
     try:
         import rospy
-        from sensor_msgs.msg import Image
+        from sensor_msgs.msg import Image, CameraInfo
     except Exception as exc:
         raise RuntimeError(f"ROS camera requested but rospy/sensor_msgs import failed: {exc}") from exc
 
+    def metadata(msg, topic):
+        return {'source_stamp_s':msg.header.stamp.to_sec(),'frame_id':msg.header.frame_id,
+                'encoding':msg.encoding,'topic':topic}
+
     def rgb_cb(msg) -> None:
-        camera.set_rgb(convert_ros_image(msg, desired_encoding="bgr8"))
+        camera.set_rgb(convert_ros_image(msg, desired_encoding="bgr8"), metadata(msg,rgb_topic))
         status = camera.status()
         if status["rgb_seq"] <= 3 or status["rgb_seq"] % 30 == 0:
             print(
@@ -2154,7 +2315,7 @@ def start_ros_camera(camera: LiveCameraState, rgb_topic: str, depth_topic: str) 
             )
 
     def depth_cb(msg) -> None:
-        camera.set_depth(convert_ros_depth_image(msg))
+        camera.set_depth(convert_ros_depth_image(msg), metadata(msg,depth_topic))
         status = camera.status()
         if status["depth_seq"] <= 3 or status["depth_seq"] % 30 == 0:
             print(
@@ -2166,6 +2327,12 @@ def start_ros_camera(camera: LiveCameraState, rgb_topic: str, depth_topic: str) 
         rospy.init_node("chessboard_vision_v2_7_web_control", anonymous=True, disable_signals=True)
     rospy.Subscriber(rgb_topic, Image, rgb_cb, queue_size=1)
     rospy.Subscriber(depth_topic, Image, depth_cb, queue_size=1)
+    def info_cb(msg, kind):
+        camera.set_camera_info(kind, {'frame_id':msg.header.frame_id,'source_stamp_s':msg.header.stamp.to_sec(),
+            'width':msg.width,'height':msg.height,'K':list(msg.K),'D':list(msg.D),'R':list(msg.R),
+            'P':list(msg.P),'distortion_model':msg.distortion_model})
+    rospy.Subscriber(rgb_topic.rsplit('/',1)[0]+'/camera_info', CameraInfo, lambda msg:info_cb(msg,'rgb'), queue_size=1)
+    rospy.Subscriber(depth_topic.rsplit('/',1)[0]+'/camera_info', CameraInfo, lambda msg:info_cb(msg,'depth'), queue_size=1)
 
 
 def main() -> None:

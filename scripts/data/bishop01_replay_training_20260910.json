@@ -1,0 +1,146 @@
+{
+  "schema": 1,
+  "session": "bishop01_replay_training_20260910",
+  "source": "Controller logs supplied by the user on 2026-09-10",
+  "capture": {
+    "name": "bishop01",
+    "captured_at": "2026-09-10 19:20:31",
+    "pose_rad": {
+      "shoulder_front": 0.7444495558738708,
+      "shoulder_side": -2.776188373565674,
+      "shoulder_rotate": 2.7029449939727783,
+      "elbow": 0.3927290737628937,
+      "arm_roll": -2.773899555206299,
+      "wrist_side": 0.1676585078239441,
+      "wrist": -2.6098649501800537
+    }
+  },
+  "nominal_tolerance_deg": 0.5,
+  "encoder_half_count_margin_deg": 0.011,
+  "effective_tolerance_deg": 0.511,
+  "replays": [
+    {
+      "run": 1,
+      "started_at": "2026-09-10 19:28:49",
+      "duration_s": 59.386,
+      "returncode": 1,
+      "stage": "pre_wrist_training",
+      "pre_wrist_blocking_errors_deg": {
+        "shoulder_front": -1.8796953803441891,
+        "arm_roll": -0.5245721886353193
+      }
+    },
+    {
+      "run": 2,
+      "started_at": "2026-09-10 19:31:31",
+      "duration_s": 59.091,
+      "returncode": 1,
+      "stage": "pre_wrist_training",
+      "pre_wrist_blocking_errors_deg": {
+        "shoulder_front": -1.1584171587070875
+      }
+    },
+    {
+      "run": 3,
+      "started_at": "2026-09-10 19:35:31",
+      "duration_s": 59.413,
+      "returncode": 1,
+      "stage": "pre_wrist_training",
+      "pre_wrist_blocking_errors_deg": {
+        "shoulder_front": -0.5027087531021085
+      }
+    },
+    {
+      "run": 4,
+      "started_at": "2026-09-10 19:38:05",
+      "duration_s": 59.131,
+      "returncode": 1,
+      "stage": "encoder_boundary_diagnosis",
+      "pre_wrist_blocking_errors_deg": {
+        "shoulder_front": -0.5027087531021085
+      },
+      "result": "Repeated identical feedback established an encoder-quantization boundary; half-count gate margin added afterward."
+    },
+    {
+      "run": 5,
+      "started_at": "2026-09-10 19:43:16",
+      "duration_s": 72.117,
+      "returncode": 1,
+      "stage": "final_wrist_hold_training",
+      "pre_wrist_passed": true,
+      "final_errors_deg": {
+        "shoulder_front": -0.7431348269811423,
+        "shoulder_side": -0.5901420046674417,
+        "shoulder_rotate": 1.661129326903781,
+        "elbow": 1.70484083004457,
+        "arm_roll": 0.6775547656652648,
+        "wrist_side": 0.7868497452165164,
+        "wrist": 0.04371321068808161
+      }
+    },
+    {
+      "run": 6,
+      "started_at": "2026-09-10 19:46:01",
+      "duration_s": 71.948,
+      "returncode": 1,
+      "stage": "final_wrist_hold_training",
+      "pre_wrist_passed": true,
+      "final_errors_deg": {
+        "shoulder_front": -0.4371389370699861,
+        "shoulder_side": -0.21857971381874805,
+        "shoulder_rotate": 0.8087080581078497,
+        "elbow": 0.08742812892345572,
+        "arm_roll": 0.0655698160321224,
+        "wrist_side": 0.10928473426749652,
+        "wrist": 1.09284392758038
+      }
+    },
+    {
+      "run": 7,
+      "started_at": "2026-09-10 19:51:37",
+      "duration_s": 71.746,
+      "returncode": 0,
+      "stage": "validated",
+      "pre_wrist_passed": true,
+      "final_errors_deg": {
+        "shoulder_front": -0.17485284275232643,
+        "shoulder_side": -0.21857971381874805,
+        "shoulder_rotate": 0.4808589779472377,
+        "elbow": 0.1529979449555781,
+        "arm_roll": -0.13115329244258483,
+        "wrist_side": 0.10928473426749652,
+        "wrist": 0.24042265878444882
+      },
+      "maximum_absolute_error_deg": 0.4808589779472377,
+      "validation_status": "validated"
+    }
+  ],
+  "summary": {
+    "capture_count": 1,
+    "replay_count": 7,
+    "total_replay_duration_s": 452.832,
+    "pre_wrist_max_error_reduction_fraction": 0.7325583930466126,
+    "final_wrist_max_error_reduction_fraction": 0.7179449427342337,
+    "final_status": "validated"
+  },
+  "final_applied_combined_bias_deg_from_run_7": {
+    "target_bias": {
+      "shoulder_front": -3.8216464571454423,
+      "shoulder_side": -0.5376888839174118,
+      "shoulder_rotate": -0.2909621244535814,
+      "elbow": 2.3373739476899615,
+      "arm_roll": 1.030473570160553,
+      "wrist_side": -0.26228310610989775,
+      "wrist": 0.7526020934701854
+    },
+    "wrist_active_hold_bias": {
+      "shoulder_front": -0.26009718944339977,
+      "shoulder_side": -0.20654970163360462,
+      "shoulder_rotate": 0.6830478203377475,
+      "elbow": 1.4106822053306893,
+      "arm_roll": 0.2371441679828427,
+      "wrist_side": 0.27539741082578073
+    }
+  },
+  "runtime_data_note": "The authoritative adaptive JSON files remain on the Orin. Values above are reconstructed from the supplied controller logs and preserve the session outcome."
+}

@@ -1,0 +1,584 @@
+{
+  "schema": 1,
+  "status": "incomplete_not_for_motion",
+  "source": "User measurements and annotated photographs, 2026-09-09",
+  "units": "mm",
+  "observed_chain_order": [
+    "shoulder_front",
+    "shoulder_side",
+    "shoulder_rotate",
+    "elbow",
+    "arm_roll",
+    "wrist_side",
+    "wrist",
+    "claw"
+  ],
+  "reported_distances": [
+    {
+      "from": "shoulder_side",
+      "to": "elbow",
+      "distance_mm": 245,
+      "axis_center_endpoints_confirmed": true,
+      "measurement_uncertainty_mm": null
+    },
+    {
+      "from": "elbow",
+      "to": "wrist",
+      "distance_mm": 290,
+      "axis_center_endpoints_confirmed": true,
+      "measurement_uncertainty_mm": null
+    },
+    {
+      "from": "wrist",
+      "to": "crown_grip_center",
+      "distance_mm": 205,
+      "endpoints_confirmed": true,
+      "claw_endpoint": "center_between_fingers_at_crown_contact",
+      "measurement_uncertainty_mm": null
+    },
+    {
+      "from": "shoulder_front",
+      "to": "shoulder_side",
+      "distance_mm": 100,
+      "measurement_endpoints": "output_rotation_axis_centers",
+      "axis_center_endpoints_confirmed": true,
+      "reference_pose_relation": "shoulder_front is on the robot-own right of shoulder_side",
+      "measurement_uncertainty_mm": null,
+      "direction_viewpoint_confirmed": "robot_own"
+    },
+    {
+      "from": "wrist_side",
+      "to": "wrist",
+      "distance_mm": 95,
+      "measurement_endpoints": "output_rotation_axis_centers",
+      "axis_center_endpoints_confirmed": true,
+      "reference_pose_relation": "wrist is below wrist_side in home pose",
+      "measurement_uncertainty_mm": null
+    },
+    {
+      "from": "elbow",
+      "to": "wrist_side",
+      "distance_mm": 200,
+      "measurement_endpoints": "output_rotation_axis_centers",
+      "axis_center_endpoints_confirmed": true,
+      "measurement_uncertainty_mm": null
+    },
+    {
+      "from": "shoulder_side",
+      "to": "shoulder_rotate",
+      "distance_mm": 50,
+      "measurement_endpoints": "output_rotation_axis_centers",
+      "axis_center_endpoints_confirmed": true,
+      "measurement_uncertainty_mm": null
+    },
+    {
+      "from": "elbow",
+      "to": "arm_roll",
+      "distance_mm": 50,
+      "measurement_endpoints": "output_rotation_axis_centers",
+      "axis_center_endpoints_confirmed": true,
+      "measurement_uncertainty_mm": null
+    },
+    {
+      "from": "shoulder_rotate",
+      "to": "elbow",
+      "distance_mm": 190,
+      "measurement_endpoints": "output_rotation_axis_centers",
+      "axis_center_endpoints_confirmed": true,
+      "measurement_uncertainty_mm": null
+    },
+    {
+      "from": "arm_roll",
+      "to": "wrist_side",
+      "distance_mm": 150,
+      "measurement_endpoints": "output_rotation_axis_centers",
+      "axis_center_endpoints_confirmed": true,
+      "measurement_uncertainty_mm": null
+    }
+  ],
+  "reference_joint_angles_rad": {
+    "shoulder_front": 0.8363851308822632,
+    "shoulder_side": -2.853627920150757,
+    "shoulder_rotate": 2.3554208278656006,
+    "elbow": -1.2956817150115967,
+    "arm_roll": -2.657930850982666,
+    "wrist_side": 0.1668955534696579,
+    "wrist": -2.0780880451202393
+  },
+  "joint_axis_vectors": null,
+  "joint_origin_offsets_mm": null,
+  "motor_zero_offsets_rad": null,
+  "motor_direction_signs": null,
+  "joint_limits_rad": null,
+  "tcp_offset_mm": null,
+  "notes": [
+    "Distances are user-reported measurements, not lengths inferred from photos.",
+    "User confirmed wrist means the labeled wrist joint, not wrist_side; measurements are manual with unknown error.",
+    "205mm is an axis-center-to-grip-center distance; the full TCP offset vector and reference orientation remain unknown.",
+    "The three distances do not yet define the full seven-joint kinematic chain.",
+    "No existing runtime link lengths, calibration or motion settings were replaced."
+  ],
+  "reference_pose": {
+    "name": "home",
+    "source_file": "left_arm_v2_home.json",
+    "source_created_at": "2026-08-06 17:30:46",
+    "source_note": "new v2 home after left arm rebuild",
+    "photo_pose_matches_home": "user_confirmed",
+    "geometric_joint_angles_at_reference": "not_yet_defined"
+  },
+  "wrist_triangle_check": {
+    "elbow_to_wrist_mm": 290,
+    "elbow_to_wrist_side_mm": 200,
+    "wrist_side_to_wrist_mm": 95,
+    "sum_minus_direct_mm": 5,
+    "interpretation": "Manual measurement error or non-collinearity; do not infer exact axis offset or joint angle from these distances alone."
+  },
+  "segment_consistency_checks": [
+    {
+      "chain": [
+        "shoulder_side",
+        "shoulder_rotate",
+        "elbow"
+      ],
+      "segment_sum_mm": 240,
+      "reported_direct_mm": 245,
+      "note": "Sum is 5mm shorter than reported direct distance; measurements cannot all be exact Euclidean distances. Keep raw values, verify later."
+    },
+    {
+      "chain": [
+        "elbow",
+        "arm_roll",
+        "wrist_side"
+      ],
+      "segment_sum_mm": 200,
+      "reported_direct_mm": 200,
+      "note": "Consistent within reported precision; exact collinearity not established."
+    },
+    {
+      "chain": [
+        "elbow",
+        "wrist_side",
+        "wrist"
+      ],
+      "segment_sum_mm": 295,
+      "reported_direct_mm": 290,
+      "note": "May reflect non-collinearity or manual measurement error."
+    }
+  ],
+  "measurement_review": {
+    "upper_arm_5mm_discrepancy": "User considers this likely manual measurement error; raw values retained pending geometric fit/check.",
+    "next_stage": "verify_joint_axis_and_positive_direction"
+  },
+  "coordinate_convention_proposed": {
+    "x": "robot forward",
+    "y": "robot own left",
+    "z": "up",
+    "handedness": "right-handed",
+    "origin": "shoulder_front output axis reference center"
+  },
+  "positive_direction_checks": {
+    "shoulder_front": {
+      "verified": true,
+      "observation": "User observed arm moving toward robot rear for +2 degree motor command near home",
+      "command_delta_deg": 2,
+      "start_rad": 0.8245593905448914,
+      "target_rad": 0.859465975584778,
+      "final_rad": 0.8630884289741516,
+      "actual_delta_deg": 2.207551290693971,
+      "returncode": 0,
+      "source_log": "d17990cc-f4aa-445c-93ed-0b2fce1fb695/pasted-text.txt",
+      "scope": "qualitative positive motor direction only; exact axis vector not established",
+      "hold_drift_max_abs_deg": 4.655532070361561,
+      "hold_drift_joint": "wrist",
+      "adaptive_hold_parameters_updated_by_legacy_command": true
+    },
+    "shoulder_side": {
+      "verified": true,
+      "observation": "User observed upper arm moving away from robot torso for positive motor command near home",
+      "command_delta_deg": 2,
+      "start_rad": -2.8322651386260986,
+      "target_rad": -2.797358553586212,
+      "final_rad": -2.8116655349731445,
+      "actual_delta_deg": 1.1802703489565434,
+      "final_minus_target_deg": -0.8197296510434594,
+      "returncode": 0,
+      "started_at": "2026-09-09 16:37:06",
+      "scope": "qualitative positive motor direction only; exact axis vector not established",
+      "hold_drift_max_abs_deg": 4.174679922603493,
+      "hold_drift_joint": "wrist",
+      "adaptive_hold_parameters_updated_by_legacy_command": true
+    },
+    "shoulder_rotate": {
+      "verified": true,
+      "observation": "User observed clockwise rotation for positive motor command near home",
+      "viewing_direction": "from shoulder along upper arm toward elbow, as specified in test instructions",
+      "command_delta_deg": 2,
+      "start_rad": 2.3485541343688965,
+      "target_rad": 2.383460719408783,
+      "final_rad": 2.376401901245117,
+      "actual_delta_deg": 1.5955595108716587,
+      "final_minus_target_deg": -0.4044404891283441,
+      "returncode": 0,
+      "started_at": "2026-09-09 20:28:50",
+      "scope": "qualitative positive motor direction only; exact axis vector not established",
+      "hold_drift_max_abs_deg": 3.5845379179360517,
+      "hold_drift_joint": "wrist",
+      "adaptive_hold_parameters_updated_by_legacy_command": true
+    },
+    "elbow": {
+      "verified": true,
+      "observation": "User observed forearm swinging toward robot front for positive motor command near home",
+      "command_delta_deg": 2,
+      "start_rad": -1.27775239944458,
+      "target_rad": -1.2428458144046934,
+      "final_rad": -1.2464714050292969,
+      "actual_delta_deg": 1.7922689589680258,
+      "final_minus_target_deg": -0.20773104103197693,
+      "returncode": 0,
+      "started_at": "2026-09-09 16:40:52",
+      "scope": "qualitative positive motor direction only; exact axis vector not established",
+      "hold_drift_max_abs_deg": 4.196536527947535,
+      "hold_drift_joint": "wrist",
+      "adaptive_hold_parameters_updated_by_legacy_command": true
+    },
+    "arm_roll": {
+      "verified": true,
+      "observation": "User observed clockwise viewed from elbow toward wrist after documented Home",
+      "command_delta_deg": 2,
+      "start_rad": -2.668612241744995,
+      "target_rad": -2.6337056567051085,
+      "final_rad": -2.6789119243621826,
+      "actual_delta_deg": -0.5901283442891017,
+      "final_minus_target_deg": -2.5901283442891043,
+      "returncode": 0,
+      "started_at": "2026-09-09 20:35:21",
+      "active_tau": -0.4244,
+      "kp": 12,
+      "kd": 7,
+      "source_log": "2978a6e4-c2fc-4bcb-a946-cecbc627748c/pasted-text.txt",
+      "home_log": "25cd7506-8584-4a71-8c0d-b0dd1d7f5389/pasted-text.txt",
+      "reason": "User confirmed the physical positive direction was clockwise; the negative net encoder displacement in the small-step trials was attributed to positioning precision and load response, so exact axis calibration remains pending.",
+      "user_direction_confirmation": "2026-09-09: clockwise direction confirmed; precision remained insufficient for an exact axis-vector fit.",
+      "previous_trial": {
+        "verified": false,
+        "observation": "User observed clockwise rotation viewed from elbow toward wrist",
+        "viewing_direction": "from elbow along forearm toward wrist",
+        "command_delta_deg": 2,
+        "start_rad": -2.5671396255493164,
+        "target_rad": -2.5322330405094298,
+        "final_rad": -2.5785839557647705,
+        "actual_delta_deg": -0.6557118206995641,
+        "final_minus_target_deg": -2.655711820699567,
+        "returncode": 0,
+        "started_at": "2026-09-09 20:33:12",
+        "source_log": "800ef4d0-fae1-488e-b000-f6ede9f3aafe/pasted-text.txt",
+        "reason": "Net encoder displacement is negative despite positive target; visual observation cannot establish positive motor direction. Transient trajectory was not recorded.",
+        "start_minus_saved_home_deg": {
+          "shoulder_front": 0.37156912103786366,
+          "shoulder_side": 1.223997220022965,
+          "shoulder_rotate": -4.61181202948431,
+          "elbow": 9.311057310533952,
+          "arm_roll": 5.201954034151751,
+          "wrist_side": -1.7922689589680258,
+          "wrist": 9.026914610872252
+        },
+        "active_tau": -0.418,
+        "hold_drift_max_abs_deg": 2.229407896038012,
+        "hold_drift_joint": "elbow",
+        "adaptive_hold_parameters_updated_by_legacy_command": true
+      }
+    },
+    "wrist_side": {
+      "verified": true,
+      "observation": "User observed gripper swinging toward robot-own left relative to forearm for positive motor command near home",
+      "command_delta_deg": 2,
+      "start_rad": 0.16956588625907898,
+      "target_rad": 0.20447247129896556,
+      "final_rad": 0.19283588230609894,
+      "actual_delta_deg": 1.3332725627803528,
+      "final_minus_target_deg": -0.6667274372196469,
+      "returncode": 0,
+      "started_at": "2026-09-09 20:24:45",
+      "source_log": "3d984646-853f-46a5-8f5d-979b03e00740/pasted-text.txt",
+      "scope": "qualitative positive motor direction only; exact axis vector not established",
+      "hold_drift_max_abs_deg": 2.5135369353213726,
+      "hold_drift_joint": "shoulder_rotate",
+      "arm_roll_applied_hold_bias_deg": 1.95,
+      "adaptive_hold_parameters_updated_by_legacy_command": true
+    },
+    "wrist": {
+      "verified": true,
+      "observation": "User observed gripper swinging toward robot front relative to forearm for positive motor command near home",
+      "command_delta_deg": 2,
+      "start_rad": -2.0719845294952393,
+      "target_rad": -2.0370779444553526,
+      "final_rad": -2.025444507598877,
+      "actual_delta_deg": 2.666546833107998,
+      "final_minus_target_deg": 0.6665468331079952,
+      "returncode": 0,
+      "started_at": "2026-09-09 16:43:07",
+      "scope": "qualitative positive motor direction only; exact axis vector not established",
+      "hold_drift_max_abs_deg": 1.5081330894954954,
+      "hold_drift_joint": "elbow",
+      "arm_roll_applied_hold_bias_deg": 2.196597325448421,
+      "arm_roll_applied_target_error_deg": 2.415163378888829,
+      "adaptive_hold_parameters_updated_by_legacy_command": true
+    }
+  },
+  "next_calibration_stage": {
+    "stage": "board_position_measurement",
+    "arm_reference_origin": "shoulder_front output axis reference center",
+    "axes": {
+      "x": "robot forward",
+      "y": "robot own left",
+      "z": "up"
+    },
+    "first_point": {
+      "square": "d4",
+      "board_xyz_mm": [
+        192.5,
+        192.5,
+        0
+      ],
+      "arm_xyz_mm": [
+        440,
+        -60,
+        -420
+      ],
+      "location": "center of d4 on the board playing surface, not piece crown",
+      "measurement_source": "User corrected forward distance to 44cm; robot-own right 6cm and down 42cm retained",
+      "measurement_uncertainty_mm": null
+    },
+    "measurement_method": "three signed orthogonal components; do not use diagonal tape distance",
+    "validation_required": "additional separated board points required before fitting or validating a board-to-arm transform",
+    "motion_requested": false
+  },
+  "board_correspondence_measurements": [
+    {
+      "square": "d4",
+      "board_mm": [
+        192.5,
+        192.5,
+        0
+      ],
+      "arm_mm": [
+        440,
+        -60,
+        -420
+      ],
+      "split": "train",
+      "source": "manual measurement, 2026-09-09",
+      "measurement_uncertainty_mm": null,
+      "revisions": [
+        {
+          "previous_arm_mm": [
+            425,
+            -60,
+            -420
+          ],
+          "reason": "User rechecked forward distance: 44cm"
+        }
+      ]
+    },
+    {
+      "square": "a1",
+      "board_mm": [
+        27.5,
+        27.5,
+        0
+      ],
+      "arm_mm": [
+        275,
+        110,
+        -420
+      ],
+      "split": "train",
+      "source": "user manual measurement, 2026-09-09",
+      "measurement_uncertainty_mm": null,
+      "revisions": [
+        {
+          "previous_arm_mm": [
+            300,
+            110,
+            -420
+          ],
+          "reason": "User rechecked forward distance: 27.5cm, same as d1"
+        }
+      ]
+    },
+    {
+      "square": "h1",
+      "board_mm": [
+        412.5,
+        27.5,
+        0
+      ],
+      "arm_mm": [
+        275,
+        -270,
+        -420
+      ],
+      "split": "train",
+      "source": "user manual measurement, 2026-09-09",
+      "measurement_uncertainty_mm": null,
+      "revisions": [
+        {
+          "previous_arm_mm": [
+            300,
+            -270,
+            -420
+          ],
+          "reason": "User rechecked forward distance: 27.5cm, same as d1"
+        }
+      ]
+    },
+    {
+      "square": "a8",
+      "board_mm": [
+        27.5,
+        412.5,
+        0
+      ],
+      "arm_mm": [
+        650,
+        110,
+        -420
+      ],
+      "split": "check",
+      "source": "user manual measurement, 2026-09-09",
+      "measurement_uncertainty_mm": null
+    },
+    {
+      "square": "h8",
+      "board_mm": [
+        412.5,
+        412.5,
+        0
+      ],
+      "arm_mm": [
+        650,
+        -270,
+        -420
+      ],
+      "split": "check",
+      "source": "user manual measurement, 2026-09-09",
+      "measurement_uncertainty_mm": null
+    }
+  ],
+  "board_measurement_consistency": {
+    "a1_h1_measured_mm": 380,
+    "a1_h1_expected_mm": 385,
+    "a1_d4_rank_forward_measured_mm": 165,
+    "a1_d4_rank_expected_mm": 165,
+    "rank_discrepancy_mm": 0,
+    "provisional_fit_residuals_mm": {
+      "d4": 4.012510459278468,
+      "a1": 1.722598251196174,
+      "h1": 4.848460109077712
+    },
+    "status": "fails_current_3mm_validation_manual_estimate_only",
+    "note": "Fit uses d4,a1,h1 only; a8,h8 are held-out. Manual measurements do not pass 3mm validation. No runtime transform enabled; retain scale and raw values.",
+    "d1_d4_forward_difference_mm": 165,
+    "d1_vs_a1_h1_forward_discrepancy_mm": 0,
+    "independent_check_residuals_mm": {
+      "a8": 12.011414513051578,
+      "h8": 11.409018473926356
+    },
+    "a1_a8_measured_mm": 375,
+    "a1_a8_expected_mm": 385
+  },
+  "d1_measurement": {
+    "board_mm": [
+      192.5,
+      27.5,
+      0
+    ],
+    "arm_x_mm": 275,
+    "arm_y_mm": null,
+    "arm_z_mm": null,
+    "source": "User remeasured shoulder_front reference to d1 forward horizontal distance as 27.5cm",
+    "previous_arm_x_mm": 330,
+    "status": "partial_measurement_not_fit_input"
+  },
+  "direct_board_measurements": [
+    {
+      "from_square": "d1",
+      "to_square": "d4",
+      "measured_center_distance_mm": 160,
+      "configured_center_distance_mm": 165,
+      "source": "User measured directly on board"
+    }
+  ],
+  "provisional_board_to_arm": {
+    "rotation": [
+      [
+        -0.008999635522141926,
+        0.9999595024602088,
+        0.0
+      ],
+      [
+        -0.9999595024602089,
+        -0.008999635522141546,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.9999999999999999
+      ]
+    ],
+    "translation_mm": [
+      249.40076420295105,
+      138.23393169927073,
+      -420.0
+    ],
+    "fit_squares": [
+      "d4",
+      "a1",
+      "h1"
+    ],
+    "residuals_mm": {
+      "d4": 4.012510459278468,
+      "a1": 1.722598251196178,
+      "h1": 4.848460109077712,
+      "a8": 12.011414513051578,
+      "h8": 11.409018473926356
+    },
+    "validated": false,
+    "executable": false
+  },
+  "crown_grasp_measurements": {
+    "white_bishop": {
+      "piece_class": "white_bishop",
+      "source_square": "d4",
+      "piece_height_mm": 60,
+      "piece_height_source": "previous user ruler label",
+      "grip_height_mm": 55,
+      "grip_height_reference": "vertical distance from board playing surface to center of actual two-finger crown contact region",
+      "grip_height_source": "user measurement at d4",
+      "grip_section_width_mm": 14,
+      "orientation": null,
+      "validated": false,
+      "executable": false,
+      "closure_strategy": "contact_stop_then_hold",
+      "width_usage": "geometry clearance and pre-opening only, not fixed closure endpoint"
+    }
+  },
+  "gripper_measurements": {
+    "finger_thicknesses_mm": [
+      13,
+      10
+    ],
+    "finger_identity_mapping": null,
+    "thickness_axis_confirmed": false,
+    "source": "user: individual finger thicknesses 13mm and 10mm",
+    "max_open_width_mm": null,
+    "closure_control": {
+      "requested": "stop closing on contact, then maintain grip",
+      "existing_implementation": "LeftArmV2.claw_close_until_pressure",
+      "contact_evidence": "motor torque threshold or low velocity plus tracking error and torque, consecutive confirmations",
+      "dedicated_pressure_sensor_verified": false,
+      "automatic_transfer_integration": "pending; must check contact result and maintain grip through arm movement"
+    }
+  }
+}

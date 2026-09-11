@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "type": "geometry_teaching_evidence",
+  "name": "bishop01",
+  "created_at": "2026-09-10 19:20:31",
+  "source": "User supplied overwritten bishop01 v2.6 capture move output",
+  "joint_units": "radians",
+  "pose": {
+    "shoulder_front": 0.7444495558738708,
+    "shoulder_side": -2.776188373565674,
+    "shoulder_rotate": 2.7029449939727783,
+    "elbow": 0.3927290737628937,
+    "arm_roll": -2.773899555206299,
+    "wrist_side": 0.1676585078239441,
+    "wrist": -2.6098649501800537
+  },
+  "intended_context": {
+    "piece_class": "white_bishop",
+    "square": "d4",
+    "grip_height_mm": 55,
+    "grip_section_width_mm": 14,
+    "tcp_reference": "center between fingers at crown contact",
+    "confirmation_status": "user_confirmed_actual_alignment_at_capture",
+    "confirmed_on": "2026-09-10"
+  },
+  "board_tcp_correspondence": {
+    "position_mm": [192.5, 192.5, 55],
+    "frame": "board_a1_outer_corner_x_toward_h1_y_toward_a8_z_up",
+    "source": "User confirmed d4 crown alignment; XY uses nominal 55mm square centers and Z uses user measured grip height",
+    "uncertainty_mm": null
+  },
+  "measured_tcp_position_mm": null,
+  "measured_tcp_orientation": null,
+  "contact_confirmed": null,
+  "validated": false,
+  "executable": false,
+  "note": "The previous bishop01 joint pose was replaced by the user capture from 2026-09-10 19:20:31. The D4 crown correspondence and measured grip geometry are retained. One joint-to-board point correspondence does not calibrate kinematics or establish gripper orientation/contact. This evidence file does not modify saved moves, home, or runtime geometry."
+}

@@ -90,6 +90,7 @@ roslaunch ascamera hp60c.launch
 cd /home/nvidia/hive_robot/DM_Control_Python
 source ~/.bashrc
 python3 chessboard_vision_v2_7_web_control.py --port 8097
+python3 chessboard_vision_v2_8_web_control.py --enable-execute
 ```
 
 终端启动成功后会打印：

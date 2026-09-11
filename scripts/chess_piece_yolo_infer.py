@@ -69,6 +69,11 @@ def save_prediction_image(image_path: str, detections: list[dict], calibration_p
         color = (0, 255, 0)
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
         label = f"{detection['piece_class']} {detection['confidence']:.1%}"
+        observation=detection.get('height') or {}
+        if observation.get('ok'):
+            label += f" H={observation['estimated_height_mm']:.0f}mm"
+        if detection.get('identity_method')=='height_assisted_yolo':
+            label=f"{detection['piece_class']} H={observation['estimated_height_mm']:.0f}mm [RGB:{detection['rgb_piece_class']} {detection['rgb_confidence']:.0%}]"
         (tw, th), baseline = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, .45, 1)
         tx = max(0, min(int(x1), width - tw - 4))
         ty = int(y1) - 6 if y1 >= th + 8 else min(height - baseline - 1, int(y1) + th + 5)
@@ -131,8 +136,8 @@ def main() -> None:
     allowed_squares = parse_square_list(args.squares)
     occupied_targets = [] if not args.occupied_targets.strip() else parse_square_list(args.occupied_targets)
     detections = run_yolo(args.model, args.image, args.imgsz, args.conf)
-    prediction_path = save_prediction_image(args.image, detections, args.calibration)
     piece_class_results = map_detections_to_squares(detections, args.calibration, allowed_squares)
+    prediction_path = save_prediction_image(args.image, list(piece_class_results.values()), args.calibration)
     payload = {
         "ok": True,
         "model": args.model,

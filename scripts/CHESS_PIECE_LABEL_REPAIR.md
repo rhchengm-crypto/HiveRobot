@@ -1,5 +1,11 @@
 # 完整棋子标注修复
 
+2026-09-07：版本 `v2.7-grid-boxes-yolo-occupancy-fusion` 移除 Inspect 中
+“深度先检出才运行 YOLO”的前置条件。运行 YOLO 时对所选全部格子映射检测，
+成功识别的棋子可补回深度漏检，原深度结果保存在 `geometry_detection`。
+同步 `chessboard_vision_v2_7_web_control.py` 后重启生效，无需重新训练。
+仍保留无 YOLO 身份的深度候选及高棋子投影核对逻辑。
+
 最终显示版本为 `v2.7-full-board-crown-projection-v2-grid-boxes`。
 Inspect Square（勾选 Detect pieces）、Detect Whole Board 和 YOLO Detect Table
 在同次静态识别图上同时绘制黄色网格、绿色预测框、类别和置信度。
