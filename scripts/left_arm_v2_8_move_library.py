@@ -21,6 +21,7 @@ from typing import Dict, Iterable, Optional
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
+PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
     "shoulder_front", "shoulder_side", "shoulder_rotate", "elbow",
     "arm_roll", "wrist_side", "wrist",
@@ -46,7 +47,16 @@ HOLD_BIAS_MAX_STEP_DEG = 0.40
 HOLD_BIAS_MIN_STEP_SCALE = 0.25
 HOLD_BIAS_LIMIT_DEG = 3.0
 PLACEMENT1_MOVE_NAME = "bishop01"
-PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 10.0
+PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 5.0
+PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID = "remove-placement1-shared-clearance-20260911-v1"
+PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR = "8b20a284d5592a0c"
+# Values printed immediately before the first Placement1 run.  Placement1
+# subsequently wrote arm_roll, wrist_side and wrist into this shared anchor.
+PLACEMENT1_PRECONTAMINATION_CLEARANCE_BIASES_DEG = {
+    "arm_roll": 0.3671909697798855,
+    "wrist_side": 0.6578945784035709,
+    "wrist": -0.820746824571414,
+}
 
 
 def command_holds(arm, targets, gains, hold_tau, fallback_kp=3.0, fallback_kd=0.3):
@@ -150,6 +160,57 @@ def rollback_rejected_placement1_learning(local):
     return rolled_back
 
 
+def recover_placement1_shared_clearance_contamination(local):
+    """Restore the shared clearance anchor once, using pre-Placement1 evidence.
+
+    The first Placement1 implementation reused the ordinary clearance learner.
+    Its failed payload carry therefore changed three values that were already
+    trained.  The exact pre-run values are available in the 14:48 execution
+    log; bind the repair to that pose hash so no other clearance is touched.
+    """
+    if local.anchor_id != PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR:
+        return {}
+    migrations = local.anchor.setdefault("migrations", {})
+    if migrations.get(PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID):
+        return {}
+    rules = local.anchor.setdefault("hold_bias", {}).setdefault("clearance", {})
+    recovered = {}
+    for joint, restored in PLACEMENT1_PRECONTAMINATION_CLEARANCE_BIASES_DEG.items():
+        previous = rules.get(joint, {})
+        contaminated = (
+            float(previous.get("bias_deg", 0.0))
+            if isinstance(previous, dict) else float(previous)
+        )
+        rules[joint] = {
+            "bias_deg": restored,
+            "previous_bias_deg": contaminated,
+            "delta_bias_deg": restored - contaminated,
+            "last_error_deg": 0.0,
+            "step_scale": 1.0,
+            "learning_state": "restored_pre_placement1",
+            "samples": int(previous.get("samples", 0)) if isinstance(previous, dict) else 0,
+            "updated_at": _now(),
+            "label": "placement1-shared-clearance-recovery",
+        }
+        recovered[joint] = {
+            "contaminated_bias_deg": contaminated,
+            "restored_bias_deg": restored,
+        }
+    migrations[PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID] = {
+        "applied_at": _now(),
+        "source": "pre-Placement1 execution log 2026-09-11 14:48",
+        "recovered": recovered,
+    }
+    local.anchor["updated_at"] = _now()
+    local._save()
+    print(
+        "v2.8 shared clearance Placement1 contamination recovery=",
+        json.dumps(recovered, ensure_ascii=False),
+        flush=True,
+    )
+    return recovered
+
+
 def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback_kd: float,
                           carry_hold=None):
     """Carry the gripped bishop to learned clearance without releasing holds."""
@@ -159,15 +220,33 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
     nominal = api.load_pose(clearance_file)
     selected = [name for name in api.DEFAULT_CLEARANCE_ORDER if name in nominal]
     validation_joints = clearance_validation_joints(api, selected)
-    local = LocalTargetBias(CLEARANCE_BIAS_PATH, nominal, "clearance:" + Path(clearance_file).name)
-    rollback_rejected_placement1_learning(local)
+    shared = LocalTargetBias(
+        CLEARANCE_BIAS_PATH,
+        nominal,
+        "clearance:" + Path(clearance_file).name,
+    )
+    rollback_rejected_placement1_learning(shared)
+    recover_placement1_shared_clearance_contamination(shared)
+    local = LocalTargetBias(
+        PLACEMENT1_CLEARANCE_BIAS_PATH,
+        nominal,
+        "placement1-clearance:" + Path(clearance_file).name,
+    )
     biased = dict(nominal)
     applied_bias_deg = {}
+    shared_bias_deg = {}
+    placement_bias_deg = {}
     for name in validation_joints:
-        offset = local.hold_bias_rad("clearance", name)
+        shared_offset = shared.hold_bias_rad("clearance", name)
+        placement_offset = local.hold_bias_rad("clearance", name)
+        offset = shared_offset + placement_offset
         if offset:
             biased[name] += offset
             applied_bias_deg[name] = math.degrees(offset)
+        if shared_offset:
+            shared_bias_deg[name] = math.degrees(shared_offset)
+        if placement_offset:
+            placement_bias_deg[name] = math.degrees(placement_offset)
 
     arm_targets = arm.positions(api.DEFAULT_JOINTS)
     print("v2.8 placement1 seamless takeover=", json.dumps({
@@ -175,6 +254,9 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         "arm_hold_targets_rad": arm_targets,
         "clearance_file": os.path.abspath(clearance_file),
         "applied_bias_deg": applied_bias_deg,
+        "shared_clearance_bias_deg_read_only": shared_bias_deg,
+        "placement1_bias_deg": placement_bias_deg,
+        "placement1_bias_file": str(PLACEMENT1_CLEARANCE_BIAS_PATH),
     }, ensure_ascii=False), flush=True)
     carry_hold = carry_hold or {}
     carry_gains = carry_hold.get("hold_gains", {})
@@ -308,17 +390,19 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
     )
     final_positions = arm.positions(validation_joints)
     errors = clearance_errors_deg(nominal, final_positions, validation_joints)
-    validation = local.record_move_validation(errors)
-    print("v2.8 placement1 clearance verification=", json.dumps(validation, ensure_ascii=False), flush=True)
     gross_errors = {
         name: value for name, value in errors.items()
         if abs(value) > PLACEMENT1_MAX_LEARNABLE_ERROR_DEG
     }
     if gross_errors:
+        validation = local.record_move_validation(errors)
+        print("v2.8 placement1 clearance verification=", json.dumps(validation, ensure_ascii=False), flush=True)
         raise RuntimeError(
-            "v2.8 placement1 motion failure: gross clearance errors were not learned: "
+            "v2.8 placement1 motion failure: gross clearance errors were recorded but not learned: "
             + json.dumps(gross_errors, ensure_ascii=False)
         )
+    validation = local.record_move_validation(errors)
+    print("v2.8 placement1 clearance verification=", json.dumps(validation, ensure_ascii=False), flush=True)
     updates = local.update_hold_bias("clearance", errors, label="placement1-clearance-final")
     if updates:
         print("v2.8 placement1 clearance learning update=", json.dumps(updates, ensure_ascii=False), flush=True)

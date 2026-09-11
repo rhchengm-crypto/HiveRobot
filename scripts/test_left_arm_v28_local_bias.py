@@ -11,11 +11,14 @@ from left_arm_v2_8_move_library import (
     LocalTargetBias,
     JOINTS,
     PLACEMENT1_MOVE_NAME,
+    PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR,
+    PLACEMENT1_PRECONTAMINATION_CLEARANCE_BIASES_DEG,
     blocking_joint_errors,
     build_parser,
     close_claw_while_holding_arm,
     final_blocking_joint_errors,
     pose_distance_deg,
+    recover_placement1_shared_clearance_contamination,
     verify_pre_wrist_or_learn,
     run_placement1_on_arm,
     rollback_rejected_placement1_learning,
@@ -56,6 +59,7 @@ class LocalBiasTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             clearance_path = root / "clearance.json"
+            shared_bias_path = root / "shared-bias.json"
             bias_path = root / "placement-bias.json"
             clearance = {joint: 0.1 for joint in JOINTS}
             clearance_path.write_text(json.dumps({"joints": clearance}), encoding="utf-8")
@@ -85,7 +89,9 @@ class LocalBiasTests(unittest.TestCase):
                 CLEARANCE_WRIST_FINE_DEADBAND_DEG=0.5,
             )
             with patch.dict(sys.modules, {"left_arm_v2_6": api}), patch(
-                "left_arm_v2_8.CLEARANCE_BIAS_PATH", bias_path
+                "left_arm_v2_8_move_library.PLACEMENT1_CLEARANCE_BIAS_PATH", bias_path
+            ), patch(
+                "left_arm_v2_8.CLEARANCE_BIAS_PATH", shared_bias_path
             ), patch(
                 "left_arm_v2_8_move_library.close_claw_while_holding_arm", return_value=1.25
             ):
@@ -93,6 +99,32 @@ class LocalBiasTests(unittest.TestCase):
             self.assertEqual(arm.hold_targets["claw"], 1.25)
             self.assertIn("shoulder_rotate", arm.hold_targets)
             self.assertIn("claw", arm.enabled)
+            self.assertTrue(bias_path.exists())
+            shared = LocalTargetBias(shared_bias_path, clearance, "clearance:" + clearance_path.name)
+            self.assertEqual(shared.anchor.get("hold_bias", {}).get("clearance", {}), {})
+
+    def test_recovers_known_shared_clearance_contamination_once(self):
+        target = {
+            "shoulder_front": 1.9357976913452148,
+            "shoulder_side": -2.7143893241882324,
+            "elbow": 0.8165484070777893,
+            "shoulder_rotate": 1.9323643445968628,
+            "arm_roll": -2.649538516998291,
+            "wrist_side": 0.3057526648044586,
+            "wrist": -1.0313191413879395,
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(Path(directory) / "bias.json", target, "clearance:test")
+            self.assertEqual(local.anchor_id, PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR)
+            rules = local.anchor.setdefault("hold_bias", {}).setdefault("clearance", {})
+            for joint, value in {"arm_roll": 0.28, "wrist_side": 1.25, "wrist": -0.66}.items():
+                rules[joint] = {"bias_deg": value, "samples": 8, "last_error_deg": 1.5}
+            local._save()
+            recovered = recover_placement1_shared_clearance_contamination(local)
+            self.assertEqual(set(recovered), {"arm_roll", "wrist_side", "wrist"})
+            for joint, expected in PLACEMENT1_PRECONTAMINATION_CLEARANCE_BIASES_DEG.items():
+                self.assertAlmostEqual(math.degrees(local.hold_bias_rad("clearance", joint)), expected)
+            self.assertEqual(recover_placement1_shared_clearance_contamination(local), {})
 
     def test_gross_placement_failure_rolls_back_its_clearance_learning(self):
         with tempfile.TemporaryDirectory() as directory:

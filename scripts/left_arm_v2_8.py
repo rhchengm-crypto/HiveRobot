@@ -79,6 +79,7 @@ def run_trained_clearance(original: List[str], legacy) -> None:
     from left_arm_v2_8_move_library import (
         LocalTargetBias,
         final_blocking_joint_errors,
+        recover_placement1_shared_clearance_contamination,
         rollback_rejected_placement1_learning,
     )
 
@@ -99,6 +100,7 @@ def run_trained_clearance(original: List[str], legacy) -> None:
     # A failed payload carry must not poison the shared clearance target used
     # by the next pre-replay clearance command.
     rollback_rejected_placement1_learning(local)
+    recover_placement1_shared_clearance_contamination(local)
     biased = dict(nominal)
     applied_bias_deg = {}
     for name in validation_joints:
