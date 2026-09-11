@@ -13,10 +13,12 @@ from left_arm_v2_8_move_library import (
     PLACEMENT1_MOVE_NAME,
     blocking_joint_errors,
     build_parser,
+    close_claw_while_holding_arm,
     final_blocking_joint_errors,
     pose_distance_deg,
     verify_pre_wrist_or_learn,
     run_placement1_on_arm,
+    rollback_rejected_placement1_learning,
 )
 
 
@@ -80,6 +82,7 @@ class LocalBiasTests(unittest.TestCase):
                 COUPLED_CLEARANCE_TRAJECTORY="smoothstep",
                 COUPLED_CLEARANCE_LINEAR_BLEND=0.0,
                 COUPLED_CLEARANCE_SETTLE_SECONDS=0.1,
+                CLEARANCE_WRIST_FINE_DEADBAND_DEG=0.5,
             )
             with patch.dict(sys.modules, {"left_arm_v2_6": api}), patch(
                 "left_arm_v2_8.CLEARANCE_BIAS_PATH", bias_path
@@ -90,6 +93,70 @@ class LocalBiasTests(unittest.TestCase):
             self.assertEqual(arm.hold_targets["claw"], 1.25)
             self.assertIn("shoulder_rotate", arm.hold_targets)
             self.assertIn("claw", arm.enabled)
+
+    def test_gross_placement_failure_rolls_back_its_clearance_learning(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "bias.json"
+            target = {joint: 0.0 for joint in JOINTS}
+            local = LocalTargetBias(path, target, "clearance:clearance.json")
+            local.update_hold_bias(
+                "clearance", {"wrist": 20.0, "arm_roll": -1.0},
+                label="placement1-clearance-final",
+            )
+            local.record_move_validation({"wrist": 89.0, "arm_roll": -1.0})
+            restored = rollback_rejected_placement1_learning(local)
+            self.assertEqual(set(restored), {"wrist", "arm_roll"})
+            self.assertAlmostEqual(local.hold_bias_rad("clearance", "wrist"), 0.0)
+            self.assertAlmostEqual(local.hold_bias_rad("clearance", "arm_roll"), 0.0)
+
+    def test_placement1_stops_when_claw_pressure_contact_is_not_detected(self):
+        clock = [0.0]
+
+        class Ctrl:
+            def controlMIT(self, *args):
+                pass
+
+        class Arm:
+            ctrl = Ctrl()
+            motors = {"elbow": object(), "claw": object()}
+
+            def enable(self, names):
+                pass
+
+            def claw_status(self):
+                return {"pos": 1.0, "vel": 1.0, "tau": 0.0}
+
+        api = types.SimpleNamespace(
+            load_pose=lambda path: {"claw": 0.0},
+            CLAW_HOME_PATH="claw.json",
+            CLEARANCE_HOLD_GAINS={"elbow": {"kp": 2.0, "kd": 1.0}},
+            CLEARANCE_BASE_HOLD_GAINS={"elbow": {"kp": 1.0, "kd": 1.0}},
+            CLAW_CLOSE_OFFSET=1.0,
+            CLAW_CLOSE_SECONDS=0.03,
+            cosine_smoothstep=lambda value: value,
+            CLAW_KP_MOVE=1.0,
+            CLAW_KD_MOVE=1.0,
+            CLAW_TAU_THRESHOLD=10.0,
+            CLAW_VEL_STALL_THRESHOLD=0.01,
+            CLAW_STALL_TAU_THRESHOLD=10.0,
+            CLAW_CONFIRM_COUNT_NEEDED=2,
+            CLAW_BACKOFF=0.1,
+            CLAW_KP_HOLD=1.0,
+            CLAW_KD_HOLD=1.0,
+        )
+
+        def sleep(seconds):
+            clock[0] += seconds
+
+        with patch("left_arm_v2_8_move_library.time.time", side_effect=lambda: clock[0]), patch(
+            "left_arm_v2_8_move_library.time.sleep", side_effect=sleep
+        ):
+            with self.assertRaisesRegex(RuntimeError, "pressure contact was not detected"):
+                close_claw_while_holding_arm(
+                    Arm(), {"elbow": 0.5}, api,
+                    arm_gains={"elbow": {"kp": 2.0, "kd": 1.0}},
+                    arm_tau={"elbow": 2.0},
+                )
 
     def test_nearby_pose_reuses_anchor_and_distant_pose_does_not(self):
         with tempfile.TemporaryDirectory() as directory:

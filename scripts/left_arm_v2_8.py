@@ -76,7 +76,11 @@ def captured_home_transition_limit(requested_limit_deg: float,
 
 
 def run_trained_clearance(original: List[str], legacy) -> None:
-    from left_arm_v2_8_move_library import LocalTargetBias, final_blocking_joint_errors
+    from left_arm_v2_8_move_library import (
+        LocalTargetBias,
+        final_blocking_joint_errors,
+        rollback_rejected_placement1_learning,
+    )
 
     parsed = legacy.build_parser().parse_args(original)
     expanded = replace_option(
@@ -92,6 +96,9 @@ def run_trained_clearance(original: List[str], legacy) -> None:
         nominal,
         "clearance:" + Path(parsed.clearance_file).name,
     )
+    # A failed payload carry must not poison the shared clearance target used
+    # by the next pre-replay clearance command.
+    rollback_rejected_placement1_learning(local)
     biased = dict(nominal)
     applied_bias_deg = {}
     for name in validation_joints:
