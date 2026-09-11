@@ -7,6 +7,7 @@ Non-replay commands are delegated unchanged.
 """
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import math
@@ -44,6 +45,194 @@ HOLD_BIAS_STEP_SCALE = 0.35
 HOLD_BIAS_MAX_STEP_DEG = 0.40
 HOLD_BIAS_MIN_STEP_SCALE = 0.25
 HOLD_BIAS_LIMIT_DEG = 3.0
+PLACEMENT1_MOVE_NAME = "bishop01"
+
+
+def command_holds(arm, targets, gains, hold_tau, fallback_kp=3.0, fallback_kd=0.3):
+    for name, target in targets.items():
+        joint_gains = gains.get(name, {})
+        arm.ctrl.controlMIT(
+            arm.motors[name],
+            joint_gains.get("kp", fallback_kp),
+            joint_gains.get("kd", fallback_kd),
+            target,
+            0,
+            hold_tau.get(name, 0.0),
+        )
+
+
+def close_claw_while_holding_arm(arm, arm_targets, api):
+    """Run the v2.6 pressure-stop close while continuously holding the arm."""
+    claw_home = api.load_pose(api.CLAW_HOME_PATH)
+    if "claw" not in claw_home:
+        raise RuntimeError("invalid claw home file: missing claw")
+    arm.enable([*arm_targets.keys(), "claw"])
+    arm_gains = {
+        name: api.CLEARANCE_HOLD_GAINS.get(name, api.CLEARANCE_BASE_HOLD_GAINS[name])
+        for name in arm_targets
+    }
+    arm_tau = {
+        name: api.CLEARANCE_JOINT_HOLD_TAU.get(name, 0.0)
+        for name in arm_targets
+    }
+    home_pos = float(claw_home["claw"])
+    q_close = home_pos + api.CLAW_CLOSE_OFFSET
+    print("v2.8 placement1 claw close pressure stop with arm holds", flush=True)
+    contact = False
+    contact_pos = home_pos
+    confirm_count = 0
+    last_status = arm.claw_status()
+    started = time.time()
+    while time.time() - started < api.CLAW_CLOSE_SECONDS:
+        elapsed = time.time() - started
+        progress = elapsed / max(api.CLAW_CLOSE_SECONDS, 1e-6)
+        target = home_pos * (1.0 - api.cosine_smoothstep(progress)) + q_close * api.cosine_smoothstep(progress)
+        command_holds(arm, arm_targets, arm_gains, arm_tau)
+        arm.ctrl.controlMIT(arm.motors["claw"], api.CLAW_KP_MOVE, api.CLAW_KD_MOVE, target, 0, 0)
+        time.sleep(0.01)
+        last_status = arm.claw_status()
+        if elapsed > 0.5:
+            tau_hit = last_status["tau"] > api.CLAW_TAU_THRESHOLD
+            stall_hit = (
+                abs(last_status["vel"]) < api.CLAW_VEL_STALL_THRESHOLD
+                and abs(target - last_status["pos"]) > 0.15
+                and last_status["tau"] > api.CLAW_STALL_TAU_THRESHOLD
+            )
+            confirm_count = confirm_count + 1 if (tau_hit or stall_hit) else 0
+            if confirm_count >= api.CLAW_CONFIRM_COUNT_NEEDED:
+                contact = True
+                contact_pos = last_status["pos"]
+                break
+    hold_pos = contact_pos - api.CLAW_BACKOFF if contact else last_status["pos"]
+    result = {
+        "contact": contact,
+        "contact_pos": contact_pos if contact else None,
+        "hold_pos": hold_pos,
+        "status": last_status,
+    }
+    print("v2.8 placement1 claw pressure result=", json.dumps(result, ensure_ascii=False), flush=True)
+    hold_targets = dict(arm_targets)
+    hold_targets["claw"] = hold_pos
+    hold_gains = dict(arm_gains)
+    hold_gains["claw"] = {"kp": api.CLAW_KP_HOLD, "kd": api.CLAW_KD_HOLD}
+    hold_tau = dict(arm_tau)
+    hold_tau["claw"] = 0.0
+    end = time.time() + 0.8
+    while time.time() < end:
+        command_holds(arm, hold_targets, hold_gains, hold_tau)
+        time.sleep(0.01)
+    return hold_pos
+
+
+def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback_kd: float):
+    """Carry the gripped bishop to learned clearance without releasing holds."""
+    import left_arm_v2_6 as api
+    from left_arm_v2_8 import CLEARANCE_BIAS_PATH, clearance_validation_joints, clearance_errors_deg
+
+    nominal = api.load_pose(clearance_file)
+    selected = [name for name in api.DEFAULT_CLEARANCE_ORDER if name in nominal]
+    validation_joints = clearance_validation_joints(api, selected)
+    local = LocalTargetBias(CLEARANCE_BIAS_PATH, nominal, "clearance:" + Path(clearance_file).name)
+    biased = dict(nominal)
+    applied_bias_deg = {}
+    for name in validation_joints:
+        offset = local.hold_bias_rad("clearance", name)
+        if offset:
+            biased[name] += offset
+            applied_bias_deg[name] = math.degrees(offset)
+
+    arm_targets = arm.positions(api.DEFAULT_JOINTS)
+    print("v2.8 placement1 seamless takeover=", json.dumps({
+        "source_move": PLACEMENT1_MOVE_NAME,
+        "arm_hold_targets_rad": arm_targets,
+        "clearance_file": os.path.abspath(clearance_file),
+        "applied_bias_deg": applied_bias_deg,
+    }, ensure_ascii=False), flush=True)
+    claw_hold_pos = close_claw_while_holding_arm(arm, arm_targets, api)
+
+    move_targets = {name: biased[name] for name in validation_joints}
+    current = arm.positions(api.DEFAULT_JOINTS)
+    deltas = {name: math.degrees(move_targets[name] - current[name]) for name in move_targets}
+    unsafe = {name: value for name, value in deltas.items() if abs(value) > 125.0}
+    if unsafe:
+        raise RuntimeError("v2.8 placement1 clearance delta exceeds 125deg: " + json.dumps(unsafe, ensure_ascii=False))
+    coupled_steps = max((int(math.ceil(abs(value) / 5.0)) for value in deltas.values()), default=1)
+    raw_seconds = max(
+        api.HOME_GAINS.get(name, {"seconds": 6.0})["seconds"] for name in move_targets
+    ) * max(1, coupled_steps)
+    seconds = min(raw_seconds, api.COUPLED_CLEARANCE_MAX_SECONDS)
+    hold_targets = {
+        name: current[name] for name in selected if name not in move_targets
+    }
+    hold_targets["claw"] = claw_hold_pos
+    hold_gains = {
+        name: api.CLEARANCE_BASE_HOLD_GAINS[name]
+        for name in hold_targets if name != "claw"
+    }
+    hold_gains["claw"] = {"kp": api.CLAW_KP_HOLD, "kd": api.CLAW_KD_HOLD}
+    hold_tau = {
+        name: api.CLEARANCE_JOINT_HOLD_TAU.get(name, 0.0)
+        for name in [*move_targets.keys(), *hold_targets.keys()]
+    }
+    hold_tau["claw"] = 0.0
+    move_gains = {
+        name: api.COUPLED_CLEARANCE_MOVE_GAINS.get(name, api.CLEARANCE_MOVE_GAINS[name])
+        for name in move_targets
+    }
+    print("v2.8 placement1 coupled clearance=", json.dumps({
+        "targets_rad": move_targets,
+        "deltas_deg": deltas,
+        "seconds": seconds,
+        "hold_joints": list(hold_targets),
+    }, ensure_ascii=False), flush=True)
+    arm.enable([*move_targets.keys(), *hold_targets.keys()])
+    arm.move_targets_with_holds(
+        move_targets,
+        seconds_per_step=seconds,
+        move_gains=move_gains,
+        hold_targets=hold_targets,
+        hold_gains=hold_gains,
+        fallback_kp=fallback_kp,
+        fallback_kd=fallback_kd,
+        hold_tau=hold_tau,
+        step_deg=0.0,
+        preload_seconds=0.4,
+        progress_windows=api.COUPLED_CLEARANCE_PROGRESS_WINDOWS,
+        pre_window_gains=api.COUPLED_CLEARANCE_PRE_WINDOW_GAINS,
+        control_dt=api.COUPLED_CLEARANCE_CONTROL_DT,
+        velocity_ff_joints=api.COUPLED_CLEARANCE_VELOCITY_FF_JOINTS,
+        move_tau_ff=api.COUPLED_CLEARANCE_MOVE_TAU_FF,
+        trajectory=api.COUPLED_CLEARANCE_TRAJECTORY,
+        linear_blend=api.COUPLED_CLEARANCE_LINEAR_BLEND,
+    )
+    final_hold_targets = dict(move_targets)
+    final_hold_targets.update(hold_targets)
+    final_hold_gains = {
+        name: api.CLEARANCE_HOLD_GAINS.get(name, move_gains[name])
+        for name in move_targets
+    }
+    final_hold_gains.update(hold_gains)
+    arm.hold_positions_with_gains(
+        final_hold_targets,
+        seconds=api.COUPLED_CLEARANCE_SETTLE_SECONDS,
+        gains=final_hold_gains,
+        fallback_kp=fallback_kp,
+        fallback_kd=fallback_kd,
+        hold_tau=hold_tau,
+    )
+    final_positions = arm.positions(validation_joints)
+    errors = clearance_errors_deg(nominal, final_positions, validation_joints)
+    updates = local.update_hold_bias("clearance", errors, label="placement1-clearance-final")
+    validation = local.record_move_validation(errors)
+    print("v2.8 placement1 clearance verification=", json.dumps(validation, ensure_ascii=False), flush=True)
+    if updates:
+        print("v2.8 placement1 clearance learning update=", json.dumps(updates, ensure_ascii=False), flush=True)
+    blockers = final_blocking_joint_errors(errors, ERROR_DEADBAND_DEG)
+    if blockers:
+        raise RuntimeError(
+            "v2.8 placement1 training incomplete: clearance joints exceed 0.5deg; "
+            "learning data was saved: " + json.dumps(blockers, ensure_ascii=False)
+        )
 
 
 def _now() -> str:
@@ -331,7 +520,9 @@ def replay_with_local_bias(args) -> None:
     original_api_deadband = api.ADAPTIVE_TARGET_BIAS_ERROR_DEADBAND_DEG
     original_settle = legacy.run_replay_settle_pass
     original_error_report = legacy.print_replay_error_report
+    original_close = api.LeftArmV2.close
     final_errors: Dict[str, float] = {}
+    placement1_ran = False
 
     def combined_bias(joint: str, low_shoulder_front: bool = False,
                       path: str = api.ADAPTIVE_TARGET_BIAS_PATH) -> float:
@@ -414,6 +605,15 @@ def replay_with_local_bias(args) -> None:
             final_errors.update(errors)
         return errors
 
+    def close_with_optional_placement1(arm):
+        nonlocal placement1_ran
+        try:
+            if args.placement1 and final_errors and not placement1_ran:
+                placement1_ran = True
+                run_placement1_on_arm(arm, args.clearance_file, args.kp, args.kd)
+        finally:
+            original_close(arm)
+
     print("v2.8 pose-local correction=", json.dumps({
         "move": move_name,
         "anchor_id": local.anchor_id,
@@ -433,6 +633,7 @@ def replay_with_local_bias(args) -> None:
     api.ADAPTIVE_TARGET_BIAS_ERROR_DEADBAND_DEG = ERROR_DEADBAND_DEG
     legacy.run_replay_settle_pass = strict_pre_wrist_settle
     legacy.print_replay_error_report = capture_error_report
+    api.LeftArmV2.close = close_with_optional_placement1
     legacy.ARM_SCRIPT = str(SCRIPT_DIR / "left_arm_v2_8.py")
     try:
         legacy.replay_move(
@@ -451,6 +652,7 @@ def replay_with_local_bias(args) -> None:
         api.ADAPTIVE_TARGET_BIAS_ERROR_DEADBAND_DEG = original_api_deadband
         legacy.run_replay_settle_pass = original_settle
         legacy.print_replay_error_report = original_error_report
+        api.LeftArmV2.close = original_close
         legacy.ARM_SCRIPT = original_arm_script
     if final_errors:
         validation = local.record_move_validation(final_errors)
@@ -464,11 +666,25 @@ def replay_with_local_bias(args) -> None:
             )
 
 
+def build_parser():
+    import left_arm_v2_6_move_library as legacy
+    parser = legacy.build_parser()
+    subparsers = next(action for action in parser._actions if isinstance(action, argparse._SubParsersAction))
+    subparsers.choices["replay-move"].add_argument(
+        "--placement1",
+        action="store_true",
+        help="after bishop01 replay, close the claw and carry it to learned clearance",
+    )
+    return parser
+
+
 def main() -> None:
     import left_arm_v2_6_move_library as legacy
-    args = legacy.build_parser().parse_args()
+    args = build_parser().parse_args()
     if args.cmd != "replay-move":
         return legacy.main()
+    if args.placement1 and legacy.normalize_move_name(args.name) != PLACEMENT1_MOVE_NAME:
+        raise RuntimeError("placement1 currently requires saved move bishop01")
     replay_with_local_bias(args)
 
 

@@ -51,6 +51,7 @@ class IntegrationTests(unittest.TestCase):
                     self.assertIn('<html',get(path).lower())
                 arm_page=get('/arm')
                 self.assertIn('id="closeClawAfterReplay"',arm_page)
+                self.assertIn('id="placement1AfterReplay"',arm_page)
                 self.assertIn("await runAction('claw-close', true)",arm_page)
                 self.assertIn("waitForRunIdle('replay-move:' + name",arm_page)
                 self.assertNotIn("finished.returncode",arm_page)
@@ -63,6 +64,14 @@ class IntegrationTests(unittest.TestCase):
                     with self.assertRaises(urllib.error.HTTPError) as error:urllib.request.urlopen(req)
                     self.assertEqual(error.exception.code,403)
                     error.exception.close()
+                    placement_body=json.dumps({'name':'bishop01','placement1':True}).encode()
+                    req=urllib.request.Request(base+'/api/move/replay',data=placement_body,method='POST',headers={'Content-Type':'application/json'})
+                    with self.assertRaises(urllib.error.HTTPError) as error:
+                        urllib.request.urlopen(req)
+                    self.assertEqual(error.exception.code,403)
+                    payload=json.loads(error.exception.read().decode())
+                    error.exception.close()
+                    self.assertEqual(payload['command'][-1],'--placement1')
                     popen.assert_not_called()
             finally:
                 server.shutdown();server.server_close();thread.join()

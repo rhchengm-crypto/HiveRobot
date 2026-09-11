@@ -8,8 +8,10 @@ from __future__ import annotations
 import os
 import argparse
 import json
+import time
 from pathlib import Path
 import threading
+from http import HTTPStatus
 from http.server import ThreadingHTTPServer
 from urllib.parse import urlparse
 import chessboard_vision_v2_7_web_control as vision
@@ -41,6 +43,9 @@ def build_arm_page() -> str:
     replay_controls = replay_button + """
             <label class="inline-option" title="Replay 命令结束后调用现有 Claw Close 压力停止流程">
               <input id="closeClawAfterReplay" type="checkbox"> Replay 后合拢夹爪
+            </label>
+            <label class="inline-option" title="bishop01 到位后夹取，并在同一控制进程内搬运到 Clearance">
+              <input id="placement1AfterReplay" type="checkbox"> Placement1：夹取后到 Clearance
             </label>"""
     if replay_button not in page:
         raise RuntimeError("v2.8 arm page injection failed: Replay button was not found")
@@ -53,24 +58,27 @@ def build_arm_page() -> str:
     replay_function = """    async function replayMove() {
       const name = document.getElementById('moveSelect').value;
       const closeAfterReplay = document.getElementById('closeClawAfterReplay').checked;
+      const placement1 = document.getElementById('placement1AfterReplay').checked;
       if (!name) {
         setStatus('No saved move selected.');
         return;
       }
-      const suffix = closeAfterReplay ? '，随后使用压力停止逻辑合拢夹爪' : '';
+      const suffix = placement1
+        ? '，随后夹取并在同一进程内执行 Placement1 到 Clearance'
+        : (closeAfterReplay ? '，随后使用压力停止逻辑合拢夹爪' : '');
       if (!confirm('Replay move via table clearance first: ' + name + suffix + '?')) return;
       try {
         const res = await fetch('/api/move/replay', {
           method: 'POST',
           cache: 'no-store',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name })
+          body: JSON.stringify({ name, placement1 })
         });
         const data = await res.json();
         document.getElementById('command').textContent = data.command_text || JSON.stringify(data.command || [], null, 2);
         document.getElementById('output').textContent = formatOutput(data);
         setStatus(data.ok ? 'Replay running/finished: ' + name : 'Replay failed to start: ' + name);
-        if (data.ok && closeAfterReplay) {
+        if (data.ok && closeAfterReplay && !placement1) {
           setStatus('Replay running: ' + name + '；结束后将合拢夹爪。');
           const finished = await waitForRunIdle('replay-move:' + name, 300000);
           if (finished) {
@@ -181,6 +189,43 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
         def send_json(self, payload, status=200):
             # Both legacy handlers have the same JSON signature; keep no-store.
             return arm_handler.send_json(self, payload, status)
+
+        def start_replay_move(self):
+            try:
+                body = self.read_json_body()
+                name = str(body.get('name', '')).strip()
+                placement1 = body.get('placement1') is True
+            except Exception as exc:
+                return self.send_json({'ok': False, 'error': f'invalid replay payload: {exc}'}, HTTPStatus.BAD_REQUEST)
+            if not name:
+                return self.send_json({'ok': False, 'error': 'move name is required'}, HTTPStatus.BAD_REQUEST)
+            if placement1 and name.casefold() != 'bishop01':
+                return self.send_json(
+                    {'ok': False, 'error': 'Placement1 currently requires saved move bishop01'},
+                    HTTPStatus.BAD_REQUEST,
+                )
+            cmd = arm.build_replay_move_command(ctrl_cfg, name)
+            if placement1:
+                cmd.append('--placement1')
+            if not ctrl_cfg.execute_enabled:
+                return self.send_json({
+                    'ok': False,
+                    'error': 'execution disabled; restart with --enable-execute',
+                    'command': cmd,
+                    'command_text': ' '.join(cmd),
+                }, HTTPStatus.FORBIDDEN)
+            cancelled = run_state.cancel_current(
+                timeout=1.0,
+                reason='replay_move',
+                expected_actions={'low-torque'},
+            )
+            if cancelled is not None:
+                time.sleep(0.2)
+            payload = run_state.start(f'replay-move:{name}', cmd, popen_kwargs={})
+            if cancelled is not None:
+                payload['cancelled_previous'] = cancelled
+            status = HTTPStatus.OK if payload.get('ok') else HTTPStatus.CONFLICT
+            return self.send_json(payload, status)
 
         def do_GET(self):
             path = urlparse(self.path).path

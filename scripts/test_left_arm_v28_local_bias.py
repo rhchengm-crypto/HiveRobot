@@ -1,15 +1,22 @@
+import json
 import math
+import sys
 import tempfile
+import types
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from left_arm_v2_8_move_library import (
     LocalTargetBias,
     JOINTS,
+    PLACEMENT1_MOVE_NAME,
     blocking_joint_errors,
+    build_parser,
     final_blocking_joint_errors,
     pose_distance_deg,
     verify_pre_wrist_or_learn,
+    run_placement1_on_arm,
 )
 
 
@@ -18,6 +25,72 @@ def pose(offset_deg=0.0):
 
 
 class LocalBiasTests(unittest.TestCase):
+    def test_placement1_cli_is_an_explicit_replay_option(self):
+        args = build_parser().parse_args([
+            "replay-move", "--name", PLACEMENT1_MOVE_NAME, "--placement1"
+        ])
+        self.assertTrue(args.placement1)
+        self.assertEqual(args.name, "bishop01")
+
+    def test_placement1_carries_claw_hold_into_coupled_clearance(self):
+        class Arm:
+            def __init__(self):
+                self.current = {joint: 0.0 for joint in JOINTS}
+                self.hold_targets = None
+
+            def positions(self, names):
+                return {name: self.current[name] for name in names}
+
+            def enable(self, names):
+                self.enabled = list(names)
+
+            def move_targets_with_holds(self, targets, **kwargs):
+                self.current.update(targets)
+                self.hold_targets = dict(kwargs["hold_targets"])
+
+            def hold_positions_with_gains(self, *args, **kwargs):
+                pass
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            clearance_path = root / "clearance.json"
+            bias_path = root / "placement-bias.json"
+            clearance = {joint: 0.1 for joint in JOINTS}
+            clearance_path.write_text(json.dumps({"joints": clearance}), encoding="utf-8")
+            arm = Arm()
+            api = types.SimpleNamespace(
+                load_pose=lambda path: json.loads(Path(path).read_text(encoding="utf-8"))["joints"],
+                DEFAULT_CLEARANCE_ORDER=list(JOINTS),
+                DEFAULT_JOINTS=list(JOINTS),
+                CLEARANCE_JOINT_DEADBANDS_DEG={"shoulder_rotate": 180.0},
+                HOME_GAINS={joint: {"seconds": 1.0} for joint in JOINTS},
+                COUPLED_CLEARANCE_MAX_SECONDS=12.0,
+                CLEARANCE_BASE_HOLD_GAINS={joint: {"kp": 1.0, "kd": 1.0} for joint in JOINTS},
+                CLEARANCE_HOLD_GAINS={joint: {"kp": 2.0, "kd": 1.0} for joint in JOINTS},
+                CLEARANCE_JOINT_HOLD_TAU={},
+                CLAW_KP_HOLD=14.0,
+                CLAW_KD_HOLD=2.0,
+                COUPLED_CLEARANCE_MOVE_GAINS={joint: {"kp": 1.0, "kd": 1.0} for joint in JOINTS},
+                CLEARANCE_MOVE_GAINS={joint: {"kp": 1.0, "kd": 1.0} for joint in JOINTS},
+                COUPLED_CLEARANCE_PROGRESS_WINDOWS={},
+                COUPLED_CLEARANCE_PRE_WINDOW_GAINS={},
+                COUPLED_CLEARANCE_CONTROL_DT=0.01,
+                COUPLED_CLEARANCE_VELOCITY_FF_JOINTS=set(),
+                COUPLED_CLEARANCE_MOVE_TAU_FF={},
+                COUPLED_CLEARANCE_TRAJECTORY="smoothstep",
+                COUPLED_CLEARANCE_LINEAR_BLEND=0.0,
+                COUPLED_CLEARANCE_SETTLE_SECONDS=0.1,
+            )
+            with patch.dict(sys.modules, {"left_arm_v2_6": api}), patch(
+                "left_arm_v2_8.CLEARANCE_BIAS_PATH", bias_path
+            ), patch(
+                "left_arm_v2_8_move_library.close_claw_while_holding_arm", return_value=1.25
+            ):
+                run_placement1_on_arm(arm, str(clearance_path), 3.0, 0.3)
+            self.assertEqual(arm.hold_targets["claw"], 1.25)
+            self.assertIn("shoulder_rotate", arm.hold_targets)
+            self.assertIn("claw", arm.enabled)
+
     def test_nearby_pose_reuses_anchor_and_distant_pose_does_not(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "bias.json"
