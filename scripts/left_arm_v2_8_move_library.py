@@ -63,7 +63,9 @@ def command_holds(arm, targets, gains, hold_tau, fallback_kp=3.0, fallback_kd=0.
 
 
 def close_claw_while_holding_arm(arm, arm_targets, api, arm_gains=None, arm_tau=None):
-    """Run the v2.6 pressure-stop close while continuously holding the arm."""
+    """Run the guarded v2.8 pressure-stop close while holding the arm."""
+    from left_arm_v2_8_claw import guarded_pressure_close
+
     claw_home = api.load_pose(api.CLAW_HOME_PATH)
     if "claw" not in claw_home:
         raise RuntimeError("invalid claw home file: missing claw")
@@ -73,58 +75,26 @@ def close_claw_while_holding_arm(arm, arm_targets, api, arm_gains=None, arm_tau=
         for name in arm_targets
     }
     arm_tau = arm_tau or {name: 0.0 for name in arm_targets}
-    home_pos = float(claw_home["claw"])
-    q_close = home_pos + api.CLAW_CLOSE_OFFSET
-    print("v2.8 placement1 claw close pressure stop with arm holds", flush=True)
-    contact = False
-    contact_pos = home_pos
-    confirm_count = 0
-    last_status = arm.claw_status()
-    started = time.time()
-    while time.time() - started < api.CLAW_CLOSE_SECONDS:
-        elapsed = time.time() - started
-        progress = elapsed / max(api.CLAW_CLOSE_SECONDS, 1e-6)
-        target = home_pos * (1.0 - api.cosine_smoothstep(progress)) + q_close * api.cosine_smoothstep(progress)
+    def hold_arm():
         command_holds(arm, arm_targets, arm_gains, arm_tau)
-        arm.ctrl.controlMIT(arm.motors["claw"], api.CLAW_KP_MOVE, api.CLAW_KD_MOVE, target, 0, 0)
-        time.sleep(0.01)
-        last_status = arm.claw_status()
-        if elapsed > 0.5:
-            tau_hit = last_status["tau"] > api.CLAW_TAU_THRESHOLD
-            stall_hit = (
-                abs(last_status["vel"]) < api.CLAW_VEL_STALL_THRESHOLD
-                and abs(target - last_status["pos"]) > 0.15
-                and last_status["tau"] > api.CLAW_STALL_TAU_THRESHOLD
-            )
-            confirm_count = confirm_count + 1 if (tau_hit or stall_hit) else 0
-            if confirm_count >= api.CLAW_CONFIRM_COUNT_NEEDED:
-                contact = True
-                contact_pos = last_status["pos"]
-                break
-    hold_pos = contact_pos - api.CLAW_BACKOFF if contact else last_status["pos"]
-    result = {
-        "contact": contact,
-        "contact_pos": contact_pos if contact else None,
-        "hold_pos": hold_pos,
-        "status": last_status,
-    }
-    print("v2.8 placement1 claw pressure result=", json.dumps(result, ensure_ascii=False), flush=True)
-    hold_targets = dict(arm_targets)
-    hold_targets["claw"] = hold_pos
-    hold_gains = dict(arm_gains)
-    hold_gains["claw"] = {"kp": api.CLAW_KP_HOLD, "kd": api.CLAW_KD_HOLD}
-    hold_tau = dict(arm_tau)
-    hold_tau["claw"] = 0.0
-    end = time.time() + 0.8
-    while time.time() < end:
+
+    def hold_all(claw_target):
+        hold_targets = dict(arm_targets)
+        hold_targets["claw"] = claw_target
+        hold_gains = dict(arm_gains)
+        hold_gains["claw"] = {"kp": api.CLAW_KP_HOLD, "kd": api.CLAW_KD_HOLD}
+        hold_tau = dict(arm_tau)
+        hold_tau["claw"] = 0.0
         command_holds(arm, hold_targets, hold_gains, hold_tau)
-        time.sleep(0.01)
-    if not contact:
-        raise RuntimeError(
-            "v2.8 placement1 stopped after claw close: pressure contact was not detected; "
-            "clearance carry was not started"
-        )
-    return hold_pos
+
+    result = guarded_pressure_close(
+        arm,
+        api.CLAW_CLOSE_OFFSET,
+        before_claw_command=hold_arm,
+        hold_callback=hold_all,
+        label="v2.8 placement1 claw",
+    )
+    return float(result["hold_pos"])
 
 
 def rollback_rejected_placement1_learning(local):

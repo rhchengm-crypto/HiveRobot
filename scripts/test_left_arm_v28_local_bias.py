@@ -112,13 +112,27 @@ class LocalBiasTests(unittest.TestCase):
     def test_placement1_stops_when_claw_pressure_contact_is_not_detected(self):
         clock = [0.0]
 
+        class Motor:
+            pos = 1.0
+            vel = 1.0
+            tau = 0.0
+
+            def getPosition(self):
+                return self.pos
+
+            def getVelocity(self):
+                return self.vel
+
+            def getTorque(self):
+                return self.tau
+
         class Ctrl:
-            def controlMIT(self, *args):
-                pass
+            def controlMIT(self, motor, kp, kd, target, velocity, torque):
+                motor.pos = target
 
         class Arm:
             ctrl = Ctrl()
-            motors = {"elbow": object(), "claw": object()}
+            motors = {"elbow": Motor(), "claw": Motor()}
 
             def enable(self, names):
                 pass
@@ -148,8 +162,8 @@ class LocalBiasTests(unittest.TestCase):
         def sleep(seconds):
             clock[0] += seconds
 
-        with patch("left_arm_v2_8_move_library.time.time", side_effect=lambda: clock[0]), patch(
-            "left_arm_v2_8_move_library.time.sleep", side_effect=sleep
+        with patch("left_arm_v2_8_claw.time.time", side_effect=lambda: clock[0]), patch(
+            "left_arm_v2_8_claw.time.sleep", side_effect=sleep
         ):
             with self.assertRaisesRegex(RuntimeError, "pressure contact was not detected"):
                 close_claw_while_holding_arm(
