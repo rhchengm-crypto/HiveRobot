@@ -49,6 +49,12 @@ class IntegrationTests(unittest.TestCase):
             try:
                 for path in ['/','/vision','/arm','/height-setup','/yolo-labels']:
                     self.assertIn('<html',get(path).lower())
+                arm_page=get('/arm')
+                self.assertIn('id="closeClawAfterReplay"',arm_page)
+                self.assertIn("await runAction('claw-close', true)",arm_page)
+                self.assertIn("waitForRunIdle('replay-move:' + name",arm_page)
+                self.assertNotIn("finished.returncode",arm_page)
+                self.assertIn("onclick=\"runAction('home')\">Home Move</button>",arm_page)
                 self.assertIn('run',json.loads(get('/api/state')))
                 self.assertIn('rgb_seq',get('/api/status'))
                 self.assertEqual(json.loads(get('/api/height/status'))['total'],0)

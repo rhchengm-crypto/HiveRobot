@@ -34,6 +34,65 @@ body{margin:0;background:#101821;color:#eee;font:16px system-ui}header{padding:1
 <script>function showPanel(name){for(const id of ['vision','arm','crown']){document.getElementById(id).hidden=id!==name;document.getElementById(id+'-tab').setAttribute('aria-selected',String(id===name));}document.getElementById('open').href='/'+name;}</script></html>"""
 
 
+def build_arm_page() -> str:
+    """Add the v2.8 replay/claw option without changing the v2.6 page."""
+    page = arm.HTML_PAGE
+    replay_button = '            <button type="button" class="primary" onclick="replayMove()">Replay</button>'
+    replay_controls = replay_button + """
+            <label class="inline-option" title="Replay 命令结束后调用现有 Claw Close 压力停止流程">
+              <input id="closeClawAfterReplay" type="checkbox"> Replay 后合拢夹爪
+            </label>"""
+    if replay_button not in page:
+        raise RuntimeError("v2.8 arm page injection failed: Replay button was not found")
+    page = page.replace(replay_button, replay_controls, 1)
+
+    function_start = page.find("    async function replayMove() {")
+    function_end = page.find("\n\n    async function copyOutput()", function_start)
+    if function_start < 0 or function_end < 0:
+        raise RuntimeError("v2.8 arm page injection failed: replayMove function was not found")
+    replay_function = """    async function replayMove() {
+      const name = document.getElementById('moveSelect').value;
+      const closeAfterReplay = document.getElementById('closeClawAfterReplay').checked;
+      if (!name) {
+        setStatus('No saved move selected.');
+        return;
+      }
+      const suffix = closeAfterReplay ? '，随后使用压力停止逻辑合拢夹爪' : '';
+      if (!confirm('Replay move via table clearance first: ' + name + suffix + '?')) return;
+      try {
+        const res = await fetch('/api/move/replay', {
+          method: 'POST',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name })
+        });
+        const data = await res.json();
+        document.getElementById('command').textContent = data.command_text || JSON.stringify(data.command || [], null, 2);
+        document.getElementById('output').textContent = formatOutput(data);
+        setStatus(data.ok ? 'Replay running/finished: ' + name : 'Replay failed to start: ' + name);
+        if (data.ok && closeAfterReplay) {
+          setStatus('Replay running: ' + name + '；结束后将合拢夹爪。');
+          const finished = await waitForRunIdle('replay-move:' + name, 300000);
+          if (finished) {
+            document.getElementById('command').textContent = finished.command_text || document.getElementById('command').textContent;
+            document.getElementById('output').textContent = formatOutput(finished);
+            setStatus('Replay finished: ' + name + '；正在合拢夹爪。');
+            await runAction('claw-close', true);
+            return;
+          }
+          setStatus('Replay wait timed out; claw close was not started: ' + name);
+        }
+      } catch (err) {
+        setStatus('Replay request failed:\\n' + err);
+      }
+      refresh();
+    }"""
+    return page[:function_start] + replay_function + page[function_end:]
+
+
+ARM_HTML_PAGE = build_arm_page()
+
+
 def build_parser():
     parser = vision.build_parser()
     parser.description = 'HiveRobot v2.8 integrated chess vision and left arm'
@@ -130,7 +189,7 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
             if path in ('/', '/index.html'):
                 return self.send_bytes(HTML_PAGE.encode('utf-8'), 'text/html; charset=utf-8')
             if path in ('/arm','/arm/'):
-                return self.send_bytes(arm.HTML_PAGE.encode('utf-8'), 'text/html; charset=utf-8')
+                return self.send_bytes(ARM_HTML_PAGE.encode('utf-8'), 'text/html; charset=utf-8')
             if path in ('/api/state','/api/moves','/stream.mjpg','/rgb.mjpg','/depth.mjpg'):
                 return arm_handler.do_GET(self)
             if path in ('/vision','/vision/'):
