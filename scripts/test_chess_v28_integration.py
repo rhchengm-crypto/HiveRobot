@@ -22,6 +22,8 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(args.port,8098)
         self.assertTrue(args.move_script.endswith('left_arm_v2_8_move_library.py'))
         self.assertTrue(args.arm_script.endswith('left_arm_v2_8.py'))
+        self.assertIn('replay-move:bishop01',v28.CLAW_HOME_INTERRUPT_ACTIONS)
+        self.assertIn(v28.PLACEMENT1_ACTION,v28.CLAW_HOME_INTERRUPT_ACTIONS)
 
     def test_shared_frames_preserve_metadata(self):
         stream=v28.arm.StreamState(); camera=v28.SharedCamera(stream)
@@ -73,6 +75,42 @@ class IntegrationTests(unittest.TestCase):
                     error.exception.close()
                     self.assertEqual(payload['command'][-1],'--placement1')
                     popen.assert_not_called()
+            finally:
+                server.shutdown();server.server_close();thread.join()
+
+    def test_claw_home_interrupts_placement1_before_starting(self):
+        class RunState:
+            def __init__(self):
+                self.cancel_args=None
+                self.started=None
+            def cancel_current(self,**kwargs):
+                self.cancel_args=kwargs
+                return {'action':v28.PLACEMENT1_ACTION,'running':False}
+            def start(self,action,cmd,popen_kwargs):
+                self.started=(action,cmd)
+                return {'ok':True,'running':True,'action':action,'command':cmd}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp);args=v28.build_parser().parse_args([])
+            stream=v28.arm.StreamState();camera=v28.SharedCamera(stream)
+            state=v28.vision.VisionState(str(p/'cal.json'),str(p/'output'),camera,
+                v28.vision.CameraConfig(True,args.rgb_topic,args.depth_topic,85),
+                str(p/'dataset'),args.yolo_docker_image,str(p/'overlay.json'))
+            cfg=v28.arm.ControlConfig(args.arm_script,args.move_script,args.python_bin,
+                False,True,str(p/'runs.jsonl'),str(p/'moves.json'))
+            run_state=RunState()
+            handler=v28.make_handler(state,stream,run_state,cfg,args)
+            server=ThreadingHTTPServer(('127.0.0.1',0),handler)
+            thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+            try:
+                req=urllib.request.Request(
+                    'http://127.0.0.1:'+str(server.server_port)+'/api/action/claw-home',
+                    data=b'{}',method='POST')
+                with urllib.request.urlopen(req,timeout=5) as response:
+                    self.assertTrue(json.loads(response.read())['ok'])
+                self.assertEqual(run_state.cancel_args['reason'],'claw_home')
+                self.assertEqual(run_state.cancel_args['expected_actions'],v28.CLAW_HOME_INTERRUPT_ACTIONS)
+                self.assertEqual(run_state.started[0],'claw-home')
             finally:
                 server.shutdown();server.server_close();thread.join()
 

@@ -99,6 +99,13 @@ def build_arm_page() -> str:
 
 
 ARM_HTML_PAGE = build_arm_page()
+PLACEMENT1_ACTION = 'placement1:bishop01'
+CLAW_HOME_INTERRUPT_ACTIONS = {
+    'claw-close',
+    PLACEMENT1_ACTION,
+    # Compatibility with the first Placement1 build, which used this name.
+    'replay-move:bishop01',
+}
 
 
 def build_parser():
@@ -190,6 +197,30 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
             # Both legacy handlers have the same JSON signature; keep no-store.
             return arm_handler.send_json(self, payload, status)
 
+        def start_action(self, action):
+            if action != 'claw-home':
+                return arm_handler.start_action(self, action)
+            cmd = arm.build_arm_command(ctrl_cfg, action)
+            if not ctrl_cfg.execute_enabled:
+                return self.send_json({
+                    'ok': False,
+                    'error': 'execution disabled; restart with --enable-execute',
+                    'command': cmd,
+                    'command_text': ' '.join(cmd),
+                }, HTTPStatus.FORBIDDEN)
+            cancelled = run_state.cancel_current(
+                timeout=1.0,
+                reason='claw_home',
+                expected_actions=CLAW_HOME_INTERRUPT_ACTIONS,
+            )
+            if cancelled is not None:
+                time.sleep(0.2)
+            payload = run_state.start('claw-home', cmd, popen_kwargs={})
+            if cancelled is not None:
+                payload['cancelled_previous'] = cancelled
+            status = HTTPStatus.OK if payload.get('ok') else HTTPStatus.CONFLICT
+            return self.send_json(payload, status)
+
         def start_replay_move(self):
             try:
                 body = self.read_json_body()
@@ -221,7 +252,8 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
             )
             if cancelled is not None:
                 time.sleep(0.2)
-            payload = run_state.start(f'replay-move:{name}', cmd, popen_kwargs={})
+            action_name = PLACEMENT1_ACTION if placement1 else f'replay-move:{name}'
+            payload = run_state.start(action_name, cmd, popen_kwargs={})
             if cancelled is not None:
                 payload['cancelled_previous'] = cancelled
             status = HTTPStatus.OK if payload.get('ok') else HTTPStatus.CONFLICT
