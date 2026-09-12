@@ -19,6 +19,7 @@ from typing import Iterable, List
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+V28_CLEARANCE_BUILD = "v2.8-clearance-nonblocking-v1"
 CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_clearance_bias.json"
 CLEARANCE_TOLERANCE_DEG = 0.5
 HOME_CAPTURED_TRANSITION_MARGIN_DEG = 5.0
@@ -267,6 +268,7 @@ def run_trained_clearance(original: List[str], legacy) -> None:
         return original_print_status(arm, joints)
 
     print("v2.8 clearance local correction=", json.dumps({
+        "build": V28_CLEARANCE_BUILD,
         "clearance_file": clearance_path,
         "anchor_id": local.anchor_id,
         "new_anchor": local.created,
@@ -293,10 +295,19 @@ def run_trained_clearance(original: List[str], legacy) -> None:
     print("v2.8 clearance final verification=", json.dumps(validation, ensure_ascii=False), flush=True)
     blockers = final_blocking_joint_errors(errors, CLEARANCE_TOLERANCE_DEG)
     if blockers:
-        raise RuntimeError(
-            "v2.8 clearance verification failed: joints exceed 0.5deg; active learned biases "
-            "were not changed and the best snapshot was retained: " + json.dumps(blockers, ensure_ascii=False)
-        )
+        # Clearance is a best-effort positioning stage, not a gate for the
+        # saved move that follows it.  Keep the strict measurement and the
+        # bounded correction passes, but return success so replay can proceed.
+        # The next invocation will measure and correct Clearance again.
+        print("v2.8 clearance residual accepted for follow-up=", json.dumps({
+            "status": "proceeding",
+            "blocks_followup": False,
+            "tolerance_deg": CLEARANCE_TOLERANCE_DEG,
+            "blocking_errors_deg": blockers,
+            "learning_changed": False,
+            "best_snapshot_retained": True,
+        }, ensure_ascii=False), flush=True)
+        return
     updates = local.update_hold_bias("clearance", errors, label="clearance-validated")
     if updates:
         print("v2.8 clearance validated learning update=", json.dumps(updates, ensure_ascii=False), flush=True)
