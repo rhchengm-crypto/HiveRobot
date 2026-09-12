@@ -1,0 +1,52 @@
+started_at: 2026-09-11 21:53:48
+
+finished_at: 2026-09-11 21:56:11
+
+duration_s: 143.212
+
+returncode: 0
+
+stdout:
+.json", "applied_bias_deg": {"shoulder_front": 0.5813976549825328, "shoulder_side": 0.9944851054186945, "elbow": 4.270990395821466, "shoulder_rotate": -3.0000000000000004, "arm_roll": -0.03280903022011448, "wrist_side": 3.2097919008581512, "wrist": -0.42074682457141405}, "shared_clearance_bias_deg_read_only": {"shoulder_side": 0.18359548488994273, "elbow": 2.456792077600552, "arm_roll": 0.3671909697798855, "wrist_side": 1.0097919008581515, "wrist": -0.820746824571414}, "placement1_bias_deg": {"shoulder_front": 0.5813976549825328, "shoulder_side": 0.8108896205287518, "elbow": 1.8141983182209143, "shoulder_rotate": -3.0000000000000004, "arm_roll": -0.4, "wrist_side": 2.1999999999999997, "wrist": 0.4}, "placement1_bias_file": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_placement1_clearance_bias.json", "carry_hold_source": "final_wrist_controller"}
+enable skip shoulder_front
+enable skip shoulder_side
+enable skip shoulder_rotate
+enable skip elbow
+enable skip arm_roll
+enable skip wrist_side
+enable skip wrist
+enable claw
+v2.8 placement1 claw close pressure stop with arm holds
+v2.8 placement1 claw pressure result= {"contact": true, "contact_pos": -0.10128175467252731, "hold_pos": -0.14128175467252732, "status": {"pos": -0.10128175467252731, "vel": 1.2527472972869873, "tau": 0.31990233063697815}}
+v2.8 placement1 wrist-first retract= {"nominal_clearance_rad": -1.0313191413879395, "learned_command_rad": -1.0386625587940217, "start_controller_target_rad": -2.596729565691597, "held_joints": ["shoulder_front", "shoulder_side", "shoulder_rotate", "elbow", "arm_roll", "wrist_side", "claw"]}
+enable skip wrist
+enable skip shoulder_front
+enable skip shoulder_side
+enable skip shoulder_rotate
+enable skip elbow
+enable skip arm_roll
+enable skip wrist_side
+enable skip claw
+v2 continuous step wrist 1/1 target= -1.0386625587940217
+v2.8 placement1 wrist-first fine= {"attempt": 1, "error_deg": 1.8359821696561076, "bias_deg": 1.5, "target_rad": -1.0051392026080246, "active_tau": 0.55, "strategy": "position_residual"}
+v2 continuous step wrist 1/1 target= -1.0051392026080246
+v2.8 placement1 wrist-first fine= {"attempt": 2, "error_deg": -1.5955595108716587, "bias_deg": 0.0, "target_rad": -1.0313191413879395, "active_tau": 0.45665445923805237, "strategy": "measured_load_feedforward"}
+v2 continuous step wrist 1/1 target= -1.0313191413879395
+v2.8 placement1 wrist-first fine result= [{"attempt": 1, "error_deg": -1.5955595108716587}, {"attempt": 2, "error_deg": -0.0655698160321224}]
+v2.8 placement1 coupled clearance= {"targets_rad": {"shoulder_front": 1.945944994688034, "shoulder_side": -2.6970322847366335, "elbow": 0.8910912518059297, "shoulder_rotate": 1.8800044670370328, "arm_roll": -2.6501111426000183, "wrist_side": 0.36177410177828073}, "deltas_deg": {"shoulder_front": 68.44719543698307, "shoulder_side": 4.3167300988479065, "elbow": 28.86004706827172, "shoulder_rotate": -46.67016000574302, "arm_roll": 7.398546069780478, "wrist_side": 11.034576996108878}, "seconds": 12.0, "hold_joints": ["wrist", "claw"], "inherited_start_tau": {"shoulder_front": 1.166123468575764, "shoulder_side": 0.71, "elbow": 3.2, "shoulder_rotate": -0.8700000000000001, "arm_roll": -0.3527607989659096, "wrist_side": -0.29999999999999993}}
+enable skip shoulder_front
+enable skip shoulder_side
+enable skip elbow
+enable skip shoulder_rotate
+enable skip arm_roll
+enable skip wrist_side
+enable skip wrist
+enable skip claw
+v2.2 continuous group step shoulder_front,shoulder_side,elbow,shoulder_rotate,arm_roll,wrist_side 1/1 targets= {"shoulder_front": 1.945944994688034, "shoulder_side": -2.6970322847366335, "elbow": 0.8910912518059297, "shoulder_rotate": 1.8800044670370328, "arm_roll": -2.6501111426000183, "wrist_side": 0.36177410177828073}
+v2.8 placement1 smooth terminal settle= {"seconds": 1.5, "gains": {"shoulder_front": {"kp": 124.0, "kd": 4.8}, "shoulder_side": {"kp": 60.0, "kd": 5.0}, "elbow": {"kp": 65.0, "kd": 6.5}, "shoulder_rotate": {"kp": 24.0, "kd": 4.5}, "arm_roll": {"kp": 18.0, "kd": 6.0}, "wrist_side": {"kp": 16.0, "kd": 2.2}}, "move_tau": {"shoulder_front": 1.0, "shoulder_side": 0.0, "elbow": 0.0, "shoulder_rotate": 0.0, "arm_roll": 0.0, "wrist_side": 0.0}, "reason": "preserve_end_of_trajectory_controller"}
+v2.8 placement1 final clearance comparison= {"shoulder_front": {"nominal_clearance_rad": 1.9357976913452148, "learned_command_rad": 1.945944994688034, "actual_rad": 1.9300755262374878, "error_deg": 0.32785591034978206}, "shoulder_side": {"nominal_clearance_rad": -2.7143893241882324, "learned_command_rad": -2.6970322847366335, "actual_rad": -2.7197299003601074, "error_deg": 0.30599247481657127}, "elbow": {"nominal_clearance_rad": 0.8165484070777893, "learned_command_rad": 0.8910912518059297, "actual_rad": 0.8085374236106873, "error_deg": 0.4589955424140269}, "shoulder_rotate": {"nominal_clearance_rad": 1.9323643445968628, "learned_command_rad": 1.8800044670370328, "actual_rad": 1.963645339012146, "error_deg": -1.7922689589680258}, "arm_roll": {"nominal_clearance_rad": -2.649538516998291, "learned_command_rad": -2.6501111426000183, "actual_rad": -2.6499199867248535, "error_deg": 0.021856605344040804}, "wrist_side": {"nominal_clearance_rad": 0.3057526648044586, "learned_command_rad": 0.36177410177828073, "actual_rad": 0.2592126429080963, "error_deg": 2.666546833107998}, "wrist": {"nominal_clearance_rad": -1.0313191413879395, "learned_command_rad": -1.0313191413879395, "actual_rad": -1.0343708992004395, "error_deg": 0.17485284275232643}}
+v2.8 placement1 clearance verification= {"status": "training", "tolerance_deg": 0.5, "encoder_half_count_margin_deg": 0.011, "effective_tolerance_deg": 0.511, "errors_deg": {"shoulder_front": 0.32785591034978206, "shoulder_side": 0.30599247481657127, "shoulder_rotate": -1.7922689589680258, "elbow": 0.4589955424140269, "arm_roll": 0.021856605344040804, "wrist_side": 2.666546833107998, "wrist": 0.17485284275232643}, "blocking_errors_deg": {"shoulder_rotate": -1.7922689589680258, "wrist_side": 2.666546833107998}, "checked_at": "2026-09-11 21:56:11"}
+v2.8 placement1 clearance learning update= {"shoulder_rotate": {"bias_deg": -3.4, "previous_bias_deg": -3.0, "delta_bias_deg": -0.3999999999999999, "last_error_deg": -1.7922689589680258, "best_error_deg": 1.7922689589680258, "best_bias_deg": -3.0, "step_scale": 1.0, "learning_state": "improved", "samples": 9, "updated_at": "2026-09-11 21:56:11", "label": "placement1-clearance-final"}, "wrist_side": {"bias_deg": 2.4, "previous_bias_deg": 2.1999999999999997, "delta_bias_deg": 0.20000000000000018, "last_error_deg": 2.666546833107998, "best_error_deg": 2.666546833107998, "best_bias_deg": 2.1999999999999997, "step_scale": 0.5, "learning_state": "improved", "samples": 12, "updated_at": "2026-09-11 21:56:11", "label": "placement1-clearance-final"}}
+v2.8 placement1 clearance residual accepted for follow-up= {"status": "proceeding", "blocks_followup": false, "blocking_errors_deg": {"shoulder_rotate": -1.7922689589680258, "wrist_side": 2.666546833107998}, "learning_saved": true}
+v2.8 final verification= {"status": "validated", "tolerance_deg": 0.5, "encoder_half_count_margin_deg": 0.011, "effective_tolerance_deg": 0.511, "errors_deg": {"shoulder_front": -0.39342231128731947, "shoulder_side": -0.21857971381874805, "shoulder_rotate": 0.4590023726031969, "elbow": 0.1529979449555781, "arm_roll": 0.24042265878444882, "wrist_side": -0.10928473426749652, "wrist": 0.21856605344040803}, "blocking_errors_deg": {}, "checked_at": "2026-09-11 21:56:11", "validated_at": "2026-09-11 21:56:11"}
+v2.8 Placement1 final training status= {"status": "training incomplete", "tolerance_deg": 0.5, "errors_deg": {"shoulder_front": 0.32785591034978206, "shoulder_side": 0.30599247481657127, "elbow": 0.4589955424140269, "shoulder_rotate": -1.7922689589680258, "arm_roll": 0.021856605344040804, "wrist_side": 2.666546833107998, "wrist": 0.17485284275232643}, "blocking_errors_deg": {"shoulder_rotate": -1.7922689589680258, "wrist_side": 2.666546833107998}}
