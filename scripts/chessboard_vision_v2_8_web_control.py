@@ -60,7 +60,7 @@ def build_arm_page() -> str:
             <label class="inline-option" title="bishop01 夹取后，先收回 wrist，再运动到 Clearance">
               <input id="placement1AfterReplay" type="checkbox"> Placement1：夹取后到 Clearance
             </label>
-            <label class="inline-option" title="完整执行 Placement1，再从 Clearance 连续执行已训练的 white_bishop_place">
+            <label class="inline-option" title="完整执行 Placement1，经 Clearance 到 white_bishop_place，最后保持手臂姿态执行 Claw Home 张爪">
               <input id="whiteBishopPlacementAfterReplay" type="checkbox"> White Bishop Placement
             </label>"""
     if replay_button not in page:
@@ -81,7 +81,7 @@ def build_arm_page() -> str:
         return;
       }
       const suffix = whiteBishopPlacement
-        ? '，随后完整执行 Placement1，并从 Clearance 执行 White Bishop Placement'
+        ? '，随后完整执行 Placement1，从 Clearance 执行 White Bishop Placement，最后 Claw Home 张爪'
         : placement1
         ? '，随后夹取并回到 Clearance'
         : (closeAfterReplay ? '，随后使用压力停止逻辑合拢夹爪' : '');

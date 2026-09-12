@@ -57,6 +57,8 @@ knight等不对称棋子按front/back/left/right记录，必要时后续增加�
 夹持中心的名义棋盘坐标为 `[137.5, 27.5, 55] mm`。2026-09-12 的完整回放中，
 七个定位关节的最终误差均在 0.5° 内，因此记录为 validated。该动作当前只定义
 到达 c1 的放置姿态，不包含松开夹爪。
+v2.8 White Bishop Placement 流程在该姿态验证通过后，另行执行 Claw Home；
+因此 saved move 本身仍是纯七关节放置姿态。
 
 `grasp_anchors.white_bishop:d4` 来自 saved move `bishop01`。2026-09-10 第 7 次回放
 的七关节最大误差为 0.481°，因此属于已验证的实测抓取**关节姿态**锚点。

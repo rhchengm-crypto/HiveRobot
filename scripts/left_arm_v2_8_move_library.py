@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-separate-placement-options-v2"
+V28_MOVE_BUILD = "v2.8-white-bishop-placement-claw-home-v3"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
@@ -142,6 +142,74 @@ def close_claw_while_holding_arm(arm, arm_targets, api, arm_gains=None, arm_tau=
             "clearance carry was not started"
         )
     return hold_pos
+
+
+def claw_home_while_holding_arm(arm, api, fallback_kp, fallback_kd,
+                               carry_hold=None):
+    """Use the captured Claw Home trajectory while holding the placement pose."""
+    home = api.load_pose(api.CLAW_HOME_PATH)
+    if "claw" not in home:
+        raise RuntimeError("invalid claw home file: missing claw")
+    home_pos = float(home["claw"])
+    if not math.isfinite(home_pos):
+        raise RuntimeError("invalid claw home position")
+    arm.enable([*api.DEFAULT_JOINTS, "claw"])
+    start_pos = float(arm.claw_status()["pos"])
+    if not math.isfinite(start_pos):
+        raise RuntimeError("invalid current claw position")
+    # The final wrist controller has already been holding the other joints.
+    # Keep its gains and feedforward, with measured positions as the handoff
+    # targets so the release cannot create a new step in any arm joint.
+    targets = arm.positions(api.DEFAULT_JOINTS)
+    previous = carry_hold or {}
+    gains = {
+        joint: dict(previous.get("hold_gains", {}).get(
+            joint, api.CLEARANCE_HOLD_GAINS.get(
+                joint, api.CLEARANCE_BASE_HOLD_GAINS.get(
+                    joint, {"kp": fallback_kp, "kd": fallback_kd}
+                ),
+            ),
+        ))
+        for joint in api.DEFAULT_JOINTS
+    }
+    tau = {
+        joint: float(previous.get("hold_tau", {}).get(joint, 0.0))
+        for joint in api.DEFAULT_JOINTS
+    }
+    seconds = float(api.CLAW_MOVE_SECONDS)
+    if not math.isfinite(seconds) or seconds <= 0:
+        raise RuntimeError("invalid claw home duration")
+    print("v2.8 White Bishop Placement claw home=", json.dumps({
+        "from_rad": start_pos, "target_rad": home_pos,
+        "seconds": seconds, "arm_hold_joints": list(targets),
+        "hold_tau": tau,
+    }, ensure_ascii=False), flush=True)
+    started = time.time()
+    while time.time() - started < seconds:
+        progress = (time.time() - started) / seconds
+        blend = api.cosine_smoothstep(progress)
+        target = start_pos * (1.0 - blend) + home_pos * blend
+        command_holds(arm, targets, gains, tau, fallback_kp, fallback_kd)
+        arm.ctrl.controlMIT(
+            arm.motors["claw"], api.CLAW_KP_OPEN, api.CLAW_KD_OPEN,
+            target, 0, 0.0,
+        )
+        time.sleep(0.01)
+    # Match the existing Claw Home 0.8 s terminal hold, keeping the arm
+    # controller active throughout that interval as well.
+    started = time.time()
+    while time.time() - started < 0.8:
+        command_holds(arm, targets, gains, tau, fallback_kp, fallback_kd)
+        arm.ctrl.controlMIT(
+            arm.motors["claw"], api.CLAW_KP_HOLD, api.CLAW_KD_HOLD,
+            home_pos, 0, 0.0,
+        )
+        time.sleep(0.01)
+    status = arm.claw_status()
+    print("v2.8 White Bishop Placement claw home result=", json.dumps({
+        "target_rad": home_pos, "status": status,
+    }, ensure_ascii=False), flush=True)
+    return status
 
 
 def rollback_rejected_placement1_learning(local):
@@ -1374,6 +1442,13 @@ def replay_with_local_bias(args) -> None:
                         "errors_deg": placement_result["errors_deg"],
                         "blocking_errors_deg": placement_result["blocking_errors_deg"],
                     })
+                    claw_status = claw_home_while_holding_arm(
+                        arm, api, args.kp, args.kd, carry_hold=carry_hold,
+                    )
+                    white_bishop_placement_summary["claw_home"] = {
+                        "status": "completed",
+                        "position_rad": claw_status["pos"],
+                    }
                 finally:
                     active_local[0] = source_local
         finally:

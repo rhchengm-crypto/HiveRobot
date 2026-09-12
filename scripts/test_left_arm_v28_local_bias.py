@@ -17,6 +17,7 @@ from left_arm_v2_8_move_library import (
     blocking_joint_errors,
     build_parser,
     close_claw_while_holding_arm,
+    claw_home_while_holding_arm,
     final_blocking_joint_errors,
     pose_distance_deg,
     recover_placement1_shared_clearance_contamination,
@@ -33,6 +34,64 @@ def pose(offset_deg=0.0):
 
 
 class LocalBiasTests(unittest.TestCase):
+    def test_white_bishop_claw_home_keeps_arm_held_through_open_and_settle(self):
+        class Clock:
+            now = 0.0
+            def time(self):
+                return self.now
+            def sleep(self, duration):
+                self.now += duration
+
+        class Arm:
+            def __init__(self):
+                self.motors = {name: name for name in (*JOINTS, 'claw')}
+                self.ctrl = types.SimpleNamespace(controlMIT=self.command)
+                self.commands = []
+                self.claw_pos = -1.0
+            def command(self, motor, kp, kd, target, velocity, tau):
+                self.commands.append((motor, target, tau))
+                if motor == 'claw':
+                    self.claw_pos = target
+            def enable(self, names):
+                self.enabled = list(names)
+            def positions(self, names):
+                return {name: .25 for name in names}
+            def claw_status(self):
+                return {'pos': self.claw_pos, 'vel': 0.0, 'tau': 0.0}
+
+        arm = Arm()
+        clock = Clock()
+        api = types.SimpleNamespace(
+            load_pose=lambda path: {'claw': 1.0},
+            CLAW_HOME_PATH='claw-home.json',
+            DEFAULT_JOINTS=JOINTS,
+            CLEARANCE_HOLD_GAINS={name: {'kp': 2.0, 'kd': 1.0} for name in JOINTS},
+            CLEARANCE_BASE_HOLD_GAINS={},
+            CLAW_MOVE_SECONDS=.04,
+            CLAW_KP_OPEN=22.0,
+            CLAW_KD_OPEN=.8,
+            CLAW_KP_HOLD=14.0,
+            CLAW_KD_HOLD=.7,
+            cosine_smoothstep=lambda fraction: min(1.0, max(0.0, fraction)),
+        )
+        with patch('left_arm_v2_8_move_library.time.time', clock.time), \
+             patch('left_arm_v2_8_move_library.time.sleep', clock.sleep):
+            status = claw_home_while_holding_arm(
+                arm, api, 3.0, .3,
+                carry_hold={'hold_tau': {'wrist': .55},
+                            'hold_gains': {'wrist': {'kp': 8.0, 'kd': 1.4}}},
+            )
+        self.assertEqual(status['pos'], 1.0)
+        self.assertEqual(arm.enabled, [*JOINTS, 'claw'])
+        claw_indices = [i for i, command in enumerate(arm.commands)
+                        if command[0] == 'claw']
+        self.assertGreater(len(claw_indices), 3)
+        for index in claw_indices:
+            held = arm.commands[index-len(JOINTS):index]
+            self.assertEqual([command[0] for command in held], list(JOINTS))
+            self.assertEqual(held[-1][2], .55)
+        self.assertEqual(arm.commands[-1][:2], ('claw', 1.0))
+
     def test_placement1_cli_is_an_explicit_replay_option(self):
         args = build_parser().parse_args([
             "replay-move", "--name", PLACEMENT1_MOVE_NAME, "--placement1"
