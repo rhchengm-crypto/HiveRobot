@@ -43,6 +43,8 @@ class LocalBiasTests(unittest.TestCase):
             def __init__(self):
                 self.current = {joint: 0.0 for joint in JOINTS}
                 self.hold_targets = None
+                self.group_kwargs = None
+                self.settle_kwargs = None
                 self.events = []
 
             def positions(self, names):
@@ -65,9 +67,10 @@ class LocalBiasTests(unittest.TestCase):
                 self.events.append(("group", tuple(targets)))
                 self.current.update(targets)
                 self.hold_targets = dict(kwargs["hold_targets"])
+                self.group_kwargs = kwargs
 
             def hold_positions_with_gains(self, *args, **kwargs):
-                pass
+                self.settle_kwargs = kwargs
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -86,7 +89,7 @@ class LocalBiasTests(unittest.TestCase):
                 COUPLED_CLEARANCE_MAX_SECONDS=12.0,
                 CLEARANCE_BASE_HOLD_GAINS={joint: {"kp": 1.0, "kd": 1.0} for joint in JOINTS},
                 CLEARANCE_HOLD_GAINS={joint: {"kp": 2.0, "kd": 1.0} for joint in JOINTS},
-                CLEARANCE_JOINT_HOLD_TAU={},
+                CLEARANCE_JOINT_HOLD_TAU={"shoulder_front": 3.0},
                 CLAW_KP_HOLD=14.0,
                 CLAW_KD_HOLD=2.0,
                 COUPLED_CLEARANCE_MOVE_GAINS={joint: {"kp": 1.0, "kd": 1.0} for joint in JOINTS},
@@ -95,7 +98,7 @@ class LocalBiasTests(unittest.TestCase):
                 COUPLED_CLEARANCE_PRE_WINDOW_GAINS={},
                 COUPLED_CLEARANCE_CONTROL_DT=0.01,
                 COUPLED_CLEARANCE_VELOCITY_FF_JOINTS=set(),
-                COUPLED_CLEARANCE_MOVE_TAU_FF={},
+                COUPLED_CLEARANCE_MOVE_TAU_FF={"shoulder_front": 1.0},
                 COUPLED_CLEARANCE_TRAJECTORY="smoothstep",
                 COUPLED_CLEARANCE_LINEAR_BLEND=0.0,
                 COUPLED_CLEARANCE_SETTLE_SECONDS=0.1,
@@ -128,6 +131,12 @@ class LocalBiasTests(unittest.TestCase):
             self.assertNotIn("shoulder_rotate", arm.hold_targets)
             self.assertIn("shoulder_rotate", arm.events[1][1])
             self.assertIn("claw", arm.enabled)
+            self.assertEqual(
+                arm.settle_kwargs["gains"]["shoulder_front"],
+                api.COUPLED_CLEARANCE_MOVE_GAINS["shoulder_front"],
+            )
+            self.assertEqual(arm.settle_kwargs["hold_tau"]["shoulder_front"], 1.0)
+            self.assertNotEqual(arm.settle_kwargs["hold_tau"]["shoulder_front"], 3.0)
             self.assertTrue(bias_path.exists())
             shared = LocalTargetBias(shared_bias_path, clearance, "clearance:" + clearance_path.name)
             self.assertEqual(shared.anchor.get("hold_bias", {}).get("clearance", {}), {})

@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-placement1-w-first-full-v1"
+V28_MOVE_BUILD = "v2.8-placement1-smooth-terminal-v1"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
@@ -49,6 +49,7 @@ HOLD_BIAS_MIN_STEP_SCALE = 0.25
 HOLD_BIAS_LIMIT_DEG = 3.0
 PLACEMENT1_MOVE_NAME = "bishop01"
 PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 5.0
+PLACEMENT1_TERMINAL_SETTLE_SECONDS = 1.5
 PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID = "restore-pre-placement1-clearance-20260911-v2"
 WRIST_SIDE_ACTIVE_TAU_MIGRATION_ID = "replay-wrist-side-active-tau-20260911-v1"
 PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR = "8b20a284d5592a0c"
@@ -478,20 +479,42 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         trajectory=api.COUPLED_CLEARANCE_TRAJECTORY,
         linear_blend=api.COUPLED_CLEARANCE_LINEAR_BLEND,
     )
+    # Keep the exact controller used at the end of the trajectory while the
+    # arm settles.  The old handoff changed several gains at once and changed
+    # shoulder_front feed-forward torque from 1.0 to 3.0 Nm.  When a joint was
+    # still lagging its target, that discontinuity produced the observed
+    # end-of-motion kick and oscillation.
     final_hold_targets = dict(move_targets)
     final_hold_targets.update(hold_targets)
-    final_hold_gains = {
-        name: api.CLEARANCE_HOLD_GAINS.get(name, move_gains[name])
-        for name in move_targets
-    }
+    final_hold_gains = {name: dict(move_gains[name]) for name in move_targets}
     final_hold_gains.update(hold_gains)
+    final_hold_tau = dict(hold_tau)
+    terminal_move_tau = {}
+    for name in move_targets:
+        config = move_tau_ff.get(name, 0.0)
+        if isinstance(config, dict):
+            terminal_tau = float(config.get("end_tau", config.get("tau", 0.0)))
+        else:
+            terminal_tau = float(config)
+        final_hold_tau[name] = terminal_tau
+        terminal_move_tau[name] = terminal_tau
+    settle_seconds = max(
+        PLACEMENT1_TERMINAL_SETTLE_SECONDS,
+        float(api.COUPLED_CLEARANCE_SETTLE_SECONDS),
+    )
+    print("v2.8 placement1 smooth terminal settle=", json.dumps({
+        "seconds": settle_seconds,
+        "gains": {name: final_hold_gains[name] for name in move_targets},
+        "move_tau": terminal_move_tau,
+        "reason": "preserve_end_of_trajectory_controller",
+    }, ensure_ascii=False), flush=True)
     arm.hold_positions_with_gains(
         final_hold_targets,
-        seconds=api.COUPLED_CLEARANCE_SETTLE_SECONDS,
+        seconds=settle_seconds,
         gains=final_hold_gains,
         fallback_kp=fallback_kp,
         fallback_kd=fallback_kd,
-        hold_tau=hold_tau,
+        hold_tau=final_hold_tau,
     )
     final_positions = arm.positions(validation_joints)
     errors = clearance_errors_deg(nominal, final_positions, validation_joints)
