@@ -215,6 +215,28 @@ class LocalBiasTests(unittest.TestCase):
             self.assertEqual(update["bias_deg"], update["best_bias_deg"])
             self.assertEqual(update["delta_bias_deg"], -first["bias_deg"])
 
+    def test_old_backoff_step_is_restored_when_bias_file_is_loaded(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "bias.json"
+            local = LocalTargetBias(path, pose(), "move")
+            local.anchor["joint_bias"]["wrist_side"] = {
+                "bias_deg": -0.12021312231688155,
+                "previous_bias_deg": 0.0,
+                "delta_bias_deg": -0.12021312231688155,
+                "last_error_deg": -1.2021312231688155,
+                "best_error_deg": 0.5245662122197955,
+                "best_bias_deg": 0.0,
+                "step_scale": 0.2,
+                "learning_state": "backoff",
+                "samples": 6,
+            }
+            local._save()
+            reloaded = LocalTargetBias(path, pose(), "move")
+            record = reloaded.anchor["joint_bias"]["wrist_side"]
+            self.assertEqual(record["bias_deg"], 0.0)
+            self.assertEqual(record["previous_bias_deg"], -0.12021312231688155)
+            self.assertEqual(record["learning_state"], "legacy_backoff_restored")
+
     def test_pose_distance_is_in_degrees(self):
         rms, maximum = pose_distance_deg(pose(), pose(4.0))
         self.assertAlmostEqual(rms, 4.0)

@@ -500,6 +500,7 @@ class LocalTargetBias:
         self.move_name = str(move_name)
         self.data = self._load()
         self.anchor_id, self.created, self.distance = self._select_anchor()
+        self.repair_legacy_backoff_records()
 
     def _load(self) -> dict:
         if not self.path.exists():
@@ -541,6 +542,39 @@ class LocalTargetBias:
     @property
     def anchor(self) -> dict:
         return self.data["anchors"][self.anchor_id]
+
+    def repair_legacy_backoff_records(self) -> Dict[str, dict]:
+        """Restore best points from records written by the old backoff rule."""
+        repaired = {}
+        rules = self.anchor.get("joint_bias", {})
+        for joint, record in rules.items():
+            if not isinstance(record, dict) or record.get("learning_state") != "backoff":
+                continue
+            bias = float(record.get("bias_deg", 0.0))
+            best = float(record.get("best_bias_deg", bias))
+            logged_previous = float(record.get("previous_bias_deg", bias))
+            # Old backoff logs used the restored best point as
+            # ``previous_bias_deg`` and then stepped away from it again.
+            if abs(bias - best) <= 1e-12 or abs(logged_previous - best) > 1e-12:
+                continue
+            record["bias_deg"] = best
+            record["previous_bias_deg"] = bias
+            record["delta_bias_deg"] = best - bias
+            record["learning_state"] = "legacy_backoff_restored"
+            record["restored_at"] = _now()
+            repaired[joint] = {
+                "contaminated_bias_deg": bias,
+                "restored_best_bias_deg": best,
+            }
+        if repaired:
+            self.anchor["updated_at"] = _now()
+            self._save()
+            print(
+                "v2.8 legacy local backoff recovery=",
+                json.dumps(repaired, ensure_ascii=False),
+                flush=True,
+            )
+        return repaired
 
     def bias_rad(self, joint: str) -> float:
         record = self.anchor.get("joint_bias", {}).get(joint, {})
