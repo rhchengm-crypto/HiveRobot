@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-white-bishop-placement-v1"
+V28_MOVE_BUILD = "v2.8-separate-placement-options-v2"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
@@ -1327,7 +1327,7 @@ def replay_with_local_bias(args) -> None:
     def close_with_optional_placement1(arm):
         nonlocal placement1_ran
         try:
-            if args.placement1 and final_errors and not placement1_ran:
+            if (args.placement1 or args.white_bishop_placement) and final_errors and not placement1_ran:
                 placement1_ran = True
                 clearance_handoff = {}
                 result = run_placement1_on_arm(
@@ -1338,6 +1338,8 @@ def replay_with_local_bias(args) -> None:
                 if result:
                     placement1_summary.clear()
                     placement1_summary.update(result)
+                if not args.white_bishop_placement:
+                    return
                 destination_pose = moves.get(
                     WHITE_BISHOP_PLACE_MOVE_NAME, {}
                 ).get("pose", {})
@@ -1458,13 +1460,13 @@ def replay_with_local_bias(args) -> None:
                 f"{ERROR_DEADBAND_DEG:.1f}deg; learned data was saved; return Home and replay again: "
                 + json.dumps(blockers, ensure_ascii=False)
             )
-    if args.placement1 and placement1_summary:
+    if (args.placement1 or args.white_bishop_placement) and placement1_summary:
         print(
             "v2.8 Placement1 final training status=",
             json.dumps(placement1_summary, ensure_ascii=False),
             flush=True,
         )
-    if args.placement1 and white_bishop_placement_summary:
+    if args.white_bishop_placement and white_bishop_placement_summary:
         # This is the final line of the complete user-visible workflow.
         print(
             "v2.8 White Bishop Placement final training status=",
@@ -1480,9 +1482,14 @@ def build_parser():
     subparsers.choices["replay-move"].add_argument(
         "--placement1",
         action="store_true",
+        help="run bishop01, pressure grasp, wrist retract, then learned clearance",
+    )
+    subparsers.choices["replay-move"].add_argument(
+        "--white-bishop-placement",
+        action="store_true",
         help=(
-            "run White Bishop Placement: bishop01, pressure grasp, learned "
-            "clearance, then trained white_bishop_place"
+            "run Placement1, then continue from clearance to the trained "
+            "white_bishop_place move"
         ),
     )
     return parser
@@ -1493,8 +1500,8 @@ def main() -> None:
     args = build_parser().parse_args()
     if args.cmd != "replay-move":
         return legacy.main()
-    if args.placement1 and legacy.normalize_move_name(args.name) != PLACEMENT1_MOVE_NAME:
-        raise RuntimeError("placement1 currently requires saved move bishop01")
+    if (args.placement1 or args.white_bishop_placement) and legacy.normalize_move_name(args.name) != PLACEMENT1_MOVE_NAME:
+        raise RuntimeError("Placement1 and White Bishop Placement require saved move bishop01")
     replay_with_local_bias(args)
 
 

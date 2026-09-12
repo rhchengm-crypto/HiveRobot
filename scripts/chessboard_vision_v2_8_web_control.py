@@ -57,8 +57,11 @@ def build_arm_page() -> str:
             <label class="inline-option" title="Replay 命令结束后调用现有 Claw Close 压力停止流程">
               <input id="closeClawAfterReplay" type="checkbox"> Replay 后合拢夹爪
             </label>
-            <label class="inline-option" title="bishop01 夹取后经 Clearance 连续执行已训练的 white_bishop_place">
-              <input id="placement1AfterReplay" type="checkbox"> White Bishop Placement
+            <label class="inline-option" title="bishop01 夹取后，先收回 wrist，再运动到 Clearance">
+              <input id="placement1AfterReplay" type="checkbox"> Placement1：夹取后到 Clearance
+            </label>
+            <label class="inline-option" title="完整执行 Placement1，再从 Clearance 连续执行已训练的 white_bishop_place">
+              <input id="whiteBishopPlacementAfterReplay" type="checkbox"> White Bishop Placement
             </label>"""
     if replay_button not in page:
         raise RuntimeError("v2.8 arm page injection failed: Replay button was not found")
@@ -72,12 +75,15 @@ def build_arm_page() -> str:
       const name = document.getElementById('moveSelect').value;
       const closeAfterReplay = document.getElementById('closeClawAfterReplay').checked;
       const placement1 = document.getElementById('placement1AfterReplay').checked;
+      const whiteBishopPlacement = document.getElementById('whiteBishopPlacementAfterReplay').checked;
       if (!name) {
         setStatus('No saved move selected.');
         return;
       }
-      const suffix = placement1
-        ? '，随后夹取，经 Clearance 执行 White Bishop Placement'
+      const suffix = whiteBishopPlacement
+        ? '，随后完整执行 Placement1，并从 Clearance 执行 White Bishop Placement'
+        : placement1
+        ? '，随后夹取并回到 Clearance'
         : (closeAfterReplay ? '，随后使用压力停止逻辑合拢夹爪' : '');
       if (!confirm('Replay move via table clearance first: ' + name + suffix + '?')) return;
       try {
@@ -85,13 +91,13 @@ def build_arm_page() -> str:
           method: 'POST',
           cache: 'no-store',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, placement1 })
+          body: JSON.stringify({ name, placement1, white_bishop_placement: whiteBishopPlacement })
         });
         const data = await res.json();
         document.getElementById('command').textContent = data.command_text || JSON.stringify(data.command || [], null, 2);
         document.getElementById('output').textContent = formatOutput(data);
         setStatus(data.ok ? 'Replay running/finished: ' + name : 'Replay failed to start: ' + name);
-        if (data.ok && closeAfterReplay && !placement1) {
+        if (data.ok && closeAfterReplay && !placement1 && !whiteBishopPlacement) {
           setStatus('Replay running: ' + name + '；结束后将合拢夹爪。');
           const finished = await waitForRunIdle('replay-move:' + name, 300000);
           if (finished) {
@@ -112,11 +118,12 @@ def build_arm_page() -> str:
 
 
 ARM_HTML_PAGE = build_arm_page()
-PLACEMENT1_ACTION = 'white-bishop-placement'
+PLACEMENT1_ACTION = 'placement1:bishop01'
+WHITE_BISHOP_PLACEMENT_ACTION = 'white-bishop-placement'
 CLAW_HOME_INTERRUPT_ACTIONS = {
     'claw-close',
     PLACEMENT1_ACTION,
-    'placement1:bishop01',
+    WHITE_BISHOP_PLACEMENT_ACTION,
     # Compatibility with the first Placement1 build, which used this name.
     'replay-move:bishop01',
 }
@@ -245,17 +252,20 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
                 body = self.read_json_body()
                 name = str(body.get('name', '')).strip()
                 placement1 = body.get('placement1') is True
+                white_bishop_placement = body.get('white_bishop_placement') is True
             except Exception as exc:
                 return self.send_json({'ok': False, 'error': f'invalid replay payload: {exc}'}, HTTPStatus.BAD_REQUEST)
             if not name:
                 return self.send_json({'ok': False, 'error': 'move name is required'}, HTTPStatus.BAD_REQUEST)
-            if placement1 and name.casefold() != 'bishop01':
+            if (placement1 or white_bishop_placement) and name.casefold() != 'bishop01':
                 return self.send_json(
-                    {'ok': False, 'error': 'White Bishop Placement requires saved move bishop01'},
+                    {'ok': False, 'error': 'Placement1 and White Bishop Placement require saved move bishop01'},
                     HTTPStatus.BAD_REQUEST,
                 )
             cmd = arm.build_replay_move_command(ctrl_cfg, name)
-            if placement1:
+            if white_bishop_placement:
+                cmd.append('--white-bishop-placement')
+            elif placement1:
                 cmd.append('--placement1')
             if not ctrl_cfg.execute_enabled:
                 return self.send_json({
@@ -271,7 +281,11 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
             )
             if cancelled is not None:
                 time.sleep(0.2)
-            action_name = PLACEMENT1_ACTION if placement1 else f'replay-move:{name}'
+            action_name = (
+                WHITE_BISHOP_PLACEMENT_ACTION if white_bishop_placement
+                else PLACEMENT1_ACTION if placement1
+                else f'replay-move:{name}'
+            )
             payload = run_state.start(action_name, cmd, popen_kwargs={})
             if cancelled is not None:
                 payload['cancelled_previous'] = cancelled

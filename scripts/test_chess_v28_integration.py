@@ -24,7 +24,9 @@ class IntegrationTests(unittest.TestCase):
         self.assertTrue(args.arm_script.endswith('left_arm_v2_8.py'))
         self.assertIn('replay-move:bishop01',v28.CLAW_HOME_INTERRUPT_ACTIONS)
         self.assertIn(v28.PLACEMENT1_ACTION,v28.CLAW_HOME_INTERRUPT_ACTIONS)
-        self.assertEqual(v28.PLACEMENT1_ACTION,'white-bishop-placement')
+        self.assertIn(v28.WHITE_BISHOP_PLACEMENT_ACTION,v28.CLAW_HOME_INTERRUPT_ACTIONS)
+        self.assertEqual(v28.PLACEMENT1_ACTION,'placement1:bishop01')
+        self.assertEqual(v28.WHITE_BISHOP_PLACEMENT_ACTION,'white-bishop-placement')
 
     def test_shared_frames_preserve_metadata(self):
         stream=v28.arm.StreamState(); camera=v28.SharedCamera(stream)
@@ -55,6 +57,8 @@ class IntegrationTests(unittest.TestCase):
                 arm_page=get('/arm')
                 self.assertIn('id="closeClawAfterReplay"',arm_page)
                 self.assertIn('id="placement1AfterReplay"',arm_page)
+                self.assertIn('Placement1：夹取后到 Clearance',arm_page)
+                self.assertIn('id="whiteBishopPlacementAfterReplay"',arm_page)
                 self.assertIn('White Bishop Placement',arm_page)
                 self.assertIn("await runAction('claw-close', true)",arm_page)
                 self.assertIn("Restore Pre-Placement1 Clearance Data", arm_page)
@@ -77,6 +81,14 @@ class IntegrationTests(unittest.TestCase):
                     payload=json.loads(error.exception.read().decode())
                     error.exception.close()
                     self.assertEqual(payload['command'][-1],'--placement1')
+                    bishop_body=json.dumps({'name':'bishop01','white_bishop_placement':True}).encode()
+                    req=urllib.request.Request(base+'/api/move/replay',data=bishop_body,method='POST',headers={'Content-Type':'application/json'})
+                    with self.assertRaises(urllib.error.HTTPError) as error:
+                        urllib.request.urlopen(req)
+                    self.assertEqual(error.exception.code,403)
+                    payload=json.loads(error.exception.read().decode())
+                    error.exception.close()
+                    self.assertEqual(payload['command'][-1],'--white-bishop-placement')
                     popen.assert_not_called()
             finally:
                 server.shutdown();server.server_close();thread.join()

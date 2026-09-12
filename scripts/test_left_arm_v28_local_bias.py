@@ -38,7 +38,16 @@ class LocalBiasTests(unittest.TestCase):
             "replay-move", "--name", PLACEMENT1_MOVE_NAME, "--placement1"
         ])
         self.assertTrue(args.placement1)
+        self.assertFalse(args.white_bishop_placement)
         self.assertEqual(args.name, "bishop01")
+
+    def test_white_bishop_placement_cli_is_separate_and_implies_placement1_flow(self):
+        args = build_parser().parse_args([
+            "replay-move", "--name", PLACEMENT1_MOVE_NAME,
+            "--white-bishop-placement",
+        ])
+        self.assertFalse(args.placement1)
+        self.assertTrue(args.white_bishop_placement)
 
     def test_white_bishop_place_follows_clearance_and_holds_claw(self):
         class Ctrl:
