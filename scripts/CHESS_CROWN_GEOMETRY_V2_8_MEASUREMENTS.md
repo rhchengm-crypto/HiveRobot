@@ -59,6 +59,9 @@ knight等不对称棋子按front/back/left/right记录，必要时后续增加�
 到达 c1 的放置姿态，不包含松开夹爪。
 v2.8 White Bishop Placement 流程在该姿态验证通过后，另行执行 Claw Home；
 因此 saved move 本身仍是纯七关节放置姿态。
+2026-09-12 15:44 的实机回放经操作者确认张爪表现良好；wrist 张爪过程峰值
+偏移 0.022°，结束偏移 0°。同次 Placement1 的 Clearance `wrist_side` 残差
+仍为 2.492°，后续训练应单独跟踪，不影响此次 c1 张爪验证。
 
 `grasp_anchors.white_bishop:d4` 来自 saved move `bishop01`。2026-09-10 第 7 次回放
 的七关节最大误差为 0.481°，因此属于已验证的实测抓取**关节姿态**锚点。
