@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "profiles": {},
+  "placement_anchors": {
+    "white_bishop:c1": {
+      "piece_class": "white_bishop",
+      "target_square": "c1",
+      "saved_move_name": "white_bishop_place",
+      "pose_rad": {
+        "shoulder_front": 1.413939118385315,
+        "shoulder_side": -2.4713892936706543,
+        "shoulder_rotate": 2.399672031402588,
+        "elbow": 0.8321889042854309,
+        "arm_roll": -2.826543092727661,
+        "wrist_side": -0.1836804747581482,
+        "wrist": -2.2772183418273926
+      },
+      "joint_units": "radians",
+      "board_tcp_mm": [
+        137.5,
+        27.5,
+        55.0
+      ],
+      "tolerance_deg": 0.5,
+      "validation_errors_deg": {
+        "shoulder_front": -0.37156912103786366,
+        "shoulder_side": 0.30600613519491127,
+        "shoulder_rotate": 0.24042265878444882,
+        "elbow": -0.04371321068808161,
+        "arm_roll": -0.15299623740828563,
+        "wrist_side": -0.21856861476134679,
+        "wrist": 0.4152891619151153
+      },
+      "validated": true,
+      "validation_source": "White Bishop Placement run completed 2026-09-12 14:56:10",
+      "purpose": "geometry_training_anchor",
+      "includes_claw_release": false,
+      "updated_at": "2026-09-12 14:56:10"
+    }
+  },
+  "calibration": null
+}

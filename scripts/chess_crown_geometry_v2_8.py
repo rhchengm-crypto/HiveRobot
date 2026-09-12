@@ -70,6 +70,36 @@ def validate_profile(data):
                 tcp_offset_mm=offset.tolist())
 
 
+def validate_placement_anchor(data):
+    """Validate a taught joint pose tied to one chessboard destination."""
+    cls=str(data['piece_class'])
+    if cls not in CHESS_PIECE_YOLO_CLASSES:raise ValueError('棋子类别无效')
+    square=normalize_square(data['target_square'])
+    move_name=str(data['saved_move_name']).strip()
+    if not move_name:raise ValueError('saved move 名称不能为空')
+    joint_names=('shoulder_front','shoulder_side','shoulder_rotate','elbow',
+                 'arm_roll','wrist_side','wrist')
+    pose=data.get('pose_rad',{})
+    if set(pose)!=set(joint_names):raise ValueError('放置姿态必须包含七个定位关节')
+    pose={name:float(pose[name]) for name in joint_names}
+    if not np.isfinite(list(pose.values())).all():raise ValueError('关节姿态包含无效数值')
+    tolerance=float(data.get('tolerance_deg',.5))
+    errors={name:float(value) for name,value in data.get('validation_errors_deg',{}).items()}
+    if errors and set(errors)!=set(joint_names):raise ValueError('验证误差必须包含七个定位关节')
+    if not np.isfinite([tolerance,*errors.values()]).all() or tolerance<=0:
+        raise ValueError('验证阈值或误差无效')
+    validated=bool(errors) and max(abs(value) for value in errors.values())<=tolerance
+    board_tcp=data.get('board_tcp_mm')
+    if board_tcp is not None:board_tcp=array(board_tcp,(3,)).tolist()
+    return {'piece_class':cls,'target_square':square,'saved_move_name':move_name,
+            'pose_rad':pose,'joint_units':'radians','board_tcp_mm':board_tcp,
+            'tolerance_deg':tolerance,'validation_errors_deg':errors,
+            'validated':validated,'validation_source':str(data.get('validation_source','')),
+            'purpose':str(data.get('purpose','geometry_training_anchor')),
+            'includes_claw_release':bool(data.get('includes_claw_release',False)),
+            'updated_at':str(data.get('updated_at','')) or time.strftime('%Y-%m-%d %H:%M:%S')}
+
+
 def coordinate_plan(calibration,profile,source_xy,target_square,clearance_mm=120):
     """Coordinates only: cannot establish arm/link collision safety or IK."""
     xy=array(source_xy,(2,));s=normalize_square(target_square)
@@ -95,13 +125,18 @@ class GeometryStore:
     def __init__(self,path):self.path=path
     def read(self):
         if self.path.exists():return json.loads(self.path.read_text(encoding='utf-8'))
-        return {'schema':1,'profiles':{},'calibration':None}
+        return {'schema':1,'profiles':{},'placement_anchors':{},'calibration':None}
     def action(self,action,data):
         current=self.read()
         if action=='status':return {'ok':True,'data':current,'motion_enabled':False}
         if action=='calibrate':current['calibration']=fit_transform(data['samples'])
         elif action=='profile':
             p=validate_profile(data);current['profiles'][p['piece_class']+':'+p['orientation']]=p
+        elif action=='placement-anchor':
+            anchor=validate_placement_anchor(data)
+            current.setdefault('placement_anchors',{})[
+                anchor['piece_class']+':'+anchor['target_square']
+            ]=anchor
         elif action=='plan':
             if not current['calibration']:raise ValueError('请先完成坐标标定及独立检查')
             p=current['profiles'].get(data['profile'])
