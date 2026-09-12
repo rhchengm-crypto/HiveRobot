@@ -19,6 +19,7 @@ from left_arm_v2_8_move_library import (
     final_blocking_joint_errors,
     pose_distance_deg,
     recover_placement1_shared_clearance_contamination,
+    replay_move_tau_with_wrist_side_support,
     verify_pre_wrist_or_learn,
     run_placement1_on_arm,
     rollback_rejected_placement1_learning,
@@ -236,6 +237,36 @@ class LocalBiasTests(unittest.TestCase):
             self.assertEqual(record["bias_deg"], 0.0)
             self.assertEqual(record["previous_bias_deg"], -0.12021312231688155)
             self.assertEqual(record["learning_state"], "legacy_backoff_restored")
+
+    def test_wrist_side_bias_is_reset_once_for_active_tau_baseline(self):
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(Path(directory) / "bias.json", pose(), "move")
+            local.anchor.setdefault("joint_bias", {})["wrist_side"] = {
+                "bias_deg": -0.12,
+                "best_bias_deg": 0.0,
+                "samples": 7,
+            }
+            local._save()
+            reset = local.reset_wrist_side_bias_for_active_tau()
+            self.assertEqual(reset, {"previous_bias_deg": -0.12, "new_bias_deg": 0.0})
+            self.assertEqual(local.anchor["joint_bias"]["wrist_side"]["bias_deg"], 0.0)
+            self.assertEqual(local.reset_wrist_side_bias_for_active_tau(), {})
+
+    def test_low_shoulder_wrist_side_uses_existing_support_tau(self):
+        legacy = types.SimpleNamespace(REPLAY_LOW_SHOULDER_WRIST_SIDE_HOLD_TAU=-0.35)
+        original = lambda name, delta, low: 0.0
+        self.assertEqual(
+            replay_move_tau_with_wrist_side_support(
+                original, legacy, "wrist_side", -7.4, True
+            ),
+            -0.35,
+        )
+        self.assertEqual(
+            replay_move_tau_with_wrist_side_support(
+                original, legacy, "elbow", -7.4, True
+            ),
+            0.0,
+        )
 
     def test_pose_distance_is_in_degrees(self):
         rms, maximum = pose_distance_deg(pose(), pose(4.0))

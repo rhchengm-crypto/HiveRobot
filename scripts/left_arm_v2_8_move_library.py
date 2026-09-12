@@ -49,6 +49,7 @@ HOLD_BIAS_LIMIT_DEG = 3.0
 PLACEMENT1_MOVE_NAME = "bishop01"
 PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 5.0
 PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID = "restore-pre-placement1-clearance-20260911-v2"
+WRIST_SIDE_ACTIVE_TAU_MIGRATION_ID = "replay-wrist-side-active-tau-20260911-v1"
 PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR = "8b20a284d5592a0c"
 # Values printed immediately before the first Placement1 run.  Placement1
 # subsequently wrote arm_roll, wrist_side and wrist into this shared anchor.
@@ -466,6 +467,14 @@ def final_blocking_joint_errors(errors_deg: Dict[str, float],
     }
 
 
+def replay_move_tau_with_wrist_side_support(original, legacy, name: str,
+                                             delta_deg: float, low_shoulder_pose: bool):
+    configured = original(name, delta_deg, low_shoulder_pose)
+    if name == "wrist_side" and low_shoulder_pose and not configured:
+        return float(legacy.REPLAY_LOW_SHOULDER_WRIST_SIDE_HOLD_TAU)
+    return configured
+
+
 def verify_pre_wrist_or_learn(arm, pose, local,
                                label: str = "before_final_wrist") -> Dict[str, float]:
     current = arm.positions(list(JOINTS))
@@ -575,6 +584,31 @@ class LocalTargetBias:
                 flush=True,
             )
         return repaired
+
+    def reset_wrist_side_bias_for_active_tau(self) -> Dict[str, float]:
+        """Reset position learning once when replay gains load feed-forward."""
+        migrations = self.anchor.setdefault("migrations", {})
+        if migrations.get(WRIST_SIDE_ACTIVE_TAU_MIGRATION_ID):
+            return {}
+        record = self.anchor.get("joint_bias", {}).get("wrist_side")
+        previous = float(record.get("bias_deg", 0.0)) if isinstance(record, dict) else 0.0
+        if isinstance(record, dict):
+            record["bias_deg"] = 0.0
+            record["previous_bias_deg"] = previous
+            record["delta_bias_deg"] = -previous
+            record["best_bias_deg"] = 0.0
+            record["learning_state"] = "active_tau_baseline_reset"
+            record["reset_at"] = _now()
+        migrations[WRIST_SIDE_ACTIVE_TAU_MIGRATION_ID] = {
+            "applied_at": _now(),
+            "previous_bias_deg": previous,
+            "new_bias_deg": 0.0,
+        }
+        self.anchor["updated_at"] = _now()
+        self._save()
+        result = {"previous_bias_deg": previous, "new_bias_deg": 0.0}
+        print("v2.8 wrist_side active-tau baseline reset=", json.dumps(result), flush=True)
+        return result
 
     def bias_rad(self, joint: str) -> float:
         record = self.anchor.get("joint_bias", {}).get(joint, {})
@@ -737,6 +771,7 @@ def replay_with_local_bias(args) -> None:
     if move_name not in moves:
         raise RuntimeError(f"unknown move: {move_name}")
     local = LocalTargetBias(LOCAL_BIAS_PATH, moves[move_name].get("pose", {}), move_name)
+    local.reset_wrist_side_bias_for_active_tau()
     original_get = api.adaptive_target_bias_for
     original_update = api.update_adaptive_target_bias
     original_active_tau_update = api.update_adaptive_active_tau
@@ -745,6 +780,7 @@ def replay_with_local_bias(args) -> None:
     original_hold_bias_update = api.update_adaptive_hold_target_bias
     original_hold_bias_ready = legacy.adaptive_hold_tau_ready_for_target_bias
     original_arm_script = legacy.ARM_SCRIPT
+    original_replay_move_tau_ff = legacy.replay_move_tau_ff
     original_api_deadband = api.ADAPTIVE_TARGET_BIAS_ERROR_DEADBAND_DEG
     original_settle = legacy.run_replay_settle_pass
     original_error_report = legacy.print_replay_error_report
@@ -859,6 +895,11 @@ def replay_with_local_bias(args) -> None:
             })
         return original_move_target_with_holds(arm, name, target, *call_args, **call_kwargs)
 
+    def replay_move_tau_ff_with_wrist_side(name, delta_deg, low_shoulder_pose):
+        return replay_move_tau_with_wrist_side_support(
+            original_replay_move_tau_ff, legacy, name, delta_deg, low_shoulder_pose
+        )
+
     print("v2.8 pose-local correction=", json.dumps({
         "move": move_name,
         "anchor_id": local.anchor_id,
@@ -880,6 +921,7 @@ def replay_with_local_bias(args) -> None:
     legacy.print_replay_error_report = capture_error_report
     api.LeftArmV2.close = close_with_optional_placement1
     api.LeftArmV2.move_target_with_holds = capture_wrist_hold
+    legacy.replay_move_tau_ff = replay_move_tau_ff_with_wrist_side
     legacy.ARM_SCRIPT = str(SCRIPT_DIR / "left_arm_v2_8.py")
     try:
         legacy.replay_move(
@@ -900,6 +942,7 @@ def replay_with_local_bias(args) -> None:
         legacy.print_replay_error_report = original_error_report
         api.LeftArmV2.close = original_close
         api.LeftArmV2.move_target_with_holds = original_move_target_with_holds
+        legacy.replay_move_tau_ff = original_replay_move_tau_ff
         legacy.ARM_SCRIPT = original_arm_script
     if final_errors:
         validation = local.record_move_validation(final_errors)
