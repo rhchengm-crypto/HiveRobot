@@ -632,6 +632,7 @@ class LocalTargetBias:
                 continue
             previous = rules.get(joint, {})
             current = float(previous.get("bias_deg", 0.0)) if isinstance(previous, dict) else 0.0
+            applied_bias = current
             previous_error = abs(float(previous.get("last_error_deg", error))) if previous else None
             best_error = abs(float(previous.get("best_error_deg", error))) if previous else abs(error)
             best_bias = float(previous.get("best_bias_deg", current)) if previous else current
@@ -641,18 +642,27 @@ class LocalTargetBias:
             if improved:
                 best_error, best_bias = abs(error), current
             elif worse:
+                # This error was produced by the currently applied bias. Go
+                # back to the proven best bias only; do not use the same bad
+                # observation to launch another step in its error direction.
                 current = best_bias
                 scale = max(MIN_STEP_SCALE, scale * 0.5)
             elif previous_error is not None:
                 scale = max(MIN_STEP_SCALE, scale * 0.8)
-            delta = max(-MAX_STEP_DEG * scale, min(MAX_STEP_DEG * scale, error * STEP_SCALE * scale))
-            new_bias = max(-BIAS_LIMIT_DEG, min(BIAS_LIMIT_DEG, current + delta))
-            if new_bias == current:
+            if worse:
+                new_bias = current
+            else:
+                delta = max(
+                    -MAX_STEP_DEG * scale,
+                    min(MAX_STEP_DEG * scale, error * STEP_SCALE * scale),
+                )
+                new_bias = max(-BIAS_LIMIT_DEG, min(BIAS_LIMIT_DEG, current + delta))
+            if new_bias == applied_bias:
                 continue
             record = {
                 "bias_deg": new_bias,
-                "previous_bias_deg": current,
-                "delta_bias_deg": new_bias - current,
+                "previous_bias_deg": applied_bias,
+                "delta_bias_deg": new_bias - applied_bias,
                 "last_error_deg": error,
                 "best_error_deg": best_error,
                 "best_bias_deg": best_bias,

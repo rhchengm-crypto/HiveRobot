@@ -207,11 +207,13 @@ class LocalBiasTests(unittest.TestCase):
     def test_backoff_uses_best_bias_when_error_gets_worse(self):
         with tempfile.TemporaryDirectory() as directory:
             local = LocalTargetBias(Path(directory) / "bias.json", pose(), "move")
-            local.update({"wrist": 2.0})
+            first = local.update({"wrist": 2.0})["wrist"]
             update = local.update({"wrist": 3.0})["wrist"]
             self.assertEqual(update["learning_state"], "backoff")
             self.assertLess(update["step_scale"], 1.0)
-            self.assertLessEqual(abs(update["bias_deg"]), 5.0)
+            self.assertEqual(update["previous_bias_deg"], first["bias_deg"])
+            self.assertEqual(update["bias_deg"], update["best_bias_deg"])
+            self.assertEqual(update["delta_bias_deg"], -first["bias_deg"])
 
     def test_pose_distance_is_in_degrees(self):
         rms, maximum = pose_distance_deg(pose(), pose(4.0))
