@@ -11,6 +11,7 @@ from left_arm_v2_8_move_library import (
     LocalTargetBias,
     JOINTS,
     PLACEMENT1_MOVE_NAME,
+    WHITE_BISHOP_PLACE_MOVE_NAME,
     PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR,
     PLACEMENT1_PRECONTAMINATION_CLEARANCE_BIASES_DEG,
     blocking_joint_errors,
@@ -22,6 +23,7 @@ from left_arm_v2_8_move_library import (
     replay_move_tau_with_wrist_side_support,
     verify_pre_wrist_or_learn,
     run_placement1_on_arm,
+    run_white_bishop_place_on_arm,
     rollback_rejected_placement1_learning,
 )
 
@@ -37,6 +39,94 @@ class LocalBiasTests(unittest.TestCase):
         ])
         self.assertTrue(args.placement1)
         self.assertEqual(args.name, "bishop01")
+
+    def test_white_bishop_place_follows_clearance_and_holds_claw(self):
+        class Ctrl:
+            def controlMIT(self, *args):
+                pass
+
+        class Arm:
+            def __init__(self):
+                self.current = {joint: 0.0 for joint in JOINTS}
+                self.ctrl = Ctrl()
+                self.motors = {joint: object() for joint in (*JOINTS, "claw")}
+                self.calls = []
+
+            def enable(self, names):
+                self.enabled = list(names)
+
+            def positions(self, names):
+                return {name: self.current[name] for name in names}
+
+            def move_target_with_holds(self, name, target, **kwargs):
+                self.calls.append(("single", name, dict(kwargs)))
+                self.current[name] = target
+
+            def move_targets_with_holds(self, targets, **kwargs):
+                self.calls.append(("group", tuple(targets), dict(kwargs)))
+                self.current.update(targets)
+
+        target = {joint: 0.1 for joint in JOINTS}
+        arm = Arm()
+        api = types.SimpleNamespace(
+            LeftArmV2=Arm,
+            DEFAULT_JOINTS=list(JOINTS),
+            CLEARANCE_HOLD_GAINS={joint: {"kp": 2.0, "kd": 1.0} for joint in JOINTS},
+            CLEARANCE_BASE_HOLD_GAINS={joint: {"kp": 1.0, "kd": 1.0} for joint in JOINTS},
+            adaptive_hold_gains_for=lambda active, gains, low: gains,
+            CLAW_KP_HOLD=14.0,
+            CLAW_KD_HOLD=2.0,
+        )
+
+        def run_non_wrist(current_arm, pose_value, replay_order, *args):
+            targets = {joint: pose_value[joint] for joint in replay_order}
+            current_arm.move_targets_with_holds(
+                targets,
+                hold_targets={"wrist": current_arm.current["wrist"]},
+                hold_gains={"wrist": {"kp": 1.0, "kd": 1.0}},
+                hold_tau={"wrist": 0.1},
+            )
+            return targets
+
+        def run_final(current_arm, pose_value, *args):
+            current_arm.move_target_with_holds(
+                "wrist", pose_value["wrist"],
+                hold_targets={joint: pose_value[joint] for joint in JOINTS[:-1]},
+                hold_gains={joint: {"kp": 1.0, "kd": 1.0} for joint in JOINTS[:-1]},
+                hold_tau={joint: 0.1 for joint in JOINTS[:-1]},
+            )
+
+        legacy = types.SimpleNamespace(
+            load_moves=lambda path: {"moves": {
+                WHITE_BISHOP_PLACE_MOVE_NAME: {"pose": target}
+            }},
+            normalize_move_name=lambda name: name,
+            REPLAY_REQUIRED_JOINTS=list(JOINTS),
+            resolve_replay_order=lambda record: (list(JOINTS[:-1]), "wrist"),
+            is_low_shoulder_pose=lambda pose_value: False,
+            REPLAY_ENTRY_HOLD_TAU={},
+            REPLAY_ENTRY_TAKEOVER_SECONDS=0.0,
+            REPLAY_ENTRY_TAKEOVER_CONTROL_DT=0.01,
+            print_replay_error_report=lambda *args: {},
+            run_adaptive_non_wrist_replay=run_non_wrist,
+            run_replay_settle_pass=lambda *args, **kwargs: {},
+            run_replay_correction_pass=lambda arm_value, pose_value, errors, *args: errors,
+            run_final_wrist_move=run_final,
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(
+                Path(directory) / "bias.json", target, WHITE_BISHOP_PLACE_MOVE_NAME
+            )
+            result = run_white_bishop_place_on_arm(
+                arm, "moves.json", 3.0, 0.3, 0.5,
+                api, legacy, local, {"claw_hold_pos": -0.2},
+            )
+        self.assertEqual(result["status"], "validated")
+        self.assertEqual(len(arm.calls), 2)
+        for call in arm.calls:
+            self.assertEqual(call[2]["hold_targets"]["claw"], -0.2)
+            self.assertEqual(call[2]["hold_gains"]["claw"]["kp"], 14.0)
+        self.assertIn("claw", arm.enabled)
 
     def test_placement1_carries_claw_hold_into_coupled_clearance(self):
         class Arm:

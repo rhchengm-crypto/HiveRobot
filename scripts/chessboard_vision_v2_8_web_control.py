@@ -57,8 +57,8 @@ def build_arm_page() -> str:
             <label class="inline-option" title="Replay 命令结束后调用现有 Claw Close 压力停止流程">
               <input id="closeClawAfterReplay" type="checkbox"> Replay 后合拢夹爪
             </label>
-            <label class="inline-option" title="bishop01 到位后夹取，并在同一控制进程内搬运到 Clearance">
-              <input id="placement1AfterReplay" type="checkbox"> Placement1：夹取后到 Clearance
+            <label class="inline-option" title="bishop01 夹取后经 Clearance 连续执行已训练的 white_bishop_place">
+              <input id="placement1AfterReplay" type="checkbox"> White Bishop Placement
             </label>"""
     if replay_button not in page:
         raise RuntimeError("v2.8 arm page injection failed: Replay button was not found")
@@ -77,7 +77,7 @@ def build_arm_page() -> str:
         return;
       }
       const suffix = placement1
-        ? '，随后夹取并在同一进程内执行 Placement1 到 Clearance'
+        ? '，随后夹取，经 Clearance 执行 White Bishop Placement'
         : (closeAfterReplay ? '，随后使用压力停止逻辑合拢夹爪' : '');
       if (!confirm('Replay move via table clearance first: ' + name + suffix + '?')) return;
       try {
@@ -112,10 +112,11 @@ def build_arm_page() -> str:
 
 
 ARM_HTML_PAGE = build_arm_page()
-PLACEMENT1_ACTION = 'placement1:bishop01'
+PLACEMENT1_ACTION = 'white-bishop-placement'
 CLAW_HOME_INTERRUPT_ACTIONS = {
     'claw-close',
     PLACEMENT1_ACTION,
+    'placement1:bishop01',
     # Compatibility with the first Placement1 build, which used this name.
     'replay-move:bishop01',
 }
@@ -250,7 +251,7 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
                 return self.send_json({'ok': False, 'error': 'move name is required'}, HTTPStatus.BAD_REQUEST)
             if placement1 and name.casefold() != 'bishop01':
                 return self.send_json(
-                    {'ok': False, 'error': 'Placement1 currently requires saved move bishop01'},
+                    {'ok': False, 'error': 'White Bishop Placement requires saved move bishop01'},
                     HTTPStatus.BAD_REQUEST,
                 )
             cmd = arm.build_replay_move_command(ctrl_cfg, name)

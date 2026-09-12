@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-final-training-status-v1"
+V28_MOVE_BUILD = "v2.8-white-bishop-placement-v1"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
@@ -49,6 +49,7 @@ HOLD_BIAS_MIN_STEP_SCALE = 0.25
 HOLD_BIAS_LIMIT_DEG = 3.0
 PLACEMENT1_HOLD_BIAS_LIMIT_DEG = 5.0
 PLACEMENT1_MOVE_NAME = "bishop01"
+WHITE_BISHOP_PLACE_MOVE_NAME = "white_bishop_place"
 PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 5.0
 PLACEMENT1_TERMINAL_SETTLE_SECONDS = 1.5
 PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID = "restore-pre-placement1-clearance-20260911-v2"
@@ -218,7 +219,7 @@ def recover_placement1_shared_clearance_contamination(local, force=False):
 
 
 def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback_kd: float,
-                          carry_hold=None):
+                          carry_hold=None, clearance_handoff=None):
     """Carry the gripped bishop to learned clearance without releasing holds."""
     import left_arm_v2_6 as api
     from left_arm_v2_8 import CLEARANCE_BIAS_PATH, clearance_errors_deg
@@ -549,6 +550,14 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         json.dumps(comparison, ensure_ascii=False),
         flush=True,
     )
+    if clearance_handoff is not None:
+        clearance_handoff.clear()
+        clearance_handoff.update({
+            "hold_targets": final_hold_targets,
+            "hold_gains": final_hold_gains,
+            "hold_tau": final_hold_tau,
+            "claw_hold_pos": claw_hold_pos,
+        })
     gross_errors = {
         name: value for name, value in errors.items()
         if abs(value) > PLACEMENT1_MAX_LEARNABLE_ERROR_DEG
@@ -596,6 +605,158 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         "errors_deg": errors,
         "blocking_errors_deg": {},
     }
+
+
+def run_white_bishop_place_on_arm(arm, moves_file: str, fallback_kp: float,
+                                  fallback_kd: float, deadband_deg: float,
+                                  api, legacy, local, claw_hold):
+    """Continue from Placement1 Clearance into the trained placement pose."""
+    moves = legacy.load_moves(moves_file).get("moves", {})
+    move_name = legacy.normalize_move_name(WHITE_BISHOP_PLACE_MOVE_NAME)
+    if move_name not in moves:
+        raise RuntimeError(f"White Bishop Placement requires saved move {move_name!r}")
+    record = moves[move_name]
+    pose = record.get("pose", {})
+    missing = [joint for joint in legacy.REPLAY_REQUIRED_JOINTS if joint not in pose]
+    if missing:
+        raise RuntimeError(
+            f"move {move_name!r} is missing joints: {', '.join(missing)}"
+        )
+    replay_order, final_joint = legacy.resolve_replay_order(record)
+    low_shoulder_pose = legacy.is_low_shoulder_pose(pose)
+    claw_target = float(claw_hold["claw_hold_pos"])
+
+    print("v2.8 White Bishop Placement follow-up=", json.dumps({
+        "move": move_name,
+        "starts_after": "placement1-clearance",
+        "same_motor_session": True,
+        "claw_hold_pos": claw_target,
+        "replay_order": replay_order,
+        "final_joint": final_joint,
+        "local_anchor_id": local.anchor_id,
+        "local_samples": {
+            name: value.get("samples", 0)
+            for name, value in local.anchor.get("joint_bias", {}).items()
+        },
+    }, ensure_ascii=False), flush=True)
+    arm.enable([*api.DEFAULT_JOINTS, "claw"])
+
+    # Take over the Clearance endpoint without dropping the piece.  The
+    # ordinary replay entry helper only commands the seven arm joints.
+    current = arm.positions(api.DEFAULT_JOINTS)
+    entry_gains = {
+        name: api.CLEARANCE_HOLD_GAINS.get(
+            name,
+            api.CLEARANCE_BASE_HOLD_GAINS.get(name, {"kp": 3.0, "kd": 0.3}),
+        )
+        for name in api.DEFAULT_JOINTS
+    }
+    entry_gains = api.adaptive_hold_gains_for(
+        "replay_entry", entry_gains, low_shoulder_pose
+    )
+    entry_tau = dict(legacy.REPLAY_ENTRY_HOLD_TAU)
+    started = time.time()
+    while time.time() - started < legacy.REPLAY_ENTRY_TAKEOVER_SECONDS:
+        command_holds(arm, current, entry_gains, entry_tau, fallback_kp, fallback_kd)
+        arm.ctrl.controlMIT(
+            arm.motors["claw"], api.CLAW_KP_HOLD, api.CLAW_KD_HOLD,
+            claw_target, 0, 0.0,
+        )
+        time.sleep(legacy.REPLAY_ENTRY_TAKEOVER_CONTROL_DT)
+
+    # Every lower-level replay movement receives the claw as an additional
+    # hold joint.  This preserves the trained arm controller while preventing
+    # the pressure-stop grasp from being dropped between groups.
+    current_single = api.LeftArmV2.move_target_with_holds
+    current_group = api.LeftArmV2.move_targets_with_holds
+
+    def add_claw_hold(call_kwargs):
+        updated = dict(call_kwargs)
+        hold_targets = dict(updated.get("hold_targets", {}))
+        hold_targets["claw"] = claw_target
+        updated["hold_targets"] = hold_targets
+        hold_gains = dict(updated.get("hold_gains", {}))
+        hold_gains["claw"] = {"kp": api.CLAW_KP_HOLD, "kd": api.CLAW_KD_HOLD}
+        updated["hold_gains"] = hold_gains
+        hold_tau = dict(updated.get("hold_tau", {}))
+        hold_tau["claw"] = 0.0
+        updated["hold_tau"] = hold_tau
+        return updated
+
+    def single_with_claw(self, name, target, *call_args, **call_kwargs):
+        return current_single(
+            self, name, target, *call_args, **add_claw_hold(call_kwargs)
+        )
+
+    def group_with_claw(self, targets, *call_args, **call_kwargs):
+        return current_group(
+            self, targets, *call_args, **add_claw_hold(call_kwargs)
+        )
+
+    api.LeftArmV2.move_target_with_holds = single_with_claw
+    api.LeftArmV2.move_targets_with_holds = group_with_claw
+    try:
+        print(
+            "v2.8 White Bishop Placement target pose=",
+            json.dumps(pose, ensure_ascii=False),
+            flush=True,
+        )
+        legacy.print_replay_error_report(
+            "white_bishop_place_after_clearance",
+            arm.positions(api.DEFAULT_JOINTS),
+            pose,
+        )
+        completed_targets = legacy.run_adaptive_non_wrist_replay(
+            arm, pose, replay_order, fallback_kp, fallback_kd,
+            deadband_deg, low_shoulder_pose,
+        )
+        before_final = legacy.run_replay_settle_pass(
+            arm, pose, fallback_kp, fallback_kd,
+            label="white_bishop_place_before_final_wrist",
+        )
+        before_final = legacy.run_replay_correction_pass(
+            arm, pose, before_final, fallback_kp, fallback_kd,
+            deadband_deg, low_shoulder_pose,
+        )
+        legacy.run_final_wrist_move(
+            arm, pose, fallback_kp, fallback_kd,
+            deadband_deg, completed_targets,
+        )
+        final_positions = arm.positions(api.DEFAULT_JOINTS)
+        final_errors = {
+            joint: math.degrees(float(pose[joint]) - float(final_positions[joint]))
+            for joint in api.DEFAULT_JOINTS
+        }
+        print(
+            "v2.8 White Bishop Placement final errors_deg=",
+            json.dumps(final_errors, ensure_ascii=False),
+            flush=True,
+        )
+        local.update(final_errors, label="white-bishop-placement-final")
+        validation = local.record_move_validation(final_errors)
+        print(
+            "v2.8 White Bishop Placement final training status=",
+            json.dumps({
+                "status": (
+                    "training complete"
+                    if not validation["blocking_errors_deg"]
+                    else "training incomplete"
+                ),
+                "tolerance_deg": ERROR_DEADBAND_DEG,
+                "errors_deg": final_errors,
+                "blocking_errors_deg": validation["blocking_errors_deg"],
+            }, ensure_ascii=False),
+            flush=True,
+        )
+        if validation["blocking_errors_deg"]:
+            raise RuntimeError(
+                "White Bishop Placement training incomplete; learned data was saved: "
+                + json.dumps(validation["blocking_errors_deg"], ensure_ascii=False)
+            )
+        return validation
+    finally:
+        api.LeftArmV2.move_target_with_holds = current_single
+        api.LeftArmV2.move_targets_with_holds = current_group
 
 
 def _now() -> str:
@@ -1053,8 +1214,11 @@ def replay_with_local_bias(args) -> None:
     moves = legacy.load_moves(args.moves_file).get("moves", {})
     if move_name not in moves:
         raise RuntimeError(f"unknown move: {move_name}")
-    local = LocalTargetBias(LOCAL_BIAS_PATH, moves[move_name].get("pose", {}), move_name)
-    local.reset_wrist_side_bias_for_active_tau()
+    source_local = LocalTargetBias(
+        LOCAL_BIAS_PATH, moves[move_name].get("pose", {}), move_name
+    )
+    source_local.reset_wrist_side_bias_for_active_tau()
+    active_local = [source_local]
     original_get = api.adaptive_target_bias_for
     original_update = api.update_adaptive_target_bias
     original_active_tau_update = api.update_adaptive_active_tau
@@ -1072,11 +1236,12 @@ def replay_with_local_bias(args) -> None:
     final_errors: Dict[str, float] = {}
     placement1_ran = False
     placement1_summary = {}
+    white_bishop_placement_summary = {}
     carry_hold = {}
 
     def combined_bias(joint: str, low_shoulder_front: bool = False,
                       path: str = api.ADAPTIVE_TARGET_BIAS_PATH) -> float:
-        return original_get(joint, low_shoulder_front, path) + local.bias_rad(joint)
+        return original_get(joint, low_shoulder_front, path) + active_local[0].bias_rad(joint)
 
     def update_local(final_errors_deg: Dict[str, float], low_shoulder_front: bool = False,
                      path: str = api.ADAPTIVE_TARGET_BIAS_PATH, label: str = "",
@@ -1084,7 +1249,9 @@ def replay_with_local_bias(args) -> None:
                      require_ready: bool = True) -> Dict[str, dict]:
         # The v2.6 shared correction is the inherited baseline. v2.8 learns
         # only the residual, preventing a distant pose from rewriting it.
-        return local.update(final_errors_deg, label=label or "v2.8-pose-local")
+        return active_local[0].update(
+            final_errors_deg, label=label or "v2.8-pose-local"
+        )
 
     def update_active_tau_05(name, delta_deg, active_error_deg, applied_tau,
                              low_shoulder_front=False, path=api.ADAPTIVE_ACTIVE_TAU_PATH,
@@ -1123,7 +1290,7 @@ def replay_with_local_bias(args) -> None:
             # on a stale v2.6 "improved" state.
             if original_hold_bias_ready(active, joint, low_shoulder_front) and joint in inherited:
                 combined[joint] = inherited[joint]
-            local_offset = local.hold_bias_rad(active, joint)
+            local_offset = active_local[0].hold_bias_rad(active, joint)
             if local_offset:
                 combined[joint] = combined.get(joint, 0.0) + local_offset
         return combined
@@ -1131,7 +1298,7 @@ def replay_with_local_bias(args) -> None:
     def v28_hold_bias_ready(active, hold_name, low_shoulder_pose):
         return (
             original_hold_bias_ready(active, hold_name, low_shoulder_pose)
-            or abs(local.hold_bias_rad(active, hold_name)) > 1e-12
+            or abs(active_local[0].hold_bias_rad(active, hold_name)) > 1e-12
         )
 
     def update_local_hold_bias(active, induced_errors_deg, low_shoulder_front=False,
@@ -1143,10 +1310,12 @@ def replay_with_local_bias(args) -> None:
         # complete snapshot so one wrist motion cannot be counted twice.
         if label == "replay-final-wrist-soft-hold":
             return {}
-        return local.update_hold_bias(active, induced_errors_deg, label=label or "v2.8-pose-local-hold")
+        return active_local[0].update_hold_bias(
+            active, induced_errors_deg, label=label or "v2.8-pose-local-hold"
+        )
 
     def strict_pre_wrist_settle(arm, pose, fallback_kp, fallback_kd, label="before_final_wrist"):
-        return verify_pre_wrist_or_learn(arm, pose, local, label)
+        return verify_pre_wrist_or_learn(arm, pose, active_local[0], label)
 
     def capture_error_report(label, current, pose):
         errors = original_error_report(label, current, pose)
@@ -1160,12 +1329,51 @@ def replay_with_local_bias(args) -> None:
         try:
             if args.placement1 and final_errors and not placement1_ran:
                 placement1_ran = True
+                clearance_handoff = {}
                 result = run_placement1_on_arm(
-                    arm, args.clearance_file, args.kp, args.kd, carry_hold=carry_hold
+                    arm, args.clearance_file, args.kp, args.kd,
+                    carry_hold=carry_hold,
+                    clearance_handoff=clearance_handoff,
                 )
                 if result:
                     placement1_summary.clear()
                     placement1_summary.update(result)
+                destination_pose = moves.get(
+                    WHITE_BISHOP_PLACE_MOVE_NAME, {}
+                ).get("pose", {})
+                if not destination_pose:
+                    raise RuntimeError(
+                        "White Bishop Placement requires trained saved move "
+                        f"{WHITE_BISHOP_PLACE_MOVE_NAME!r}"
+                    )
+                destination_local = LocalTargetBias(
+                    LOCAL_BIAS_PATH,
+                    destination_pose,
+                    WHITE_BISHOP_PLACE_MOVE_NAME,
+                )
+                destination_local.reset_wrist_side_bias_for_active_tau()
+                active_local[0] = destination_local
+                try:
+                    placement_result = run_white_bishop_place_on_arm(
+                        arm,
+                        args.moves_file,
+                        args.kp,
+                        args.kd,
+                        args.deadband_deg,
+                        api,
+                        legacy,
+                        destination_local,
+                        clearance_handoff,
+                    )
+                    white_bishop_placement_summary.clear()
+                    white_bishop_placement_summary.update({
+                        "status": "training complete",
+                        "tolerance_deg": ERROR_DEADBAND_DEG,
+                        "errors_deg": placement_result["errors_deg"],
+                        "blocking_errors_deg": placement_result["blocking_errors_deg"],
+                    })
+                finally:
+                    active_local[0] = source_local
         finally:
             original_close(arm)
 
@@ -1195,12 +1403,15 @@ def replay_with_local_bias(args) -> None:
     print("v2.8 pose-local correction=", json.dumps({
         "build": V28_MOVE_BUILD,
         "move": move_name,
-        "anchor_id": local.anchor_id,
-        "new_anchor": local.created,
-        "nearest_rms_deg": local.distance[0],
-        "nearest_max_deg": local.distance[1],
+        "anchor_id": source_local.anchor_id,
+        "new_anchor": source_local.created,
+        "nearest_rms_deg": source_local.distance[0],
+        "nearest_max_deg": source_local.distance[1],
         "shared_v2_6_baseline": True,
-        "local_samples": {name: value.get("samples", 0) for name, value in local.anchor.get("joint_bias", {}).items()},
+        "local_samples": {
+            name: value.get("samples", 0)
+            for name, value in source_local.anchor.get("joint_bias", {}).items()
+        },
     }, ensure_ascii=False), flush=True)
     api.adaptive_target_bias_for = combined_bias
     api.update_adaptive_target_bias = update_local
@@ -1238,7 +1449,7 @@ def replay_with_local_bias(args) -> None:
         legacy.replay_move_tau_ff = original_replay_move_tau_ff
         legacy.ARM_SCRIPT = original_arm_script
     if final_errors:
-        validation = local.record_move_validation(final_errors)
+        validation = source_local.record_move_validation(final_errors)
         print("v2.8 final verification=", json.dumps(validation, ensure_ascii=False), flush=True)
         blockers = validation["blocking_errors_deg"]
         if blockers:
@@ -1248,11 +1459,16 @@ def replay_with_local_bias(args) -> None:
                 + json.dumps(blockers, ensure_ascii=False)
             )
     if args.placement1 and placement1_summary:
-        # Keep this as the final line of a successful full replay so the UI
-        # cannot hide the Placement1 result behind bishop01's own validation.
         print(
             "v2.8 Placement1 final training status=",
             json.dumps(placement1_summary, ensure_ascii=False),
+            flush=True,
+        )
+    if args.placement1 and white_bishop_placement_summary:
+        # This is the final line of the complete user-visible workflow.
+        print(
+            "v2.8 White Bishop Placement final training status=",
+            json.dumps(white_bishop_placement_summary, ensure_ascii=False),
             flush=True,
         )
 
@@ -1264,7 +1480,10 @@ def build_parser():
     subparsers.choices["replay-move"].add_argument(
         "--placement1",
         action="store_true",
-        help="after bishop01 replay, close the claw and carry it to learned clearance",
+        help=(
+            "run White Bishop Placement: bishop01, pressure grasp, learned "
+            "clearance, then trained white_bishop_place"
+        ),
     )
     return parser
 

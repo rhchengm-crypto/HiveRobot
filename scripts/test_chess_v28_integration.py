@@ -24,6 +24,7 @@ class IntegrationTests(unittest.TestCase):
         self.assertTrue(args.arm_script.endswith('left_arm_v2_8.py'))
         self.assertIn('replay-move:bishop01',v28.CLAW_HOME_INTERRUPT_ACTIONS)
         self.assertIn(v28.PLACEMENT1_ACTION,v28.CLAW_HOME_INTERRUPT_ACTIONS)
+        self.assertEqual(v28.PLACEMENT1_ACTION,'white-bishop-placement')
 
     def test_shared_frames_preserve_metadata(self):
         stream=v28.arm.StreamState(); camera=v28.SharedCamera(stream)
@@ -54,6 +55,7 @@ class IntegrationTests(unittest.TestCase):
                 arm_page=get('/arm')
                 self.assertIn('id="closeClawAfterReplay"',arm_page)
                 self.assertIn('id="placement1AfterReplay"',arm_page)
+                self.assertIn('White Bishop Placement',arm_page)
                 self.assertIn("await runAction('claw-close', true)",arm_page)
                 self.assertIn("Restore Pre-Placement1 Clearance Data", arm_page)
                 self.assertIn("waitForRunIdle('replay-move:' + name",arm_page)
