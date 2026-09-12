@@ -23,6 +23,12 @@ V28_CLEARANCE_BUILD = "v2.8-clearance-nonblocking-v1"
 CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_clearance_bias.json"
 CLEARANCE_TOLERANCE_DEG = 0.5
 HOME_CAPTURED_TRANSITION_MARGIN_DEG = 5.0
+# v2.6 checks the live current-to-Home delta before it executes the captured
+# pre-home Clearance pose.  Encoder/load settling can leave that live start a
+# little outside the captured Clearance angle.  Once the captured
+# Clearance-to-Home transition has passed the bounded check above, allow one
+# degree for this start-position difference instead of the former 0.1 degree.
+HOME_RUNTIME_START_MARGIN_DEG = 1.0
 CLEARANCE_COMMAND_MARGIN_DEG = 5.0
 CLEARANCE_FINE_JOINTS = ("wrist_side",)
 CLEARANCE_FINE_MAX_ERROR_DEG = 5.0
@@ -203,7 +209,7 @@ def captured_home_transition_limit(requested_limit_deg: float,
     if largest <= requested_limit_deg:
         return float(requested_limit_deg)
     if largest <= requested_limit_deg + HOME_CAPTURED_TRANSITION_MARGIN_DEG:
-        return largest + 0.1
+        return largest + HOME_RUNTIME_START_MARGIN_DEG
     return float(requested_limit_deg)
 
 

@@ -53,8 +53,13 @@ class HomeWrapperTests(unittest.TestCase):
         self.assertAlmostEqual(errors["shoulder_side"], 1.0)
 
     def test_captured_home_transition_gets_small_boundary_margin(self):
-        self.assertAlmostEqual(captured_home_transition_limit(120.0, [20.0, 121.02]), 121.12)
+        self.assertAlmostEqual(captured_home_transition_limit(120.0, [20.0, 121.02]), 122.02)
         self.assertEqual(captured_home_transition_limit(120.0, [126.0]), 120.0)
+
+    def test_captured_home_margin_covers_small_live_start_offset(self):
+        effective = captured_home_transition_limit(120.0, [121.02187135612442])
+        self.assertGreater(effective, 121.52)
+        self.assertLess(effective, 122.1)
 
     def test_replace_option_expands_clearance_command_limit(self):
         original = ["clearance", "--max-delta-deg", "120", "--execute"]
