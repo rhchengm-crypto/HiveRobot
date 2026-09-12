@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-white-bishop-placement-claw-home-v3"
+V28_MOVE_BUILD = "v2.8-white-bishop-placement-claw-handoff-v4"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
@@ -157,11 +157,22 @@ def claw_home_while_holding_arm(arm, api, fallback_kp, fallback_kd,
     start_pos = float(arm.claw_status()["pos"])
     if not math.isfinite(start_pos):
         raise RuntimeError("invalid current claw position")
-    # The final wrist controller has already been holding the other joints.
-    # Keep its gains and feedforward, with measured positions as the handoff
-    # targets so the release cannot create a new step in any arm joint.
-    targets = arm.positions(api.DEFAULT_JOINTS)
+    # Preserve the *commanded* final wrist controller targets.  Replacing
+    # them with encoder positions at this handoff causes an abrupt target
+    # change under load, especially at the wrist during claw release.
+    measured_before = arm.positions(api.DEFAULT_JOINTS)
     previous = carry_hold or {}
+    prior_targets = previous.get("hold_targets", {})
+    if "wrist" not in prior_targets:
+        raise RuntimeError(
+            "White Bishop Placement claw home refused: final wrist hold target missing"
+        )
+    targets = {
+        joint: float(prior_targets.get(joint, measured_before[joint]))
+        for joint in api.DEFAULT_JOINTS
+    }
+    if not all(math.isfinite(value) for value in targets.values()):
+        raise RuntimeError("invalid final arm hold targets before claw home")
     gains = {
         joint: dict(previous.get("hold_gains", {}).get(
             joint, api.CLEARANCE_HOLD_GAINS.get(
@@ -182,9 +193,13 @@ def claw_home_while_holding_arm(arm, api, fallback_kp, fallback_kd,
     print("v2.8 White Bishop Placement claw home=", json.dumps({
         "from_rad": start_pos, "target_rad": home_pos,
         "seconds": seconds, "arm_hold_joints": list(targets),
+        "wrist_command_target_rad": targets["wrist"],
+        "wrist_measured_before_rad": measured_before["wrist"],
         "hold_tau": tau,
     }, ensure_ascii=False), flush=True)
     started = time.time()
+    next_wrist_sample = started
+    wrist_peak_drift_deg = 0.0
     while time.time() - started < seconds:
         progress = (time.time() - started) / seconds
         blend = api.cosine_smoothstep(progress)
@@ -194,6 +209,13 @@ def claw_home_while_holding_arm(arm, api, fallback_kp, fallback_kd,
             arm.motors["claw"], api.CLAW_KP_OPEN, api.CLAW_KD_OPEN,
             target, 0, 0.0,
         )
+        now = time.time()
+        if now >= next_wrist_sample:
+            wrist_current = float(arm.positions(["wrist"])["wrist"])
+            drift = math.degrees(wrist_current - measured_before["wrist"])
+            if abs(drift) > abs(wrist_peak_drift_deg):
+                wrist_peak_drift_deg = drift
+            next_wrist_sample = now + 0.1
         time.sleep(0.01)
     # Match the existing Claw Home 0.8 s terminal hold, keeping the arm
     # controller active throughout that interval as well.
@@ -206,8 +228,18 @@ def claw_home_while_holding_arm(arm, api, fallback_kp, fallback_kd,
         )
         time.sleep(0.01)
     status = arm.claw_status()
+    wrist_after = float(arm.positions(["wrist"])["wrist"])
+    wrist_drift_deg = math.degrees(wrist_after - measured_before["wrist"])
+    if abs(wrist_drift_deg) > abs(wrist_peak_drift_deg):
+        wrist_peak_drift_deg = wrist_drift_deg
+    status = dict(status)
+    status["wrist_before_rad"] = measured_before["wrist"]
+    status["wrist_after_rad"] = wrist_after
+    status["wrist_drift_deg"] = wrist_drift_deg
+    status["wrist_peak_drift_deg"] = wrist_peak_drift_deg
     print("v2.8 White Bishop Placement claw home result=", json.dumps({
         "target_rad": home_pos, "status": status,
+        "wrist_command_target_rad": targets["wrist"],
     }, ensure_ascii=False), flush=True)
     return status
 
@@ -1446,8 +1478,14 @@ def replay_with_local_bias(args) -> None:
                         arm, api, args.kp, args.kd, carry_hold=carry_hold,
                     )
                     white_bishop_placement_summary["claw_home"] = {
-                        "status": "completed",
+                        "status": (
+                            "completed"
+                            if abs(claw_status["wrist_peak_drift_deg"]) <= ERROR_DEADBAND_DEG
+                            else "training incomplete"
+                        ),
                         "position_rad": claw_status["pos"],
+                        "wrist_drift_deg": claw_status["wrist_drift_deg"],
+                        "wrist_peak_drift_deg": claw_status["wrist_peak_drift_deg"],
                     }
                 finally:
                     active_local[0] = source_local

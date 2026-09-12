@@ -78,7 +78,8 @@ class LocalBiasTests(unittest.TestCase):
              patch('left_arm_v2_8_move_library.time.sleep', clock.sleep):
             status = claw_home_while_holding_arm(
                 arm, api, 3.0, .3,
-                carry_hold={'hold_tau': {'wrist': .55},
+                carry_hold={'hold_targets': {'wrist': .3},
+                            'hold_tau': {'wrist': .55},
                             'hold_gains': {'wrist': {'kp': 8.0, 'kd': 1.4}}},
             )
         self.assertEqual(status['pos'], 1.0)
@@ -89,8 +90,25 @@ class LocalBiasTests(unittest.TestCase):
         for index in claw_indices:
             held = arm.commands[index-len(JOINTS):index]
             self.assertEqual([command[0] for command in held], list(JOINTS))
+            self.assertEqual(held[-1][1], .3)
             self.assertEqual(held[-1][2], .55)
         self.assertEqual(arm.commands[-1][:2], ('claw', 1.0))
+        self.assertEqual(status['wrist_drift_deg'], 0.0)
+        self.assertEqual(status['wrist_peak_drift_deg'], 0.0)
+
+    def test_white_bishop_claw_home_refuses_missing_wrist_handoff(self):
+        arm = types.SimpleNamespace(
+            enable=lambda names: None,
+            claw_status=lambda: {'pos': -1.0},
+            positions=lambda names: {name: .25 for name in names},
+        )
+        api = types.SimpleNamespace(
+            load_pose=lambda path: {'claw': 1.0},
+            CLAW_HOME_PATH='claw-home.json',
+            DEFAULT_JOINTS=JOINTS,
+        )
+        with self.assertRaisesRegex(RuntimeError, 'final wrist hold target missing'):
+            claw_home_while_holding_arm(arm, api, 3.0, .3, carry_hold={})
 
     def test_placement1_cli_is_an_explicit_replay_option(self):
         args = build_parser().parse_args([
