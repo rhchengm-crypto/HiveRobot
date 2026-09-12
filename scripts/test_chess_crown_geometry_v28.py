@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import numpy as np
 from chess_crown_geometry_v2_8 import (GeometryStore,fit_transform,coordinate_plan,
-    validate_profile,validate_placement_anchor,crown_point)
+    validate_profile,validate_placement_anchor,validate_grasp_anchor,crown_point)
 
 class GeometryTests(unittest.TestCase):
     def samples(self):
@@ -46,5 +46,22 @@ class GeometryTests(unittest.TestCase):
             result=GeometryStore(path).action('placement-anchor',record)
             self.assertIn('keep',result['data']['profiles'])
             self.assertEqual(result['data']['placement_anchors']['white_bishop:c1'],checked)
+
+    def test_d4_grasp_anchor_keeps_pose_and_metric_validation_separate(self):
+        joints=('shoulder_front','shoulder_side','shoulder_rotate','elbow',
+                'arm_roll','wrist_side','wrist')
+        record=dict(piece_class='white_bishop',source_square='D4',
+            saved_move_name='bishop01',pose_rad={name:.1 for name in joints},
+            board_tcp_mm=[192.5,192.5,55],grip_section_width_mm=14,
+            tolerance_deg=.5,validation_errors_deg={name:.4 for name in joints},
+            board_correspondence_status='user_confirmed_nominal_square_center')
+        with tempfile.TemporaryDirectory() as directory:
+            store=GeometryStore(Path(directory)/'geometry.json')
+            data=store.action('grasp-anchor',record)['data']
+            anchor=data['grasp_anchors']['white_bishop:d4']
+            self.assertTrue(anchor['pose_validated'])
+            self.assertFalse(anchor['metric_transform_validated'])
+            self.assertFalse(anchor['contact_confirmed'])
+            self.assertEqual(anchor['saved_move_name'],'bishop01')
 
 if __name__=='__main__':unittest.main()

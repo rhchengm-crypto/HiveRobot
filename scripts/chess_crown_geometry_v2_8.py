@@ -100,6 +100,31 @@ def validate_placement_anchor(data):
             'updated_at':str(data.get('updated_at','')) or time.strftime('%Y-%m-%d %H:%M:%S')}
 
 
+def validate_grasp_anchor(data):
+    """Record an empirical grasp pose without claiming a calibrated 3-D transform."""
+    anchor=validate_placement_anchor({
+        'piece_class':data['piece_class'],
+        'target_square':data['source_square'],
+        'saved_move_name':data['saved_move_name'],
+        'pose_rad':data['pose_rad'],
+        'board_tcp_mm':data.get('board_tcp_mm'),
+        'tolerance_deg':data.get('tolerance_deg',.5),
+        'validation_errors_deg':data.get('validation_errors_deg',{}),
+        'validation_source':data.get('validation_source',''),
+        'purpose':'geometry_training_anchor',
+        'updated_at':data.get('updated_at',''),
+    })
+    anchor['source_square']=anchor.pop('target_square')
+    anchor['pose_validated']=anchor.pop('validated')
+    anchor['board_correspondence_status']=str(data.get('board_correspondence_status','unverified'))
+    anchor['contact_confirmed']=data.get('contact_confirmed') is True
+    anchor['metric_transform_validated']=False
+    anchor['grip_section_width_mm']=float(data['grip_section_width_mm'])
+    if not np.isfinite(anchor['grip_section_width_mm']) or anchor['grip_section_width_mm']<=0:
+        raise ValueError('棋冠夹持宽度无效')
+    return anchor
+
+
 def coordinate_plan(calibration,profile,source_xy,target_square,clearance_mm=120):
     """Coordinates only: cannot establish arm/link collision safety or IK."""
     xy=array(source_xy,(2,));s=normalize_square(target_square)
@@ -125,7 +150,7 @@ class GeometryStore:
     def __init__(self,path):self.path=path
     def read(self):
         if self.path.exists():return json.loads(self.path.read_text(encoding='utf-8'))
-        return {'schema':1,'profiles':{},'placement_anchors':{},'calibration':None}
+        return {'schema':1,'profiles':{},'placement_anchors':{},'grasp_anchors':{},'calibration':None}
     def action(self,action,data):
         current=self.read()
         if action=='status':return {'ok':True,'data':current,'motion_enabled':False}
@@ -136,6 +161,11 @@ class GeometryStore:
             anchor=validate_placement_anchor(data)
             current.setdefault('placement_anchors',{})[
                 anchor['piece_class']+':'+anchor['target_square']
+            ]=anchor
+        elif action=='grasp-anchor':
+            anchor=validate_grasp_anchor(data)
+            current.setdefault('grasp_anchors',{})[
+                anchor['piece_class']+':'+anchor['source_square']
             ]=anchor
         elif action=='plan':
             if not current['calibration']:raise ValueError('请先完成坐标标定及独立检查')

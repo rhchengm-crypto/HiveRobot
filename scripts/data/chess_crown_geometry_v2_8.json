@@ -38,5 +38,42 @@
       "updated_at": "2026-09-12 14:56:10"
     }
   },
+  "grasp_anchors": {
+    "white_bishop:d4": {
+      "piece_class": "white_bishop",
+      "source_square": "d4",
+      "saved_move_name": "bishop01",
+      "pose_rad": {
+        "shoulder_front": 0.7444495558738708,
+        "shoulder_side": -2.776188373565674,
+        "shoulder_rotate": 2.7029449939727783,
+        "elbow": 0.3927290737628937,
+        "arm_roll": -2.773899555206299,
+        "wrist_side": 0.1676585078239441,
+        "wrist": -2.6098649501800537
+      },
+      "joint_units": "radians",
+      "board_tcp_mm": [192.5, 192.5, 55.0],
+      "grip_section_width_mm": 14.0,
+      "tolerance_deg": 0.5,
+      "validation_errors_deg": {
+        "shoulder_front": -0.17485284275232643,
+        "shoulder_side": -0.21857971381874805,
+        "shoulder_rotate": 0.4808589779472377,
+        "elbow": 0.1529979449555781,
+        "arm_roll": -0.13115329244258483,
+        "wrist_side": 0.10928473426749652,
+        "wrist": 0.24042265878444882
+      },
+      "pose_validated": true,
+      "validation_source": "bishop01 replay run 7, 2026-09-10 19:51:37",
+      "board_correspondence_status": "user_confirmed_nominal_square_center",
+      "contact_confirmed": false,
+      "metric_transform_validated": false,
+      "purpose": "geometry_training_anchor",
+      "includes_claw_release": false,
+      "updated_at": "2026-09-10 19:52:49"
+    }
+  },
   "calibration": null
 }
