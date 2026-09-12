@@ -20,6 +20,7 @@ from typing import Iterable, List
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 V28_CLEARANCE_BUILD = "v2.8-clearance-nonblocking-v1"
+V28_HOME_BUILD = "v2.8-home-staged-path-guard-v1"
 CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_clearance_bias.json"
 CLEARANCE_TOLERANCE_DEG = 0.5
 HOME_CAPTURED_TRANSITION_MARGIN_DEG = 5.0
@@ -29,6 +30,11 @@ HOME_CAPTURED_TRANSITION_MARGIN_DEG = 5.0
 # Clearance-to-Home transition has passed the bounded check above, allow one
 # degree for this start-position difference instead of the former 0.1 degree.
 HOME_RUNTIME_START_MARGIN_DEG = 1.0
+# v2.6 performs a direct current-to-Home limit check before its requested
+# pre-home Clearance stage.  That direct leg is never executed by v2.8, so use
+# an internal allowance only for the legacy precheck after v2.8 has validated
+# both real legs independently.
+HOME_LEGACY_DIRECT_PRECHECK_BYPASS_DEG = 180.0
 CLEARANCE_COMMAND_MARGIN_DEG = 5.0
 CLEARANCE_FINE_JOINTS = ("wrist_side",)
 CLEARANCE_FINE_MAX_ERROR_DEG = 5.0
@@ -213,6 +219,13 @@ def captured_home_transition_limit(requested_limit_deg: float,
     return float(requested_limit_deg)
 
 
+def home_clearance_entry_errors_deg(current, clearance, joints: Iterable[str]):
+    return {
+        name: math.degrees(float(clearance[name]) - float(current[name]))
+        for name in joints if name in current and name in clearance
+    }
+
+
 def run_trained_clearance(original: List[str], legacy) -> None:
     from left_arm_v2_8_move_library import (
         LocalTargetBias,
@@ -395,7 +408,14 @@ def main() -> None:
             "v2.8 Home refused: clearance-to-home delta exceeds --max-delta-deg: " + report
         )
 
+    # Keep the bounded captured-pose value for the post-Home correction pass.
+    # Only the first legacy call needs to bypass v2.6's nonexistent direct
+    # current-to-Home leg; the live current-to-Clearance leg is checked below.
     expanded = replace_option(original, "--max-delta-deg", str(effective_max_delta))
+    legacy_precheck_limit = max(
+        effective_max_delta,
+        HOME_LEGACY_DIRECT_PRECHECK_BYPASS_DEG,
+    )
     if effective_max_delta > parsed.max_delta_deg:
         print(
             "v2.8 Home captured-pose limit margin: requested_deg=",
@@ -411,14 +431,51 @@ def main() -> None:
     # deadbands only for this first pass so joints displaced by clearance
     # cannot disappear from the later formal Home phase.
     legacy.HOME_JOINT_DEADBANDS_DEG = {name: -1.0 for name in selected}
-    forced = replace_option(expanded, "--deadband-deg", "-1.0")
+    forced = replace_option(original, "--max-delta-deg", str(legacy_precheck_limit))
+    forced = replace_option(forced, "--deadband-deg", "-1.0")
     print(
         "v2.8 Home pre-clearance fix: formal Home includes all selected joints=",
         ",".join(selected),
         flush=True,
     )
-    sys.argv = [sys.argv[0], *forced]
-    legacy.main()
+    original_positions = legacy.LeftArmV2.positions
+    entry_checked = False
+
+    def positions_with_staged_entry_check(arm, joints):
+        nonlocal entry_checked
+        current = original_positions(arm, joints)
+        if entry_checked:
+            return current
+        entry_checked = True
+        entry_errors = home_clearance_entry_errors_deg(current, clearance, selected)
+        entry_unsafe = {
+            name: error for name, error in entry_errors.items()
+            if abs(error) > parsed.max_delta_deg
+        }
+        print("v2.8 Home staged path entry check=", json.dumps({
+            "build": V28_HOME_BUILD,
+            "path": "current-to-clearance",
+            "max_delta_deg": parsed.max_delta_deg,
+            "errors_deg": entry_errors,
+            "blocking_errors_deg": entry_unsafe,
+            "legacy_direct_precheck_bypass_deg": legacy_precheck_limit,
+        }, ensure_ascii=False), flush=True)
+        if entry_unsafe:
+            report = ", ".join(
+                f"{name}={error:.2f}deg" for name, error in entry_unsafe.items()
+            )
+            raise RuntimeError(
+                "v2.8 Home refused: current-to-clearance delta exceeds "
+                f"--max-delta-deg: {report}"
+            )
+        return current
+
+    legacy.LeftArmV2.positions = positions_with_staged_entry_check
+    try:
+        sys.argv = [sys.argv[0], *forced]
+        legacy.main()
+    finally:
+        legacy.LeftArmV2.positions = original_positions
 
     if not parsed.execute:
         return
