@@ -255,7 +255,13 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         if placement_offset:
             placement_bias_deg[name] = math.degrees(placement_offset)
 
-    arm_targets = arm.positions(api.DEFAULT_JOINTS)
+    carry_hold = carry_hold or {}
+    # Continue the exact final-wrist control law into claw closing. Replacing
+    # these targets with measured positions would erase the PD position error
+    # that is currently producing the wrist's load-supporting torque.
+    arm_targets = dict(
+        carry_hold.get("hold_targets") or arm.positions(api.DEFAULT_JOINTS)
+    )
     print("v2.8 placement1 seamless takeover=", json.dumps({
         "source_move": PLACEMENT1_MOVE_NAME,
         "arm_hold_targets_rad": arm_targets,
@@ -264,8 +270,10 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         "shared_clearance_bias_deg_read_only": shared_bias_deg,
         "placement1_bias_deg": placement_bias_deg,
         "placement1_bias_file": str(PLACEMENT1_CLEARANCE_BIAS_PATH),
+        "carry_hold_source": (
+            "final_wrist_controller" if carry_hold.get("hold_targets") else "measured_fallback"
+        ),
     }, ensure_ascii=False), flush=True)
-    carry_hold = carry_hold or {}
     carry_gains = carry_hold.get("hold_gains", {})
     carry_tau = carry_hold.get("hold_tau", {})
     claw_hold_pos = close_claw_while_holding_arm(
@@ -889,8 +897,11 @@ def replay_with_local_bias(args) -> None:
             gains["wrist"] = {"kp": wrist_kp, "kd": wrist_kd}
             tau = dict(call_kwargs.get("hold_tau", {}))
             tau["wrist"] = call_kwargs.get("active_tau", 0.0)
+            targets = dict(call_kwargs["hold_targets"])
+            targets["wrist"] = target
             carry_hold.clear()
             carry_hold.update({
+                "hold_targets": targets,
                 "hold_gains": gains,
                 "hold_tau": tau,
             })

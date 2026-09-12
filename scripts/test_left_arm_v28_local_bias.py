@@ -89,14 +89,26 @@ class LocalBiasTests(unittest.TestCase):
                 COUPLED_CLEARANCE_SETTLE_SECONDS=0.1,
                 CLEARANCE_WRIST_FINE_DEADBAND_DEG=0.5,
             )
+            inherited_targets = {joint: 0.2 + index * 0.01 for index, joint in enumerate(JOINTS)}
+            inherited_gains = {joint: {"kp": 3.0, "kd": 0.5} for joint in JOINTS}
+            inherited_tau = {joint: 0.1 + index * 0.01 for index, joint in enumerate(JOINTS)}
             with patch.dict(sys.modules, {"left_arm_v2_6": api}), patch(
                 "left_arm_v2_8_move_library.PLACEMENT1_CLEARANCE_BIAS_PATH", bias_path
             ), patch(
                 "left_arm_v2_8.CLEARANCE_BIAS_PATH", shared_bias_path
             ), patch(
                 "left_arm_v2_8_move_library.close_claw_while_holding_arm", return_value=1.25
-            ):
-                run_placement1_on_arm(arm, str(clearance_path), 3.0, 0.3)
+            ) as close_mock:
+                run_placement1_on_arm(
+                    arm, str(clearance_path), 3.0, 0.3,
+                    carry_hold={
+                        "hold_targets": inherited_targets,
+                        "hold_gains": inherited_gains,
+                        "hold_tau": inherited_tau,
+                    },
+                )
+            self.assertEqual(close_mock.call_args.args[1], inherited_targets)
+            self.assertEqual(close_mock.call_args.kwargs["arm_tau"], inherited_tau)
             self.assertEqual(arm.hold_targets["claw"], 1.25)
             self.assertIn("shoulder_rotate", arm.hold_targets)
             self.assertIn("claw", arm.enabled)
