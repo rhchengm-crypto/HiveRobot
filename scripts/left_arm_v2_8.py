@@ -27,7 +27,11 @@ CLEARANCE_FINE_JOINTS = ("wrist_side",)
 CLEARANCE_FINE_MAX_ERROR_DEG = 5.0
 CLEARANCE_FINE_MAX_BIAS_DEG = 1.5
 CLEARANCE_FINE_SECONDS = 6.0
-CLEARANCE_FINE_MAX_ATTEMPTS = 2
+# A loaded wrist_side can remain one encoder-scale step outside the 0.5-degree
+# gate after the position-residual and first load-feed-forward passes.  Allow
+# one more bounded pass using a fresh measured load rather than aborting the
+# entire pre-replay sequence while it is still converging.
+CLEARANCE_FINE_MAX_ATTEMPTS = 3
 CLEARANCE_FINE_ACTIVE_TAU_LIMIT = 1.0
 CLEARANCE_FINE_GAINS = {
     "wrist_side": {"kp": 24.0, "kd": 3.0},
