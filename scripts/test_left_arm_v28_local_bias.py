@@ -361,6 +361,35 @@ class LocalBiasTests(unittest.TestCase):
             self.assertGreater(second["bias_deg"], first["bias_deg"])
             self.assertEqual(second["learning_state"], "integrating")
 
+    def test_placement_hold_bias_backs_off_when_error_worsens(self):
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(Path(directory) / "bias.json", pose(), "placement")
+            first = local.update_hold_bias(
+                "clearance", {"wrist_side": 3.4}, backoff_on_worse=True
+            )["wrist_side"]
+            second = local.update_hold_bias(
+                "clearance", {"wrist_side": 3.7}, backoff_on_worse=True
+            )["wrist_side"]
+            self.assertEqual(second["learning_state"], "backoff")
+            self.assertEqual(second["bias_deg"], first["best_bias_deg"])
+            self.assertLess(second["step_scale"], first["step_scale"])
+
+    def test_recovers_observed_placement_wrist_side_worsening_once(self):
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(Path(directory) / "bias.json", pose(), "placement")
+            rules = local.anchor.setdefault("hold_bias", {}).setdefault("clearance", {})
+            rules["wrist_side"] = {
+                "bias_deg": 1.2,
+                "previous_bias_deg": 0.8,
+                "last_error_deg": 3.650109441515467,
+                "samples": 3,
+            }
+            local._save()
+            recovered = local.recover_known_placement1_wrist_side_worsening()
+            self.assertEqual(recovered["restored_bias_deg"], 0.8)
+            self.assertEqual(rules["wrist_side"]["bias_deg"], 0.8)
+            self.assertEqual(local.recover_known_placement1_wrist_side_worsening(), {})
+
     def test_wrist_hold_bias_is_context_specific_and_bounded(self):
         with tempfile.TemporaryDirectory() as directory:
             local = LocalTargetBias(Path(directory) / "bias.json", pose(), "move")

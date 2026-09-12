@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-placement1-smooth-terminal-v1"
+V28_MOVE_BUILD = "v2.8-placement1-adaptive-backoff-v1"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
@@ -51,6 +51,7 @@ PLACEMENT1_MOVE_NAME = "bishop01"
 PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 5.0
 PLACEMENT1_TERMINAL_SETTLE_SECONDS = 1.5
 PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID = "restore-pre-placement1-clearance-20260911-v2"
+PLACEMENT1_WRIST_SIDE_WORSENING_RECOVERY_ID = "restore-placement1-wrist-side-20260911-2043-v1"
 WRIST_SIDE_ACTIVE_TAU_MIGRATION_ID = "replay-wrist-side-active-tau-20260911-v1"
 PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR = "8b20a284d5592a0c"
 # Values printed immediately before the first Placement1 run.  Placement1
@@ -243,6 +244,7 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         nominal,
         "placement1-clearance:" + Path(clearance_file).name,
     )
+    local.recover_known_placement1_wrist_side_worsening()
     biased = dict(nominal)
     applied_bias_deg = {}
     shared_bias_deg = {}
@@ -547,7 +549,9 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         )
     validation = local.record_move_validation(errors)
     print("v2.8 placement1 clearance verification=", json.dumps(validation, ensure_ascii=False), flush=True)
-    updates = local.update_hold_bias("clearance", errors, label="placement1-clearance-final")
+    updates = local.update_hold_bias(
+        "clearance", errors, label="placement1-clearance-final", backoff_on_worse=True
+    )
     if updates:
         print("v2.8 placement1 clearance learning update=", json.dumps(updates, ensure_ascii=False), flush=True)
     blockers = final_blocking_joint_errors(errors, ERROR_DEADBAND_DEG)
@@ -759,7 +763,47 @@ class LocalTargetBias:
         value = record.get("bias_deg", 0.0) if isinstance(record, dict) else 0.0
         return math.radians(max(-HOLD_BIAS_LIMIT_DEG, min(HOLD_BIAS_LIMIT_DEG, float(value))))
 
-    def update_hold_bias(self, active: str, errors_deg: Dict[str, float], label: str = "") -> Dict[str, dict]:
+    def recover_known_placement1_wrist_side_worsening(self) -> Dict[str, float]:
+        """Undo the 20:43 wrist_side step that moved opposite its command."""
+        migrations = self.anchor.setdefault("migrations", {})
+        if migrations.get(PLACEMENT1_WRIST_SIDE_WORSENING_RECOVERY_ID):
+            return {}
+        rules = self.anchor.get("hold_bias", {}).get("clearance", {})
+        record = rules.get("wrist_side") if isinstance(rules, dict) else None
+        if not isinstance(record, dict):
+            return {}
+        current = float(record.get("bias_deg", 0.0))
+        previous = float(record.get("previous_bias_deg", current))
+        error = float(record.get("last_error_deg", 0.0))
+        if not (
+            abs(current - 1.2) < 0.05
+            and abs(previous - 0.8) < 0.05
+            and abs(error - 3.650109441515467) < 0.10
+        ):
+            return {}
+        record.update({
+            "bias_deg": previous,
+            "previous_bias_deg": current,
+            "delta_bias_deg": previous - current,
+            "last_error_deg": 3.4533974320981606,
+            "best_error_deg": 3.4533974320981606,
+            "best_bias_deg": previous,
+            "learning_state": "worsening_backoff_recovery",
+            "updated_at": _now(),
+        })
+        migrations[PLACEMENT1_WRIST_SIDE_WORSENING_RECOVERY_ID] = {
+            "applied_at": _now(),
+            "rejected_bias_deg": current,
+            "restored_bias_deg": previous,
+        }
+        self.anchor["updated_at"] = _now()
+        self._save()
+        result = {"rejected_bias_deg": current, "restored_bias_deg": previous}
+        print("v2.8 placement1 wrist_side worsening recovery=", json.dumps(result), flush=True)
+        return result
+
+    def update_hold_bias(self, active: str, errors_deg: Dict[str, float], label: str = "",
+                         backoff_on_worse: bool = False) -> Dict[str, dict]:
         """Learn pose-local hold offsets without stalling on repeated equal errors.
 
         The inherited v2.6 learner restores its best value when two readings are
@@ -783,11 +827,25 @@ class LocalTargetBias:
             reversed_direction = bool(previous) and error * previous_error < 0.0
             if reversed_direction:
                 scale = max(HOLD_BIAS_MIN_STEP_SCALE, scale * 0.5)
-            delta = max(
-                -HOLD_BIAS_MAX_STEP_DEG * scale,
-                min(HOLD_BIAS_MAX_STEP_DEG * scale, error * HOLD_BIAS_STEP_SCALE * scale),
-            )
-            new_bias = max(-HOLD_BIAS_LIMIT_DEG, min(HOLD_BIAS_LIMIT_DEG, current + delta))
+            best_error = abs(float(previous.get("best_error_deg", previous_error))) if isinstance(previous, dict) else abs(error)
+            best_bias = float(
+                previous.get("best_bias_deg", previous.get("previous_bias_deg", current))
+            ) if isinstance(previous, dict) else current
+            improved = abs(error) < best_error - IMPROVEMENT_DEADBAND_DEG
+            worse = bool(previous) and abs(error) > abs(previous_error) + IMPROVEMENT_DEADBAND_DEG
+            if improved:
+                best_error, best_bias = abs(error), current
+            if backoff_on_worse and worse:
+                new_bias = best_bias
+                scale = max(HOLD_BIAS_MIN_STEP_SCALE, scale * 0.5)
+                state = "backoff"
+            else:
+                delta = max(
+                    -HOLD_BIAS_MAX_STEP_DEG * scale,
+                    min(HOLD_BIAS_MAX_STEP_DEG * scale, error * HOLD_BIAS_STEP_SCALE * scale),
+                )
+                new_bias = max(-HOLD_BIAS_LIMIT_DEG, min(HOLD_BIAS_LIMIT_DEG, current + delta))
+                state = "direction_reversal" if reversed_direction else "improved" if improved else "integrating"
             if new_bias == current:
                 continue
             record = {
@@ -795,8 +853,10 @@ class LocalTargetBias:
                 "previous_bias_deg": current,
                 "delta_bias_deg": new_bias - current,
                 "last_error_deg": error,
+                "best_error_deg": best_error,
+                "best_bias_deg": best_bias,
                 "step_scale": scale,
-                "learning_state": "direction_reversal" if reversed_direction else "integrating",
+                "learning_state": state,
                 "samples": int(previous.get("samples", 0)) + 1 if isinstance(previous, dict) else 1,
                 "updated_at": _now(),
             }
