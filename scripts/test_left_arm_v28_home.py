@@ -178,6 +178,8 @@ class HomeWrapperTests(unittest.TestCase):
         arm = Arm()
         result = fine_correct_clearance_wrist_side(arm, nominal, list(JOINTS), legacy)
         self.assertEqual(len(arm.calls), 2)
+        self.assertAlmostEqual(arm.calls[1][1], nominal["wrist_side"])
+        self.assertAlmostEqual(arm.calls[1][2]["active_tau"], 0.1)
         self.assertAlmostEqual(result["wrist_side"], nominal["wrist_side"])
 
 

@@ -28,6 +28,7 @@ CLEARANCE_FINE_MAX_ERROR_DEG = 5.0
 CLEARANCE_FINE_MAX_BIAS_DEG = 1.5
 CLEARANCE_FINE_SECONDS = 6.0
 CLEARANCE_FINE_MAX_ATTEMPTS = 2
+CLEARANCE_FINE_ACTIVE_TAU_LIMIT = 1.0
 CLEARANCE_FINE_GAINS = {
     "wrist_side": {"kp": 24.0, "kd": 3.0},
 }
@@ -114,11 +115,26 @@ def fine_correct_clearance_wrist_side(arm, nominal, validation_joints, legacy):
                     flush=True,
                 )
                 break
-            bias_deg = max(
-                -CLEARANCE_FINE_MAX_BIAS_DEG,
-                min(CLEARANCE_FINE_MAX_BIAS_DEG, error_deg),
-            )
-            target = float(nominal[name]) + math.radians(bias_deg)
+            if attempt == 1:
+                bias_deg = max(
+                    -CLEARANCE_FINE_MAX_BIAS_DEG,
+                    min(CLEARANCE_FINE_MAX_BIAS_DEG, error_deg),
+                )
+                target = float(nominal[name]) + math.radians(bias_deg)
+                active_tau = 0.0
+                strategy = "position_residual"
+            else:
+                # Once the first pass has settled, its reported motor torque is
+                # the best available estimate of the load needed at this pose.
+                # Feed it forward while commanding the nominal position so the
+                # joint no longer needs a standing position error for support.
+                bias_deg = 0.0
+                target = float(nominal[name])
+                active_tau = max(
+                    -CLEARANCE_FINE_ACTIVE_TAU_LIMIT,
+                    min(CLEARANCE_FINE_ACTIVE_TAU_LIMIT, float(start_status[name]["tau"])),
+                )
+                strategy = "measured_load_feedforward"
             hold_targets = {
                 joint: current_all[joint]
                 for joint in legacy.DEFAULT_JOINTS if joint != name
@@ -139,6 +155,8 @@ def fine_correct_clearance_wrist_side(arm, nominal, validation_joints, legacy):
                 "nominal_error_deg": error_deg,
                 "bias_deg": bias_deg,
                 "target_rad": target,
+                "strategy": strategy,
+                "active_tau": active_tau,
                 "seconds": CLEARANCE_FINE_SECONDS,
                 "kp": gains["kp"],
                 "kd": gains["kd"],
@@ -156,7 +174,7 @@ def fine_correct_clearance_wrist_side(arm, nominal, validation_joints, legacy):
                 fallback_kp=3.0,
                 fallback_kd=0.3,
                 hold_tau=hold_tau,
-                active_tau=0.0,
+                active_tau=active_tau,
                 control_dt=legacy.COUPLED_CLEARANCE_CONTROL_DT,
                 active_velocity_ff=False,
                 step_deg=0.0,
