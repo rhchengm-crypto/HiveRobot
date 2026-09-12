@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-placement1-adaptive-backoff-v1"
+V28_MOVE_BUILD = "v2.8-placement1-rejected-step-memory-v1"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
@@ -52,6 +52,7 @@ PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 5.0
 PLACEMENT1_TERMINAL_SETTLE_SECONDS = 1.5
 PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID = "restore-pre-placement1-clearance-20260911-v2"
 PLACEMENT1_WRIST_SIDE_WORSENING_RECOVERY_ID = "restore-placement1-wrist-side-20260911-2043-v1"
+PLACEMENT1_WRIST_SIDE_RETRY_RECOVERY_ID = "avoid-rejected-placement1-wrist-side-retry-20260911-v1"
 WRIST_SIDE_ACTIVE_TAU_MIGRATION_ID = "replay-wrist-side-active-tau-20260911-v1"
 PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR = "8b20a284d5592a0c"
 # Values printed immediately before the first Placement1 run.  Placement1
@@ -245,6 +246,7 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         "placement1-clearance:" + Path(clearance_file).name,
     )
     local.recover_known_placement1_wrist_side_worsening()
+    local.avoid_repeating_rejected_placement1_wrist_side_step()
     biased = dict(nominal)
     applied_bias_deg = {}
     shared_bias_deg = {}
@@ -788,6 +790,8 @@ class LocalTargetBias:
             "last_error_deg": 3.4533974320981606,
             "best_error_deg": 3.4533974320981606,
             "best_bias_deg": previous,
+            "rejected_bias_deg": current,
+            "step_scale": 0.5,
             "learning_state": "worsening_backoff_recovery",
             "updated_at": _now(),
         })
@@ -800,6 +804,49 @@ class LocalTargetBias:
         self._save()
         result = {"rejected_bias_deg": current, "restored_bias_deg": previous}
         print("v2.8 placement1 wrist_side worsening recovery=", json.dumps(result), flush=True)
+        return result
+
+    def avoid_repeating_rejected_placement1_wrist_side_step(self) -> Dict[str, float]:
+        """Prevent a plateau reading from immediately retrying a rejected full step."""
+        migrations = self.anchor.setdefault("migrations", {})
+        if migrations.get(PLACEMENT1_WRIST_SIDE_RETRY_RECOVERY_ID):
+            return {}
+        recovered = migrations.get(PLACEMENT1_WRIST_SIDE_WORSENING_RECOVERY_ID)
+        if not isinstance(recovered, dict):
+            return {}
+        rules = self.anchor.get("hold_bias", {}).get("clearance", {})
+        record = rules.get("wrist_side") if isinstance(rules, dict) else None
+        if not isinstance(record, dict):
+            return {}
+        rejected = float(recovered.get("rejected_bias_deg", 1.2))
+        best = float(record.get("best_bias_deg", recovered.get("restored_bias_deg", 0.8)))
+        current = float(record.get("bias_deg", 0.0))
+        previous = float(record.get("previous_bias_deg", current))
+        if not (abs(current - rejected) < 0.05 and abs(previous - best) < 0.05):
+            return {}
+        record.update({
+            "bias_deg": best,
+            "previous_bias_deg": current,
+            "delta_bias_deg": best - current,
+            "rejected_bias_deg": rejected,
+            "step_scale": max(HOLD_BIAS_MIN_STEP_SCALE, float(record.get("step_scale", 1.0)) * 0.5),
+            "learning_state": "rejected_step_memory_backoff",
+            "updated_at": _now(),
+        })
+        migrations[PLACEMENT1_WRIST_SIDE_RETRY_RECOVERY_ID] = {
+            "applied_at": _now(),
+            "rejected_bias_deg": rejected,
+            "restored_bias_deg": best,
+            "step_scale": record["step_scale"],
+        }
+        self.anchor["updated_at"] = _now()
+        self._save()
+        result = {
+            "rejected_bias_deg": rejected,
+            "restored_bias_deg": best,
+            "step_scale": record["step_scale"],
+        }
+        print("v2.8 placement1 rejected wrist_side retry recovery=", json.dumps(result), flush=True)
         return result
 
     def update_hold_bias(self, active: str, errors_deg: Dict[str, float], label: str = "",

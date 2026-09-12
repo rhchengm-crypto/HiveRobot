@@ -388,7 +388,29 @@ class LocalBiasTests(unittest.TestCase):
             recovered = local.recover_known_placement1_wrist_side_worsening()
             self.assertEqual(recovered["restored_bias_deg"], 0.8)
             self.assertEqual(rules["wrist_side"]["bias_deg"], 0.8)
+            self.assertEqual(rules["wrist_side"]["step_scale"], 0.5)
             self.assertEqual(local.recover_known_placement1_wrist_side_worsening(), {})
+
+    def test_rejected_placement_wrist_side_step_is_not_retried_at_full_scale(self):
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(Path(directory) / "bias.json", pose(), "placement")
+            rules = local.anchor.setdefault("hold_bias", {}).setdefault("clearance", {})
+            rules["wrist_side"] = {
+                "bias_deg": 1.2,
+                "previous_bias_deg": 0.8,
+                "last_error_deg": 3.43,
+                "best_error_deg": 3.45,
+                "best_bias_deg": 0.8,
+                "step_scale": 1.0,
+            }
+            local.anchor.setdefault("migrations", {})[
+                "restore-placement1-wrist-side-20260911-2043-v1"
+            ] = {"rejected_bias_deg": 1.2, "restored_bias_deg": 0.8}
+            local._save()
+            recovered = local.avoid_repeating_rejected_placement1_wrist_side_step()
+            self.assertEqual(recovered["restored_bias_deg"], 0.8)
+            self.assertEqual(recovered["step_scale"], 0.5)
+            self.assertEqual(rules["wrist_side"]["bias_deg"], 0.8)
 
     def test_wrist_hold_bias_is_context_specific_and_bounded(self):
         with tempfile.TemporaryDirectory() as directory:
