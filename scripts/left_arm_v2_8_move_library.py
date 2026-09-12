@@ -20,6 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+V28_MOVE_BUILD = "v2.8-replay-wrist-side-active-tau-v1"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
@@ -901,6 +902,7 @@ def replay_with_local_bias(args) -> None:
         )
 
     print("v2.8 pose-local correction=", json.dumps({
+        "build": V28_MOVE_BUILD,
         "move": move_name,
         "anchor_id": local.anchor_id,
         "new_anchor": local.created,
