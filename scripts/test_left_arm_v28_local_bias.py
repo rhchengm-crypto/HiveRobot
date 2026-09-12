@@ -114,7 +114,7 @@ class LocalBiasTests(unittest.TestCase):
             ), patch(
                 "left_arm_v2_8_move_library.close_claw_while_holding_arm", return_value=1.25
             ) as close_mock:
-                run_placement1_on_arm(
+                result = run_placement1_on_arm(
                     arm, str(clearance_path), 3.0, 0.3,
                     carry_hold={
                         "hold_targets": inherited_targets,
@@ -122,6 +122,8 @@ class LocalBiasTests(unittest.TestCase):
                         "hold_tau": inherited_tau,
                     },
                 )
+            self.assertEqual(result["status"], "training complete")
+            self.assertEqual(result["blocking_errors_deg"], {})
             self.assertEqual(close_mock.call_args.args[1], inherited_targets)
             self.assertEqual(close_mock.call_args.kwargs["arm_tau"], inherited_tau)
             self.assertEqual(arm.events[0][0:2], ("single", "wrist"))

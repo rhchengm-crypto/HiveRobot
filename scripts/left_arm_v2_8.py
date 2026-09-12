@@ -307,6 +307,12 @@ def run_trained_clearance(original: List[str], legacy) -> None:
             "learning_changed": False,
             "best_snapshot_retained": True,
         }, ensure_ascii=False), flush=True)
+        print("v2.8 Clearance final training status=", json.dumps({
+            "status": "training incomplete",
+            "tolerance_deg": CLEARANCE_TOLERANCE_DEG,
+            "errors_deg": errors,
+            "blocking_errors_deg": blockers,
+        }, ensure_ascii=False), flush=True)
         return
     updates = local.update_hold_bias("clearance", errors, label="clearance-validated")
     if updates:

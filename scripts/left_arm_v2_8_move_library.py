@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-placement1-local-bias-limit5-v1"
+V28_MOVE_BUILD = "v2.8-final-training-status-v1"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
@@ -562,7 +562,12 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
             "gross_errors_deg": gross_errors,
             "learning_changed": False,
         }, ensure_ascii=False), flush=True)
-        return
+        return {
+            "status": "training incomplete",
+            "tolerance_deg": ERROR_DEADBAND_DEG,
+            "errors_deg": errors,
+            "blocking_errors_deg": gross_errors,
+        }
     validation = local.record_move_validation(errors)
     print("v2.8 placement1 clearance verification=", json.dumps(validation, ensure_ascii=False), flush=True)
     updates = local.update_hold_bias(
@@ -579,7 +584,18 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
             "blocking_errors_deg": blockers,
             "learning_saved": True,
         }, ensure_ascii=False), flush=True)
-        return
+        return {
+            "status": "training incomplete",
+            "tolerance_deg": ERROR_DEADBAND_DEG,
+            "errors_deg": errors,
+            "blocking_errors_deg": blockers,
+        }
+    return {
+        "status": "training complete",
+        "tolerance_deg": ERROR_DEADBAND_DEG,
+        "errors_deg": errors,
+        "blocking_errors_deg": {},
+    }
 
 
 def _now() -> str:
@@ -1055,6 +1071,7 @@ def replay_with_local_bias(args) -> None:
     original_move_target_with_holds = api.LeftArmV2.move_target_with_holds
     final_errors: Dict[str, float] = {}
     placement1_ran = False
+    placement1_summary = {}
     carry_hold = {}
 
     def combined_bias(joint: str, low_shoulder_front: bool = False,
@@ -1143,7 +1160,12 @@ def replay_with_local_bias(args) -> None:
         try:
             if args.placement1 and final_errors and not placement1_ran:
                 placement1_ran = True
-                run_placement1_on_arm(arm, args.clearance_file, args.kp, args.kd, carry_hold=carry_hold)
+                result = run_placement1_on_arm(
+                    arm, args.clearance_file, args.kp, args.kd, carry_hold=carry_hold
+                )
+                if result:
+                    placement1_summary.clear()
+                    placement1_summary.update(result)
         finally:
             original_close(arm)
 
@@ -1225,6 +1247,14 @@ def replay_with_local_bias(args) -> None:
                 f"{ERROR_DEADBAND_DEG:.1f}deg; learned data was saved; return Home and replay again: "
                 + json.dumps(blockers, ensure_ascii=False)
             )
+    if args.placement1 and placement1_summary:
+        # Keep this as the final line of a successful full replay so the UI
+        # cannot hide the Placement1 result behind bishop01's own validation.
+        print(
+            "v2.8 Placement1 final training status=",
+            json.dumps(placement1_summary, ensure_ascii=False),
+            flush=True,
+        )
 
 
 def build_parser():
