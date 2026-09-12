@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-replay-wrist-side-active-tau-v1"
+V28_MOVE_BUILD = "v2.8-placement1-w-first-full-v1"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
@@ -217,11 +217,14 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
                           carry_hold=None):
     """Carry the gripped bishop to learned clearance without releasing holds."""
     import left_arm_v2_6 as api
-    from left_arm_v2_8 import CLEARANCE_BIAS_PATH, clearance_validation_joints, clearance_errors_deg
+    from left_arm_v2_8 import CLEARANCE_BIAS_PATH, clearance_errors_deg
 
     nominal = api.load_pose(clearance_file)
     selected = [name for name in api.DEFAULT_CLEARANCE_ORDER if name in nominal]
-    validation_joints = clearance_validation_joints(api, selected)
+    # Placement1 must reproduce the complete captured Clearance pose. Ordinary
+    # Table Clearance may intentionally skip shoulder_rotate, but preserving
+    # bishop01's shoulder_rotate here leaves the arm about 44 degrees away.
+    validation_joints = list(selected)
     shared = LocalTargetBias(
         CLEARANCE_BIAS_PATH,
         nominal,
@@ -280,7 +283,132 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         arm, arm_targets, api, arm_gains=carry_gains, arm_tau=carry_tau
     )
 
-    move_targets = {name: biased[name] for name in validation_joints}
+    # Retract wrist to Clearance before moving the rest of the arm so the
+    # gripper and carried piece rise out of the occupied board volume first.
+    wrist_hold_target = float(arm_targets["wrist"])
+    wrist_hold_tau = float(carry_tau.get("wrist", 0.0))
+    wrist_move_gains = api.COUPLED_CLEARANCE_MOVE_GAINS.get(
+        "wrist", api.CLEARANCE_MOVE_GAINS["wrist"]
+    )
+    wrist_hold_gains = dict(wrist_move_gains)
+    pre_wrist_holds = {
+        name: target for name, target in arm_targets.items() if name != "wrist"
+    }
+    pre_wrist_holds["claw"] = claw_hold_pos
+    pre_wrist_gains = {
+        name: carry_gains.get(
+            name,
+            api.CLEARANCE_HOLD_GAINS.get(name, api.CLEARANCE_BASE_HOLD_GAINS[name]),
+        )
+        for name in pre_wrist_holds if name != "claw"
+    }
+    pre_wrist_gains["claw"] = {"kp": api.CLAW_KP_HOLD, "kd": api.CLAW_KD_HOLD}
+    pre_wrist_tau = {
+        name: float(carry_tau.get(name, 0.0))
+        for name in pre_wrist_holds if name != "claw"
+    }
+    pre_wrist_tau["claw"] = 0.0
+    print("v2.8 placement1 wrist-first retract=", json.dumps({
+        "nominal_clearance_rad": nominal["wrist"],
+        "learned_command_rad": biased["wrist"],
+        "start_controller_target_rad": wrist_hold_target,
+        "held_joints": list(pre_wrist_holds),
+    }, ensure_ascii=False), flush=True)
+    arm.enable(["wrist", *pre_wrist_holds.keys()])
+    arm.move_target_with_holds(
+        "wrist",
+        biased["wrist"],
+        seconds_per_step=api.COUPLED_CLEARANCE_MAX_SECONDS,
+        kp=wrist_move_gains["kp"],
+        kd=wrist_move_gains["kd"],
+        hold_targets=pre_wrist_holds,
+        hold_gains=pre_wrist_gains,
+        fallback_kp=fallback_kp,
+        fallback_kd=fallback_kd,
+        hold_tau=pre_wrist_tau,
+        active_tau=0.0,
+        control_dt=api.COUPLED_CLEARANCE_CONTROL_DT,
+        active_velocity_ff=False,
+        step_deg=0.0,
+        trajectory=api.COUPLED_CLEARANCE_TRAJECTORY,
+        linear_blend=api.COUPLED_CLEARANCE_LINEAR_BLEND,
+    )
+    wrist_hold_target = float(biased["wrist"])
+
+    wrist_fine_results = []
+    for attempt in range(1, 3):
+        status = arm.read_status(api.DEFAULT_JOINTS)
+        wrist_error_deg = math.degrees(float(nominal["wrist"]) - float(status["wrist"]["pos"]))
+        if abs(wrist_error_deg) <= ERROR_DEADBAND_DEG + ENCODER_HALF_COUNT_MARGIN_DEG:
+            break
+        if abs(wrist_error_deg) > PLACEMENT1_MAX_LEARNABLE_ERROR_DEG:
+            print("v2.8 placement1 wrist-first fine skip gross error=", wrist_error_deg, flush=True)
+            break
+        fine = api.COUPLED_CLEARANCE_WRIST_FINE_GAINS
+        if attempt == 1:
+            fine_bias_deg = max(
+                -api.CLEARANCE_WRIST_FINE_MAX_BIAS_DEG,
+                min(api.CLEARANCE_WRIST_FINE_MAX_BIAS_DEG, wrist_error_deg),
+            )
+            fine_target = float(nominal["wrist"]) + math.radians(fine_bias_deg)
+            active_tau = api.CLEARANCE_WRIST_FINE_ACTIVE_TAU
+            strategy = "position_residual"
+        else:
+            fine_bias_deg = 0.0
+            fine_target = float(nominal["wrist"])
+            measured_tau = float(status["wrist"]["tau"])
+            limits = getattr(api, "ACTIVE_TAU_LIMITS", {}).get("wrist", (0.35, 0.7))
+            active_tau = max(float(limits[0]), min(float(limits[1]), measured_tau))
+            strategy = "measured_load_feedforward"
+        print("v2.8 placement1 wrist-first fine=", json.dumps({
+            "attempt": attempt,
+            "error_deg": wrist_error_deg,
+            "bias_deg": fine_bias_deg,
+            "target_rad": fine_target,
+            "active_tau": active_tau,
+            "strategy": strategy,
+        }, ensure_ascii=False), flush=True)
+        arm.move_target_with_holds(
+            "wrist",
+            fine_target,
+            seconds_per_step=fine["seconds"],
+            kp=fine["kp"],
+            kd=fine["kd"],
+            hold_targets=pre_wrist_holds,
+            hold_gains=pre_wrist_gains,
+            fallback_kp=fallback_kp,
+            fallback_kd=fallback_kd,
+            hold_tau=pre_wrist_tau,
+            active_tau=active_tau,
+            control_dt=api.CLEARANCE_WRIST_FINE_CONTROL_DT,
+            active_velocity_ff=False,
+            step_deg=0.0,
+        )
+        wrist_hold_target = fine_target
+        wrist_hold_tau = active_tau
+        wrist_hold_gains = {"kp": fine["kp"], "kd": fine["kd"]}
+        reached_wrist = arm.positions(["wrist"])["wrist"]
+        wrist_fine_results.append({
+            "attempt": attempt,
+            "error_deg": math.degrees(float(nominal["wrist"]) - reached_wrist),
+        })
+    if wrist_fine_results:
+        print("v2.8 placement1 wrist-first fine result=", json.dumps(wrist_fine_results), flush=True)
+
+    wrist_actual = arm.positions(["wrist"])["wrist"]
+    wrist_error_deg = math.degrees(float(nominal["wrist"]) - wrist_actual)
+    if abs(wrist_error_deg) > ERROR_DEADBAND_DEG + ENCODER_HALF_COUNT_MARGIN_DEG:
+        local.update_hold_bias(
+            "clearance", {"wrist": wrist_error_deg}, label="placement1-wrist-first"
+        )
+        raise RuntimeError(
+            "v2.8 placement1 stopped after wrist-first retract: wrist exceeds 0.5deg; "
+            "other arm joints were not moved: " + json.dumps({"wrist": wrist_error_deg})
+        )
+
+    move_targets = {
+        name: biased[name] for name in validation_joints if name != "wrist"
+    }
     current = arm.positions(api.DEFAULT_JOINTS)
     deltas = {name: math.degrees(move_targets[name] - current[name]) for name in move_targets}
     unsafe = {name: value for name, value in deltas.items() if abs(value) > 125.0}
@@ -291,19 +419,19 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         api.HOME_GAINS.get(name, {"seconds": 6.0})["seconds"] for name in move_targets
     ) * max(1, coupled_steps)
     seconds = min(raw_seconds, api.COUPLED_CLEARANCE_MAX_SECONDS)
-    hold_targets = {
-        name: current[name] for name in selected if name not in move_targets
-    }
+    hold_targets = {"wrist": wrist_hold_target}
     hold_targets["claw"] = claw_hold_pos
     hold_gains = {
         name: api.CLEARANCE_BASE_HOLD_GAINS[name]
         for name in hold_targets if name != "claw"
     }
+    hold_gains["wrist"] = wrist_hold_gains
     hold_gains["claw"] = {"kp": api.CLAW_KP_HOLD, "kd": api.CLAW_KD_HOLD}
     hold_tau = {
         name: api.CLEARANCE_JOINT_HOLD_TAU.get(name, 0.0)
         for name in [*move_targets.keys(), *hold_targets.keys()]
     }
+    hold_tau["wrist"] = wrist_hold_tau
     hold_tau["claw"] = 0.0
     move_gains = {
         name: api.COUPLED_CLEARANCE_MOVE_GAINS.get(name, api.CLEARANCE_MOVE_GAINS[name])
@@ -350,44 +478,6 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         trajectory=api.COUPLED_CLEARANCE_TRAJECTORY,
         linear_blend=api.COUPLED_CLEARANCE_LINEAR_BLEND,
     )
-    reached = arm.positions(validation_joints)
-    if "wrist" in move_targets:
-        wrist_error_deg = math.degrees(move_targets["wrist"] - reached["wrist"])
-        if abs(wrist_error_deg) > api.CLEARANCE_WRIST_FINE_DEADBAND_DEG:
-            fine = api.COUPLED_CLEARANCE_WRIST_FINE_GAINS
-            fine_bias_deg = max(
-                -api.CLEARANCE_WRIST_FINE_MAX_BIAS_DEG,
-                min(api.CLEARANCE_WRIST_FINE_MAX_BIAS_DEG, wrist_error_deg),
-            )
-            fine_target = move_targets["wrist"] + math.radians(fine_bias_deg)
-            fine_holds = {name: target for name, target in move_targets.items() if name != "wrist"}
-            fine_holds.update(hold_targets)
-            fine_gains = {
-                name: api.CLEARANCE_HOLD_GAINS.get(name, hold_gains.get(name, {"kp": fallback_kp, "kd": fallback_kd}))
-                for name in fine_holds
-            }
-            fine_gains["claw"] = {"kp": api.CLAW_KP_HOLD, "kd": api.CLAW_KD_HOLD}
-            print("v2.8 placement1 wrist fine=", json.dumps({
-                "error_deg": wrist_error_deg,
-                "bias_deg": fine_bias_deg,
-                "target_rad": fine_target,
-            }, ensure_ascii=False), flush=True)
-            arm.move_target_with_holds(
-                "wrist",
-                fine_target,
-                seconds_per_step=fine["seconds"],
-                kp=fine["kp"],
-                kd=fine["kd"],
-                hold_targets=fine_holds,
-                hold_gains=fine_gains,
-                fallback_kp=fallback_kp,
-                fallback_kd=fallback_kd,
-                hold_tau=hold_tau,
-                active_tau=api.CLEARANCE_WRIST_FINE_ACTIVE_TAU,
-                control_dt=api.CLEARANCE_WRIST_FINE_CONTROL_DT,
-                active_velocity_ff=False,
-                step_deg=0.0,
-            )
     final_hold_targets = dict(move_targets)
     final_hold_targets.update(hold_targets)
     final_hold_gains = {
@@ -405,6 +495,22 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
     )
     final_positions = arm.positions(validation_joints)
     errors = clearance_errors_deg(nominal, final_positions, validation_joints)
+    comparison = {
+        name: {
+            "nominal_clearance_rad": float(nominal[name]),
+            "learned_command_rad": float(
+                wrist_hold_target if name == "wrist" else move_targets[name]
+            ),
+            "actual_rad": float(final_positions[name]),
+            "error_deg": float(errors[name]),
+        }
+        for name in validation_joints
+    }
+    print(
+        "v2.8 placement1 final clearance comparison=",
+        json.dumps(comparison, ensure_ascii=False),
+        flush=True,
+    )
     gross_errors = {
         name: value for name, value in errors.items()
         if abs(value) > PLACEMENT1_MAX_LEARNABLE_ERROR_DEG

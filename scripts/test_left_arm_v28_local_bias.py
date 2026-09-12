@@ -43,6 +43,7 @@ class LocalBiasTests(unittest.TestCase):
             def __init__(self):
                 self.current = {joint: 0.0 for joint in JOINTS}
                 self.hold_targets = None
+                self.events = []
 
             def positions(self, names):
                 return {name: self.current[name] for name in names}
@@ -50,7 +51,18 @@ class LocalBiasTests(unittest.TestCase):
             def enable(self, names):
                 self.enabled = list(names)
 
+            def read_status(self, names):
+                return {
+                    name: {"pos": self.current[name], "vel": 0.0, "tau": 0.1}
+                    for name in names
+                }
+
+            def move_target_with_holds(self, name, target, **kwargs):
+                self.events.append(("single", name, target))
+                self.current[name] = target
+
             def move_targets_with_holds(self, targets, **kwargs):
+                self.events.append(("group", tuple(targets)))
                 self.current.update(targets)
                 self.hold_targets = dict(kwargs["hold_targets"])
 
@@ -109,8 +121,12 @@ class LocalBiasTests(unittest.TestCase):
                 )
             self.assertEqual(close_mock.call_args.args[1], inherited_targets)
             self.assertEqual(close_mock.call_args.kwargs["arm_tau"], inherited_tau)
+            self.assertEqual(arm.events[0][0:2], ("single", "wrist"))
+            self.assertEqual(arm.events[1][0], "group")
             self.assertEqual(arm.hold_targets["claw"], 1.25)
-            self.assertIn("shoulder_rotate", arm.hold_targets)
+            self.assertIn("wrist", arm.hold_targets)
+            self.assertNotIn("shoulder_rotate", arm.hold_targets)
+            self.assertIn("shoulder_rotate", arm.events[1][1])
             self.assertIn("claw", arm.enabled)
             self.assertTrue(bias_path.exists())
             shared = LocalTargetBias(shared_bias_path, clearance, "clearance:" + clearance_path.name)
