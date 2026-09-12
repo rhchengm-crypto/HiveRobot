@@ -420,6 +420,23 @@ class LocalBiasTests(unittest.TestCase):
             self.assertAlmostEqual(math.degrees(local.hold_bias_rad("wrist", "shoulder_rotate")), 3.0)
             self.assertEqual(local.hold_bias_rad("wrist_side", "shoulder_rotate"), 0.0)
 
+    def test_placement_hold_bias_can_use_five_degree_local_limit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(Path(directory) / "bias.json", pose(), "placement")
+            for _ in range(20):
+                local.update_hold_bias(
+                    "clearance", {"shoulder_rotate": -2.0},
+                    bias_limit_deg=5.0,
+                )
+            self.assertAlmostEqual(
+                math.degrees(local.hold_bias_rad("clearance", "shoulder_rotate", limit_deg=5.0)),
+                -5.0,
+            )
+            self.assertAlmostEqual(
+                math.degrees(local.hold_bias_rad("clearance", "shoulder_rotate")),
+                -3.0,
+            )
+
     def test_validation_is_stored_per_move_even_when_anchor_is_shared(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "bias.json"

@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-clearance-nonblocking-full-v1"
+V28_MOVE_BUILD = "v2.8-placement1-local-bias-limit5-v1"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 JOINTS = (
@@ -47,6 +47,7 @@ HOLD_BIAS_STEP_SCALE = 0.35
 HOLD_BIAS_MAX_STEP_DEG = 0.40
 HOLD_BIAS_MIN_STEP_SCALE = 0.25
 HOLD_BIAS_LIMIT_DEG = 3.0
+PLACEMENT1_HOLD_BIAS_LIMIT_DEG = 5.0
 PLACEMENT1_MOVE_NAME = "bishop01"
 PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 5.0
 PLACEMENT1_TERMINAL_SETTLE_SECONDS = 1.5
@@ -253,7 +254,9 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
     placement_bias_deg = {}
     for name in validation_joints:
         shared_offset = shared.hold_bias_rad("clearance", name)
-        placement_offset = local.hold_bias_rad("clearance", name)
+        placement_offset = local.hold_bias_rad(
+            "clearance", name, limit_deg=PLACEMENT1_HOLD_BIAS_LIMIT_DEG
+        )
         offset = shared_offset + placement_offset
         if offset:
             biased[name] += offset
@@ -563,7 +566,8 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
     validation = local.record_move_validation(errors)
     print("v2.8 placement1 clearance verification=", json.dumps(validation, ensure_ascii=False), flush=True)
     updates = local.update_hold_bias(
-        "clearance", errors, label="placement1-clearance-final", backoff_on_worse=True
+        "clearance", errors, label="placement1-clearance-final", backoff_on_worse=True,
+        bias_limit_deg=PLACEMENT1_HOLD_BIAS_LIMIT_DEG,
     )
     if updates:
         print("v2.8 placement1 clearance learning update=", json.dumps(updates, ensure_ascii=False), flush=True)
@@ -773,11 +777,13 @@ class LocalTargetBias:
         value = record.get("bias_deg", 0.0) if isinstance(record, dict) else 0.0
         return math.radians(max(-BIAS_LIMIT_DEG, min(BIAS_LIMIT_DEG, float(value))))
 
-    def hold_bias_rad(self, active: str, joint: str) -> float:
+    def hold_bias_rad(self, active: str, joint: str,
+                      limit_deg: float = HOLD_BIAS_LIMIT_DEG) -> float:
         active_rules = self.anchor.get("hold_bias", {}).get(active, {})
         record = active_rules.get(joint, {}) if isinstance(active_rules, dict) else {}
         value = record.get("bias_deg", 0.0) if isinstance(record, dict) else 0.0
-        return math.radians(max(-HOLD_BIAS_LIMIT_DEG, min(HOLD_BIAS_LIMIT_DEG, float(value))))
+        limit = abs(float(limit_deg))
+        return math.radians(max(-limit, min(limit, float(value))))
 
     def recover_known_placement1_wrist_side_worsening(self) -> Dict[str, float]:
         """Undo the 20:43 wrist_side step that moved opposite its command."""
@@ -864,7 +870,8 @@ class LocalTargetBias:
         return result
 
     def update_hold_bias(self, active: str, errors_deg: Dict[str, float], label: str = "",
-                         backoff_on_worse: bool = False) -> Dict[str, dict]:
+                         backoff_on_worse: bool = False,
+                         bias_limit_deg: float = HOLD_BIAS_LIMIT_DEG) -> Dict[str, dict]:
         """Learn pose-local hold offsets without stalling on repeated equal errors.
 
         The inherited v2.6 learner restores its best value when two readings are
@@ -905,7 +912,8 @@ class LocalTargetBias:
                     -HOLD_BIAS_MAX_STEP_DEG * scale,
                     min(HOLD_BIAS_MAX_STEP_DEG * scale, error * HOLD_BIAS_STEP_SCALE * scale),
                 )
-                new_bias = max(-HOLD_BIAS_LIMIT_DEG, min(HOLD_BIAS_LIMIT_DEG, current + delta))
+                limit = abs(float(bias_limit_deg))
+                new_bias = max(-limit, min(limit, current + delta))
                 state = "direction_reversal" if reversed_direction else "improved" if improved else "integrating"
             if new_bias == current:
                 continue
