@@ -12,6 +12,7 @@ from left_arm_v2_8_move_library import (
     JOINTS,
     PLACEMENT1_MOVE_NAME,
     WHITE_BISHOP_PLACE_MOVE_NAME,
+    WHITE_KNIGHT_PLACE_B1_MOVE_NAME,
     PLACEMENT1_CONTAMINATED_CLEARANCE_ANCHOR,
     PLACEMENT1_PRECONTAMINATION_CLEARANCE_BIASES_DEG,
     blocking_joint_errors,
@@ -25,6 +26,7 @@ from left_arm_v2_8_move_library import (
     verify_pre_wrist_or_learn,
     run_placement1_on_arm,
     run_white_bishop_place_on_arm,
+    replay_with_local_bias,
     rollback_rejected_placement1_learning,
 )
 
@@ -136,6 +138,29 @@ class LocalBiasTests(unittest.TestCase):
         self.assertFalse(args.placement1)
         self.assertTrue(args.white_bishop_placement)
 
+    def test_white_knight_place_b1_cli_is_separate_and_implies_c4_flow(self):
+        args = build_parser().parse_args([
+            "replay-move", "--name", "white_knight_c4",
+            "--white-knight-place-b1",
+        ])
+        self.assertTrue(args.white_knight_place_b1)
+        self.assertFalse(args.placement_c4)
+        self.assertFalse(args.white_bishop_placement)
+
+    def test_knight_destination_is_checked_before_source_motion(self):
+        args = build_parser().parse_args([
+            "replay-move", "--name", "white_knight_c4",
+            "--white-knight-place-b1",
+        ])
+        import left_arm_v2_6_move_library as legacy
+        with patch.object(legacy, "load_moves", return_value={"moves": {
+            "white_knight_c4": {"pose": pose()},
+        }}), patch.object(legacy, "replay_move") as replay, \
+             patch.dict(sys.modules, {"left_arm_v2_6": types.ModuleType("left_arm_v2_6")}):
+            with self.assertRaisesRegex(RuntimeError, "source motion was not started"):
+                replay_with_local_bias(args)
+            replay.assert_not_called()
+
     def test_white_bishop_place_follows_clearance_and_holds_claw(self):
         class Ctrl:
             def controlMIT(self, *args):
@@ -163,7 +188,6 @@ class LocalBiasTests(unittest.TestCase):
                 self.current.update(targets)
 
         target = {joint: 0.1 for joint in JOINTS}
-        arm = Arm()
         api = types.SimpleNamespace(
             LeftArmV2=Arm,
             DEFAULT_JOINTS=list(JOINTS),
@@ -194,7 +218,8 @@ class LocalBiasTests(unittest.TestCase):
 
         legacy = types.SimpleNamespace(
             load_moves=lambda path: {"moves": {
-                WHITE_BISHOP_PLACE_MOVE_NAME: {"pose": target}
+                WHITE_BISHOP_PLACE_MOVE_NAME: {"pose": target},
+                WHITE_KNIGHT_PLACE_B1_MOVE_NAME: {"pose": target},
             }},
             normalize_move_name=lambda name: name,
             REPLAY_REQUIRED_JOINTS=list(JOINTS),
@@ -210,19 +235,28 @@ class LocalBiasTests(unittest.TestCase):
             run_final_wrist_move=run_final,
         )
         with tempfile.TemporaryDirectory() as directory:
-            local = LocalTargetBias(
-                Path(directory) / "bias.json", target, WHITE_BISHOP_PLACE_MOVE_NAME
-            )
-            result = run_white_bishop_place_on_arm(
-                arm, "moves.json", 3.0, 0.3, 0.5,
-                api, legacy, local, {"claw_hold_pos": -0.2},
-            )
-        self.assertEqual(result["status"], "validated")
-        self.assertEqual(len(arm.calls), 2)
-        for call in arm.calls:
-            self.assertEqual(call[2]["hold_targets"]["claw"], -0.2)
-            self.assertEqual(call[2]["hold_gains"]["claw"]["kp"], 14.0)
-        self.assertIn("claw", arm.enabled)
+            for move_name, label, clearance_stage in (
+                (WHITE_BISHOP_PLACE_MOVE_NAME, "White Bishop Placement", "placement1-clearance"),
+                (WHITE_KNIGHT_PLACE_B1_MOVE_NAME, "White Knight Place_B1", "placement-c4-clearance"),
+            ):
+                with self.subTest(move_name=move_name):
+                    arm = Arm()
+                    local = LocalTargetBias(
+                        Path(directory) / (move_name + "_bias.json"), target, move_name
+                    )
+                    result = run_white_bishop_place_on_arm(
+                        arm, "moves.json", 3.0, 0.3, 0.5,
+                        api, legacy, local, {"claw_hold_pos": -0.2},
+                        destination_move_name=move_name,
+                        workflow_label=label,
+                        clearance_stage=clearance_stage,
+                    )
+                    self.assertEqual(result["status"], "validated")
+                    self.assertEqual(len(arm.calls), 2)
+                    for call in arm.calls:
+                        self.assertEqual(call[2]["hold_targets"]["claw"], -0.2)
+                        self.assertEqual(call[2]["hold_gains"]["claw"]["kp"], 14.0)
+                    self.assertIn("claw", arm.enabled)
 
     def test_placement1_carries_claw_hold_into_coupled_clearance(self):
         class Arm:

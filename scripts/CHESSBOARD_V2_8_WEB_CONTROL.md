@@ -40,9 +40,14 @@ python3 chessboard_vision_v2_8_web_control.py --host 0.0.0.0 --port 8098 --enabl
 v2.8 保留原有动作执行流程，没有新增识别后自动抓取的行为。
 
 机械臂页 Replay 按钮旁的“多流程”下拉框提供 `none`、`Placement1`、
-`Placement_C4`、`White Bishop Placement` 四项，一次只能选择一个。
+`Placement_C4`、`White Bishop Placement`、`white knight place_B1` 五项，一次只能选择一个。
 `none` 只回放当前 Saved Move；选 Placement1 或 White Bishop Placement 时
-Saved Move 须为 `bishop01`，选 Placement_C4 时须为 `white_knight_c4`。
+Saved Move 须为 `bishop01`，选 Placement_C4 或 white knight place_B1 时
+须为 `white_knight_c4`。新流程先执行 Placement_C4 的夹取和专属 Clearance，
+随后保持夹爪执行已训练的 `white_knight_place_b1` 到 b1，七关节到位验收后
+保持 wrist 执行 Claw Home 张爪。目标 saved move 不存在或缺少关节时会在
+起始动作前拒绝执行；放置姿态按原有 pose-local 规则匹配学习锚点，
+目标不同且姿态相距较远时使用独立锚点，近似姿态可能继承已有局部补偿。
 单独的“Replay 后合拢夹爪”勾选项仍保留；与多流程同时选择时，多流程按
 其内置的夹取步骤执行，该勾选项不会在末尾重复合爪。
 

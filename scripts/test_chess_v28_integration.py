@@ -26,6 +26,7 @@ class IntegrationTests(unittest.TestCase):
         self.assertIn(v28.PLACEMENT1_ACTION,v28.CLAW_HOME_INTERRUPT_ACTIONS)
         self.assertIn(v28.PLACEMENT_C4_ACTION,v28.CLAW_HOME_INTERRUPT_ACTIONS)
         self.assertIn(v28.WHITE_BISHOP_PLACEMENT_ACTION,v28.CLAW_HOME_INTERRUPT_ACTIONS)
+        self.assertIn(v28.WHITE_KNIGHT_PLACE_B1_ACTION,v28.CLAW_HOME_INTERRUPT_ACTIONS)
         self.assertEqual(v28.PLACEMENT1_ACTION,'placement1:bishop01')
         self.assertEqual(v28.WHITE_BISHOP_PLACEMENT_ACTION,'white-bishop-placement')
 
@@ -63,6 +64,7 @@ class IntegrationTests(unittest.TestCase):
                 self.assertIn('<option value="placement1">',arm_page)
                 self.assertIn('<option value="placement_c4">',arm_page)
                 self.assertIn('<option value="white_bishop_placement">',arm_page)
+                self.assertIn('<option value="white_knight_place_b1">white knight place_B1</option>',arm_page)
                 self.assertNotIn('id="placement1AfterReplay"',arm_page)
                 self.assertNotIn('id="placementC4AfterReplay"',arm_page)
                 self.assertNotIn('id="whiteBishopPlacementAfterReplay"',arm_page)
@@ -103,6 +105,13 @@ class IntegrationTests(unittest.TestCase):
                         urllib.request.urlopen(req)
                     self.assertEqual(error.exception.code,400)
                     error.exception.close()
+                    mixed_body=json.dumps({'name':'white_knight_c4',
+                        'placement_c4':True,'white_knight_place_b1':True}).encode()
+                    req=urllib.request.Request(base+'/api/move/replay',data=mixed_body,method='POST',headers={'Content-Type':'application/json'})
+                    with self.assertRaises(urllib.error.HTTPError) as error:
+                        urllib.request.urlopen(req)
+                    self.assertEqual(error.exception.code,400)
+                    error.exception.close()
                     bishop_body=json.dumps({'name':'bishop01','white_bishop_placement':True}).encode()
                     req=urllib.request.Request(base+'/api/move/replay',data=bishop_body,method='POST',headers={'Content-Type':'application/json'})
                     with self.assertRaises(urllib.error.HTTPError) as error:
@@ -111,6 +120,20 @@ class IntegrationTests(unittest.TestCase):
                     payload=json.loads(error.exception.read().decode())
                     error.exception.close()
                     self.assertEqual(payload['command'][-1],'--white-bishop-placement')
+                    knight_body=json.dumps({'name':'white_knight_c4','white_knight_place_b1':True}).encode()
+                    req=urllib.request.Request(base+'/api/move/replay',data=knight_body,method='POST',headers={'Content-Type':'application/json'})
+                    with self.assertRaises(urllib.error.HTTPError) as error:
+                        urllib.request.urlopen(req)
+                    self.assertEqual(error.exception.code,403)
+                    payload=json.loads(error.exception.read().decode())
+                    error.exception.close()
+                    self.assertEqual(payload['command'][-1],'--white-knight-place-b1')
+                    wrong_knight_body=json.dumps({'name':'bishop01','white_knight_place_b1':True}).encode()
+                    req=urllib.request.Request(base+'/api/move/replay',data=wrong_knight_body,method='POST',headers={'Content-Type':'application/json'})
+                    with self.assertRaises(urllib.error.HTTPError) as error:
+                        urllib.request.urlopen(req)
+                    self.assertEqual(error.exception.code,400)
+                    error.exception.close()
                     plain_body=json.dumps({'name':'bishop01','placement1':False,
                         'placement_c4':False,'white_bishop_placement':False}).encode()
                     req=urllib.request.Request(base+'/api/move/replay',data=plain_body,method='POST',headers={'Content-Type':'application/json'})
