@@ -71,7 +71,8 @@ v2.8 White Bishop Placement 流程在该姿态验证通过后，另行执行 Cla
 `grasp_anchors.white_bishop:d4` 来自 saved move `bishop01`。2026-09-10 第 7 次回放
 的七关节最大误差为 0.481°，因此属于已验证的实测抓取**关节姿态**锚点。
 棋冠夹持中心按用户确认的 D4 名义格心记录为 `[192.5, 192.5, 55] mm`，
-夹持部位宽度 14 mm。抓取接触结果与棋盘到机械臂的三维变换尚未验证；
+夹持部位宽度 14 mm。用户于 2026-09-12 确认 bishop01 已成功夹取，
+`contact_confirmed=true`；棋盘到机械臂的三维变换尚未验证。
 这不影响将该姿态用作后续几何训练的 D4 示教样本。
 
 `grasp_anchors.white_knight:c4` 来自用户报告的 saved move `white_knight_c4`。
@@ -79,5 +80,8 @@ v2.8 White Bishop Placement 流程在该姿态验证通过后，另行执行 Cla
 目标关节角由日志中的最终编码器角加上报告的目标误差还原；该日志并未直接打印
 saved move 原始姿态。C4 名义格心为 `[137.5, 192.5] mm`。用户随后确认
 棋冠夹持高度和宽度与 bishop01 相同，因此夹持中心记录为
-`[137.5, 192.5, 55] mm`，夹持部位宽 14 mm。实际接触证据仍未提供；
-棋盘到机械臂的三维变换仍未验证。
+`[137.5, 192.5, 55] mm`，夹持部位宽 14 mm。2026-09-12 21:34 的
+Placement_C4 回放后用户目测确认成功夹取并停在 Clearance，
+`contact_confirmed=true`。压力传感结果仍为 `contact=false`，
+因此这里只是操作者视觉确认；Clearance 七关节残差训练仍为
+`training incomplete`。棋盘到机械臂的三维变换仍未验证。

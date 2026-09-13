@@ -1,0 +1,146 @@
+started_at: 2026-09-12 21:12:51
+
+finished_at: 2026-09-12 21:14:30
+
+duration_s: 99.402
+
+returncode: 1
+
+stdout:
+y adaptive group hold target bias= {"elbow": 2.061448592939954} hold_targets= {"elbow": 0.46981353524168473}
+v2.6 replay adaptive group active group-2 shoulder_rotate,arm_roll,wrist_side deltas_deg= {"shoulder_rotate": 10.65936107745095, "arm_roll": -2.6852039798397396, "wrist_side": -5.879516483779833} targets= {"shoulder_rotate": 2.560535499572754, "arm_roll": -2.7089926685107124, "wrist_side": 0.19283588230609894} seconds= 7.055419780535799 hold joints: wrist,shoulder_front,shoulder_side,elbow
+v2.6 replay adaptive group active_tau= {"arm_roll": -0.3019678493290874, "wrist_side": -0.35}
+v2.6 replay adaptive group completed hold targets= {"shoulder_front": 0.5195841186550446, "shoulder_side": -2.8627832412719725, "elbow": 0.4338344699342782}
+v2.6 replay adaptive group hold_tau= {"wrist": 0.55, "shoulder_front": 1.2937558048405762, "elbow": 4.117268775272362, "shoulder_side": 0.7}
+v2.6 replay adaptive group soft hold overrides gains= {"elbow": {"kp": 25.0, "kd": 3.0}} tau= {"elbow": {"adaptive_tau": 4.117268775272362, "soft_cap_skipped": 3.2}}
+v2.2 continuous group step shoulder_rotate,arm_roll,wrist_side 1/1 targets= {"shoulder_rotate": 2.560535499572754, "arm_roll": -2.7089926685107124, "wrist_side": 0.19283588230609894}
+v2.6 replay adaptive group active tau updates {"arm_roll:negative": {"tau": -0.3018804229077112, "previous_tau": -0.3060023718298668, "applied_tau": -0.3019678493290874, "delta_tau": 0.0041219489221555605, "direction": "negative", "last_error_deg": 1.030487230538897, "best_error_deg": 0.6807542242775642, "best_tau": -0.3060023718298668, "step_scale": 0.2, "learning_state": "plateau", "refined_best": false, "samples": 156, "updated_at": "2026-09-12 21:14:08", "label": "replay-adaptive-group"}}
+v2.6 replay adaptive hold tau observation replay-adaptive-group active= wrist_side errors_deg= {"shoulder_front": -0.32785249525519705, "shoulder_side": -0.3278627405389521, "elbow": -0.26228438677036714}
+v2.6 replay adaptive hold target bias observation replay-adaptive-group-soft-hold active= wrist_side errors_deg= {"elbow": -0.26228438677036714}
+v2.8 pre-wrist verification= {"tolerance_deg": 0.5, "encoder_half_count_margin_deg": 0.011, "effective_tolerance_deg": 0.511, "blocking_errors_deg": {}, "extra_correction_motion": false}
+v2.6 replay correction decisions= {"shoulder_side": {"error_deg": -0.3278627405389521, "samples": 58, "learning_state": "plateau", "step_scale": 0.2, "best_error_deg": 1.09284392758038, "decision": "below_error_deadband"}, "elbow": {"error_deg": -0.26228438677036714, "samples": 28, "learning_state": "plateau", "step_scale": 0.2, "best_error_deg": 1.005420921298802, "decision": "below_error_deadband"}} enabled= False
+v2.6 replay correction skipped selected= 
+v2.6 replay final wrist adaptive target bias wrist bias_deg= 0.2599311284402625 nominal_target= -2.9879071712493896 biased_target= -2.983370517229683
+v2.6 replay final wrist hold target bias pending hold-tau improvement ["arm_roll", "shoulder_front", "shoulder_side"]
+v2.6 replay final wrist adaptive hold target bias= {"shoulder_rotate": 1.1955852156555042, "elbow": 1.240180147292432, "wrist_side": 0.0} hold_targets= {"shoulder_rotate": 2.581402398074109, "elbow": 0.41780758779472216, "wrist_side": 0.19283588230609894}
+v2.6 replay final wrist carried hold targets= {"shoulder_front": 0.5195841186550446, "shoulder_side": -2.8627832412719725, "elbow": 0.4338344699342782, "shoulder_rotate": 2.560535499572754, "arm_roll": -2.7089926685107124}
+v2.6 replay final wrist frozen hold targets= {"elbow": {"previous_target": 0.4338344699342782, "frozen_target": 0.39616236090660095, "nominal_error_deg": -0.26228438677036714}}
+v2.6 replay final wrist soft hold overrides gains= {"elbow": {"kp": 25.0, "kd": 3.0}} tau= {"elbow": {"adaptive_tau": 3.21, "soft_cap_skipped": 3.2}}
+v2.6 replay final wrist frozen hold overrides gains= {"elbow": {"kp": 25.0, "kd": 3.0}} tau= {"elbow": {"previous_tau": 3.21, "tau": 3.2}}
+v2.6 replay final wrist active delta_deg= -112.52187365448113 target= -2.983370517229683 kp= 22.0 kd= 1.4 seconds= 12.0 hold joints: shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side
+v2.6 replay final wrist hold_tau= {"shoulder_front": 1.166123468575764, "elbow": 3.2, "arm_roll": -0.3527607989659096, "shoulder_rotate": -0.8700000000000001, "shoulder_side": 0.71, "wrist_side": -0.29999999999999993}
+v2.6 replay final wrist low shoulder wrist_side hold gains= {"kp": 24.0, "kd": 2.4} hold_tau= -0.29999999999999993
+v2.6 replay final wrist low shoulder adaptive hold gains= {"shoulder_rotate": {"kp": 24.0, "kd": 4.5}, "arm_roll": {"kp": 12.0, "kd": 7.0}, "shoulder_side": {"kp": 65.0, "kd": 4.5}, "wrist_side": {"kp": 24.0, "kd": 2.4}} hold_tau= {"arm_roll": -0.3527607989659096, "shoulder_rotate": -0.8700000000000001, "shoulder_side": 0.71}
+v2.6 replay final wrist trajectory= blend_smootherstep linear_blend= 0.35 active_velocity_ff= False active_tau= 0.0
+v2 continuous step wrist 1/1 target= -2.983370517229683
+v2.6 replay adaptive hold tau observation replay-final-wrist active= wrist errors_deg= {"shoulder_front": -0.32785249525519705, "shoulder_side": -0.3278627405389521, "shoulder_rotate": 0.39343255657107445, "elbow": -0.17485625784691144, "arm_roll": -0.04371321068808161, "wrist_side": 0.26228267922307463}
+v2.6 replay adaptive hold target bias observation replay-final-wrist-soft-hold active= wrist errors_deg= {"elbow": -0.17485625784691144}
+v2.6 replay final errors_deg= {"shoulder_front": -0.32785249525519705, "shoulder_side": -0.3278627405389521, "shoulder_rotate": 0.39343255657107445, "elbow": -0.17485625784691144, "arm_roll": -0.04371321068808161, "wrist_side": 0.24042607387903384, "wrist": 0.4808589779472377}
+{
+  "shoulder_front": {
+    "pos": 0.6017776727676392,
+    "vel": -0.0019536020699888468,
+    "tau": -5.039316177368164
+  },
+  "shoulder_side": {
+    "pos": -2.8509573936462402,
+    "vel": -0.0019536020699888468,
+    "tau": -0.10256410390138626
+  },
+  "shoulder_rotate": {
+    "pos": 2.55378794670105,
+    "vel": -0.007326007355004549,
+    "tau": -0.24664224684238434
+  },
+  "elbow": {
+    "pos": 0.39463645219802856,
+    "vel": -0.0019536020699888468,
+    "tau": 3.740170955657959
+  },
+  "arm_roll": {
+    "pos": -2.733081579208374,
+    "vel": -0.021978022530674934,
+    "tau": -0.08547008782625198
+  },
+  "wrist_side": {
+    "pos": 0.18863965570926666,
+    "vel": -0.007326007355004549,
+    "tau": -0.2271062284708023
+  },
+  "wrist": {
+    "pos": -2.9962997436523438,
+    "vel": -0.007326007355004549,
+    "tau": 0.25641027092933655
+  }
+}
+v2.8 placement1 seamless takeover= {"source_move": "white_knight_c4", "arm_hold_targets_rad": {"shoulder_front": 0.5195841186550446, "shoulder_side": -2.8627832412719725, "shoulder_rotate": 2.581402398074109, "elbow": 0.41780758779472216, "arm_roll": -2.7089926685107124, "wrist_side": 0.19283588230609894, "wrist": -2.983370517229683}, "clearance_file": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_table_clearance.json", "applied_bias_deg": {"shoulder_side": 0.18359548488994273, "elbow": 2.63274014118629, "arm_roll": 0.543136642799414, "wrist_side": 1.5376378845400223, "wrist": -0.820746824571414}, "shared_clearance_bias_deg_read_only": {"shoulder_side": 0.18359548488994273, "elbow": 2.63274014118629, "arm_roll": 0.543136642799414, "wrist_side": 1.5376378845400223, "wrist": -0.820746824571414}, "placement1_bias_deg": {}, "placement1_bias_file": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_placement_c4_clearance_bias.json", "carry_hold_source": "final_wrist_controller"}
+enable skip shoulder_front
+enable skip shoulder_side
+enable skip shoulder_rotate
+enable skip elbow
+enable skip arm_roll
+enable skip wrist_side
+enable skip wrist
+enable claw
+v2.8 placement1 claw close pressure stop with arm holds
+v2.8 placement1 claw pressure result= {"contact": false, "contact_pos": null, "hold_pos": 6.661898136138916, "status": {"pos": 6.661898136138916, "vel": -0.007326007355004549, "tau": 0.26617828011512756}}
+
+
+stderr:
+Traceback (most recent call last):
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1648, in <module>
+    main()
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1644, in main
+    replay_with_local_bias(args)
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1562, in replay_with_local_bias
+    legacy.replay_move(
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6_move_library.py", line 2354, in replay_move
+    arm.close()
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1448, in close_with_optional_placement1
+    result = run_placement1_on_arm(
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 404, in run_placement1_on_arm
+    claw_hold_pos = close_claw_while_holding_arm(
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 142, in close_claw_while_holding_arm
+    raise RuntimeError(
+RuntimeError: v2.8 placement1 stopped after claw close: pressure contact was not detected; clearance carry was not started
+Error in sys.excepthook:
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/apport_python_hook.py", line 72, in apport_excepthook
+    from apport.fileutils import likely_packaged, get_recent_crashes
+  File "/usr/lib/python3/dist-packages/apport/__init__.py", line 5, in <module>
+    from apport.report import Report
+  File "/usr/lib/python3/dist-packages/apport/report.py", line 32, in <module>
+    import apport.fileutils
+  File "/usr/lib/python3/dist-packages/apport/fileutils.py", line 12, in <module>
+    import os, glob, subprocess, os.path, time, pwd, sys, requests_unixsocket
+  File "/usr/lib/python3/dist-packages/requests_unixsocket/__init__.py", line 1, in <module>
+    import requests
+  File "/usr/lib/python3/dist-packages/requests/__init__.py", line 95, in <module>
+    from urllib3.contrib import pyopenssl
+  File "/usr/lib/python3/dist-packages/urllib3/contrib/pyopenssl.py", line 46, in <module>
+    import OpenSSL.SSL
+  File "/usr/lib/python3/dist-packages/OpenSSL/__init__.py", line 8, in <module>
+    from OpenSSL import crypto, SSL
+  File "/usr/lib/python3/dist-packages/OpenSSL/crypto.py", line 1553, in <module>
+    class X509StoreFlags(object):
+  File "/usr/lib/python3/dist-packages/OpenSSL/crypto.py", line 1571, in X509StoreFlags
+    NOTIFY_POLICY = _lib.X509_V_FLAG_NOTIFY_POLICY
+AttributeError: module 'lib' has no attribute 'X509_V_FLAG_NOTIFY_POLICY'
+
+Original exception was:
+Traceback (most recent call last):
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1648, in <module>
+    main()
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1644, in main
+    replay_with_local_bias(args)
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1562, in replay_with_local_bias
+    legacy.replay_move(
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6_move_library.py", line 2354, in replay_move
+    arm.close()
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1448, in close_with_optional_placement1
+    result = run_placement1_on_arm(
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 404, in run_placement1_on_arm
+    claw_hold_pos = close_claw_while_holding_arm(
+  File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 142, in close_claw_while_holding_arm
+    raise RuntimeError(
+RuntimeError: v2.8 placement1 stopped after claw close: pressure contact was not detected; clearance carry was not started
