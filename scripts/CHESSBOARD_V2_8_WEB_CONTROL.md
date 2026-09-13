@@ -44,10 +44,13 @@ v2.8 保留原有动作执行流程，没有新增识别后自动抓取的行为
 `none` 只回放当前 Saved Move；选 Placement1 或 White Bishop Placement 时
 Saved Move 须为 `bishop01`，选 Placement_C4 或 white knight place_B1 时
 须为 `white_knight_c4`。新流程先执行 Placement_C4 的夹取和专属 Clearance，
-随后保持夹爪执行已训练的 `white_knight_place_b1` 到 b1，七关节到位验收后
+随后保持夹爪执行已训练的 `white_knight_place_b1` 到 b1，测量七关节误差后
 保持 wrist 执行 Claw Home 张爪。目标 saved move 不存在或缺少关节时会在
 起始动作前拒绝执行；放置姿态按原有 pose-local 规则匹配学习锚点，
 目标不同且姿态相距较远时使用独立锚点，近似姿态可能继承已有局部补偿。
+多流程末尾的放置姿态验收仍记录七关节误差和 `training incomplete`，
+但该训练状态不阻止最后的 Claw Home；张爪阶段继续保持 wrist 和其他关节，
+避免因控制器交接导致下坠。前面的目标动作存在性、运动安全与 wrist 前检查仍按原逻辑执行。
 单独的“Replay 后合拢夹爪”勾选项仍保留；与多流程同时选择时，多流程按
 其内置的夹取步骤执行，该勾选项不会在末尾重复合爪。
 

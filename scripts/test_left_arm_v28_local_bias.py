@@ -169,6 +169,7 @@ class LocalBiasTests(unittest.TestCase):
         class Arm:
             def __init__(self):
                 self.current = {joint: 0.0 for joint in JOINTS}
+                self.residual_deg = 0.0
                 self.ctrl = Ctrl()
                 self.motors = {joint: object() for joint in (*JOINTS, "claw")}
                 self.calls = []
@@ -215,6 +216,7 @@ class LocalBiasTests(unittest.TestCase):
                 hold_gains={joint: {"kp": 1.0, "kd": 1.0} for joint in JOINTS[:-1]},
                 hold_tau={joint: 0.1 for joint in JOINTS[:-1]},
             )
+            current_arm.current["wrist"] -= math.radians(current_arm.residual_deg)
 
         legacy = types.SimpleNamespace(
             load_moves=lambda path: {"moves": {
@@ -239,24 +241,27 @@ class LocalBiasTests(unittest.TestCase):
                 (WHITE_BISHOP_PLACE_MOVE_NAME, "White Bishop Placement", "placement1-clearance"),
                 (WHITE_KNIGHT_PLACE_B1_MOVE_NAME, "White Knight Place_B1", "placement-c4-clearance"),
             ):
-                with self.subTest(move_name=move_name):
-                    arm = Arm()
-                    local = LocalTargetBias(
-                        Path(directory) / (move_name + "_bias.json"), target, move_name
-                    )
-                    result = run_white_bishop_place_on_arm(
-                        arm, "moves.json", 3.0, 0.3, 0.5,
-                        api, legacy, local, {"claw_hold_pos": -0.2},
-                        destination_move_name=move_name,
-                        workflow_label=label,
-                        clearance_stage=clearance_stage,
-                    )
-                    self.assertEqual(result["status"], "validated")
-                    self.assertEqual(len(arm.calls), 2)
-                    for call in arm.calls:
-                        self.assertEqual(call[2]["hold_targets"]["claw"], -0.2)
-                        self.assertEqual(call[2]["hold_gains"]["claw"]["kp"], 14.0)
-                    self.assertIn("claw", arm.enabled)
+                for residual_deg in (0.0, 0.65):
+                    with self.subTest(move_name=move_name, residual_deg=residual_deg):
+                        arm = Arm()
+                        arm.residual_deg = residual_deg
+                        local = LocalTargetBias(
+                            Path(directory) / (move_name + str(residual_deg) + "_bias.json"), target, move_name
+                        )
+                        result = run_white_bishop_place_on_arm(
+                            arm, "moves.json", 3.0, 0.3, 0.5,
+                            api, legacy, local, {"claw_hold_pos": -0.2},
+                            destination_move_name=move_name,
+                            workflow_label=label,
+                            clearance_stage=clearance_stage,
+                        )
+                        self.assertEqual(result["status"], "validated" if residual_deg==0 else "training")
+                        self.assertEqual(bool(result["blocking_errors_deg"]), residual_deg!=0)
+                        self.assertEqual(len(arm.calls), 2)
+                        for call in arm.calls:
+                            self.assertEqual(call[2]["hold_targets"]["claw"], -0.2)
+                            self.assertEqual(call[2]["hold_gains"]["claw"]["kp"], 14.0)
+                        self.assertIn("claw", arm.enabled)
 
     def test_placement1_carries_claw_hold_into_coupled_clearance(self):
         class Arm:

@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-white-knight-place-b1-after-c4"
+V28_MOVE_BUILD = "v2.8-multiflow-final-claw-home-no-training-gate"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 PLACEMENT_C4_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement_c4_clearance_bias.json"
@@ -876,9 +876,11 @@ def run_white_bishop_place_on_arm(arm, moves_file: str, fallback_kp: float,
             flush=True,
         )
         if validation["blocking_errors_deg"]:
-            raise RuntimeError(
-                f"{workflow_label} training incomplete; learned data was saved: "
-                + json.dumps(validation["blocking_errors_deg"], ensure_ascii=False)
+            print(
+                f"v2.8 {workflow_label} training incomplete; "
+                "recorded residuals do not gate final Claw Home=",
+                json.dumps(validation["blocking_errors_deg"], ensure_ascii=False),
+                flush=True,
             )
         return validation
     finally:
@@ -1512,7 +1514,10 @@ def replay_with_local_bias(args) -> None:
                     )
                     destination_placement_summary.clear()
                     destination_placement_summary.update({
-                        "status": "training complete",
+                        "status": (
+                            "training incomplete" if placement_result["blocking_errors_deg"]
+                            else "training complete"
+                        ),
                         "tolerance_deg": ERROR_DEADBAND_DEG,
                         "errors_deg": placement_result["errors_deg"],
                         "blocking_errors_deg": placement_result["blocking_errors_deg"],
