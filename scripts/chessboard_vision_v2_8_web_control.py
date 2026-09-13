@@ -57,14 +57,14 @@ def build_arm_page() -> str:
             <label class="inline-option" title="Replay 命令结束后调用现有 Claw Close 压力停止流程">
               <input id="closeClawAfterReplay" type="checkbox"> Replay 后合拢夹爪
             </label>
-            <label class="inline-option" title="bishop01 夹取后，先收回 wrist，再运动到 Clearance">
-              <input id="placement1AfterReplay" type="checkbox"> Placement1：夹取后到 Clearance
-            </label>
-            <label class="inline-option" title="white_knight_c4 从 C4 夹取后，先收回 wrist，再运动到 Clearance；使用独立的 C4 学习记录">
-              <input id="placementC4AfterReplay" type="checkbox"> Placement_C4：夹取后到 Clearance
-            </label>
-            <label class="inline-option" title="完整执行 Placement1，经 Clearance 到 white_bishop_place，最后保持手臂姿态执行 Claw Home 张爪">
-              <input id="whiteBishopPlacementAfterReplay" type="checkbox"> White Bishop Placement
+            <label class="inline-option" title="选择一个多流程动作；none 只执行所选 Saved Move 的 Replay">
+              多流程
+              <select id="multiFlowSelect">
+                <option value="none">none</option>
+                <option value="placement1">Placement1：夹取后到 Clearance</option>
+                <option value="placement_c4">Placement_C4：夹取后到 Clearance</option>
+                <option value="white_bishop_placement">White Bishop Placement</option>
+              </select>
             </label>"""
     if replay_button not in page:
         raise RuntimeError("v2.8 arm page injection failed: Replay button was not found")
@@ -77,9 +77,10 @@ def build_arm_page() -> str:
     replay_function = """    async function replayMove() {
       const name = document.getElementById('moveSelect').value;
       const closeAfterReplay = document.getElementById('closeClawAfterReplay').checked;
-      const placement1 = document.getElementById('placement1AfterReplay').checked;
-      const placementC4 = document.getElementById('placementC4AfterReplay').checked;
-      const whiteBishopPlacement = document.getElementById('whiteBishopPlacementAfterReplay').checked;
+      const multiFlow = document.getElementById('multiFlowSelect').value;
+      const placement1 = multiFlow === 'placement1';
+      const placementC4 = multiFlow === 'placement_c4';
+      const whiteBishopPlacement = multiFlow === 'white_bishop_placement';
       if (!name) {
         setStatus('No saved move selected.');
         return;
