@@ -1,6 +1,8 @@
 """Metric teaching and crown-coordinate planning. No motor commands here."""
 import hashlib
+import copy
 import json
+import shutil
 import time
 import numpy as np
 from chess_piece_yolo_labels import atomic_write
@@ -91,13 +93,18 @@ def validate_placement_anchor(data):
     validated=bool(errors) and max(abs(value) for value in errors.values())<=tolerance
     board_tcp=data.get('board_tcp_mm')
     if board_tcp is not None:board_tcp=array(board_tcp,(3,)).tolist()
-    return {'piece_class':cls,'target_square':square,'saved_move_name':move_name,
+    anchor = {'piece_class':cls,'target_square':square,'saved_move_name':move_name,
             'pose_rad':pose,'joint_units':'radians','board_tcp_mm':board_tcp,
             'tolerance_deg':tolerance,'validation_errors_deg':errors,
             'validated':validated,'validation_source':str(data.get('validation_source','')),
             'purpose':str(data.get('purpose','geometry_training_anchor')),
             'includes_claw_release':bool(data.get('includes_claw_release',False)),
             'updated_at':str(data.get('updated_at','')) or time.strftime('%Y-%m-%d %H:%M:%S')}
+    if 'workflow_validation' in data:
+        if not isinstance(data['workflow_validation'], dict):
+            raise ValueError('workflow_validation 必须是对象')
+        anchor['workflow_validation'] = data['workflow_validation']
+    return anchor
 
 
 def validate_grasp_anchor(data):
@@ -127,7 +134,87 @@ def validate_grasp_anchor(data):
         raise ValueError('棋冠夹持宽度无效')
     anchor['grip_dimensions_source']=str(data.get('grip_dimensions_source',''))
     anchor['pose_source']=str(data.get('pose_source',''))
+    for field in ('contact_confirmation_method',):
+        if field in data: anchor[field]=str(data[field])
+    for field in ('workflow_validation','grasp_confirmation'):
+        if field in data:
+            if not isinstance(data[field],dict):raise ValueError(field+' 必须是对象')
+            anchor[field]=data[field]
     return anchor
+
+
+def validate_anchor_bundle(data):
+    if not isinstance(data,dict) or data.get('schema')!=1:
+        raise ValueError('几何文件 schema 必须为 1')
+    result={}
+    for section,validator,square_field in (
+        ('placement_anchors',validate_placement_anchor,'target_square'),
+        ('grasp_anchors',validate_grasp_anchor,'source_square'),
+    ):
+        records=data.get(section,{})
+        if not isinstance(records,dict) or len(records)>128:
+            raise ValueError(section+' 必须是至多128条记录的对象')
+        checked={}
+        for key,raw in records.items():
+            if not isinstance(raw,dict):raise ValueError(str(key)+' 必须是对象')
+            anchor=validator(raw)
+            expected=anchor['piece_class']+':'+anchor[square_field]
+            if key!=expected:raise ValueError('锚点键与内容不符: '+str(key))
+            checked[key]=anchor
+        result[section]=checked
+    if not any(result.values()):raise ValueError('文件中没有可导入的锚点')
+    return result
+
+
+def geometry_revision(current):
+    raw=json.dumps(current,ensure_ascii=False,sort_keys=True,separators=(',',':'))
+    return hashlib.sha256(raw.encode('utf-8')).hexdigest()[:20]
+
+
+def merge_anchor_bundle(current,bundle):
+    """Merge teaching evidence while refusing to replace a different taught pose."""
+    result=copy.deepcopy(current)
+    changes={'new':[],'updated':[],'unchanged':[],'conflicts':[]}
+    for section in ('placement_anchors','grasp_anchors'):
+        saved=result.setdefault(section,{})
+        if not isinstance(saved,dict):raise ValueError('机器人几何文件中的 '+section+' 格式无效')
+        for key,incoming in bundle[section].items():
+            label=section+':'+key
+            old=saved.get(key)
+            if old is None:
+                saved[key]=incoming
+                changes['new'].append(label)
+                continue
+            if not isinstance(old,dict) or old.get('saved_move_name')!=incoming['saved_move_name']:
+                changes['conflicts'].append(label+' (saved move 不同)')
+                continue
+            old_pose=old.get('pose_rad')
+            if not isinstance(old_pose,dict) or set(old_pose)!=set(incoming['pose_rad']):
+                changes['conflicts'].append(label+' (关节姿态不完整)')
+                continue
+            try:
+                pose_difference=max(abs(float(old_pose[j])-v) for j,v in incoming['pose_rad'].items())
+            except (TypeError,ValueError):
+                pose_difference=float('inf')
+            if not np.isfinite(pose_difference) or pose_difference>1e-4:
+                changes['conflicts'].append(label+' (关节姿态不同)')
+                continue
+            merged=copy.deepcopy(old)
+            if section=='grasp_anchors':
+                if incoming.get('contact_confirmed'):
+                    merged['contact_confirmed']=True
+                fields=('contact_confirmation_method','grasp_confirmation','workflow_validation')
+            else:
+                fields=('workflow_validation',)
+            for field in fields:
+                if field in incoming:merged[field]=incoming[field]
+            if merged!=old:
+                merged['updated_at']=incoming['updated_at']
+                saved[key]=merged
+                changes['updated'].append(label)
+            else:
+                changes['unchanged'].append(label)
+    return result,changes
 
 
 def coordinate_plan(calibration,profile,source_xy,target_square,clearance_mm=120):
@@ -159,6 +246,25 @@ class GeometryStore:
     def action(self,action,data):
         current=self.read()
         if action=='status':return {'ok':True,'data':current,'motion_enabled':False}
+        if action=='import-anchors':
+            bundle=validate_anchor_bundle(data.get('geometry'))
+            proposed,changes=merge_anchor_bundle(current,bundle)
+            revision=geometry_revision(current)
+            preview={'changes':changes,'counts':{key:len(value) for key,value in changes.items()},
+                     'current_revision':revision,'motion_enabled':False}
+            if data.get('dry_run') is True:
+                return {'ok':True,'preview':preview}
+            if changes['conflicts']:
+                raise ValueError('存在姿态冲突，未写入：'+', '.join(changes['conflicts']))
+            if data.get('expected_revision')!=revision:
+                raise ValueError('机器人端数据已变化，请重新预览后写入')
+            backup=None
+            if self.path.exists():
+                backup=self.path.with_name(self.path.name+'.bak.'+str(time.time_ns()))
+                shutil.copy2(self.path,backup)
+            atomic_write(self.path,json.dumps(proposed,ensure_ascii=False,indent=2))
+            return {'ok':True,'preview':preview,'backup_path':str(backup) if backup else None,
+                    'written_revision':geometry_revision(proposed),'motion_enabled':False}
         if action=='calibrate':current['calibration']=fit_transform(data['samples'])
         elif action=='profile':
             p=validate_profile(data);current['profiles'][p['piece_class']+':'+p['orientation']]=p
@@ -196,7 +302,19 @@ PAGE='''<!doctype html><html lang="zh"><meta charset="utf-8"><title>v2.8 棋冠�
 <h2>3. 抓放坐标预览</h2><p>当前为手动输入实际取棋XY的坐标检查；尚未接入视觉棋冠定位和自动目标选择。D4中心为192.5,192.5，实际偏心时应使用实测位置。</p>
 <input id="source" value="192.5,192.5"><input id="target" value="c1"><label>上方高度<input id="clearance" type="number" value="120"></label>
 <button onclick="send('plan',{profile:el('cls').value+':'+el('orientation').value,source_xy_mm:vec('source'),target_square:el('target').value,clearance_mm:num('clearance')})">生成坐标预览（不执行）</button>
+<h2>4. 从本机导入已验证锚点</h2>
+<p>选择本机的 chess_crown_geometry_v2_8.json。先预览新增、更新及冲突记录；写入仅合并抓取与放置锚点，不改动机器人已有标定、参数或其他训练数据。姿态不一致的同名锚点会拒绝写入。</p>
+<input id="anchorFile" type="file" accept=".json,application/json" onchange="resetImport()">
+<button onclick="previewImport()">预览锚点</button>
+<button id="writeAnchors" onclick="writeImport()" disabled>写入已预览锚点</button>
+<pre id="importResult"></pre>
 <button onclick="send('status',{})">读取已保存数据</button><pre id="result"></pre>
 <script>const el=id=>document.getElementById(id),num=id=>Number(el(id).value),vec=id=>el(id).value.split(',').map(Number);
 async function send(action,data){try{let r=await fetch('/api/crown/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});let d=await r.json();el('result').textContent=JSON.stringify(d,null,2);}catch(e){el('result').textContent=e.message;}}
-function profile(){send('profile',{piece_class:el('cls').value,orientation:el('orientation').value,piece_height_mm:num('total'),grip_height_mm:num('grip'),open_width_mm:num('open'),closed_width_mm:num('closed'),tcp_offset_mm:vec('offset')});}</script></html>'''.replace('__CLASSES__',''.join('<option>'+c+'</option>' for c in CHESS_PIECE_YOLO_CLASSES))
+function profile(){send('profile',{piece_class:el('cls').value,orientation:el('orientation').value,piece_height_mm:num('total'),grip_height_mm:num('grip'),open_width_mm:num('open'),closed_width_mm:num('closed'),tcp_offset_mm:vec('offset')});}
+let pendingImport=null;
+function resetImport(){pendingImport=null;el('writeAnchors').disabled=true;el('importResult').textContent='';}
+async function anchorRequest(body){let response=await fetch('/api/crown/import-anchors',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});let result=await response.json();if(!response.ok||!result.ok)throw Error(result.error||result.message||JSON.stringify(result));return result;}
+async function previewImport(){resetImport();try{let file=el('anchorFile').files[0];if(!file)throw Error('请先选择几何 JSON 文件');let geometry=JSON.parse(await file.text());let result=await anchorRequest({geometry,dry_run:true});pendingImport={geometry,expected_revision:result.preview.current_revision};el('importResult').textContent=JSON.stringify(result.preview,null,2);el('writeAnchors').disabled=result.preview.counts.conflicts>0;}catch(e){el('importResult').textContent=e.message;}}
+async function writeImport(){if(!pendingImport)return;el('writeAnchors').disabled=true;try{let result=await anchorRequest(pendingImport);el('importResult').textContent=JSON.stringify(result,null,2);pendingImport=null;}catch(e){el('importResult').textContent=e.message+'；请重新预览后再写入';pendingImport=null;}}
+</script></html>'''.replace('__CLASSES__',''.join('<option>'+c+'</option>' for c in CHESS_PIECE_YOLO_CLASSES))

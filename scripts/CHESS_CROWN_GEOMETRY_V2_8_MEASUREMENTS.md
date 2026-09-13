@@ -43,8 +43,13 @@ knight等不对称棋子按front/back/left/right记录，必要时后续增加�
 
 ## 部署本阶段
 
-更新 chessboard_vision_v2_8_web_control.py，并把 chess_crown_geometry_v2_8.py
-放到同一目录，保留旧依赖；重启v2.8即可看到新页签。
+若机器人已经在运行支持 `/crown` 的 v2.8 Web，只需替换同目录中的
+`chess_crown_geometry_v2_8.py`，再重启原 Web 进程。不需 `git pull`，
+不复制或覆盖机器人端 `data` 目录。替换前先备份机器人现有的同名 `.py` 文件。
+新页面通过 `/api/crown/import-anchors` 提供本机 JSON 选取、预览差异、写入功能。
+浏览器中的本机 JSON 不会直接覆盖机器人几何文件；服务端只合并抓取和放置锚点，
+写入前保存原几何文件的时间戳备份。同名 saved move 或关节姿态不同会列为冲突并拒绝写入。
+写入时还会复核预览时的文件版本，避免预览后机器人端数据发生变化。
 示教数据与坐标预览不会下发机械臂动作，即使服务有 --enable-execute。
 原机械臂页的手动动作仍按原执行开关运行。
 

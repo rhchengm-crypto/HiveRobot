@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import numpy as np
 from chess_crown_geometry_v2_8 import (GeometryStore,fit_transform,coordinate_plan,
-    validate_profile,validate_placement_anchor,validate_grasp_anchor,crown_point)
+    validate_profile,validate_placement_anchor,validate_grasp_anchor,crown_point,PAGE)
 
 class GeometryTests(unittest.TestCase):
     def samples(self):
@@ -79,5 +79,85 @@ class GeometryTests(unittest.TestCase):
             self.assertIsNone(anchor['board_tcp_mm'])
             self.assertIsNone(anchor['grip_section_width_mm'])
             self.assertEqual(anchor['board_xy_mm'],[137.5,192.5])
+
+    def test_import_preview_merge_and_backup_preserve_existing_data(self):
+        source=Path(__file__).resolve().parent/'data'/'chess_crown_geometry_v2_8.json'
+        bundle=json.loads(source.read_text(encoding='utf-8'))
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'geometry.json'
+            existing={'schema':1,'profiles':{'trained':{'keep':True}},
+                'calibration':{'keep':True},'placement_anchors':{},'grasp_anchors':{}}
+            path.write_text(json.dumps(existing),encoding='utf-8')
+            original=path.read_bytes()
+            store=GeometryStore(path)
+            preview=store.action('import-anchors',{'geometry':bundle,'dry_run':True})
+            self.assertEqual(preview['preview']['counts']['new'],3)
+            self.assertEqual(preview['preview']['counts']['conflicts'],0)
+            self.assertEqual(path.read_bytes(),original)
+            result=store.action('import-anchors',{'geometry':bundle,
+                'expected_revision':preview['preview']['current_revision']})
+            self.assertTrue(Path(result['backup_path']).exists())
+            self.assertEqual(Path(result['backup_path']).read_bytes(),original)
+            saved=store.read()
+            self.assertEqual(saved['profiles'],existing['profiles'])
+            self.assertEqual(saved['calibration'],existing['calibration'])
+            self.assertTrue(saved['grasp_anchors']['white_bishop:d4']['contact_confirmed'])
+            self.assertTrue(saved['grasp_anchors']['white_knight:c4']['contact_confirmed'])
+            self.assertIn('grasp_confirmation',saved['grasp_anchors']['white_bishop:d4'])
+            self.assertIn('workflow_validation',saved['placement_anchors']['white_bishop:c1'])
+            self.assertFalse(result['motion_enabled'])
+
+    def test_import_conflict_and_stale_preview_do_not_write(self):
+        source=Path(__file__).resolve().parent/'data'/'chess_crown_geometry_v2_8.json'
+        bundle=json.loads(source.read_text(encoding='utf-8'))
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'geometry.json'
+            store=GeometryStore(path)
+            preview=store.action('import-anchors',{'geometry':bundle,'dry_run':True})
+            store.action('profile',dict(piece_class='white_bishop',piece_height_mm=60,
+                grip_height_mm=50,open_width_mm=30,closed_width_mm=15))
+            changed=path.read_bytes()
+            with self.assertRaisesRegex(ValueError,'重新预览'):
+                store.action('import-anchors',{'geometry':bundle,
+                    'expected_revision':preview['preview']['current_revision']})
+            self.assertEqual(path.read_bytes(),changed)
+            existing=store.read()
+            existing['grasp_anchors']['white_bishop:d4']=bundle['grasp_anchors']['white_bishop:d4'].copy()
+            existing['grasp_anchors']['white_bishop:d4']['pose_rad']=dict(
+                existing['grasp_anchors']['white_bishop:d4']['pose_rad'],wrist=0)
+            path.write_text(json.dumps(existing),encoding='utf-8')
+            preview=store.action('import-anchors',{'geometry':bundle,'dry_run':True})
+            self.assertEqual(preview['preview']['counts']['conflicts'],1)
+            with self.assertRaisesRegex(ValueError,'姿态冲突'):
+                store.action('import-anchors',{'geometry':bundle,
+                    'expected_revision':preview['preview']['current_revision']})
+            self.assertEqual(store.read()['grasp_anchors']['white_bishop:d4']['pose_rad']['wrist'],0)
+
+    def test_import_merges_contact_evidence_into_matching_pose(self):
+        source=Path(__file__).resolve().parent/'data'/'chess_crown_geometry_v2_8.json'
+        bundle=json.loads(source.read_text(encoding='utf-8'))
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'geometry.json'
+            old=bundle['grasp_anchors']['white_bishop:d4'].copy()
+            old['contact_confirmed']=False
+            old.pop('grasp_confirmation')
+            old['runtime_note']='keep this robot note'
+            initial={'schema':1,'profiles':{},'calibration':None,
+                'placement_anchors':{},'grasp_anchors':{'white_bishop:d4':old}}
+            path.write_text(json.dumps(initial),encoding='utf-8')
+            store=GeometryStore(path)
+            preview=store.action('import-anchors',{'geometry':bundle,'dry_run':True})
+            self.assertIn('grasp_anchors:white_bishop:d4',preview['preview']['changes']['updated'])
+            store.action('import-anchors',{'geometry':bundle,
+                'expected_revision':preview['preview']['current_revision']})
+            saved=store.read()['grasp_anchors']['white_bishop:d4']
+            self.assertTrue(saved['contact_confirmed'])
+            self.assertEqual(saved['runtime_note'],'keep this robot note')
+            self.assertEqual(saved['grasp_confirmation'],bundle['grasp_anchors']['white_bishop:d4']['grasp_confirmation'])
+
+    def test_import_page_has_preview_and_write_controls(self):
+        self.assertIn('预览锚点',PAGE)
+        self.assertIn('/api/crown/import-anchors',PAGE)
+        self.assertIn('写入已预览锚点',PAGE)
 
 if __name__=='__main__':unittest.main()
