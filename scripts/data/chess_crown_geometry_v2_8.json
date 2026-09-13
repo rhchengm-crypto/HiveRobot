@@ -66,8 +66,9 @@
       },
       "joint_units": "radians",
       "board_xy_mm": [137.5, 192.5],
-      "board_tcp_mm": null,
-      "grip_section_width_mm": null,
+      "board_tcp_mm": [137.5, 192.5, 55.0],
+      "grip_section_width_mm": 14.0,
+      "grip_dimensions_source": "user confirmed same crown grip height and width as bishop01 on 2026-09-12",
       "tolerance_deg": 0.5,
       "validation_errors_deg": {
         "shoulder_front": -0.3059958899111562,
@@ -86,7 +87,7 @@
       "metric_transform_validated": false,
       "purpose": "geometry_training_anchor",
       "includes_claw_release": false,
-      "updated_at": "2026-09-12 20:59:24"
+      "updated_at": "2026-09-12 21:03:53"
     },
     "white_bishop:d4": {
       "piece_class": "white_bishop",

@@ -125,6 +125,7 @@ def validate_grasp_anchor(data):
     anchor['grip_section_width_mm']=float(width) if width is not None else None
     if width is not None and (not np.isfinite(anchor['grip_section_width_mm']) or anchor['grip_section_width_mm']<=0):
         raise ValueError('棋冠夹持宽度无效')
+    anchor['grip_dimensions_source']=str(data.get('grip_dimensions_source',''))
     anchor['pose_source']=str(data.get('pose_source',''))
     return anchor
 
