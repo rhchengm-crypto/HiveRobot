@@ -20,9 +20,10 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-white-bishop-placement-claw-handoff-v4"
+V28_MOVE_BUILD = "v2.8-placement-no-contact-gate-v4"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
+PLACEMENT_C4_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement_c4_clearance_bias.json"
 JOINTS = (
     "shoulder_front", "shoulder_side", "shoulder_rotate", "elbow",
     "arm_roll", "wrist_side", "wrist",
@@ -49,6 +50,7 @@ HOLD_BIAS_MIN_STEP_SCALE = 0.25
 HOLD_BIAS_LIMIT_DEG = 3.0
 PLACEMENT1_HOLD_BIAS_LIMIT_DEG = 5.0
 PLACEMENT1_MOVE_NAME = "bishop01"
+PLACEMENT_C4_MOVE_NAME = "white_knight_c4"
 WHITE_BISHOP_PLACE_MOVE_NAME = "white_bishop_place"
 PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 5.0
 PLACEMENT1_TERMINAL_SETTLE_SECONDS = 1.5
@@ -79,7 +81,8 @@ def command_holds(arm, targets, gains, hold_tau, fallback_kp=3.0, fallback_kd=0.
         )
 
 
-def close_claw_while_holding_arm(arm, arm_targets, api, arm_gains=None, arm_tau=None):
+def close_claw_while_holding_arm(arm, arm_targets, api, arm_gains=None, arm_tau=None,
+                                require_contact=True):
     """Run the v2.6 pressure-stop close while continuously holding the arm."""
     claw_home = api.load_pose(api.CLAW_HOME_PATH)
     if "claw" not in claw_home:
@@ -124,6 +127,10 @@ def close_claw_while_holding_arm(arm, arm_targets, api, arm_gains=None, arm_tau=
         "contact_pos": contact_pos if contact else None,
         "hold_pos": hold_pos,
         "status": last_status,
+        "final_command_target": q_close,
+        "confirmed_samples": confirm_count,
+        "contact_check_required": require_contact,
+        "contact_override_used": not contact and not require_contact,
     }
     print("v2.8 placement1 claw pressure result=", json.dumps(result, ensure_ascii=False), flush=True)
     hold_targets = dict(arm_targets)
@@ -136,11 +143,13 @@ def close_claw_while_holding_arm(arm, arm_targets, api, arm_gains=None, arm_tau=
     while time.time() < end:
         command_holds(arm, hold_targets, hold_gains, hold_tau)
         time.sleep(0.01)
-    if not contact:
+    if not contact and require_contact:
         raise RuntimeError(
             "v2.8 placement1 stopped after claw close: pressure contact was not detected; "
             "clearance carry was not started"
         )
+    if not contact:
+        print("v2.8 Placement contact check bypassed; continuing to wrist-first clearance", flush=True)
     return hold_pos
 
 
@@ -319,11 +328,13 @@ def recover_placement1_shared_clearance_contamination(local, force=False):
 
 
 def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback_kd: float,
-                          carry_hold=None, clearance_handoff=None):
-    """Carry the gripped bishop to learned clearance without releasing holds."""
+                          carry_hold=None, clearance_handoff=None,
+                          source_move_name=PLACEMENT1_MOVE_NAME, local_bias_path=None):
+    """Carry a gripped piece to learned clearance without releasing holds."""
     import left_arm_v2_6 as api
     from left_arm_v2_8 import CLEARANCE_BIAS_PATH, clearance_errors_deg
 
+    is_c4 = source_move_name == PLACEMENT_C4_MOVE_NAME
     nominal = api.load_pose(clearance_file)
     selected = [name for name in api.DEFAULT_CLEARANCE_ORDER if name in nominal]
     # Placement1 must reproduce the complete captured Clearance pose. Ordinary
@@ -335,20 +346,29 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         nominal,
         "clearance:" + Path(clearance_file).name,
     )
-    rollback_rejected_placement1_learning(shared)
-    recovered_shared = recover_placement1_shared_clearance_contamination(shared)
+    if not is_c4:
+        rollback_rejected_placement1_learning(shared)
+        recovered_shared = recover_placement1_shared_clearance_contamination(shared)
+    else:
+        recovered_shared = {}
     if recovered_shared:
         raise RuntimeError(
             "v2.8 restored the pre-Placement1 shared Clearance history without moving; "
             "run the requested action again only after reviewing the restored values"
         )
+    if local_bias_path is None:
+        local_bias_path = (
+            PLACEMENT_C4_CLEARANCE_BIAS_PATH if is_c4 else PLACEMENT1_CLEARANCE_BIAS_PATH
+        )
     local = LocalTargetBias(
-        PLACEMENT1_CLEARANCE_BIAS_PATH,
+        local_bias_path,
         nominal,
-        "placement1-clearance:" + Path(clearance_file).name,
+        ("placement-c4-clearance:" if is_c4 else "placement1-clearance:")
+        + Path(clearance_file).name,
     )
-    local.recover_known_placement1_wrist_side_worsening()
-    local.avoid_repeating_rejected_placement1_wrist_side_step()
+    if not is_c4:
+        local.recover_known_placement1_wrist_side_worsening()
+        local.avoid_repeating_rejected_placement1_wrist_side_step()
     biased = dict(nominal)
     applied_bias_deg = {}
     shared_bias_deg = {}
@@ -375,13 +395,13 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         carry_hold.get("hold_targets") or arm.positions(api.DEFAULT_JOINTS)
     )
     print("v2.8 placement1 seamless takeover=", json.dumps({
-        "source_move": PLACEMENT1_MOVE_NAME,
+        "source_move": source_move_name,
         "arm_hold_targets_rad": arm_targets,
         "clearance_file": os.path.abspath(clearance_file),
         "applied_bias_deg": applied_bias_deg,
         "shared_clearance_bias_deg_read_only": shared_bias_deg,
         "placement1_bias_deg": placement_bias_deg,
-        "placement1_bias_file": str(PLACEMENT1_CLEARANCE_BIAS_PATH),
+        "placement1_bias_file": str(local_bias_path),
         "carry_hold_source": (
             "final_wrist_controller" if carry_hold.get("hold_targets") else "measured_fallback"
         ),
@@ -389,7 +409,8 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
     carry_gains = carry_hold.get("hold_gains", {})
     carry_tau = carry_hold.get("hold_tau", {})
     claw_hold_pos = close_claw_while_holding_arm(
-        arm, arm_targets, api, arm_gains=carry_gains, arm_tau=carry_tau
+        arm, arm_targets, api, arm_gains=carry_gains, arm_tau=carry_tau,
+        require_contact=False,
     )
 
     # Retract wrist to Clearance before moving the rest of the arm so the
@@ -680,7 +701,9 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
     validation = local.record_move_validation(errors)
     print("v2.8 placement1 clearance verification=", json.dumps(validation, ensure_ascii=False), flush=True)
     updates = local.update_hold_bias(
-        "clearance", errors, label="placement1-clearance-final", backoff_on_worse=True,
+        "clearance", errors,
+        label="placement-c4-clearance-final" if is_c4 else "placement1-clearance-final",
+        backoff_on_worse=True,
         bias_limit_deg=PLACEMENT1_HOLD_BIAS_LIMIT_DEG,
     )
     if updates:
@@ -1427,13 +1450,14 @@ def replay_with_local_bias(args) -> None:
     def close_with_optional_placement1(arm):
         nonlocal placement1_ran
         try:
-            if (args.placement1 or args.white_bishop_placement) and final_errors and not placement1_ran:
+            if (args.placement1 or args.white_bishop_placement or args.placement_c4) and final_errors and not placement1_ran:
                 placement1_ran = True
                 clearance_handoff = {}
                 result = run_placement1_on_arm(
                     arm, args.clearance_file, args.kp, args.kd,
                     carry_hold=carry_hold,
                     clearance_handoff=clearance_handoff,
+                    source_move_name=PLACEMENT_C4_MOVE_NAME if args.placement_c4 else PLACEMENT1_MOVE_NAME,
                 )
                 if result:
                     placement1_summary.clear()
@@ -1573,9 +1597,10 @@ def replay_with_local_bias(args) -> None:
                 f"{ERROR_DEADBAND_DEG:.1f}deg; learned data was saved; return Home and replay again: "
                 + json.dumps(blockers, ensure_ascii=False)
             )
-    if (args.placement1 or args.white_bishop_placement) and placement1_summary:
+    if (args.placement1 or args.white_bishop_placement or args.placement_c4) and placement1_summary:
         print(
-            "v2.8 Placement1 final training status=",
+            "v2.8 Placement_C4 final training status=" if args.placement_c4
+            else "v2.8 Placement1 final training status=",
             json.dumps(placement1_summary, ensure_ascii=False),
             flush=True,
         )
@@ -1598,6 +1623,11 @@ def build_parser():
         help="run bishop01, pressure grasp, wrist retract, then learned clearance",
     )
     subparsers.choices["replay-move"].add_argument(
+        "--placement-c4",
+        action="store_true",
+        help="run white_knight_c4, pressure grasp, wrist retract, then learned clearance",
+    )
+    subparsers.choices["replay-move"].add_argument(
         "--white-bishop-placement",
         action="store_true",
         help=(
@@ -1615,6 +1645,10 @@ def main() -> None:
         return legacy.main()
     if (args.placement1 or args.white_bishop_placement) and legacy.normalize_move_name(args.name) != PLACEMENT1_MOVE_NAME:
         raise RuntimeError("Placement1 and White Bishop Placement require saved move bishop01")
+    if args.placement_c4 and (args.placement1 or args.white_bishop_placement):
+        raise RuntimeError("Placement_C4 cannot be combined with D4 placement options")
+    if args.placement_c4 and legacy.normalize_move_name(args.name) != PLACEMENT_C4_MOVE_NAME:
+        raise RuntimeError("Placement_C4 requires saved move white_knight_c4")
     replay_with_local_bias(args)
 
 

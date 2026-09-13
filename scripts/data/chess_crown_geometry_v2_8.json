@@ -80,14 +80,38 @@
         "wrist": 0.4808589779472377
       },
       "pose_validated": true,
-      "validation_source": "white_knight_c4 replay completed 2026-09-12 20:59:24",
+      "validation_source": "white_knight_c4 pose replay validated 2026-09-12 20:59:24; operator confirmed C4 grasp and clearance 2026-09-12 21:36:45",
       "pose_source": "reconstructed_from_final_encoder_positions_plus_reported_errors",
       "board_correspondence_status": "user_reported_c4_nominal_square_center",
-      "contact_confirmed": false,
+      "contact_confirmed": true,
+      "contact_confirmation_method": "operator_visual_observation",
+      "workflow_validation": {
+        "run_started_at": "2026-09-12 21:34:21",
+        "run_finished_at": "2026-09-12 21:36:45",
+        "returncode": 0,
+        "operator_observation": "white_knight successfully gripped at c4 and stopped at clearance",
+        "source_log": "442f85f5-defd-4bde-9583-994a766c6933/pasted-text.txt",
+        "pressure_contact_confirmed": false,
+        "pressure_contact_gate_bypassed": true,
+        "wrist_retracted_before_coupled_clearance": true,
+        "clearance_reached_by_operator_observation": true,
+        "clearance_training_status": "training incomplete",
+        "clearance_tolerance_deg": 0.5,
+        "clearance_errors_deg": {
+          "shoulder_front": 0.9617042955161353,
+          "shoulder_side": 1.0491307168922985,
+          "shoulder_rotate": -4.677388675705602,
+          "elbow": 1.8359821696561076,
+          "arm_roll": -0.4371457672591561,
+          "wrist_side": 2.7976881727195355,
+          "wrist": 0.19670944809636723
+        },
+        "clearance_learning_saved": true
+      },
       "metric_transform_validated": false,
       "purpose": "geometry_training_anchor",
       "includes_claw_release": false,
-      "updated_at": "2026-09-12 21:03:53"
+      "updated_at": "2026-09-12 21:36:45"
     },
     "white_bishop:d4": {
       "piece_class": "white_bishop",

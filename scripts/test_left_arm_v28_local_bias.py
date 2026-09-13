@@ -116,7 +116,17 @@ class LocalBiasTests(unittest.TestCase):
         ])
         self.assertTrue(args.placement1)
         self.assertFalse(args.white_bishop_placement)
+        self.assertFalse(args.placement_c4)
         self.assertEqual(args.name, "bishop01")
+
+    def test_placement_c4_cli_is_separate(self):
+        args = build_parser().parse_args([
+            "replay-move", "--name", "white_knight_c4", "--placement-c4"
+        ])
+        self.assertTrue(args.placement_c4)
+        self.assertFalse(args.placement1)
+        self.assertFalse(args.white_bishop_placement)
+        self.assertEqual(args.name, "white_knight_c4")
 
     def test_white_bishop_placement_cli_is_separate_and_implies_placement1_flow(self):
         args = build_parser().parse_args([
@@ -302,6 +312,7 @@ class LocalBiasTests(unittest.TestCase):
             self.assertEqual(result["blocking_errors_deg"], {})
             self.assertEqual(close_mock.call_args.args[1], inherited_targets)
             self.assertEqual(close_mock.call_args.kwargs["arm_tau"], inherited_tau)
+            self.assertFalse(close_mock.call_args.kwargs["require_contact"])
             self.assertEqual(arm.events[0][0:2], ("single", "wrist"))
             self.assertEqual(arm.events[1][0], "group")
             self.assertEqual(arm.hold_targets["claw"], 1.25)
@@ -318,6 +329,24 @@ class LocalBiasTests(unittest.TestCase):
             self.assertTrue(bias_path.exists())
             shared = LocalTargetBias(shared_bias_path, clearance, "clearance:" + clearance_path.name)
             self.assertEqual(shared.anchor.get("hold_bias", {}).get("clearance", {}), {})
+            d4_history = bias_path.read_bytes()
+            c4_bias_path = root / "placement-c4-bias.json"
+            with patch.dict(sys.modules, {"left_arm_v2_6": api}), patch(
+                "left_arm_v2_8.CLEARANCE_BIAS_PATH", shared_bias_path
+            ), patch(
+                "left_arm_v2_8_move_library.close_claw_while_holding_arm", return_value=1.25
+            ) as c4_close_mock:
+                c4_arm = Arm()
+                c4_result = run_placement1_on_arm(
+                    c4_arm, str(clearance_path), 3.0, 0.3,
+                    source_move_name="white_knight_c4",
+                    local_bias_path=c4_bias_path,
+                )
+            self.assertEqual(c4_result["status"], "training complete")
+            self.assertFalse(c4_close_mock.call_args.kwargs["require_contact"])
+            self.assertEqual([event[0] for event in c4_arm.events[:2]], ["single", "group"])
+            self.assertTrue(c4_bias_path.exists())
+            self.assertEqual(bias_path.read_bytes(), d4_history)
 
     def test_recovers_known_shared_clearance_contamination_once(self):
         target = {
@@ -407,6 +436,26 @@ class LocalBiasTests(unittest.TestCase):
                     arm_gains={"elbow": {"kp": 2.0, "kd": 1.0}},
                     arm_tau={"elbow": 2.0},
                 )
+            class LateStallArm(Arm):
+                def claw_status(self):
+                    return {"pos": 0.3, "vel": 0.0, "tau": 0.26}
+
+            api.CLAW_TAU_THRESHOLD = 0.30
+            api.CLAW_STALL_TAU_THRESHOLD = 0.24
+            api.CLAW_VEL_STALL_THRESHOLD = 0.08
+            with self.assertRaisesRegex(RuntimeError, "pressure contact was not detected"):
+                close_claw_while_holding_arm(
+                    LateStallArm(), {"elbow": 0.5}, api,
+                    arm_gains={"elbow": {"kp": 2.0, "kd": 1.0}},
+                    arm_tau={"elbow": 2.0},
+                )
+            hold_pos = close_claw_while_holding_arm(
+                LateStallArm(), {"elbow": 0.5}, api,
+                arm_gains={"elbow": {"kp": 2.0, "kd": 1.0}},
+                arm_tau={"elbow": 2.0},
+                require_contact=False,
+            )
+            self.assertAlmostEqual(hold_pos, 0.3)
 
     def test_nearby_pose_reuses_anchor_and_distant_pose_does_not(self):
         with tempfile.TemporaryDirectory() as directory:
