@@ -51,6 +51,43 @@
     }
   },
   "grasp_anchors": {
+    "white_knight:c4": {
+      "piece_class": "white_knight",
+      "source_square": "c4",
+      "saved_move_name": "white_knight_c4",
+      "pose_rad": {
+        "shoulder_front": 0.5960555672645569,
+        "shoulder_side": -2.856679677963257,
+        "shoulder_rotate": 2.560654640197754,
+        "elbow": 0.3915846347808838,
+        "arm_roll": -2.733844518661499,
+        "wrist_side": 0.19321735203266144,
+        "wrist": -2.9879071712493896
+      },
+      "joint_units": "radians",
+      "board_xy_mm": [137.5, 192.5],
+      "board_tcp_mm": null,
+      "grip_section_width_mm": null,
+      "tolerance_deg": 0.5,
+      "validation_errors_deg": {
+        "shoulder_front": -0.3059958899111562,
+        "shoulder_side": -0.3278627405389521,
+        "shoulder_rotate": 0.39343255657107445,
+        "elbow": 0.04371321068808161,
+        "arm_roll": -0.04371321068808161,
+        "wrist_side": 0.26228267922307463,
+        "wrist": 0.4808589779472377
+      },
+      "pose_validated": true,
+      "validation_source": "white_knight_c4 replay completed 2026-09-12 20:59:24",
+      "pose_source": "reconstructed_from_final_encoder_positions_plus_reported_errors",
+      "board_correspondence_status": "user_reported_c4_nominal_square_center",
+      "contact_confirmed": false,
+      "metric_transform_validated": false,
+      "purpose": "geometry_training_anchor",
+      "includes_claw_release": false,
+      "updated_at": "2026-09-12 20:59:24"
+    },
     "white_bishop:d4": {
       "piece_class": "white_bishop",
       "source_square": "d4",

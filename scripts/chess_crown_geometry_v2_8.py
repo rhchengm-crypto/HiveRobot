@@ -119,9 +119,13 @@ def validate_grasp_anchor(data):
     anchor['board_correspondence_status']=str(data.get('board_correspondence_status','unverified'))
     anchor['contact_confirmed']=data.get('contact_confirmed') is True
     anchor['metric_transform_validated']=False
-    anchor['grip_section_width_mm']=float(data['grip_section_width_mm'])
-    if not np.isfinite(anchor['grip_section_width_mm']) or anchor['grip_section_width_mm']<=0:
+    xy=data.get('board_xy_mm')
+    anchor['board_xy_mm']=array(xy,(2,)).tolist() if xy is not None else None
+    width=data.get('grip_section_width_mm')
+    anchor['grip_section_width_mm']=float(width) if width is not None else None
+    if width is not None and (not np.isfinite(anchor['grip_section_width_mm']) or anchor['grip_section_width_mm']<=0):
         raise ValueError('棋冠夹持宽度无效')
+    anchor['pose_source']=str(data.get('pose_source',''))
     return anchor
 
 

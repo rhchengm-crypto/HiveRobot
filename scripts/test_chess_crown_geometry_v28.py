@@ -64,4 +64,20 @@ class GeometryTests(unittest.TestCase):
             self.assertFalse(anchor['contact_confirmed'])
             self.assertEqual(anchor['saved_move_name'],'bishop01')
 
+    def test_partial_c4_grasp_anchor_preserves_unknown_height_and_width(self):
+        joints=('shoulder_front','shoulder_side','shoulder_rotate','elbow',
+                'arm_roll','wrist_side','wrist')
+        record=dict(piece_class='white_knight',source_square='c4',
+            saved_move_name='white_knight_c4',pose_rad={name:.1 for name in joints},
+            board_xy_mm=[137.5,192.5],board_tcp_mm=None,
+            tolerance_deg=.5,validation_errors_deg={name:.4 for name in joints},
+            pose_source='reconstructed_from_final_encoder_and_errors')
+        with tempfile.TemporaryDirectory() as directory:
+            store=GeometryStore(Path(directory)/'geometry.json')
+            anchor=store.action('grasp-anchor',record)['data']['grasp_anchors']['white_knight:c4']
+            self.assertTrue(anchor['pose_validated'])
+            self.assertIsNone(anchor['board_tcp_mm'])
+            self.assertIsNone(anchor['grip_section_width_mm'])
+            self.assertEqual(anchor['board_xy_mm'],[137.5,192.5])
+
 if __name__=='__main__':unittest.main()
