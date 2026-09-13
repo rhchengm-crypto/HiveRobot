@@ -142,11 +142,18 @@
       "pose_validated": true,
       "validation_source": "bishop01 replay run 7, 2026-09-10 19:51:37",
       "board_correspondence_status": "user_confirmed_nominal_square_center",
-      "contact_confirmed": false,
+      "contact_confirmed": true,
+      "contact_confirmation_method": "operator_confirmation",
+      "grasp_confirmation": {
+        "confirmed_at": "2026-09-12 21:45:07",
+        "operator_observation": "bishop01 successfully gripped the white bishop at d4",
+        "supporting_workflow_log": "3d2317b1-d3dd-40e8-ad9b-fbf5576917dc/pasted-text.txt",
+        "supporting_workflow_returncode": 0
+      },
       "metric_transform_validated": false,
       "purpose": "geometry_training_anchor",
       "includes_claw_release": false,
-      "updated_at": "2026-09-10 19:52:49"
+      "updated_at": "2026-09-12 21:45:07"
     }
   },
   "calibration": null
