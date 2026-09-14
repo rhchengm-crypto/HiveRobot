@@ -20,6 +20,7 @@ from left_arm_v2_8_move_library import (
     close_claw_while_holding_arm,
     claw_home_while_holding_arm,
     final_blocking_joint_errors,
+    learn_placement_final_errors,
     pose_distance_deg,
     recover_placement1_shared_clearance_contamination,
     replay_move_tau_with_wrist_side_support,
@@ -36,6 +37,26 @@ def pose(offset_deg=0.0):
 
 
 class LocalBiasTests(unittest.TestCase):
+    def test_source_validation_preserves_destination_learning_in_shared_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'bias.json'
+            source = LocalTargetBias(path, pose(), 'white_knight_c4')
+            destination = LocalTargetBias(path, pose(30.0), 'white_knight_place_b1')
+            first = destination.update_hold_bias(
+                'wrist', {'arm_roll': 0.9}, label='white-knight-place_b1-final-wrist-hold'
+            )['arm_roll']
+            source.record_move_validation({joint: 0.0 for joint in JOINTS})
+            reloaded = LocalTargetBias(path, pose(30.0), 'white_knight_place_b1')
+            self.assertAlmostEqual(
+                reloaded.anchor['hold_bias']['wrist']['arm_roll']['bias_deg'],
+                first['bias_deg'],
+            )
+            self.assertEqual(reloaded.anchor['hold_bias']['wrist']['arm_roll']['samples'], 1)
+            second = reloaded.update_hold_bias(
+                'wrist', {'arm_roll': 0.8}, label='white-knight-place_b1-final-wrist-hold'
+            )['arm_roll']
+            self.assertEqual(second['samples'], 2)
+
     def test_white_bishop_claw_home_keeps_arm_held_through_open_and_settle(self):
         class Clock:
             now = 0.0
@@ -85,6 +106,7 @@ class LocalBiasTests(unittest.TestCase):
                             'hold_gains': {'wrist': {'kp': 8.0, 'kd': 1.4}}},
             )
         self.assertEqual(status['pos'], 1.0)
+        self.assertEqual(status['target_rad'], 1.0)
         self.assertEqual(arm.enabled, [*JOINTS, 'claw'])
         claw_indices = [i for i, command in enumerate(arm.commands)
                         if command[0] == 'claw']
@@ -627,6 +649,48 @@ class LocalBiasTests(unittest.TestCase):
             self.assertGreater(second["bias_deg"], first["bias_deg"])
             self.assertEqual(second["learning_state"], "integrating")
 
+    def test_placement_roll_induced_by_wrist_trains_hold_only(self):
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(Path(directory) / "bias.json", pose(), "move")
+            result = learn_placement_final_errors(
+                local, {"arm_roll": -0.3},
+                {"arm_roll": 0.678, "wrist": -0.787}, "white-knight-place_b1",
+            )
+            self.assertEqual(result["wrist_hold_errors_deg"], {"arm_roll": 0.678})
+            self.assertNotIn("arm_roll", local.anchor["joint_bias"])
+            self.assertIn("wrist", local.anchor["joint_bias"])
+            self.assertGreater(local.hold_bias_rad("wrist", "arm_roll"), 0.0)
+
+    def test_placement_roll_already_wrong_before_wrist_trains_target(self):
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(Path(directory) / "bias.json", pose(), "move")
+            result = learn_placement_final_errors(
+                local, {"arm_roll": -0.765}, {"arm_roll": -0.7}, "white-knight-place_b1",
+            )
+            self.assertEqual(result["wrist_hold_errors_deg"], {})
+            self.assertIn("arm_roll", local.anchor["joint_bias"])
+            self.assertNotIn("wrist", local.anchor.get("hold_bias", {}))
+
+    def test_known_knight_final_wrist_roll_target_is_restored_once(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "bias.json"
+            local = LocalTargetBias(path, pose(), WHITE_KNIGHT_PLACE_B1_MOVE_NAME)
+            local.anchor["joint_bias"] = {
+                "arm_roll": {
+                    "bias_deg": -3.152287933511061,
+                    "previous_bias_deg": -3.2200447761154214,
+                    "last_error_deg": 0.6775684260436049,
+                    "label": "white-knight-place_b1-final",
+                },
+                "elbow": {"bias_deg": 0.25},
+            }
+            local._save()
+            restored = local.restore_known_knight_b1_wrist_induced_roll()
+            self.assertAlmostEqual(restored["restored_bias_deg"], -3.2200447761154214)
+            self.assertAlmostEqual(local.anchor["joint_bias"]["arm_roll"]["bias_deg"], -3.2200447761154214)
+            self.assertEqual(local.anchor["joint_bias"]["elbow"]["bias_deg"], 0.25)
+            self.assertEqual(local.restore_known_knight_b1_wrist_induced_roll(), {})
+
     def test_placement_hold_bias_backs_off_when_error_worsens(self):
         with tempfile.TemporaryDirectory() as directory:
             local = LocalTargetBias(Path(directory) / "bias.json", pose(), "placement")
@@ -639,6 +703,23 @@ class LocalBiasTests(unittest.TestCase):
             self.assertEqual(second["learning_state"], "backoff")
             self.assertEqual(second["bias_deg"], first["best_bias_deg"])
             self.assertLess(second["step_scale"], first["step_scale"])
+
+    def test_placement_hold_bias_stops_gradual_drift_away_from_best(self):
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(Path(directory) / "bias.json", pose(), "placement")
+            local.anchor.setdefault("hold_bias", {}).setdefault("clearance", {})["wrist_side"] = {
+                "bias_deg": 0.4,
+                "previous_bias_deg": 0.3,
+                "last_error_deg": 3.4,
+                "best_error_deg": 2.8,
+                "best_bias_deg": 0.0,
+                "step_scale": 0.25,
+            }
+            update = local.update_hold_bias(
+                "clearance", {"wrist_side": 3.45}, backoff_on_worse=True
+            )["wrist_side"]
+            self.assertEqual(update["learning_state"], "backoff")
+            self.assertEqual(update["bias_deg"], 0.0)
 
     def test_recovers_observed_placement_wrist_side_worsening_once(self):
         with tempfile.TemporaryDirectory() as directory:

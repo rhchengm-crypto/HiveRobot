@@ -91,7 +91,7 @@ class GeometryTests(unittest.TestCase):
             original=path.read_bytes()
             store=GeometryStore(path)
             preview=store.action('import-anchors',{'geometry':bundle,'dry_run':True})
-            self.assertEqual(preview['preview']['counts']['new'],3)
+            self.assertEqual(preview['preview']['counts']['new'],4)
             self.assertEqual(preview['preview']['counts']['conflicts'],0)
             self.assertEqual(path.read_bytes(),original)
             result=store.action('import-anchors',{'geometry':bundle,
@@ -105,6 +105,7 @@ class GeometryTests(unittest.TestCase):
             self.assertTrue(saved['grasp_anchors']['white_knight:c4']['contact_confirmed'])
             self.assertIn('grasp_confirmation',saved['grasp_anchors']['white_bishop:d4'])
             self.assertIn('workflow_validation',saved['placement_anchors']['white_bishop:c1'])
+            self.assertIn('white_knight:b1',saved['placement_anchors'])
             self.assertFalse(result['motion_enabled'])
 
     def test_import_conflict_and_stale_preview_do_not_write(self):

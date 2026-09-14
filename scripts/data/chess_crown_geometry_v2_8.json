@@ -2,6 +2,52 @@
   "schema": 1,
   "profiles": {},
   "placement_anchors": {
+    "white_knight:b1": {
+      "piece_class": "white_knight",
+      "target_square": "b1",
+      "saved_move_name": "white_knight_place_b1",
+      "pose_rad": {
+        "shoulder_front": 1.3204776048660278,
+        "shoulder_side": -2.4069199562072754,
+        "shoulder_rotate": 2.2299153804779053,
+        "elbow": 0.8424887657165527,
+        "arm_roll": -3.0546653270721436,
+        "wrist_side": -0.3068970739841461,
+        "wrist": -2.714770793914795
+      },
+      "joint_units": "radians",
+      "board_tcp_mm": [82.5, 27.5, 55.0],
+      "tolerance_deg": 0.5,
+      "validation_errors_deg": {
+        "shoulder_front": 0.021856605344040804,
+        "shoulder_side": 0.021856605344040804,
+        "shoulder_rotate": 0.24043631916278885,
+        "elbow": -0.08742642137616322,
+        "arm_roll": 0.5464287939793601,
+        "wrist_side": -0.08742812892345572,
+        "wrist": -0.4808589779472377
+      },
+      "validated": false,
+      "validation_source": "White Knight Place_B1 run completed 2026-09-13 14:58:33; operator confirmed successful placement; arm_roll training residual remains 0.5464 deg",
+      "purpose": "geometry_training_anchor",
+      "includes_claw_release": false,
+      "workflow_validation": {
+        "run_started_at": "2026-09-13 14:55:19",
+        "run_finished_at": "2026-09-13 14:58:33",
+        "returncode": 0,
+        "placement_confirmed": true,
+        "placement_confirmation_method": "operator_confirmation",
+        "operator_observation": "white knight successfully placed at b1",
+        "claw_home_status": "completed",
+        "claw_home_target_rad": 0.6727321147918701,
+        "claw_home_final_rad": 0.6792172193527222,
+        "wrist_drift_during_release_deg": -1.5299896948395362,
+        "wrist_drift_observation": "operator reported the piece touched the board and pushed the wrist forward",
+        "final_training_status": "training incomplete",
+        "source_log": "fc2e7a0f-de2f-44e1-83b7-2507baa7f3ae/pasted-text.txt"
+      },
+      "updated_at": "2026-09-13 14:58:33"
+    },
     "white_bishop:c1": {
       "piece_class": "white_bishop",
       "target_square": "c1",

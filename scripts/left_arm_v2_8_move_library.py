@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-multiflow-final-claw-home-no-training-gate"
+V28_MOVE_BUILD = "v2.8-multiflow-anchor-save-merge"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 PLACEMENT_C4_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement_c4_clearance_bias.json"
@@ -53,6 +53,7 @@ PLACEMENT1_MOVE_NAME = "bishop01"
 PLACEMENT_C4_MOVE_NAME = "white_knight_c4"
 WHITE_BISHOP_PLACE_MOVE_NAME = "white_bishop_place"
 WHITE_KNIGHT_PLACE_B1_MOVE_NAME = "white_knight_place_b1"
+KNIGHT_B1_WRIST_INDUCED_ROLL_RECOVERY_ID = "restore-knight-b1-wrist-induced-roll-20260913-v1"
 PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 5.0
 PLACEMENT1_TERMINAL_SETTLE_SECONDS = 1.5
 PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID = "restore-pre-placement1-clearance-20260911-v2"
@@ -243,6 +244,7 @@ def claw_home_while_holding_arm(arm, api, fallback_kp, fallback_kd,
     if abs(wrist_drift_deg) > abs(wrist_peak_drift_deg):
         wrist_peak_drift_deg = wrist_drift_deg
     status = dict(status)
+    status["target_rad"] = home_pos
     status["wrist_before_rad"] = measured_before["wrist"]
     status["wrist_after_rad"] = wrist_after
     status["wrist_drift_deg"] = wrist_drift_deg
@@ -672,6 +674,15 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         json.dumps(comparison, ensure_ascii=False),
         flush=True,
     )
+    clearance_feedback = None
+    if callable(getattr(arm, "read_status", None)):
+        clearance_feedback = {
+            "status": arm.read_status(["wrist_side", "arm_roll"]),
+            "command_target_rad": {name: move_targets[name] for name in ("wrist_side", "arm_roll")},
+            "terminal_feedforward_tau": {name: final_hold_tau.get(name, 0.0) for name in ("wrist_side", "arm_roll")},
+            "terminal_gains": {name: final_hold_gains[name] for name in ("wrist_side", "arm_roll")},
+        }
+        print("v2.8 clearance joint feedback=", json.dumps(clearance_feedback, ensure_ascii=False), flush=True)
     if clearance_handoff is not None:
         clearance_handoff.clear()
         clearance_handoff.update({
@@ -679,6 +690,7 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
             "hold_gains": final_hold_gains,
             "hold_tau": final_hold_tau,
             "claw_hold_pos": claw_hold_pos,
+            "joint_feedback": clearance_feedback,
         })
     gross_errors = {
         name: value for name, value in errors.items()
@@ -859,7 +871,15 @@ def run_white_bishop_place_on_arm(arm, moves_file: str, fallback_kp: float,
             json.dumps(final_errors, ensure_ascii=False),
             flush=True,
         )
-        local.update(final_errors, label=workflow_label.lower().replace(" ", "-") + "-final")
+        if callable(getattr(arm, "read_status", None)):
+            local.last_final_joint_feedback = {
+                "status": arm.read_status(["arm_roll", "wrist_side", "wrist"]),
+                "nominal_error_deg": {name: final_errors[name] for name in ("arm_roll", "wrist_side", "wrist")},
+            }
+        learn_placement_final_errors(
+            local, before_final, final_errors,
+            label=workflow_label.lower().replace(" ", "-"),
+        )
         validation = local.record_move_validation(final_errors)
         print(
             f"v2.8 {workflow_label} final training status=",
@@ -935,6 +955,37 @@ def final_blocking_joint_errors(errors_deg: Dict[str, float],
     }
 
 
+def learn_placement_final_errors(local, before_final: Dict[str, float],
+                                 final_errors: Dict[str, float], label: str) -> Dict[str, object]:
+    """Keep a wrist-induced roll residual out of the pre-wrist target learner."""
+    target_errors = dict(final_errors)
+    wrist_hold_errors = {}
+    before_roll = before_final.get("arm_roll")
+    final_roll = final_errors.get("arm_roll")
+    if (
+        before_roll is not None and final_roll is not None
+        and math.isfinite(float(before_roll)) and math.isfinite(float(final_roll))
+        and abs(float(before_roll)) <= PRE_WRIST_TOLERANCE_DEG + ENCODER_HALF_COUNT_MARGIN_DEG
+        and abs(float(final_roll)) > ERROR_DEADBAND_DEG + ENCODER_HALF_COUNT_MARGIN_DEG
+    ):
+        target_errors.pop("arm_roll", None)
+        wrist_hold_errors["arm_roll"] = float(final_roll)
+    target_updates = local.update(target_errors, label=label + "-final")
+    hold_updates = (
+        local.update_hold_bias("wrist", wrist_hold_errors, label=label + "-final-wrist-hold")
+        if wrist_hold_errors else {}
+    )
+    result = {
+        "arm_roll_before_wrist_deg": before_roll,
+        "arm_roll_after_wrist_deg": final_roll,
+        "wrist_hold_errors_deg": wrist_hold_errors,
+        "target_bias_updates": target_updates,
+        "wrist_hold_bias_updates": hold_updates,
+    }
+    print("v2.8 placement residual learning=", json.dumps(result, ensure_ascii=False), flush=True)
+    return result
+
+
 def replay_move_tau_with_wrist_side_support(original, legacy, name: str,
                                              delta_deg: float, low_shoulder_pose: bool):
     configured = original(name, delta_deg, low_shoulder_pose)
@@ -959,6 +1010,13 @@ def verify_pre_wrist_or_learn(arm, pose, local,
         "blocking_errors_deg": blockers,
         "extra_correction_motion": False,
     }, ensure_ascii=False), flush=True)
+    if callable(getattr(arm, "read_status", None)):
+        local.last_pre_wrist_joint_feedback = {
+            "status": arm.read_status(["arm_roll", "wrist_side"]),
+            "nominal_target_rad": {name: pose[name] for name in ("arm_roll", "wrist_side")},
+            "nominal_error_deg": {name: errors[name] for name in ("arm_roll", "wrist_side")},
+        }
+        print("v2.8 pre-wrist joint feedback=", json.dumps(local.last_pre_wrist_joint_feedback, ensure_ascii=False), flush=True)
     if blockers:
         updates = local.update(blockers, label="pre-wrist-gate")
         print("v2.8 pre-wrist local learning update=", json.dumps(updates, ensure_ascii=False), flush=True)
@@ -999,6 +1057,7 @@ class LocalTargetBias:
                 candidates.append((rms, maximum, anchor_id))
         if candidates:
             rms, maximum, anchor_id = min(candidates)
+            self.anchor_id = anchor_id
             anchor = self.data["anchors"][anchor_id]
             names = anchor.setdefault("move_names", [])
             if self.move_name not in names:
@@ -1006,6 +1065,7 @@ class LocalTargetBias:
                 self._save()
             return anchor_id, False, (rms, maximum)
         anchor_id = pose_id(self.target_pose)
+        self.anchor_id = anchor_id
         self.data["anchors"][anchor_id] = {
             "target_pose_rad": self.target_pose,
             "move_names": [self.move_name],
@@ -1082,6 +1142,44 @@ class LocalTargetBias:
         record = self.anchor.get("joint_bias", {}).get(joint, {})
         value = record.get("bias_deg", 0.0) if isinstance(record, dict) else 0.0
         return math.radians(max(-BIAS_LIMIT_DEG, min(BIAS_LIMIT_DEG, float(value))))
+
+    def restore_known_knight_b1_wrist_induced_roll(self) -> Dict[str, float]:
+        """Undo only the observed B1 final-wrist error written as a target bias."""
+        if self.move_name != WHITE_KNIGHT_PLACE_B1_MOVE_NAME:
+            return {}
+        migrations = self.anchor.setdefault("migrations", {})
+        if migrations.get(KNIGHT_B1_WRIST_INDUCED_ROLL_RECOVERY_ID):
+            return {}
+        record = self.anchor.get("joint_bias", {}).get("arm_roll")
+        if not isinstance(record, dict) or record.get("label") != "white-knight-place_b1-final":
+            return {}
+        current = float(record.get("bias_deg", 0.0))
+        previous = float(record.get("previous_bias_deg", current))
+        final_error = float(record.get("last_error_deg", 0.0))
+        if not (
+            abs(final_error - 0.6775684260436049) < 0.01
+            and abs(previous - (-3.2200447761154214)) < 0.01
+            and abs(current - previous) < 0.2
+        ):
+            return {}
+        record.update({
+            "bias_deg": previous,
+            "previous_bias_deg": current,
+            "delta_bias_deg": previous - current,
+            "last_error_deg": -0.7649811870414281,
+            "learning_state": "wrist_induced_target_rollback",
+            "restored_at": _now(),
+        })
+        migrations[KNIGHT_B1_WRIST_INDUCED_ROLL_RECOVERY_ID] = {
+            "applied_at": _now(),
+            "rejected_bias_deg": current,
+            "restored_bias_deg": previous,
+        }
+        self.anchor["updated_at"] = _now()
+        self._save()
+        result = {"rejected_bias_deg": current, "restored_bias_deg": previous}
+        print("v2.8 B1 wrist-induced arm_roll target recovery=", json.dumps(result), flush=True)
+        return result
 
     def hold_bias_rad(self, active: str, joint: str,
                       limit_deg: float = HOLD_BIAS_LIMIT_DEG) -> float:
@@ -1206,7 +1304,10 @@ class LocalTargetBias:
                 previous.get("best_bias_deg", previous.get("previous_bias_deg", current))
             ) if isinstance(previous, dict) else current
             improved = abs(error) < best_error - IMPROVEMENT_DEADBAND_DEG
-            worse = bool(previous) and abs(error) > abs(previous_error) + IMPROVEMENT_DEADBAND_DEG
+            worse = bool(previous) and (
+                abs(error) > abs(previous_error) + IMPROVEMENT_DEADBAND_DEG
+                or (backoff_on_worse and abs(error) > best_error + IMPROVEMENT_DEADBAND_DEG)
+            )
             if improved:
                 best_error, best_bias = abs(error), current
             if backoff_on_worse and worse:
@@ -1323,6 +1424,14 @@ class LocalTargetBias:
 
     def _save(self) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
+        # A multi-flow replay holds separate source and destination learners in
+        # memory.  The source learner is older; writing its entire cached file
+        # after the destination has learned would erase that newer anchor.
+        # Replace only the anchor owned by this learner in the latest file.
+        anchor = self.data["anchors"][self.anchor_id]
+        latest = self._load()
+        latest["anchors"][self.anchor_id] = anchor
+        self.data = latest
         self.data["updated_at"] = _now()
         fd, temp_name = tempfile.mkstemp(prefix=self.path.name + ".", suffix=".tmp", dir=str(self.path.parent))
         try:
@@ -1492,6 +1601,7 @@ def replay_with_local_bias(args) -> None:
                     destination_pose,
                     destination_move_name,
                 )
+                destination_local.restore_known_knight_b1_wrist_induced_roll()
                 destination_local.reset_wrist_side_bias_for_active_tau()
                 active_local[0] = destination_local
                 try:
@@ -1514,6 +1624,7 @@ def replay_with_local_bias(args) -> None:
                     )
                     destination_placement_summary.clear()
                     destination_placement_summary.update({
+                        "build": V28_MOVE_BUILD,
                         "status": (
                             "training incomplete" if placement_result["blocking_errors_deg"]
                             else "training complete"
@@ -1521,6 +1632,11 @@ def replay_with_local_bias(args) -> None:
                         "tolerance_deg": ERROR_DEADBAND_DEG,
                         "errors_deg": placement_result["errors_deg"],
                         "blocking_errors_deg": placement_result["blocking_errors_deg"],
+                        "joint_feedback": {
+                            "clearance": clearance_handoff.get("joint_feedback"),
+                            "before_final_wrist": getattr(destination_local, "last_pre_wrist_joint_feedback", None),
+                            "after_final_wrist": getattr(destination_local, "last_final_joint_feedback", None),
+                        },
                     })
                     claw_status = claw_home_while_holding_arm(
                         arm, api, args.kp, args.kd, carry_hold=carry_hold,
@@ -1529,10 +1645,13 @@ def replay_with_local_bias(args) -> None:
                     destination_placement_summary["claw_home"] = {
                         "status": (
                             "completed"
-                            if abs(claw_status["wrist_peak_drift_deg"]) <= ERROR_DEADBAND_DEG
+                            if abs(math.degrees(
+                                claw_status["pos"] - claw_status["target_rad"]
+                            )) <= ERROR_DEADBAND_DEG + ENCODER_HALF_COUNT_MARGIN_DEG
                             else "training incomplete"
                         ),
                         "position_rad": claw_status["pos"],
+                        "target_rad": claw_status["target_rad"],
                         "wrist_drift_deg": claw_status["wrist_drift_deg"],
                         "wrist_peak_drift_deg": claw_status["wrist_peak_drift_deg"],
                     }
@@ -1630,6 +1749,12 @@ def replay_with_local_bias(args) -> None:
             flush=True,
         )
     if (args.white_bishop_placement or args.white_knight_place_b1) and destination_placement_summary:
+        persisted_destination = LocalTargetBias(
+            LOCAL_BIAS_PATH, destination_pose, destination_move_name,
+        )
+        roll_hold = (persisted_destination.anchor.get("hold_bias", {})
+                     .get("wrist", {}).get("arm_roll"))
+        destination_placement_summary["persisted_arm_roll_wrist_hold"] = roll_hold
         # This is the final line of the complete user-visible workflow.
         print(
             "v2.8 White Bishop Placement final training status=" if args.white_bishop_placement

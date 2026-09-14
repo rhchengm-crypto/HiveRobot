@@ -68,6 +68,19 @@ v2.8 White Bishop Placement 流程在该姿态验证通过后，另行执行 Cla
 偏移 0.022°，结束偏移 0°。同次 Placement1 的 Clearance `wrist_side` 残差
 仍为 2.492°，后续训练应单独跟踪，不影响此次 c1 张爪验证。
 
+`placement_anchors.white_knight:b1` 来自机器人端 saved move
+`white_knight_place_b1`（2026-09-13 13:25:03），七关节姿态已与机器人端原始
+保存值逐项核对。B1 棋冠夹持中心按名义格心记录为 `[82.5, 27.5, 55] mm`，
+高度沿用已确认与 bishop01 相同的 white_knight 夹取位置。2026-09-13
+14:55–14:58 的 White Knight Place_B1 回放返回码为 0，Claw Home 完成，
+操作者确认棋子成功放置，因此 `workflow_validation.placement_confirmed=true`。
+该次最终 `arm_roll` 误差为 0.546°，仍超过 0.5° 训练阈值，故锚点的
+`validated=false`；这表示关节到位精度尚未完全验收，不否定实际放置成功。
+saved move 本身只含七关节放置姿态，张爪属于多流程后续动作。
+本机记录已通过 `/api/crown/import-anchors` 的预览与合并写入机器人端，
+回读版本为 `d7e1fc3887576fab04f4`；写入前备份为
+`data/chess_crown_geometry_v2_8.json.bak.1789337114992058732`，未下发机械臂动作。
+
 `grasp_anchors.white_bishop:d4` 来自 saved move `bishop01`。2026-09-10 第 7 次回放
 的七关节最大误差为 0.481°，因此属于已验证的实测抓取**关节姿态**锚点。
 棋冠夹持中心按用户确认的 D4 名义格心记录为 `[192.5, 192.5, 55] mm`，

@@ -1,4 +1,5 @@
 import json
+import io
 import tempfile
 import threading
 import unittest
@@ -47,7 +48,8 @@ class IntegrationTests(unittest.TestCase):
                 str(p/'dataset'),args.yolo_docker_image,str(p/'overlay.json'))
             cfg=v28.arm.ControlConfig(args.arm_script,args.move_script,args.python_bin,
                 False,False,str(p/'runs.jsonl'),str(p/'moves.json'))
-            handler=v28.make_handler(state,stream,v28.arm.RunState(cfg.run_log),cfg,args)
+            run_state=v28.FullRunState(cfg.run_log)
+            handler=v28.make_handler(state,stream,run_state,cfg,args)
             server=ThreadingHTTPServer(('127.0.0.1',0),handler)
             thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
             base='http://127.0.0.1:'+str(server.server_port)
@@ -60,6 +62,7 @@ class IntegrationTests(unittest.TestCase):
                 self.assertIn('id="closeClawAfterReplay"',arm_page)
                 self.assertIn('多流程',arm_page)
                 self.assertIn('id="multiFlowSelect"',arm_page)
+                self.assertIn('/api/arm/full-run-log',arm_page)
                 self.assertIn('<option value="none">none</option>',arm_page)
                 self.assertIn('<option value="placement1">',arm_page)
                 self.assertIn('<option value="placement_c4">',arm_page)
@@ -76,6 +79,15 @@ class IntegrationTests(unittest.TestCase):
                 self.assertNotIn("finished.returncode",arm_page)
                 self.assertIn("onclick=\"runAction('home')\">Home Move</button>",arm_page)
                 self.assertIn('run',json.loads(get('/api/state')))
+                with self.assertRaises(urllib.error.HTTPError) as error:
+                    get('/api/arm/full-run-log')
+                self.assertEqual(error.exception.code,404)
+                error.exception.close()
+                run_state.full_log_dir.mkdir(parents=True,exist_ok=True)
+                complete=run_state.full_log_dir/'arm_run_test.txt'
+                complete.write_text('C4 initial motion\n',encoding='utf-8')
+                run_state.set_last({'full_log_path':str(complete)})
+                self.assertEqual(get('/api/arm/full-run-log').replace('\r\n','\n'),'C4 initial motion\n')
                 self.assertIn('rgb_seq',get('/api/status'))
                 self.assertEqual(json.loads(get('/api/height/status'))['total'],0)
                 with patch.object(v28.arm.subprocess,'Popen') as popen:
@@ -148,6 +160,24 @@ class IntegrationTests(unittest.TestCase):
                     popen.assert_not_called()
             finally:
                 server.shutdown();server.server_close();thread.join()
+
+    def test_full_arm_log_keeps_early_motion_output(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            run_state=v28.FullRunState(str(Path(tmp)/'runs.jsonl'))
+            proc=type('Proc',(),{'pid':4321})()
+            run_state.proc=proc
+            run_state.current={
+                'started_epoch':1234.5,
+                'stdout':'',
+                'stderr':'',
+            }
+            lines=['C4 initial motion\n', *['step '+str(i)+'\n' for i in range(3000)]]
+            run_state._stream_reader(proc,io.StringIO(''.join(lines)),'stdout')
+            snapshot=run_state.snapshot()
+            self.assertNotIn('C4 initial motion',snapshot['stdout'])
+            full=Path(snapshot['full_log_path']).read_text(encoding='utf-8')
+            self.assertTrue(full.startswith('C4 initial motion\n'))
+            self.assertIn('step 2999\n',full)
 
     def test_claw_home_interrupts_placement1_before_starting(self):
         class RunState:

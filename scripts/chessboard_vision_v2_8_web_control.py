@@ -18,7 +18,7 @@ import chessboard_vision_v2_7_web_control as vision
 import left_arm_v2_6_web_control as arm
 from chess_crown_geometry_v2_8 import GeometryStore, PAGE as CROWN_PAGE
 
-WEB_VERSION = "v2.8-integrated-vision-arm"
+WEB_VERSION = "v2.8-full-arm-run-log"
 V28_MOVE_SCRIPT = str(Path(__file__).parent / 'left_arm_v2_8_move_library.py')
 V28_ARM_SCRIPT = str(Path(__file__).parent / 'left_arm_v2_8.py')
 
@@ -70,6 +70,13 @@ def build_arm_page() -> str:
     if replay_button not in page:
         raise RuntimeError("v2.8 arm page injection failed: Replay button was not found")
     page = page.replace(replay_button, replay_controls, 1)
+    copy_button = '          <button type="button" class="copy-btn" onclick="copyOutput()">Copy</button>'
+    if copy_button not in page:
+        raise RuntimeError("v2.8 arm page injection failed: Debug Output copy button was not found")
+    page = page.replace(copy_button, (
+        '          <a href="/api/arm/full-run-log" target="_blank" rel="noopener">完整运行日志</a>\n'
+        + copy_button
+    ), 1)
 
     function_start = page.find("    async function replayMove() {")
     function_end = page.find("\n\n    async function copyOutput()", function_start)
@@ -211,6 +218,36 @@ class SharedCamera(vision.LiveCameraState):
         self.arm_stream.set_depth(frame)
 
 
+class FullRunState(arm.RunState):
+    """Keep complete v2.8 arm output on disk while preserving the small live UI tail."""
+
+    def __init__(self, log_path: str) -> None:
+        super().__init__(log_path)
+        self.full_log_dir = Path(log_path).resolve().parent / 'left_arm_v2_8_full_runs'
+
+    def _stream_reader(self, proc, stream, field: str) -> None:
+        if stream is None:
+            return
+        try:
+            for line in stream:
+                with self.lock:
+                    if self.proc is not proc or self.current is None:
+                        continue
+                    if 'full_log_path' not in self.current:
+                        self.full_log_dir.mkdir(parents=True, exist_ok=True)
+                        started = int(self.current['started_epoch'] * 1000)
+                        self.current['full_log_path'] = str(
+                            self.full_log_dir / f'arm_run_{started}_{proc.pid}.txt'
+                        )
+                    with open(self.current['full_log_path'], 'a', encoding='utf-8') as out:
+                        out.write(line if field == 'stdout' else '[stderr] ' + line)
+                    self.current[field] = (self.current.get(field, '') + line)[-8000:]
+        except Exception as exc:
+            with self.lock:
+                if self.proc is proc and self.current is not None:
+                    self.current[field + '_reader_error'] = str(exc)
+
+
 def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
     geometry = GeometryStore(Path(args.crown_config))
     geometry_lock = threading.Lock()
@@ -327,6 +364,15 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
 
         def do_GET(self):
             path = urlparse(self.path).path
+            if path == '/api/arm/full-run-log':
+                run = run_state.snapshot() or {}
+                log_path = run.get('full_log_path')
+                if not log_path:
+                    return self.send_json({'ok': False, 'error': '尚无完整运行日志'}, HTTPStatus.NOT_FOUND)
+                resolved = Path(log_path).resolve()
+                if resolved.parent != run_state.full_log_dir or not resolved.is_file():
+                    return self.send_json({'ok': False, 'error': '运行日志不存在'}, HTTPStatus.NOT_FOUND)
+                return self.send_bytes(resolved.read_bytes(), 'text/plain; charset=utf-8')
             if path == '/crown':
                 return self.send_bytes(CROWN_PAGE.encode('utf-8'), 'text/html; charset=utf-8')
             if path in ('/', '/index.html'):
@@ -376,7 +422,7 @@ def main():
         moves_file=os.path.abspath(args.moves_file),
     )
     stream_state = arm.StreamState()
-    run_state = arm.RunState(args.run_log)
+    run_state = FullRunState(args.run_log)
     roi = (args.roi_x0, args.roi_y0, args.roi_x1, args.roi_y1)
     detector_cfg = arm.DetectorConfig(
         hfov_deg=args.hfov_deg,
