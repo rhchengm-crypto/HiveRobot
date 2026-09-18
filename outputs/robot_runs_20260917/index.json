@@ -1,0 +1,51 @@
+{
+  "date": "2026-09-17",
+  "source": "user-pasted web command output",
+  "runs": [
+    {
+      "file": "141450_012976bf-9631-4c36-9bc2-ebcb55cb736e.log",
+      "source_attachment_id": "012976bf-9631-4c36-9bc2-ebcb55cb736e",
+      "bytes": 8141,
+      "sha256": "ac05a72e89be47c129fecf13bcf3a35ff2f4deac7a4f9ad11425183ee06c3e28",
+      "started_at": "2026-09-17 14:14:50",
+      "finished_at": "2026-09-17 14:18:01",
+      "duration_s": 190.779,
+      "returncode": 0,
+      "flow": "C4 pickup to white_rook_place_A1",
+      "placement_status": "training incomplete",
+      "blocking_errors_deg": {
+        "shoulder_rotate": 0.9179910848280538,
+        "arm_roll": 0.6994250313876458,
+        "wrist_side": 0.6557084056049791,
+        "wrist": -1.0709873222363393
+      },
+      "claw_home": {
+        "status": "completed",
+        "target_rad": 0.6727321147918701,
+        "position_rad": 0.6795986890792847,
+        "wrist_drift_deg": -0.4152891619151153,
+        "wrist_peak_drift_deg": -0.4371457672591561
+      }
+    },
+    {
+      "file": "165118_70bf893d-f64a-4f3f-92f4-71953af75d34.log",
+      "source_attachment_id": "70bf893d-f64a-4f3f-92f4-71953af75d34",
+      "bytes": 8180,
+      "sha256": "754f5c8e0f29864fc16884aa2378c4b4a53ea695d6ee7c67ac940810330b2e48",
+      "started_at": "2026-09-17 16:51:18",
+      "finished_at": "2026-09-17 16:52:54",
+      "duration_s": 95.705,
+      "returncode": 0,
+      "saved_move": "white_rook_place_A1",
+      "geometry_anchor": "white_rook:a1",
+      "placement_confirmed": true,
+      "validation_status": "training incomplete",
+      "blocking_errors_deg": {
+        "shoulder_side": -0.7431382420757273,
+        "shoulder_rotate": -0.6338483851663533,
+        "arm_roll": -4.874091293612799,
+        "wrist": 1.442563273463373
+      }
+    }
+  ]
+}

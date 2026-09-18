@@ -40,9 +40,9 @@ python3 chessboard_vision_v2_8_web_control.py --host 0.0.0.0 --port 8098 --enabl
 v2.8 保留原有动作执行流程，没有新增识别后自动抓取的行为。
 
 机械臂页 Replay 按钮旁的“多流程”下拉框提供 `none`、`Placement1`、
-`Placement_C4`、`White Bishop Placement`、`white knight place_B1` 五项，一次只能选择一个。
+`Placement A5`、`Placement_C4`、`White Bishop Placement`、`white knight place_B1` 六项，一次只能选择一个。
 `none` 只回放当前 Saved Move；选 Placement1 或 White Bishop Placement 时
-Saved Move 须为 `bishop01`，选 Placement_C4 或 white knight place_B1 时
+Saved Move 须为 `bishop01`；选 Placement A5 时须为 `white rook a5`；选 Placement_C4 或 white knight place_B1 时
 须为 `white_knight_c4`。新流程先执行 Placement_C4 的夹取和专属 Clearance，
 随后保持夹爪执行已训练的 `white_knight_place_b1` 到 b1，测量七关节误差后
 保持 wrist 执行 Claw Home 张爪。目标 saved move 不存在或缺少关节时会在
@@ -53,6 +53,11 @@ Saved Move 须为 `bishop01`，选 Placement_C4 或 white knight place_B1 时
 避免因控制器交接导致下坠。前面的目标动作存在性、运动安全与 wrist 前检查仍按原逻辑执行。
 单独的“Replay 后合拢夹爪”勾选项仍保留；与多流程同时选择时，多流程按
 其内置的夹取步骤执行，该勾选项不会在末尾重复合爪。
+
+Replay 区域另有“启用 0.5° 门禁”勾选项，默认不勾选。未勾选时系统仍会
+测量、打印并学习 wrist 前和 Replay 结束时的关节误差，但超限误差不再中止
+流程；勾选后才会在受检关节误差超出 0.5°（另含编码器半计数余量）时阻止
+后续动作。
 
 ## 回放补偿继承
 
@@ -67,10 +72,11 @@ v2.8 在其上增加按七个关节目标姿态匹配的局部目标角修正，
 残差；其余 v2.6 通用力矩学习仍按原逻辑工作。
 
 v2.8 的局部目标角学习和 wrist 前到位检查名义阈值均为 0.5 度。进入最后的 wrist 动作
-前，系统读取其他六个关节的实际角度。若存在超限关节，本次回放会在 wrist 前停止，
-把残差写入当前姿态的局部补偿，且不发额外的短促修正指令。下一次 replay 由原有
+前，系统读取其他六个关节的实际角度。若存在超限关节，系统总会把残差写入当前姿态
+的局部补偿，且不发额外的短促修正指令；只有勾选“启用 0.5° 门禁”时，本次回放才会
+在 wrist 前停止。下一次 replay 由原有
 20 秒平滑主轨迹应用新补偿。日志中的 `v2.8 pre-wrist verification` 会列出超限关节，
-`v2.8 pre-wrist local learning update` 会显示保存的补偿；只有超限列表为空才执行 wrist。
+`v2.8 pre-wrist local learning update` 会显示保存的补偿。未启用门禁时 wrist 继续执行。
 由于实机关节反馈约以 0.0218566 度为一个编码器计数，验收比较时加入
 0.011 度的半计数余量，有效放行边界为 0.511 度。这仅用于避免浮点数在量化
 边界反复阻塞；名义训练目标仍为 0.5 度。
@@ -86,8 +92,8 @@ v2.8 的局部目标角学习和 wrist 前到位检查名义阈值均为 0.5 度
 
 上述训练流程适用于通过 v2.8 回放的全部保存动作。wrist 完成后会对七个关节执行统一
 的 0.5 度最终验收，并把每个动作的 `validated` 或 `training` 状态写入同一姿态锚点的
-`move_validation`。超限时只保存学习结果并以明确错误结束，不追加现场修正运动；返回
-Home 后再次回放。七个关节全部合格时才记录为已验证。
+`move_validation`。超限时保存学习结果且不追加现场修正运动；只有启用门禁时才以明确
+错误结束。七个关节全部合格时才记录为已验证。
 
 独立 Table Clearance 及 Replay 启动的前置 clearance 也使用相同流程。它以新捕获的
 clearance 为名义目标，把局部补偿保存到 `data/left_arm_v2_8_clearance_bias.json`，

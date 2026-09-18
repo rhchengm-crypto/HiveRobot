@@ -18,7 +18,7 @@ import chessboard_vision_v2_7_web_control as vision
 import left_arm_v2_6_web_control as arm
 from chess_crown_geometry_v2_8 import GeometryStore, PAGE as CROWN_PAGE
 
-WEB_VERSION = "v2.8-full-arm-run-log"
+WEB_VERSION = "v2.8-optional-motion-gate"
 V28_MOVE_SCRIPT = str(Path(__file__).parent / 'left_arm_v2_8_move_library.py')
 V28_ARM_SCRIPT = str(Path(__file__).parent / 'left_arm_v2_8.py')
 
@@ -57,11 +57,15 @@ def build_arm_page() -> str:
             <label class="inline-option" title="Replay 命令结束后调用现有 Claw Close 压力停止流程">
               <input id="closeClawAfterReplay" type="checkbox"> Replay 后合拢夹爪
             </label>
+            <label class="inline-option" title="勾选后，任一受检关节超出 0.5° 时停止后续动作；未勾选时仍记录并学习误差，但流程继续">
+              <input id="enableMotionGate" type="checkbox"> 启用 0.5° 门禁
+            </label>
             <label class="inline-option" title="选择一个多流程动作；none 只执行所选 Saved Move 的 Replay">
               多流程
               <select id="multiFlowSelect">
                 <option value="none">none</option>
                 <option value="placement1">Placement1：夹取后到 Clearance</option>
+                <option value="placement_a5">Placement A5：夹取后到 Clearance</option>
                 <option value="placement_c4">Placement_C4：夹取后到 Clearance</option>
                 <option value="white_bishop_placement">White Bishop Placement</option>
                 <option value="white_knight_place_b1">white knight place_B1</option>
@@ -85,8 +89,10 @@ def build_arm_page() -> str:
     replay_function = """    async function replayMove() {
       const name = document.getElementById('moveSelect').value;
       const closeAfterReplay = document.getElementById('closeClawAfterReplay').checked;
+      const enableMotionGate = document.getElementById('enableMotionGate').checked;
       const multiFlow = document.getElementById('multiFlowSelect').value;
       const placement1 = multiFlow === 'placement1';
+      const placementA5 = multiFlow === 'placement_a5';
       const placementC4 = multiFlow === 'placement_c4';
       const whiteBishopPlacement = multiFlow === 'white_bishop_placement';
       const whiteKnightPlaceB1 = multiFlow === 'white_knight_place_b1';
@@ -100,6 +106,8 @@ def build_arm_page() -> str:
         ? '，随后完整执行 Placement1，从 Clearance 执行 White Bishop Placement，最后 Claw Home 张爪'
         : placementC4
         ? '，随后从 C4 夹取并回到 Clearance'
+        : placementA5
+        ? '，随后从 A5 夹取并回到 Clearance'
         : placement1
         ? '，随后夹取并回到 Clearance'
         : (closeAfterReplay ? '，随后使用压力停止逻辑合拢夹爪' : '');
@@ -109,13 +117,13 @@ def build_arm_page() -> str:
           method: 'POST',
           cache: 'no-store',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, placement1, placement_c4: placementC4, white_bishop_placement: whiteBishopPlacement, white_knight_place_b1: whiteKnightPlaceB1 })
+          body: JSON.stringify({ name, enable_gate: enableMotionGate, placement1, placement_a5: placementA5, placement_c4: placementC4, white_bishop_placement: whiteBishopPlacement, white_knight_place_b1: whiteKnightPlaceB1 })
         });
         const data = await res.json();
         document.getElementById('command').textContent = data.command_text || JSON.stringify(data.command || [], null, 2);
         document.getElementById('output').textContent = formatOutput(data);
         setStatus(data.ok ? 'Replay running/finished: ' + name : 'Replay failed to start: ' + name);
-        if (data.ok && closeAfterReplay && !placement1 && !placementC4 && !whiteBishopPlacement && !whiteKnightPlaceB1) {
+        if (data.ok && closeAfterReplay && !placement1 && !placementA5 && !placementC4 && !whiteBishopPlacement && !whiteKnightPlaceB1) {
           setStatus('Replay running: ' + name + '；结束后将合拢夹爪。');
           const finished = await waitForRunIdle('replay-move:' + name, 300000);
           if (finished) {
@@ -137,12 +145,14 @@ def build_arm_page() -> str:
 
 ARM_HTML_PAGE = build_arm_page()
 PLACEMENT1_ACTION = 'placement1:bishop01'
+PLACEMENT_A5_ACTION = 'placement-a5:white_rook_A5'
 PLACEMENT_C4_ACTION = 'placement-c4:white_knight_c4'
 WHITE_BISHOP_PLACEMENT_ACTION = 'white-bishop-placement'
 WHITE_KNIGHT_PLACE_B1_ACTION = 'white-knight-place-b1'
 CLAW_HOME_INTERRUPT_ACTIONS = {
     'claw-close',
     PLACEMENT1_ACTION,
+    PLACEMENT_A5_ACTION,
     PLACEMENT_C4_ACTION,
     WHITE_BISHOP_PLACEMENT_ACTION,
     WHITE_KNIGHT_PLACE_B1_ACTION,
@@ -304,14 +314,16 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
                 body = self.read_json_body()
                 name = str(body.get('name', '')).strip()
                 placement1 = body.get('placement1') is True
+                placement_a5 = body.get('placement_a5') is True
                 placement_c4 = body.get('placement_c4') is True
                 white_bishop_placement = body.get('white_bishop_placement') is True
                 white_knight_place_b1 = body.get('white_knight_place_b1') is True
+                enable_gate = body.get('enable_gate') is True
             except Exception as exc:
                 return self.send_json({'ok': False, 'error': f'invalid replay payload: {exc}'}, HTTPStatus.BAD_REQUEST)
             if not name:
                 return self.send_json({'ok': False, 'error': 'move name is required'}, HTTPStatus.BAD_REQUEST)
-            if sum((placement1, placement_c4, white_bishop_placement, white_knight_place_b1)) > 1:
+            if sum((placement1, placement_a5, placement_c4, white_bishop_placement, white_knight_place_b1)) > 1:
                 return self.send_json(
                     {'ok': False, 'error': 'select only one multi-step placement flow'},
                     HTTPStatus.BAD_REQUEST,
@@ -326,13 +338,22 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
                     {'ok': False, 'error': 'Placement_C4 and White Knight Place_B1 require saved move white_knight_c4'},
                     HTTPStatus.BAD_REQUEST,
                 )
+            if placement_a5 and name.casefold() != 'white_rook_a5':
+                return self.send_json(
+                    {'ok': False, 'error': 'Placement A5 requires saved move white_rook_A5'},
+                    HTTPStatus.BAD_REQUEST,
+                )
             cmd = arm.build_replay_move_command(ctrl_cfg, name)
+            if enable_gate:
+                cmd.append('--enable-gate')
             if white_knight_place_b1:
                 cmd.append('--white-knight-place-b1')
             elif white_bishop_placement:
                 cmd.append('--white-bishop-placement')
             elif placement1:
                 cmd.append('--placement1')
+            elif placement_a5:
+                cmd.append('--placement-a5')
             elif placement_c4:
                 cmd.append('--placement-c4')
             if not ctrl_cfg.execute_enabled:
@@ -353,6 +374,7 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
                 WHITE_KNIGHT_PLACE_B1_ACTION if white_knight_place_b1
                 else WHITE_BISHOP_PLACEMENT_ACTION if white_bishop_placement
                 else PLACEMENT1_ACTION if placement1
+                else PLACEMENT_A5_ACTION if placement_a5
                 else PLACEMENT_C4_ACTION if placement_c4
                 else f'replay-move:{name}'
             )

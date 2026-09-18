@@ -152,6 +152,15 @@ class LocalBiasTests(unittest.TestCase):
         self.assertFalse(args.white_bishop_placement)
         self.assertEqual(args.name, "white_knight_c4")
 
+    def test_placement_a5_cli_is_separate_and_reuses_placement1_clearance(self):
+        args = build_parser().parse_args([
+            "replay-move", "--name", "white_rook_A5", "--placement-a5"
+        ])
+        self.assertTrue(args.placement_a5)
+        self.assertFalse(args.placement1)
+        self.assertFalse(args.placement_c4)
+        self.assertEqual(args.name, "white_rook_A5")
+
     def test_white_bishop_placement_cli_is_separate_and_implies_placement1_flow(self):
         args = build_parser().parse_args([
             "replay-move", "--name", PLACEMENT1_MOVE_NAME,
@@ -640,6 +649,22 @@ class LocalBiasTests(unittest.TestCase):
             local = LocalTargetBias(Path(directory) / "bias.json", target_pose, "move")
             errors = verify_pre_wrist_or_learn(Arm(), target_pose, local)
             self.assertEqual(blocking_joint_errors(errors), {})
+
+    def test_disabled_pre_wrist_gate_still_learns_and_does_not_raise(self):
+        class Arm:
+            def __init__(self):
+                self.current = {joint: 0.0 for joint in JOINTS}
+                self.current["shoulder_front"] = math.radians(1.0)
+            def positions(self, joints):
+                return {joint: self.current[joint] for joint in joints}
+        target_pose = {joint: 0.0 for joint in JOINTS}
+        with tempfile.TemporaryDirectory() as directory:
+            local = LocalTargetBias(Path(directory) / "bias.json", target_pose, "move")
+            errors = verify_pre_wrist_or_learn(
+                Arm(), target_pose, local, gate_enabled=False
+            )
+            self.assertIn("shoulder_front", blocking_joint_errors(errors))
+            self.assertIn("shoulder_front", local.anchor["joint_bias"])
 
     def test_equal_wrist_induced_errors_continue_integrating(self):
         with tempfile.TemporaryDirectory() as directory:

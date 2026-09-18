@@ -20,7 +20,7 @@ from typing import Dict, Iterable, Optional
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-V28_MOVE_BUILD = "v2.8-multiflow-anchor-save-merge"
+V28_MOVE_BUILD = "v2.8-optional-motion-gate"
 LOCAL_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_local_target_bias.json"
 PLACEMENT1_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement1_clearance_bias.json"
 PLACEMENT_C4_CLEARANCE_BIAS_PATH = SCRIPT_DIR / "data" / "left_arm_v2_8_placement_c4_clearance_bias.json"
@@ -50,6 +50,7 @@ HOLD_BIAS_MIN_STEP_SCALE = 0.25
 HOLD_BIAS_LIMIT_DEG = 3.0
 PLACEMENT1_HOLD_BIAS_LIMIT_DEG = 5.0
 PLACEMENT1_MOVE_NAME = "bishop01"
+PLACEMENT_A5_MOVE_NAME = "white_rook_A5"
 PLACEMENT_C4_MOVE_NAME = "white_knight_c4"
 WHITE_BISHOP_PLACE_MOVE_NAME = "white_bishop_place"
 WHITE_KNIGHT_PLACE_B1_MOVE_NAME = "white_knight_place_b1"
@@ -995,7 +996,8 @@ def replay_move_tau_with_wrist_side_support(original, legacy, name: str,
 
 
 def verify_pre_wrist_or_learn(arm, pose, local,
-                               label: str = "before_final_wrist") -> Dict[str, float]:
+                               label: str = "before_final_wrist",
+                               gate_enabled: bool = True) -> Dict[str, float]:
     current = arm.positions(list(JOINTS))
     errors = {
         joint: math.degrees(float(pose[joint]) - current[joint])
@@ -1007,6 +1009,7 @@ def verify_pre_wrist_or_learn(arm, pose, local,
         "tolerance_deg": PRE_WRIST_TOLERANCE_DEG,
         "encoder_half_count_margin_deg": ENCODER_HALF_COUNT_MARGIN_DEG,
         "effective_tolerance_deg": PRE_WRIST_TOLERANCE_DEG + ENCODER_HALF_COUNT_MARGIN_DEG,
+        "gate_enabled": bool(gate_enabled),
         "blocking_errors_deg": blockers,
         "extra_correction_motion": False,
     }, ensure_ascii=False), flush=True)
@@ -1020,10 +1023,16 @@ def verify_pre_wrist_or_learn(arm, pose, local,
     if blockers:
         updates = local.update(blockers, label="pre-wrist-gate")
         print("v2.8 pre-wrist local learning update=", json.dumps(updates, ensure_ascii=False), flush=True)
-        raise RuntimeError(
-            "v2.8 replay stopped before wrist: non-wrist joints exceed "
-            f"{PRE_WRIST_TOLERANCE_DEG:.1f}deg; local residuals saved for the next smooth replay; "
-            "no extra correction motion was issued: " + json.dumps(blockers, ensure_ascii=False)
+        if gate_enabled:
+            raise RuntimeError(
+                "v2.8 replay stopped before wrist: non-wrist joints exceed "
+                f"{PRE_WRIST_TOLERANCE_DEG:.1f}deg; local residuals saved for the next smooth replay; "
+                "no extra correction motion was issued: " + json.dumps(blockers, ensure_ascii=False)
+            )
+        print(
+            "v2.8 pre-wrist gate disabled; learned residuals recorded and wrist motion continues=",
+            json.dumps(blockers, ensure_ascii=False),
+            flush=True,
         )
     return errors
 
@@ -1566,7 +1575,9 @@ def replay_with_local_bias(args) -> None:
         )
 
     def strict_pre_wrist_settle(arm, pose, fallback_kp, fallback_kd, label="before_final_wrist"):
-        return verify_pre_wrist_or_learn(arm, pose, active_local[0], label)
+        return verify_pre_wrist_or_learn(
+            arm, pose, active_local[0], label, gate_enabled=args.enable_gate
+        )
 
     def capture_error_report(label, current, pose):
         errors = original_error_report(label, current, pose)
@@ -1578,14 +1589,18 @@ def replay_with_local_bias(args) -> None:
     def close_with_optional_placement1(arm):
         nonlocal placement1_ran
         try:
-            if (args.placement1 or args.white_bishop_placement or args.placement_c4 or args.white_knight_place_b1) and final_errors and not placement1_ran:
+            if (args.placement1 or args.placement_a5 or args.white_bishop_placement or args.placement_c4 or args.white_knight_place_b1) and final_errors and not placement1_ran:
                 placement1_ran = True
                 clearance_handoff = {}
                 result = run_placement1_on_arm(
                     arm, args.clearance_file, args.kp, args.kd,
                     carry_hold=carry_hold,
                     clearance_handoff=clearance_handoff,
-                    source_move_name=PLACEMENT_C4_MOVE_NAME if (args.placement_c4 or args.white_knight_place_b1) else PLACEMENT1_MOVE_NAME,
+                    source_move_name=(
+                        PLACEMENT_C4_MOVE_NAME if (args.placement_c4 or args.white_knight_place_b1)
+                        else PLACEMENT_A5_MOVE_NAME if args.placement_a5
+                        else PLACEMENT1_MOVE_NAME
+                    ),
                 )
                 if result:
                     placement1_summary.clear()
@@ -1735,15 +1750,16 @@ def replay_with_local_bias(args) -> None:
         validation = source_local.record_move_validation(final_errors)
         print("v2.8 final verification=", json.dumps(validation, ensure_ascii=False), flush=True)
         blockers = validation["blocking_errors_deg"]
-        if blockers:
+        if blockers and args.enable_gate:
             raise RuntimeError(
                 "v2.8 replay training incomplete: final joints exceed "
                 f"{ERROR_DEADBAND_DEG:.1f}deg; learned data was saved; return Home and replay again: "
                 + json.dumps(blockers, ensure_ascii=False)
             )
-    if (args.placement1 or args.white_bishop_placement or args.placement_c4 or args.white_knight_place_b1) and placement1_summary:
+    if (args.placement1 or args.placement_a5 or args.white_bishop_placement or args.placement_c4 or args.white_knight_place_b1) and placement1_summary:
         print(
             "v2.8 Placement_C4 final training status=" if (args.placement_c4 or args.white_knight_place_b1)
+            else "v2.8 Placement_A5 final training status=" if args.placement_a5
             else "v2.8 Placement1 final training status=",
             json.dumps(placement1_summary, ensure_ascii=False),
             flush=True,
@@ -1769,9 +1785,22 @@ def build_parser():
     parser = legacy.build_parser()
     subparsers = next(action for action in parser._actions if isinstance(action, argparse._SubParsersAction))
     subparsers.choices["replay-move"].add_argument(
+        "--enable-gate",
+        action="store_true",
+        help=(
+            "stop before wrist or after replay when measured joint errors exceed 0.5 degrees; "
+            "without this flag errors are still recorded and learned but do not stop the flow"
+        ),
+    )
+    subparsers.choices["replay-move"].add_argument(
         "--placement1",
         action="store_true",
         help="run bishop01, pressure grasp, wrist retract, then learned clearance",
+    )
+    subparsers.choices["replay-move"].add_argument(
+        "--placement-a5",
+        action="store_true",
+        help="run white_rook_A5, pressure grasp, wrist retract, then learned Placement1 clearance",
     )
     subparsers.choices["replay-move"].add_argument(
         "--placement-c4",
@@ -1802,7 +1831,7 @@ def main() -> None:
     args = build_parser().parse_args()
     if args.cmd != "replay-move":
         return legacy.main()
-    selected = (args.placement1, args.placement_c4,
+    selected = (args.placement1, args.placement_a5, args.placement_c4,
                 args.white_bishop_placement, args.white_knight_place_b1)
     if sum(bool(value) for value in selected) > 1:
         raise RuntimeError("select only one multi-step placement flow")
@@ -1810,6 +1839,8 @@ def main() -> None:
         raise RuntimeError("Placement1 and White Bishop Placement require saved move bishop01")
     if (args.placement_c4 or args.white_knight_place_b1) and legacy.normalize_move_name(args.name) != PLACEMENT_C4_MOVE_NAME:
         raise RuntimeError("Placement_C4 and White Knight Place_B1 require saved move white_knight_c4")
+    if args.placement_a5 and legacy.normalize_move_name(args.name).casefold() != PLACEMENT_A5_MOVE_NAME.casefold():
+        raise RuntimeError("Placement A5 requires saved move white_rook_A5")
     replay_with_local_bias(args)
 
 

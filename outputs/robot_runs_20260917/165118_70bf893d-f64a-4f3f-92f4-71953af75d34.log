@@ -1,0 +1,70 @@
+started_at: 2026-09-17 16:51:18
+
+finished_at: 2026-09-17 16:52:54
+
+duration_s: 95.705
+
+returncode: 0
+
+stdout:
+965, "vel": 0.007326007355004549, "tau": -1.096459150314331}, "wrist_side": {"pos": -0.5487525463104248, "vel": -0.007326007355004549, "tau": -0.3443223536014557}}, "nominal_target_rad": {"arm_roll": -3.022239923477173, "wrist_side": -0.54417484998703}, "nominal_error_deg": {"arm_roll": -4.480672397420065, "wrist_side": 0.26228267922307463}}
+v2.8 pre-wrist local learning update= {"shoulder_side": {"bias_deg": 0.5223810639495792, "previous_bias_deg": 0.8196363607798701, "delta_bias_deg": -0.29725529683029095, "last_error_deg": -0.7431382420757273, "best_error_deg": 0.6557118206995641, "best_bias_deg": 0.49178045043008806, "step_scale": 0.8, "learning_state": "plateau", "samples": 3, "updated_at": "2026-09-17 16:52:41", "label": "pre-wrist-gate"}, "shoulder_rotate": {"bias_deg": -0.6119972439736485, "previous_bias_deg": -0.5464267449226091, "delta_bias_deg": -0.0655704990510394, "last_error_deg": -0.6557049905103941, "best_error_deg": 0.5901351744782717, "best_bias_deg": -0.41528574682053027, "step_scale": 0.2, "learning_state": "plateau", "samples": 8, "updated_at": "2026-09-17 16:52:41", "label": "pre-wrist-gate"}, "arm_roll": {"bias_deg": -0.75, "previous_bias_deg": -0.8614700532924421, "delta_bias_deg": 0.11147005329244208, "last_error_deg": -4.480672397420065, "best_error_deg": 0.5245585282569792, "best_bias_deg": -0.75, "step_scale": 0.2, "learning_state": "backoff", "samples": 11, "updated_at": "2026-09-17 16:52:41", "label": "pre-wrist-gate"}}
+v2.8 pre-wrist gate disabled; learned residuals recorded and wrist motion continues= {"shoulder_side": -0.7431382420757273, "shoulder_rotate": -0.6557049905103941, "arm_roll": -4.480672397420065}
+v2.6 replay correction decisions= {"shoulder_side": {"error_deg": -0.7431382420757273, "samples": 58, "learning_state": "plateau", "step_scale": 0.2, "best_error_deg": 1.09284392758038, "decision": "below_error_deadband"}, "elbow": {"error_deg": 0.3497125156938229, "samples": 28, "learning_state": "plateau", "step_scale": 0.2, "best_error_deg": 1.005420921298802, "decision": "below_error_deadband"}} enabled= False
+v2.6 replay correction skipped selected= 
+v2.6 replay final wrist adaptive target bias wrist bias_deg= -0.75552416583614 nominal_target= -2.593461513519287 biased_target= -2.6066478977915115
+v2.6 replay final wrist hold target bias pending hold-tau improvement ["shoulder_front", "shoulder_side"]
+v2.6 replay final wrist adaptive hold target bias= {"shoulder_rotate": 0.0, "elbow": 1.0106822053306894, "arm_roll": 1.159540025110117, "wrist_side": 0.0} hold_targets= {"shoulder_rotate": 1.8593834490776062, "elbow": 0.8433435318989168, "arm_roll": -2.98741739933481, "wrist_side": -0.5469702944755555}
+v2.6 replay final wrist carried hold targets= {"shoulder_front": 1.4447600522279818, "shoulder_side": -2.654535698890686, "elbow": 0.8606621036794297, "shoulder_rotate": 1.8593834490776062, "arm_roll": -3.007655190581639, "wrist_side": -0.5469702944755555}
+v2.6 replay final wrist frozen hold targets= {"elbow": {"previous_target": 0.8606621036794297, "frozen_target": 0.8257037997245789, "nominal_error_deg": 0.3497125156938229}}
+v2.6 replay final wrist soft hold overrides gains= {"elbow": {"kp": 25.0, "kd": 3.0}} tau= {"elbow": {"adaptive_tau": 3.2199999999999998, "soft_cap_skipped": 3.2}}
+v2.6 replay final wrist frozen hold overrides gains= {"elbow": {"kp": 25.0, "kd": 3.0}} tau= {"elbow": {"previous_tau": 3.2199999999999998, "tau": 3.2}}
+v2.6 replay final wrist active delta_deg= -88.6204163659575 target= -2.6066478977915115 kp= 22.0 kd= 1.4 seconds= 12.0 hold joints: shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side
+v2.6 replay final wrist hold_tau= {"shoulder_front": 1.166123468575764, "elbow": 3.2, "arm_roll": -0.3127607989659096, "shoulder_rotate": -0.8500000000000001, "shoulder_side": 0.71, "wrist_side": -0.2599999999999999}
+v2.6 replay final wrist low shoulder wrist_side hold gains= {"kp": 24.0, "kd": 2.4} hold_tau= -0.2599999999999999
+v2.6 replay final wrist low shoulder adaptive hold gains= {"shoulder_side": {"kp": 65.0, "kd": 4.5}, "arm_roll": {"kp": 12.0, "kd": 7.0}, "wrist_side": {"kp": 24.0, "kd": 2.4}, "shoulder_rotate": {"kp": 24.0, "kd": 4.5}} hold_tau= {"arm_roll": -0.3127607989659096, "shoulder_rotate": -0.8500000000000001, "shoulder_side": 0.71}
+v2.6 replay final wrist trajectory= blend_smootherstep linear_blend= 0.35 active_velocity_ff= False active_tau= 0.0
+v2 continuous step wrist 1/1 target= -2.6066478977915115
+v2.6 replay adaptive hold tau observation replay-final-wrist active= wrist errors_deg= {"shoulder_front": -0.04371321068808161, "shoulder_side": -0.7431382420757273, "shoulder_rotate": -0.6338483851663533, "elbow": 0.37156912103786366, "arm_roll": -4.89594789895684, "wrist_side": 0.26228267922307463}
+v2.6 replay adaptive hold tau updates replay-final-wrist active= wrist {"arm_roll": {"tau": -0.3227607989659096, "previous_tau": -0.3127607989659096, "base_tau": -0.3327607989659096, "applied_tau": -0.3127607989659096, "delta_tau": -0.010000000000000009, "search_direction": 1.0, "successful_direction": 1.0, "last_error_deg": -4.89594789895684, "best_error_deg": 1.0928575879587201, "best_tau": -0.3327607989659096, "step_scale": 0.2, "learning_state": "backoff", "refined_best": false, "samples": 85, "updated_at": "2026-09-17 16:52:54", "label": "replay-final-wrist"}}
+v2.6 replay adaptive hold target bias observation replay-final-wrist-soft-hold active= wrist errors_deg= {"elbow": 0.37156912103786366}
+v2.6 replay final errors_deg= {"shoulder_front": -0.04371321068808161, "shoulder_side": -0.7431382420757273, "shoulder_rotate": -0.6338483851663533, "elbow": 0.37156912103786366, "arm_roll": -4.874091293612799, "wrist_side": 0.26228267922307463, "wrist": 1.442563273463373}
+v2.6 replay adaptive target bias updates {"shoulder_side": {"bias_deg": 0.2845768264853464, "previous_bias_deg": 0.5223810639495792, "delta_bias_deg": -0.2378042374642328, "last_error_deg": -0.7431382420757273, "best_error_deg": 0.6557118206995641, "best_bias_deg": 0.49178045043008806, "step_scale": 0.6400000000000001, "learning_state": "plateau", "samples": 4, "updated_at": "2026-09-17 16:52:54", "label": "replay-final"}, "shoulder_rotate": {"bias_deg": -0.6753820824902839, "previous_bias_deg": -0.6119972439736485, "delta_bias_deg": -0.06338483851663534, "last_error_deg": -0.6338483851663533, "best_error_deg": 0.5901351744782717, "best_bias_deg": -0.41528574682053027, "step_scale": 0.2, "learning_state": "plateau", "samples": 9, "updated_at": "2026-09-17 16:52:54", "label": "replay-final"}}
+{
+  "shoulder_front": {
+    "pos": 1.4597162008285522,
+    "vel": -0.0019536020699888468,
+    "tau": -0.006837606895714998
+  },
+  "shoulder_side": {
+    "pos": -2.6613640785217285,
+    "vel": -0.0019536020699888468,
+    "tau": 1.0871795415878296
+  },
+  "shoulder_rotate": {
+    "pos": 1.8850613832473755,
+    "vel": 0.007326007355004549,
+    "tau": -1.5115995407104492
+  },
+  "elbow": {
+    "pos": 0.8253223299980164,
+    "vel": -0.0019536020699888468,
+    "tau": 3.6307692527770996
+  },
+  "arm_roll": {
+    "pos": -2.9367895126342773,
+    "vel": -0.007326007355004549,
+    "tau": -0.94017094373703
+  },
+  "wrist_side": {
+    "pos": -0.5487525463104248,
+    "vel": 0.007326007355004549,
+    "tau": -0.25152626633644104
+  },
+  "wrist": {
+    "pos": -2.618257522583008,
+    "vel": 0.007326007355004549,
+    "tau": 0.23687423765659332
+  }
+}
+v2.8 final verification= {"status": "training", "tolerance_deg": 0.5, "encoder_half_count_margin_deg": 0.011, "effective_tolerance_deg": 0.511, "errors_deg": {"shoulder_front": -0.04371321068808161, "shoulder_side": -0.7431382420757273, "shoulder_rotate": -0.6338483851663533, "elbow": 0.37156912103786366, "arm_roll": -4.874091293612799, "wrist_side": 0.26228267922307463, "wrist": 1.442563273463373}, "blocking_errors_deg": {"shoulder_side": -0.7431382420757273, "shoulder_rotate": -0.6338483851663533, "arm_roll": -4.874091293612799, "wrist": 1.442563273463373}, "checked_at": "2026-09-17 16:52:54"}

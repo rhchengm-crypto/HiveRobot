@@ -2,6 +2,61 @@
   "schema": 1,
   "profiles": {},
   "placement_anchors": {
+    "white_rook:a1": {
+      "piece_class": "white_rook",
+      "target_square": "a1",
+      "saved_move_name": "white_rook_place_A1",
+      "pose_rad": {
+        "shoulder_front": 1.4589532613754272,
+        "shoulder_side": -2.6743342876434326,
+        "shoulder_rotate": 1.8739986419677734,
+        "elbow": 0.8318074345588684,
+        "arm_roll": -3.022239923477173,
+        "wrist_side": -0.54417484998703,
+        "wrist": -2.593461513519287
+      },
+      "joint_units": "radians",
+      "board_tcp_mm": [
+        27.5,
+        27.5,
+        55.0
+      ],
+      "tolerance_deg": 0.5,
+      "validation_errors_deg": {
+        "shoulder_front": -0.04371321068808161,
+        "shoulder_side": -0.7431382420757273,
+        "shoulder_rotate": -0.6338483851663533,
+        "elbow": 0.37156912103786366,
+        "arm_roll": -4.874091293612799,
+        "wrist_side": 0.26228267922307463,
+        "wrist": 1.442563273463373
+      },
+      "validated": false,
+      "validation_source": "White Rook Place_A1 run completed 2026-09-17 16:52:54; operator approved it as an A1 geometry anchor; four joints remain outside the 0.5 degree training tolerance",
+      "purpose": "geometry_training_anchor",
+      "includes_claw_release": false,
+      "workflow_validation": {
+        "run_started_at": "2026-09-17 16:51:18",
+        "run_finished_at": "2026-09-17 16:52:54",
+        "duration_s": 95.705,
+        "returncode": 0,
+        "placement_confirmed": true,
+        "placement_confirmation_method": "operator_confirmation",
+        "operator_observation": "white_rook_place_A1 approved as a geometry anchor",
+        "final_training_status": "training incomplete",
+        "effective_tolerance_deg": 0.511,
+        "blocking_errors_deg": {
+          "shoulder_side": -0.7431382420757273,
+          "shoulder_rotate": -0.6338483851663533,
+          "arm_roll": -4.874091293612799,
+          "wrist": 1.442563273463373
+        },
+        "gate_enabled": false,
+        "pose_source": "nominal targets printed by the run, supplemented by final encoder position plus reported nominal error",
+        "source_log": "70bf893d-f64a-4f3f-92f4-71953af75d34/pasted-text.txt"
+      },
+      "updated_at": "2026-09-17 16:52:54"
+    },
     "white_knight:b1": {
       "piece_class": "white_knight",
       "target_square": "b1",
