@@ -1,0 +1,52 @@
+v2.8 pose-local correction= {"build": "v2.8-multiflow-anchor-save-merge", "move": "white_pawn_D5", "anchor_id": "f69a021e12a137cc", "new_anchor": false, "nearest_rms_deg": 0.0, "nearest_max_deg": 0.0, "shared_v2_6_baseline": true, "local_samples": {"arm_roll": 1, "elbow": 2, "shoulder_front": 5, "shoulder_side": 2}}
+v2.6 replay pre-step table clearance command= python3 -u /home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py clearance --clearance-file /home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_table_clearance.json --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute
+[stderr] python3: can't open file '/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py': [Errno 2] No such file or directory
+[stderr] Traceback (most recent call last):
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1817, in <module>
+[stderr]     main()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1813, in main
+[stderr]     replay_with_local_bias(args)
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1714, in replay_with_local_bias
+[stderr]     legacy.replay_move(
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6_move_library.py", line 2008, in replay_move
+[stderr]     run_table_clearance(python_bin, clearance_file)
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6_move_library.py", line 478, in run_table_clearance
+[stderr]     raise RuntimeError(f"table clearance failed with returncode {completed.returncode}")
+[stderr] RuntimeError: table clearance failed with returncode 2
+[stderr] Error in sys.excepthook:
+[stderr] Traceback (most recent call last):
+[stderr]   File "/usr/lib/python3/dist-packages/apport_python_hook.py", line 72, in apport_excepthook
+[stderr]     from apport.fileutils import likely_packaged, get_recent_crashes
+[stderr]   File "/usr/lib/python3/dist-packages/apport/__init__.py", line 5, in <module>
+[stderr]     from apport.report import Report
+[stderr]   File "/usr/lib/python3/dist-packages/apport/report.py", line 32, in <module>
+[stderr]     import apport.fileutils
+[stderr]   File "/usr/lib/python3/dist-packages/apport/fileutils.py", line 12, in <module>
+[stderr]     import os, glob, subprocess, os.path, time, pwd, sys, requests_unixsocket
+[stderr]   File "/usr/lib/python3/dist-packages/requests_unixsocket/__init__.py", line 1, in <module>
+[stderr]     import requests
+[stderr]   File "/usr/lib/python3/dist-packages/requests/__init__.py", line 95, in <module>
+[stderr]     from urllib3.contrib import pyopenssl
+[stderr]   File "/usr/lib/python3/dist-packages/urllib3/contrib/pyopenssl.py", line 46, in <module>
+[stderr]     import OpenSSL.SSL
+[stderr]   File "/usr/lib/python3/dist-packages/OpenSSL/__init__.py", line 8, in <module>
+[stderr]     from OpenSSL import crypto, SSL
+[stderr]   File "/usr/lib/python3/dist-packages/OpenSSL/crypto.py", line 1553, in <module>
+[stderr]     class X509StoreFlags(object):
+[stderr]   File "/usr/lib/python3/dist-packages/OpenSSL/crypto.py", line 1571, in X509StoreFlags
+[stderr]     NOTIFY_POLICY = _lib.X509_V_FLAG_NOTIFY_POLICY
+[stderr] AttributeError: module 'lib' has no attribute 'X509_V_FLAG_NOTIFY_POLICY'
+[stderr] 
+[stderr] Original exception was:
+[stderr] Traceback (most recent call last):
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1817, in <module>
+[stderr]     main()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1813, in main
+[stderr]     replay_with_local_bias(args)
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8_move_library.py", line 1714, in replay_with_local_bias
+[stderr]     legacy.replay_move(
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6_move_library.py", line 2008, in replay_move
+[stderr]     run_table_clearance(python_bin, clearance_file)
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6_move_library.py", line 478, in run_table_clearance
+[stderr]     raise RuntimeError(f"table clearance failed with returncode {completed.returncode}")
+[stderr] RuntimeError: table clearance failed with returncode 2

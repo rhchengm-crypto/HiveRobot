@@ -1,0 +1,46 @@
+v2.8 pose-local correction= {"build": "v2.8-optional-motion-gate", "move": "white_knight_c4", "anchor_id": "c68e4acca4e7579d", "new_anchor": false, "nearest_rms_deg": 1.108902567098246, "nearest_max_deg": 2.316834317414175, "shared_v2_6_baseline": true, "local_samples": {"arm_roll": 1, "elbow": 2, "shoulder_front": 6, "shoulder_rotate": 1, "shoulder_side": 12, "wrist": 6}}
+v2.6 replay pre-step table clearance command= python3 -u /home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py clearance --clearance-file /home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_table_clearance.json --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute
+v2.8 clearance local correction= {"build": "v2.8-clearance-nonblocking-v1", "clearance_file": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_table_clearance.json", "anchor_id": "8b20a284d5592a0c", "new_anchor": false, "nominal_target_rad": {"shoulder_front": 1.9357976913452148, "shoulder_side": -2.7143893241882324, "elbow": 0.8165484070777893, "shoulder_rotate": 1.9323643445968628, "arm_roll": -2.649538516998291, "wrist_side": 0.3057526648044586, "wrist": -1.0313191413879395}, "applied_bias_deg": {"shoulder_side": 0.18359548488994273, "elbow": 2.63274014118629, "arm_roll": 0.543136642799414, "wrist_side": 1.7135865457673125, "wrist": -0.820746824571414}, "validation_joints": ["shoulder_front", "shoulder_side", "elbow", "arm_roll", "wrist_side", "wrist"], "requested_max_delta_deg": 120.0, "effective_max_delta_deg": 125.0, "best_snapshot_created": false}
+Serial port is open
+Serial port is open
+v2 clearance target shoulder_front delta_deg= 63.77854769586779 target= 1.9357976913452148
+v2 clearance planned steps shoulder_front steps= 13 step_deg<= 5.0
+v2 clearance target shoulder_side delta_deg= 7.702377006266699 target= -2.7111849784851074
+v2 clearance planned steps shoulder_side steps= 2 step_deg<= 5.0
+v2 clearance target elbow delta_deg= 122.62733738576244 target= 0.8624983908909104
+v2 clearance planned steps elbow steps= 25 step_deg<= 5.0
+v2 clearance skip shoulder_rotate delta_deg= -23.36507311280563 deadband_deg= 180.0
+v2 clearance target arm_roll delta_deg= 0.7835593015838628 target= -2.640058994293213
+v2 clearance planned steps arm_roll steps= 1 step_deg<= 5.0
+v2 clearance target wrist_side delta_deg= 9.691369585973618 target= 0.3356603920459747
+v2 clearance planned steps wrist_side steps= 2 step_deg<= 5.0
+v2 clearance target wrist delta_deg= 58.73941798328855 target= -1.045643875801999
+v2 clearance planned continuous wrist steps= 1
+v2.6 clearance coupled shoulder/roll/wrist active shoulder_front,shoulder_side,elbow,arm_roll,wrist_side,wrist hold joints: shoulder_rotate
+v2.6 clearance coupled shoulder/roll/wrist gains shoulder_front kp= 124.0 kd= 4.8 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains shoulder_side kp= 60.0 kd= 5.0 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains elbow kp= 65.0 kd= 6.5 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains arm_roll kp= 18.0 kd= 6.0 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains wrist_side kp= 16.0 kd= 2.2 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains wrist kp= 22.0 kd= 1.4 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist continuous interpolation steps_removed= 25 raw_seconds= 300.0 used_seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist progress windows= {"arm_roll": [0.35, 1.0], "wrist": [0.0, 1.0]}
+v2.6 clearance coupled shoulder/roll/wrist pre-window gains= {"wrist": {"kp": 6.0, "kd": 0.8}}
+v2.6 clearance coupled shoulder/roll/wrist velocity_ff_joints= shoulder_front
+v2.6 clearance coupled shoulder/roll/wrist move_tau_ff= {"shoulder_front": 1.0}
+v2.6 clearance coupled shoulder/roll/wrist control_dt= 0.01
+v2.6 clearance coupled shoulder/roll/wrist trajectory= blend_smootherstep
+v2.6 clearance coupled shoulder/roll/wrist linear_blend= 0.35
+enable shoulder_front
+enable shoulder_side
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+enable shoulder_rotate
+v2.2 continuous group step shoulder_front,shoulder_side,elbow,arm_roll,wrist_side,wrist 1/1 targets= {"shoulder_front": 1.9357976913452148, "shoulder_side": -2.7111849784851074, "elbow": 0.8624983908909103, "arm_roll": -2.640058994293213, "wrist_side": 0.3356603920459747, "wrist": -1.045643875801999}
+v2.6 clearance coupled shoulder/roll/wrist reached= {"shoulder_front": 1.9171053171157837, "shoulder_side": -2.725451946258545, "elbow": 0.7864118218421936, "arm_roll": -2.650301456451416, "wrist_side": 0.28477150201797485, "wrist": -1.0786221027374268}
+v2.6 clearance coupled wrist fine hold gains= {"shoulder_rotate": {"kp": 8.0, "kd": 4.0}, "shoulder_front": {"kp": 125.0, "kd": 6.5}, "shoulder_side": {"kp": 70.0, "kd": 5.0}, "elbow": {"kp": 92.0, "kd": 6.2}, "arm_roll": {"kp": 6.0, "kd": 6.0}, "wrist_side": {"kp": 8.0, "kd": 1.6}}
+v2.6 clearance coupled wrist settle before fine seconds= 1.0
+v2.6 clearance coupled wrist fine target delta_deg= 1.88951321922466 bias_deg= 1.5 target= -1.0194639370220842 kp= 26.0 kd= 4.7 seconds= 8.0
+v2 continuous step wrist 1/1 target= -1.0194639370220842

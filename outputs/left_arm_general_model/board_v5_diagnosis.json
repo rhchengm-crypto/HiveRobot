@@ -1,0 +1,76 @@
+{
+  "build": "seven-axis-board-grasp-v5-continuous-transit",
+  "source_run_id": "406c92e9d9d78148",
+  "source_log": "arm_run_1793140179675_43265.txt",
+  "trigger": {
+    "waypoint_index": 44,
+    "stage": "source_above",
+    "timing": {
+      "seconds": 2.350728664065708,
+      "reference_peak_velocity_rad_s": 0.06999999999999999,
+      "reference_peak_acceleration_rad_s2": 0.09169246276378203,
+      "feedback_velocity_limit_rad_s": 0.2
+    },
+    "joint": "wrist",
+    "position_rad": -2.6953155994415283,
+    "velocity_rad_s": -0.21245421469211578,
+    "tau": 0.3638583719730377,
+    "reference_rad": -2.6926764611866347,
+    "error_deg": 0.15121148355692407,
+    "velocity_limit_rad_s": 0.2,
+    "error_limit_deg": 5.0
+  },
+  "old_planner_samples": 52,
+  "old_controller_restarts": 52,
+  "new_continuous_transit_groups": 2,
+  "new_group_sample_ranges": [
+    [
+      0,
+      24
+    ],
+    [
+      25,
+      51
+    ]
+  ],
+  "physical_feedback_excursion_root_cause": "not uniquely identifiable from v4 log; pre-trigger continuous feedback not recorded",
+  "confirmed_software_defect": "geometry samples were executed as separate stop/start controller sessions with repeated measured-total-torque reanchoring",
+  "remediation": "merge exactly collinear transit samples only; preserve collision-checked path, threshold and acceleration budgets; bounded endpoint settling; record last 32 watchdog frames with actual MIT commands",
+  "loaded_protective_stop_observed_s": 999.2993688440001,
+  "loaded_stop_max_drift_deg": {
+    "shoulder_front": 0.15299623740828563,
+    "shoulder_side": 0.08742642137616322,
+    "shoulder_rotate": 0.0,
+    "elbow": 0.06557323112670742,
+    "arm_roll": 0.0,
+    "wrist_side": 0.5682802766815234,
+    "wrist": 0.8524076084175913
+  },
+  "loaded_stop_io_failure_count": 0,
+  "offline_tests_passed": 195,
+  "new_transit_hardware_validated": false,
+  "touch_140_preview_succeeded": true,
+  "touch_constraints": {
+    "maximum_descent_mm": 25,
+    "minimum_descent_mm": 1,
+    "max_start_xy_error_mm": 5,
+    "preserve_current_wrist_orientation": true,
+    "claw_commands": false
+  },
+  "preserved": [
+    "same-process protective support",
+    "physical emergency stop",
+    "normal Model Hold",
+    "existing adaptive learning and JSON",
+    "ordinary Clearance shoulder_rotate active-target skip"
+  ],
+  "jetson_code_uploaded_and_verified": true,
+  "jetson_web_restarted_and_v5_verified": true,
+  "no_motion_started_by_agent": true,
+  "ssh_sync_config": {
+    "host": "jetson",
+    "user": "nvidia",
+    "ip": "192.168.0.199",
+    "identity_file": "C:/Users/rhche/.ssh/hiverobot_jetson_sync_ed25519"
+  }
+}

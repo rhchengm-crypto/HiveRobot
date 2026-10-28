@@ -1,0 +1,259 @@
+{
+  "source_sha256": "87d58d2c3a42ccb16f41573221622d821e20c5221bd2cd800b157cc5960fc52a",
+  "units": "mm, rad",
+  "reference_frame": "original STEP assembly frame; not yet robot shoulder/body frame",
+  "user_confirmed_current_structure": true,
+  "joint_order_from_body_to_tool": null,
+  "joint_axes": [
+    {
+      "cad_label": "M1",
+      "controller_joint_name": "wrist",
+      "encoder_positive_sign": null,
+      "encoder_angle_at_cad_reference_pose_rad": null,
+      "axis_unit_direction_arbitrary_sign": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "axis_point_in_cad_frame_mm": [
+        0.0,
+        46.5,
+        -301.569240482
+      ],
+      "screw_angular_part": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "screw_linear_part_mm": [
+        0.0,
+        -301.569240482,
+        -46.5
+      ],
+      "source_representation_entity": 35,
+      "status": "geometry candidate only; mapping and encoder registration required",
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "cad_label": "M2",
+      "controller_joint_name": "wrist_side",
+      "encoder_positive_sign": null,
+      "encoder_angle_at_cad_reference_pose_rad": null,
+      "axis_unit_direction_arbitrary_sign": [
+        0.0,
+        0.9848077529548818,
+        -0.17364817799204443
+      ],
+      "axis_point_in_cad_frame_mm": [
+        -28.0,
+        -34.13376627253997,
+        -193.58220772283175
+      ],
+      "screw_angular_part": [
+        0.0,
+        0.9848077529548818,
+        -0.17364817799204443
+      ],
+      "screw_linear_part_mm": [
+        196.56852532079995,
+        -4.862148983777244,
+        -27.57461708273669
+      ],
+      "source_representation_entity": 9156,
+      "status": "geometry candidate only; mapping and encoder registration required",
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "cad_label": "M3",
+      "controller_joint_name": "arm_roll",
+      "encoder_positive_sign": null,
+      "encoder_angle_at_cad_reference_pose_rad": null,
+      "axis_unit_direction_arbitrary_sign": [
+        -0.0,
+        0.17364817799204443,
+        0.9848077529548818
+      ],
+      "axis_point_in_cad_frame_mm": [
+        -31.0,
+        95.15167941163908,
+        -16.777808372383134
+      ],
+      "screw_angular_part": [
+        -0.0,
+        0.17364817799204443,
+        0.9848077529548818
+      ],
+      "screw_linear_part_mm": [
+        96.61954744582357,
+        30.529040341601334,
+        -5.383093517753378
+      ],
+      "source_representation_entity": 18266,
+      "status": "geometry candidate only; mapping and encoder registration required",
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "cad_label": "M4",
+      "controller_joint_name": "shoulder_rotate",
+      "encoder_positive_sign": null,
+      "encoder_angle_at_cad_reference_pose_rad": null,
+      "axis_unit_direction_arbitrary_sign": [
+        0.0,
+        0.17364817799204443,
+        0.9848077529548818
+      ],
+      "axis_point_in_cad_frame_mm": [
+        -30.0,
+        99.94358637596561,
+        -17.62275086086987
+      ],
+      "screw_angular_part": [
+        0.0,
+        0.17364817799204443,
+        0.9848077529548818
+      ],
+      "screw_linear_part_mm": [
+        101.48537729936461,
+        29.54423258864645,
+        -5.209445339761333
+      ],
+      "source_representation_entity": 27376,
+      "status": "geometry candidate only; mapping and encoder registration required",
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "cad_label": "M5",
+      "controller_joint_name": "shoulder_side",
+      "encoder_positive_sign": null,
+      "encoder_angle_at_cad_reference_pose_rad": null,
+      "axis_unit_direction_arbitrary_sign": [
+        0.9991495746988093,
+        -0.039192667988185485,
+        -0.012808674996138863
+      ],
+      "axis_point_in_cad_frame_mm": [
+        8.430116746524606,
+        141.4007998270612,
+        224.9313814218858
+      ],
+      "screw_angular_part": [
+        0.9991495746988093,
+        -0.039192667988185485,
+        -0.012808674996138863
+      ],
+      "screw_linear_part_mm": [
+        7.004504063012966,
+        224.84807270967858,
+        -141.61094777602784
+      ],
+      "source_representation_entity": 36486,
+      "status": "geometry candidate only; mapping and encoder registration required",
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "cad_label": "M6",
+      "controller_joint_name": "shoulder_front",
+      "encoder_positive_sign": null,
+      "encoder_angle_at_cad_reference_pose_rad": null,
+      "axis_unit_direction_arbitrary_sign": [
+        0.0,
+        0.9848077529548818,
+        -0.17364817799204443
+      ],
+      "axis_point_in_cad_frame_mm": [
+        -38.0,
+        42.48038878083338,
+        240.91825611794752
+      ],
+      "screw_angular_part": [
+        0.0,
+        0.9848077529548818,
+        -0.17364817799204443
+      ],
+      "screw_linear_part_mm": [
+        -244.63480856551,
+        -6.598630763697688,
+        -37.422694612285504
+      ],
+      "source_representation_entity": 45596,
+      "status": "geometry candidate only; mapping and encoder registration required",
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "cad_label": "M7",
+      "controller_joint_name": "elbow",
+      "encoder_positive_sign": null,
+      "encoder_angle_at_cad_reference_pose_rad": null,
+      "axis_unit_direction_arbitrary_sign": [
+        1.0,
+        -0.0,
+        -0.0
+      ],
+      "axis_point_in_cad_frame_mm": [
+        0.0,
+        102.5,
+        -7.0
+      ],
+      "screw_angular_part": [
+        1.0,
+        -0.0,
+        -0.0
+      ],
+      "screw_linear_part_mm": [
+        -0.0,
+        -7.0,
+        -102.5
+      ],
+      "source_representation_entity": 54706,
+      "status": "geometry candidate only; mapping and encoder registration required",
+      "joint_name_mapping_source": "user-confirmed"
+    }
+  ],
+  "mass_density_and_inertias": "not inferred from geometry alone",
+  "deployment_ready": false,
+  "model_axis_angle_constraints": [
+    {
+      "pair": [
+        "M6",
+        "M5"
+      ],
+      "model_axis_angle_deg": 90.0,
+      "source": "user-approved nominal orthogonality"
+    },
+    {
+      "pair": [
+        "M5",
+        "M4"
+      ],
+      "model_axis_angle_deg": 90.0,
+      "source": "user-approved nominal orthogonality"
+    }
+  ],
+  "axis_geometry_note": "Stored axis vectors remain original STEP geometry. Nominal 90-degree constraints apply to the future model; adjusted axis locations/orientations are not yet solved.",
+  "distance_verification": {
+    "scope": "six listed CAD datum-center distances",
+    "pairs": [
+      "M6-M5",
+      "M5-M4",
+      "M4-M7",
+      "M7-M3",
+      "M3-M2",
+      "M2-M1"
+    ],
+    "source": "user physical review",
+    "user_statement": "其他距离基本正确",
+    "status": "approximately confirmed; use CAD distances for modeling",
+    "measured_values_mm": null,
+    "measurement_tolerance_mm": null
+  },
+  "physical_motor_orientation_review": {
+    "source": "user correction",
+    "statement": "CAD motor orientation differs from physical assembly; align CAD to physical assembly before encoder registration",
+    "affected_motors": null,
+    "physical_motor_mounting_orientation_verified": false,
+    "orientation_corrections": null,
+    "status": "photo and encoder baseline paired; CAD orientation comparison pending",
+    "original_step_preserved": true,
+    "photo_evidence": "physical_assembly_photo_evidence.json"
+  }
+}

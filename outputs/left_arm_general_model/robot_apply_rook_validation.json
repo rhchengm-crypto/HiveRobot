@@ -1,0 +1,38 @@
+{
+  "build": "seven-axis-rigid-body-motion-v3-prepared",
+  "workflow_action": "v3-c4-white-rook-place-a1",
+  "workflow_run_id": "9e895babd8916d38",
+  "source_attachment": "C:\\Users\\rhche\\.codex\\attachments\\d250445f-1188-4bc2-abc3-ad3942871070\\Pasted text.txt",
+  "source_sha256": "0742827b1757e5ea076b0a3cac08ee3235578692be33004ba0795c28aed84b59",
+  "motion_ok": true,
+  "hold_ok": true,
+  "hold_reason": "duration_complete",
+  "hold_duration_s": 5.015930652618408,
+  "hold_peak_abs_error_deg": 0.021856605344040804,
+  "hold_peak_velocity_rad_s": 0.03663003817200661,
+  "rejected_velocity_spikes": [],
+  "motion_summary_from_user": {
+    "frames_by_segment": [
+      883,
+      912,
+      1458,
+      911
+    ],
+    "total_frames": 4164,
+    "stale_frames_by_segment": [
+      3,
+      3,
+      5,
+      1
+    ],
+    "worker_error_frames": 0,
+    "terminal_correction_zero_all_segments": true,
+    "peak_prepare_frame_ms": 2.8516119982668897,
+    "peak_applied_delta_tau_Nm": 0.5
+  },
+  "placement_training_status": "training incomplete",
+  "placement_precision_accepted": false,
+  "precision_tuning_requested": false,
+  "vibration_observation_explicitly_provided": false,
+  "scope": "Logged motion-model application, terminal release and model-hold completion; does not establish global model accuracy or physical absence of vibration."
+}

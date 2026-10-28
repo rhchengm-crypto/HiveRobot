@@ -1,0 +1,36 @@
+{
+  "motion_issued": false,
+  "type": "offline single-axis direction-check proposal",
+  "joint": "shoulder_rotate",
+  "encoder_delta_deg": 1.0,
+  "web_direction": "inward",
+  "start_pose_source": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1793149694827_64243.txt",
+  "start_rad": {
+    "shoulder_front": 0.692568838596344,
+    "shoulder_side": -2.8524835109710693,
+    "shoulder_rotate": 2.4450674057006836,
+    "elbow": 0.5163271427154541,
+    "arm_roll": -2.733081579208374,
+    "wrist_side": 0.09403372555971146,
+    "wrist": -3.089761257171631
+  },
+  "targets_rad": {
+    "shoulder_front": 0.692568838596344,
+    "shoulder_side": -2.8524835109710693,
+    "shoulder_rotate": 2.4625206982206267,
+    "elbow": 0.5163271427154541,
+    "arm_roll": -2.733081579208374,
+    "wrist_side": 0.09403372555971146,
+    "wrist": -3.089761257171631
+  },
+  "other_six_joint_targets_unchanged": true,
+  "model_tcp_delta_mm": [
+    7.147547091087773,
+    -1.826051576938596,
+    0.2423903229299782
+  ],
+  "model_predicted_direction": "toward D",
+  "physical_direction_verified": false,
+  "nominal_geometry_sweep_check": "passed; physical geometry/obstacles not verified",
+  "purpose": "check board-relative B/D response; not repeat clockwise/counterclockwise calibration"
+}

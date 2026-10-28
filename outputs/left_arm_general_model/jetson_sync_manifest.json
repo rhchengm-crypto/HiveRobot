@@ -1,0 +1,58 @@
+{
+  "jetson_root": "/home/nvidia/hive_robot/DM_Control_Python",
+  "files": [
+    {
+      "source": "scripts/left_arm_v2_6.py",
+      "destination": "left_arm_v2_6.py",
+      "sha256": "74808a07de672e6692c52a03647d440ba437cc12358549cad07f5f095028dc25"
+    },
+    {
+      "source": "scripts/left_arm_v3_1_motion_dynamics.py",
+      "destination": "left_arm_v3_1_motion_dynamics.py",
+      "sha256": "2266cb7b7f14fc7c8af715bd1ba1f7a9c9a4221096a2576d533076f88551fd7f"
+    },
+    {
+      "source": "scripts/left_arm_rigid_body.py",
+      "destination": "left_arm_rigid_body.py",
+      "sha256": "4ea8673a58ecde110e3bd2414eec4c7a6543dfd5546a54534734283e984f7cfd"
+    },
+    {
+      "source": "scripts/left_arm_general_motion.py",
+      "destination": "left_arm_general_motion.py",
+      "sha256": "0c1884f859308741a85a98f19cb7dacf599665dae1b0b6f6ff74218ec9ded23b"
+    },
+    {
+      "source": "scripts/left_arm_dynamics_worker.py",
+      "destination": "left_arm_dynamics_worker.py",
+      "sha256": "507e42158e734c24cb51ba3a482d92385fb4435ad5c4a06ffe14e6d4645234ad"
+    },
+    {
+      "source": "scripts/chessboard_vision_v3_0_web_control.py",
+      "destination": "chessboard_vision_v3_0_web_control.py",
+      "sha256": "863a0c77ba15cd0a2027758859dad19dc63d97454048fa22b8208f69820a73c4"
+    },
+    {
+      "source": "outputs/left_arm_general_model/left_arm_general_dynamics.json",
+      "destination": "data/left_arm_general_dynamics.json",
+      "sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+    },
+    {
+      "source": "scripts/left_arm_general_move.py",
+      "destination": "left_arm_general_move.py",
+      "sha256": "83726a430153e01d0f02076d39a4b4145c3a59bbf22b49a055f9348128c0aaf2"
+    },
+    {
+      "source": "scripts/left_arm_v3_1_model_control.py",
+      "destination": "left_arm_v3_1_model_control.py",
+      "sha256": "0cdd979f20275988841f50631468aa05987517a2369060f4f2acb9fb5cb31369"
+    }
+  ],
+  "does_not_replace": [
+    "data/left_arm_v3_1_dynamics.json",
+    "adaptive learning files",
+    "saved poses and moves"
+  ],
+  "first_motion": "Preview an unnamed nearby joint target; review the physical path before execute.",
+  "build": "seven-axis-rigid-body-motion-v3-prepared",
+  "patch": "general-unnamed-joint-targets-v1"
+}

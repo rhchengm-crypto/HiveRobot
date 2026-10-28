@@ -1,0 +1,73 @@
+{
+  "route": "Clearance to Home with general dynamics apply",
+  "source_attachment": "C:\\Users\\rhche\\.codex\\attachments\\0e684e9c-665b-4f91-bf49-57b34c5b23c9\\Pasted text.txt",
+  "attachment_sha256": "39db2309b612a1fab6eb37a7feba464ad8b62d0b7b13b15bc855bb1619b0e2e5",
+  "motion_ok": true,
+  "motion_returncode": 0,
+  "hold_ok": true,
+  "hold_state": "complete",
+  "finished_at_as_logged": "2026-10-21 16:29:44",
+  "available_segment_summaries": [
+    {
+      "build": "seven-axis-rigid-body-motion-v3-prepared",
+      "mode": "apply",
+      "frames": 264,
+      "commanded_joints": [
+        "elbow",
+        "shoulder_front",
+        "shoulder_side",
+        "shoulder_rotate",
+        "wrist",
+        "wrist_side",
+        "arm_roll"
+      ],
+      "peak_prepare_frame_ms": 3.1064639988471754,
+      "peak_dynamics_compute_ms": 13.007952000407386,
+      "accepted_worker_results": 102,
+      "stale_worker_frames": 0,
+      "worker_error_frames": 0,
+      "terminal_correction_zero": true,
+      "peak_applied_delta_tau_Nm": {
+        "elbow": 0.1131431147357026,
+        "shoulder_front": 0.06713437705922906,
+        "shoulder_side": 0.0033587970210078102,
+        "shoulder_rotate": 0.0001498627133175553,
+        "wrist": 0.0033391183726279644,
+        "wrist_side": 5.739716481905577e-05,
+        "arm_roll": 0.0008183581359118047
+      }
+    },
+    {
+      "build": "seven-axis-rigid-body-motion-v3-prepared",
+      "mode": "apply",
+      "frames": 268,
+      "commanded_joints": [
+        "shoulder_side",
+        "elbow",
+        "shoulder_front",
+        "shoulder_rotate",
+        "wrist",
+        "wrist_side",
+        "arm_roll"
+      ],
+      "peak_prepare_frame_ms": 2.450507001412916,
+      "peak_dynamics_compute_ms": 4.815188000065973,
+      "accepted_worker_results": 95,
+      "stale_worker_frames": 0,
+      "worker_error_frames": 0,
+      "terminal_correction_zero": true,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_side": 0.1981321318507609,
+        "elbow": 0.09677121560554608,
+        "shoulder_front": 0.13878979599589647,
+        "shoulder_rotate": 0.007651483242970541,
+        "wrist": 0.004932679959577788,
+        "wrist_side": 0.008588038328046383,
+        "arm_roll": 0.004480687523851717
+      }
+    }
+  ],
+  "segment_scope": "available stdout tail; not a guarantee that every motion segment is included",
+  "vibration_observation_explicitly_provided": false,
+  "next_test": "existing White Bishop Placement multi-stage flow with unchanged apply configuration, if no abnormal motion observed"
+}

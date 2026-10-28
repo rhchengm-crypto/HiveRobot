@@ -1,0 +1,340 @@
+Serial port is open
+{
+  "ok": true,
+  "gain_units_verified": true,
+  "pose_rad": {
+    "shoulder_front": 1.4597162008285522,
+    "shoulder_side": -2.673189878463745,
+    "shoulder_rotate": 1.8789578676223755,
+    "elbow": 0.838674008846283,
+    "arm_roll": -2.9406042098999023,
+    "wrist_side": -0.5518043637275696,
+    "wrist": -2.6209278106689453
+  },
+  "measured_velocity_rad_s": {
+    "shoulder_front": -0.0019536020699888468,
+    "shoulder_side": -0.0019536020699888468,
+    "shoulder_rotate": -0.03663003817200661,
+    "elbow": -0.0019536020699888468,
+    "arm_roll": -0.007326007355004549,
+    "wrist_side": -0.007326007355004549,
+    "wrist": 0.007326007355004549
+  },
+  "scheduled": {
+    "shoulder_front": {
+      "kp": 2.0,
+      "kd": 1.2175535319617286,
+      "tau_ff": -0.020512821152806282,
+      "effective_inertia": 0.2705674515470508,
+      "gravity_tau": -0.020512821152806282,
+      "friction_tau": 0.0,
+      "omega_n": 2.5,
+      "zeta": 0.9,
+      "gain_source": "identified-inertia",
+      "kp_unclamped": 1.6910465721690675,
+      "kd_unclamped": 1.2175535319617286,
+      "kp_clamped": true,
+      "kd_clamped": false,
+      "tau_clamped": false,
+      "gravity_diagnostic": {
+        "nearest_distance_deg": 0.0,
+        "neighbors_used": 1,
+        "neighbor_distances_deg": [
+          0.0
+        ]
+      },
+      "inertia_diagnostic": {
+        "nearest_distance_deg": 41.11361433557321,
+        "neighbors_used": 2,
+        "neighbor_distances_deg": [
+          41.1136,
+          41.6721
+        ]
+      }
+    },
+    "shoulder_side": {
+      "kp": 2.0,
+      "kd": 0.7262828977829087,
+      "tau_ff": 1.0,
+      "effective_inertia": 0.16139619950731304,
+      "gravity_tau": 1.6341880559921265,
+      "friction_tau": 0.0,
+      "omega_n": 2.5,
+      "zeta": 0.9,
+      "gain_source": "identified-inertia",
+      "kp_unclamped": 1.0087262469207066,
+      "kd_unclamped": 0.7262828977829087,
+      "kp_clamped": true,
+      "kd_clamped": false,
+      "tau_clamped": true,
+      "gravity_diagnostic": {
+        "nearest_distance_deg": 0.0,
+        "neighbors_used": 1,
+        "neighbor_distances_deg": [
+          0.0
+        ]
+      },
+      "inertia_diagnostic": {
+        "nearest_distance_deg": 40.9913557903639,
+        "neighbors_used": 2,
+        "neighbor_distances_deg": [
+          40.9914,
+          41.7806
+        ]
+      }
+    },
+    "shoulder_rotate": {
+      "kp": 3.0,
+      "kd": 0.3,
+      "tau_ff": -1.0,
+      "effective_inertia": null,
+      "gravity_tau": -1.4578754901885986,
+      "friction_tau": 0.0,
+      "omega_n": 2.0,
+      "zeta": 0.9,
+      "gain_source": "minimum-gains-without-local-inertia",
+      "kp_unclamped": null,
+      "kd_unclamped": null,
+      "kp_clamped": true,
+      "kd_clamped": true,
+      "tau_clamped": true,
+      "gravity_diagnostic": {
+        "nearest_distance_deg": 0.0,
+        "neighbors_used": 1,
+        "neighbor_distances_deg": [
+          0.0
+        ]
+      },
+      "inertia_diagnostic": {
+        "source": "minimum-gains-fallback",
+        "available": false,
+        "reason": "nearest effective_inertia sample is 52.35deg away; limit is 45.00deg"
+      }
+    },
+    "elbow": {
+      "kp": 2.0,
+      "kd": 1.1972998996083737,
+      "tau_ff": 3.617094039916992,
+      "effective_inertia": 0.2660666443574164,
+      "gravity_tau": 3.617094039916992,
+      "friction_tau": 0.0,
+      "omega_n": 2.5,
+      "zeta": 0.9,
+      "gain_source": "identified-inertia",
+      "kp_unclamped": 1.6629165272338524,
+      "kd_unclamped": 1.1972998996083737,
+      "kp_clamped": true,
+      "kd_clamped": false,
+      "tau_clamped": false,
+      "gravity_diagnostic": {
+        "nearest_distance_deg": 0.0,
+        "neighbors_used": 1,
+        "neighbor_distances_deg": [
+          0.0
+        ]
+      },
+      "inertia_diagnostic": {
+        "nearest_distance_deg": 30.43550613393778,
+        "neighbors_used": 3,
+        "neighbor_distances_deg": [
+          30.4355,
+          30.478,
+          39.7333
+        ]
+      }
+    },
+    "arm_roll": {
+      "kp": 1.0,
+      "kd": 0.3,
+      "tau_ff": -0.8,
+      "effective_inertia": 0.009037887801782581,
+      "gravity_tau": -0.9352869391441345,
+      "friction_tau": 0.0,
+      "omega_n": 2.0,
+      "zeta": 0.9,
+      "gain_source": "identified-inertia",
+      "kp_unclamped": 0.036151551207130324,
+      "kd_unclamped": 0.03253639608641729,
+      "kp_clamped": true,
+      "kd_clamped": true,
+      "tau_clamped": true,
+      "gravity_diagnostic": {
+        "nearest_distance_deg": 0.0,
+        "neighbors_used": 1,
+        "neighbor_distances_deg": [
+          0.0
+        ]
+      },
+      "inertia_diagnostic": {
+        "nearest_distance_deg": 41.039251249915104,
+        "neighbors_used": 2,
+        "neighbor_distances_deg": [
+          41.0393,
+          41.7873
+        ]
+      }
+    },
+    "wrist_side": {
+      "kp": 1.0,
+      "kd": 0.3,
+      "tau_ff": -0.11965811997652054,
+      "effective_inertia": 0.029390084641925343,
+      "gravity_tau": -0.11965811997652054,
+      "friction_tau": 0.0,
+      "omega_n": 2.0,
+      "zeta": 0.9,
+      "gain_source": "identified-inertia",
+      "kp_unclamped": 0.11756033856770137,
+      "kd_unclamped": 0.10580430471093123,
+      "kp_clamped": true,
+      "kd_clamped": true,
+      "tau_clamped": false,
+      "gravity_diagnostic": {
+        "nearest_distance_deg": 0.0,
+        "neighbors_used": 1,
+        "neighbor_distances_deg": [
+          0.0
+        ]
+      },
+      "inertia_diagnostic": {
+        "nearest_distance_deg": 42.30164206172801,
+        "neighbors_used": 1,
+        "neighbor_distances_deg": [
+          42.3016
+        ]
+      }
+    },
+    "wrist": {
+      "kp": 1.0,
+      "kd": 0.3,
+      "tau_ff": 0.2905983030796051,
+      "effective_inertia": 0.021886993533191373,
+      "gravity_tau": 0.2905983030796051,
+      "friction_tau": 0.0,
+      "omega_n": 2.0,
+      "zeta": 0.9,
+      "gain_source": "identified-inertia",
+      "kp_unclamped": 0.0875479741327655,
+      "kd_unclamped": 0.07879317671948895,
+      "kp_clamped": true,
+      "kd_clamped": true,
+      "tau_clamped": false,
+      "gravity_diagnostic": {
+        "nearest_distance_deg": 0.0,
+        "neighbors_used": 1,
+        "neighbor_distances_deg": [
+          0.0
+        ]
+      },
+      "inertia_diagnostic": {
+        "nearest_distance_deg": 30.07651311227839,
+        "neighbors_used": 3,
+        "neighbor_distances_deg": [
+          30.0765,
+          42.2707,
+          42.2743
+        ]
+      }
+    }
+  },
+  "model_hold_takeover": {
+    "shoulder_front": {
+      "measured_tau": -0.020512821152806282,
+      "tau_ff_without_static_bias": -0.020512821152806282,
+      "static_hold_bias_tau": 0.0,
+      "static_hold_bias_raw_tau": 0.0,
+      "static_hold_bias_clamped": false,
+      "takeover_tau_ff": -0.02129426198080182,
+      "load_support_tau": 0.0,
+      "hold_tau_limits": [
+        -4.8,
+        3.8
+      ],
+      "supported_hold_tau_ff": -0.020512821152806282
+    },
+    "shoulder_side": {
+      "measured_tau": 1.6478632688522339,
+      "tau_ff_without_static_bias": 1.0,
+      "static_hold_bias_tau": 0.46,
+      "static_hold_bias_raw_tau": 0.6478632688522339,
+      "static_hold_bias_clamped": true,
+      "takeover_tau_ff": 1.6470818280242383,
+      "load_support_tau": 0.6478632688522339,
+      "hold_tau_limits": [
+        -1.0,
+        1.6478632688522339
+      ],
+      "supported_hold_tau_ff": 1.6478632688522339
+    },
+    "shoulder_rotate": {
+      "measured_tau": -1.4578754901885986,
+      "tau_ff_without_static_bias": -1.0,
+      "static_hold_bias_tau": -0.22,
+      "static_hold_bias_raw_tau": -0.45787549018859863,
+      "static_hold_bias_clamped": true,
+      "takeover_tau_ff": -1.4725275054574012,
+      "load_support_tau": -0.45787549018859863,
+      "hold_tau_limits": [
+        -1.4725275054574012,
+        1.0
+      ],
+      "supported_hold_tau_ff": -1.4578754901885986
+    },
+    "elbow": {
+      "measured_tau": 3.6034188270568848,
+      "tau_ff_without_static_bias": 3.617094039916992,
+      "static_hold_bias_tau": -0.013675212860107422,
+      "static_hold_bias_raw_tau": -0.013675212860107422,
+      "static_hold_bias_clamped": false,
+      "takeover_tau_ff": 3.6026373862288894,
+      "load_support_tau": 0.0,
+      "hold_tau_limits": [
+        -5.4,
+        5.4
+      ],
+      "supported_hold_tau_ff": 3.6034188270568848
+    },
+    "arm_roll": {
+      "measured_tau": -0.930402934551239,
+      "tau_ff_without_static_bias": -0.8,
+      "static_hold_bias_tau": -0.08,
+      "static_hold_bias_raw_tau": -0.13040293455123897,
+      "static_hold_bias_clamped": true,
+      "takeover_tau_ff": -0.9333333374932409,
+      "load_support_tau": -0.13040293455123897,
+      "hold_tau_limits": [
+        -0.9333333374932409,
+        0.8
+      ],
+      "supported_hold_tau_ff": -0.930402934551239
+    },
+    "wrist_side": {
+      "measured_tau": -0.11965811997652054,
+      "tau_ff_without_static_bias": -0.11965811997652054,
+      "static_hold_bias_tau": 0.0,
+      "static_hold_bias_raw_tau": 0.0,
+      "static_hold_bias_clamped": false,
+      "takeover_tau_ff": -0.12258852291852236,
+      "load_support_tau": 0.0,
+      "hold_tau_limits": [
+        -0.45,
+        0.45
+      ],
+      "supported_hold_tau_ff": -0.11965811997652054
+    },
+    "wrist": {
+      "measured_tau": 0.2905983030796051,
+      "tau_ff_without_static_bias": 0.2905983030796051,
+      "static_hold_bias_tau": 0.0,
+      "static_hold_bias_raw_tau": 0.0,
+      "static_hold_bias_clamped": false,
+      "takeover_tau_ff": 0.2935287060216069,
+      "load_support_tau": 0.0,
+      "hold_tau_limits": [
+        -0.7,
+        0.7
+      ],
+      "supported_hold_tau_ff": 0.2905983030796051
+    }
+  }
+}

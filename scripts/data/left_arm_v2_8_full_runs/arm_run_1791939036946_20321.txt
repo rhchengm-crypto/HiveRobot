@@ -1,0 +1,40 @@
+{
+  "ok": true,
+  "removed": true,
+  "motion_issued": false,
+  "joint": "elbow",
+  "sample": {
+    "captured_at": "2026-10-13 17:40:01",
+    "pose_rad": {
+      "shoulder_front": 0.8176928162574768,
+      "shoulder_side": -2.857442617416382,
+      "shoulder_rotate": 2.340543270111084,
+      "elbow": -1.1972609758377075,
+      "arm_roll": -2.6621270179748535,
+      "wrist_side": 0.16994735598564148,
+      "wrist": -1.796177625656128
+    },
+    "effective_inertia": 0.005011872336272725,
+    "method": "normalized_closed_loop_step_fit",
+    "test_kp": 40.0,
+    "test_kd": 3.0,
+    "measured_omega_n": 89.3367184301926,
+    "step_deg": -2.0,
+    "quality": {
+      "effective_inertia": 0.005011872336272725,
+      "inertia_mad": null,
+      "relative_mad": null,
+      "measured_omega_n": 89.3367184301926,
+      "estimated_zeta": 3.3501269411322228,
+      "normalized_fit_mse": 0.004683423781932135,
+      "plateau_step_deg": -1.09285075776955,
+      "achieved_fraction": 0.546425378884775,
+      "usable_samples": 60,
+      "peak_velocity": 0.14261294901371002,
+      "peak_acceleration": 1.1675691914986464,
+      "estimator": "normalized_closed_loop_step_fit"
+    },
+    "label": "elbow_home_step_negative_reprocessed"
+  },
+  "remaining": 1
+}

@@ -1,0 +1,54 @@
+Serial port is open
+v3.1 guarded nudge active gravity= {"applied_tau": 0.0, "joint": "wrist", "nearest_distance_deg": 0.0, "tau": -0.012210012413561344}
+v3.1 guarded nudge passive hold= {"arm_roll": {"nearest_distance_deg": 0.40505312497306256, "source": "identified_gravity", "tau": -0.018083298716818883}, "elbow": {"nearest_distance_deg": 0.40505312497306256, "source": "identified_gravity", "tau": -1.0242208160739867}, "shoulder_front": {"nearest_distance_deg": 0.40505312497306256, "source": "identified_gravity", "tau": 0.9558642407606324}, "shoulder_rotate": {"nearest_distance_deg": 0.40505312497306256, "source": "identified_gravity", "tau": -0.021438581123643486}, "shoulder_side": {"nearest_distance_deg": 0.40505312497306256, "source": "identified_gravity", "tau": -0.14556104069192788}, "wrist_side": {"nearest_distance_deg": 0.40505312497306256, "source": "identified_gravity", "tau": 0.01038547281204065}}
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+{
+  "ok": true,
+  "motion_issued": true,
+  "joint": "wrist",
+  "step_deg": -2.0,
+  "active_tau": 0.0,
+  "final": {
+    "shoulder_front": {
+      "pos": 0.8184558153152466,
+      "vel": -0.0019536020699888468,
+      "tau": 0.9367521405220032
+    },
+    "shoulder_side": {
+      "pos": -2.8345539569854736,
+      "vel": -0.0019536020699888468,
+      "tau": -0.17094017565250397
+    },
+    "shoulder_rotate": {
+      "pos": 2.340543270111084,
+      "vel": -0.007326007355004549,
+      "tau": -0.041514042764902115
+    },
+    "elbow": {
+      "pos": -1.28080415725708,
+      "vel": -0.0019536020699888468,
+      "tau": -1.0735043287277222
+    },
+    "arm_roll": {
+      "pos": -2.665560483932495,
+      "vel": -0.007326007355004549,
+      "tau": -0.04639804735779762
+    },
+    "wrist_side": {
+      "pos": 0.16918440163135529,
+      "vel": -0.007326007355004549,
+      "tau": -0.0024420025292783976
+    },
+    "wrist": {
+      "pos": -2.0563440322875977,
+      "vel": -0.021978022530674934,
+      "tau": -0.19291819632053375
+    }
+  }
+}

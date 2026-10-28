@@ -1,0 +1,40 @@
+{
+  "ok": true,
+  "removed": true,
+  "motion_issued": false,
+  "joint": "wrist_side",
+  "sample": {
+    "captured_at": "2026-10-15 14:34:28",
+    "pose_rad": {
+      "shoulder_front": 0.8455405235290527,
+      "shoulder_side": -2.8379874229431152,
+      "shoulder_rotate": 2.3416876792907715,
+      "elbow": -1.0790035724639893,
+      "arm_roll": -2.6651790142059326,
+      "wrist_side": 0.1653696447610855,
+      "wrist": -1.806477427482605
+    },
+    "effective_inertia": 0.006389094776415444,
+    "method": "normalized_closed_loop_step_fit",
+    "test_kp": 6.0,
+    "test_kd": 0.6,
+    "measured_omega_n": 30.644741334510744,
+    "step_deg": -3.0,
+    "quality": {
+      "effective_inertia": 0.006389094776415444,
+      "inertia_mad": null,
+      "relative_mad": null,
+      "measured_omega_n": 30.644741334510744,
+      "estimated_zeta": 1.532237066725537,
+      "normalized_fit_mse": 0.0018690492005699118,
+      "plateau_step_deg": -2.7539741082578075,
+      "achieved_fraction": 0.925277046829557,
+      "usable_samples": 59,
+      "peak_velocity": 0.3589743673801422,
+      "peak_acceleration": 5.871871459624362,
+      "estimator": "normalized_closed_loop_step_fit"
+    },
+    "label": "wrist_side_home_step_negative_kp6"
+  },
+  "remaining": 2
+}

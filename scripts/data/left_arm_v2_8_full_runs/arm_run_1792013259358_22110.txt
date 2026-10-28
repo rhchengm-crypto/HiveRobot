@@ -1,0 +1,48 @@
+Serial port is open
+v3.1 inertia passive hold= {"arm_roll": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "elbow": {"nearest_distance_deg": 4.319012738631829, "source": "identified_gravity", "tau": 0.9558092871466921}, "shoulder_rotate": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "shoulder_side": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "wrist": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.55}, "wrist_side": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}}
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+{
+  "ok": true,
+  "saved": true,
+  "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json",
+  "joint": "shoulder_front",
+  "sample": {
+    "captured_at": "2026-10-14 14:27:39",
+    "pose_rad": {
+      "shoulder_front": 0.8642328381538391,
+      "shoulder_side": -2.8513388633728027,
+      "shoulder_rotate": 2.28751802444458,
+      "elbow": -1.0725184679031372,
+      "arm_roll": -2.6796748638153076,
+      "wrist_side": 0.14400701224803925,
+      "wrist": -1.7103456258773804
+    },
+    "effective_inertia": 0.005011872336272725,
+    "method": "normalized_closed_loop_step_fit",
+    "test_kp": 50.0,
+    "test_kd": 3.5,
+    "measured_omega_n": 99.88148764833448,
+    "step_deg": -2.0,
+    "quality": {
+      "effective_inertia": 0.005011872336272725,
+      "inertia_mad": null,
+      "relative_mad": null,
+      "measured_omega_n": 99.88148764833448,
+      "estimated_zeta": 3.495852067691707,
+      "normalized_fit_mse": 0.019486756999587428,
+      "plateau_step_deg": -1.9452651963763115,
+      "achieved_fraction": 0.9835626084074687,
+      "usable_samples": 58,
+      "peak_velocity": 0.15433456003665924,
+      "peak_acceleration": 3.034060127905093,
+      "estimator": "normalized_closed_loop_step_fit"
+    },
+    "label": "shoulder_front_home_step_negative_kp50"
+  }
+}

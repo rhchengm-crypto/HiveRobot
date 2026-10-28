@@ -1,0 +1,50 @@
+{
+  "status": 200,
+  "data": {
+    "ok": true,
+    "version": "v3.0-c4-confirmed-dynamics-takeover",
+    "square": "c4",
+    "piece_class": "white_rook",
+    "confidence": 0.9699474573135376,
+    "actionable": true,
+    "prediction_image_url": "/yolo-prediction.jpg?name=detect_20261027_140227_75302_02c926_pred.jpg",
+    "detection_info": {
+      "piece_class": "white_rook",
+      "class_id": 1,
+      "confidence": 0.9699474573135376,
+      "bbox_xyxy": [
+        246.5284881591797,
+        152.69976806640625,
+        285.69415283203125,
+        206.59078979492188
+      ],
+      "center_px": [
+        266.11132049560547,
+        201.20168762207032
+      ],
+      "bbox_center_px": [
+        266.11132049560547,
+        179.64527893066406
+      ],
+      "square_anchor": "bbox_base_90_percent",
+      "square": "c4",
+      "center_mm": [
+        138.9969482421875,
+        180.06785583496094
+      ],
+      "height": {
+        "ok": false,
+        "reason": "The current board does not match the height calibration or is heavily occluded. Clear it, inspect it, and recalibrate.",
+        "decision": "unchanged"
+      }
+    },
+    "piece_type": "rook",
+    "saved_move": "white_knight_c4",
+    "flow_key": "white_rook_place_a1",
+    "flow_label": "white rook place_A1",
+    "confirmation_required": true,
+    "confirmation_token": "REDACTED_EPHEMERAL_TOKEN",
+    "confirmation_expires_at": 1793135089.9415402,
+    "confirmation_ttl_seconds": 120
+  }
+}

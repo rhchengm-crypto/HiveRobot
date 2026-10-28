@@ -1,0 +1,48 @@
+Serial port is open
+v3.1 inertia passive hold= {"elbow": {"nearest_distance_deg": 1.8916396158633193, "source": "identified_gravity", "tau": 3.3544738804117697}, "shoulder_front": {"nearest_distance_deg": 0.520515002211277, "source": "identified_gravity", "tau": 2.138969329362028}, "shoulder_rotate": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "shoulder_side": {"nearest_distance_deg": 0.49573521871460335, "source": "identified_gravity", "tau": 0.6766136677100789}, "wrist": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.55}, "wrist_side": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}}
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+{
+  "ok": true,
+  "saved": true,
+  "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json",
+  "joint": "arm_roll",
+  "sample": {
+    "captured_at": "2026-10-15 14:13:38",
+    "pose_rad": {
+      "shoulder_front": 1.942282795906067,
+      "shoulder_side": -2.72163724899292,
+      "shoulder_rotate": 2.351987600326538,
+      "elbow": 0.8165484070777893,
+      "arm_roll": -2.6537346839904785,
+      "wrist_side": 0.3057526648044586,
+      "wrist": -1.0568779706954956
+    },
+    "effective_inertia": 0.00903788780178258,
+    "method": "normalized_closed_loop_step_fit",
+    "test_kp": 12.0,
+    "test_kd": 0.7,
+    "measured_omega_n": 36.43821971496714,
+    "step_deg": 3.0,
+    "quality": {
+      "effective_inertia": 0.00903788780178258,
+      "inertia_mad": null,
+      "relative_mad": null,
+      "measured_omega_n": 36.43821971496714,
+      "estimated_zeta": 1.0627814083532081,
+      "normalized_fit_mse": 0.0008903002072791019,
+      "plateau_step_deg": 2.6446902277639572,
+      "achieved_fraction": 0.8815634092546524,
+      "usable_samples": 59,
+      "peak_velocity": 0.4175824224948883,
+      "peak_acceleration": null,
+      "estimator": "normalized_closed_loop_step_fit"
+    },
+    "label": "arm_roll_clearance_step_positive_kp12"
+  }
+}

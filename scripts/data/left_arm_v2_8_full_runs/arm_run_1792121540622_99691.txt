@@ -1,0 +1,11 @@
+Serial port is open
+v3.1 guarded nudge active gravity= {"applied_tau": 0.0, "joint": "wrist", "nearest_distance_deg": 0.5619974613718328, "tau": -0.01694735343149677}
+v3.1 guarded nudge passive hold= {"arm_roll": {"nearest_distance_deg": 0.058414234882380775, "source": "identified_gravity", "tau": -0.018365700919156024}, "elbow": {"nearest_distance_deg": 7.658765703966841, "source": "identified_gravity", "tau": 1.1430891035955213}, "shoulder_front": {"nearest_distance_deg": 0.05899553055388302, "source": "identified_gravity", "tau": 0.005114706509503241}, "shoulder_rotate": {"nearest_distance_deg": 0.6086404482796489, "source": "identified_gravity", "tau": 0.006349407642674184}, "shoulder_side": {"nearest_distance_deg": 0.572465988705865, "source": "identified_gravity", "tau": -0.08550625494991118}, "wrist_side": {"nearest_distance_deg": 0.5544174089454135, "source": "identified_gravity", "tau": 0.05869719816427448}}
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+[stderr] error: guarded nudge position watchdog tripped for elbow: 2.03deg

@@ -1,0 +1,48 @@
+Serial port is open
+v3.1 inertia passive hold= {"elbow": {"nearest_distance_deg": 7.643888093657462, "source": "identified_gravity", "tau": 1.1430002976569291}, "shoulder_front": {"nearest_distance_deg": 0.042925582857138336, "source": "identified_gravity", "tau": 0.004678335388277054}, "shoulder_rotate": {"nearest_distance_deg": 0.589964975443241, "source": "identified_gravity", "tau": 0.0061939030892096195}, "shoulder_side": {"nearest_distance_deg": 0.5569978067182533, "source": "identified_gravity", "tau": -0.08627707636463418}, "wrist": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.55}, "wrist_side": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}}
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+{
+  "ok": true,
+  "saved": true,
+  "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json",
+  "joint": "arm_roll",
+  "sample": {
+    "captured_at": "2026-10-15 14:10:09",
+    "pose_rad": {
+      "shoulder_front": 0.8161669373512268,
+      "shoulder_side": -2.853627920150757,
+      "shoulder_rotate": 2.3409247398376465,
+      "elbow": -1.1919203996658325,
+      "arm_roll": -2.66479754447937,
+      "wrist_side": 0.16918440163135529,
+      "wrist": -2.0029373168945312
+    },
+    "effective_inertia": 0.010382883752081379,
+    "method": "normalized_closed_loop_step_fit",
+    "test_kp": 12.0,
+    "test_kd": 0.7,
+    "measured_omega_n": 33.9962979800594,
+    "step_deg": 3.0,
+    "quality": {
+      "effective_inertia": 0.010382883752081379,
+      "inertia_mad": null,
+      "relative_mad": null,
+      "measured_omega_n": 33.9962979800594,
+      "estimated_zeta": 0.9915586910850659,
+      "normalized_fit_mse": 0.00010013622727761409,
+      "plateau_step_deg": 2.6446902277639572,
+      "achieved_fraction": 0.8815634092546524,
+      "usable_samples": 55,
+      "peak_velocity": 0.593406617641449,
+      "peak_acceleration": null,
+      "estimator": "normalized_closed_loop_step_fit"
+    },
+    "label": "arm_roll_home_step_positive_kp12_repeat2"
+  }
+}

@@ -16,13 +16,13 @@ def depth_corners_from_overlay(data, capture):
     points=np.asarray(data['corners'],float)
     if data.get('corner_space','depth')=='depth':return points
     if data.get('corner_space')!='rgb' or data.get('alignment_confirmed') is not True:
-        raise ValueError('请先确认叠加图中棋盘四边已对齐')
+        raise ValueError('Confirm that all four board edges align in the overlay first.')
     transform=np.asarray(data.get('depth_to_rgb'),float)
     if transform.shape!=(4,) or not np.isfinite(transform).all() or np.any(transform[:2]<=0):
-        raise ValueError('叠加缩放或平移参数无效')
+        raise ValueError('Invalid overlay scale or translation.')
     h,w=capture['rgb'].shape[:2]
     if points.shape!=(4,2) or not np.isfinite(points).all() or np.any(points<0) or np.any(points[:,0]>=w) or np.any(points[:,1]>=h):
-        raise ValueError('请在 RGB 图内选择四角')
+        raise ValueError('Select all four corners in the RGB image.')
     return (points-transform[2:])/transform[:2]
 
 
@@ -44,11 +44,11 @@ def handle_height_action(state, action, data):
         info=capture.get('camera_info',{}).get('depth')
         if not info:info={'width':z.shape[1],'height':z.shape[0],'K':[0,0,0,0,0,0,0,0,1],'D':[],'distortion_model':'plumb_bob','frame_id':capture['depth_metadata'].get('frame_id','')}
         return {'ok':True,'token':token,'depth_image':encode(depth_image),'rgb_image':encode(capture['rgb']),'intrinsics':info,
-                'note':'红色为无效深度。请在深度图点棋盘角；内参为零时必须填写相机真实参数。'}
+                'note':'Red indicates invalid depth. Click the board corners on the depth image. If intrinsics are zero, enter the actual camera parameters.'}
     if action=='calibrate':
         with state.height_lock:
             pending=state.height_previews.get(data['token'])
-        if not pending or time.time()-pending[0]>180:raise ValueError('画面已过期，请重新冻结空棋盘')
+        if not pending or time.time()-pending[0]>180:raise ValueError('The frame has expired. Freeze the empty board again.')
         capture=pending[1]
         corners=depth_corners_from_overlay(data,capture)
         cal=fit_board(capture['depth'],capture['depth_metadata']['encoding'],data['intrinsics'],corners)
@@ -62,43 +62,43 @@ def handle_height_action(state, action, data):
             atomic_write(root/'legacy_calibration_ack.json',json.dumps({'calibration_id':cal['id'],'confirmed_at':time.time()}))
         else:
             (root/'legacy_calibration_ack.json').unlink(missing_ok=True)
-        return {'ok':True,'calibration':cal,'message':'标定已保存；旧高度模型不再匹配，请重新建立高度模型'}
+        return {'ok':True,'calibration':cal,'message':'Calibration saved. The previous height model no longer matches; rebuild it.'}
     if action=='build':return {'ok':True,'model':build_model(root)}
     if action=='report':
         return {'ok':True,'calibration':json.loads(calibration_path(root).read_text(encoding='utf-8')) if calibration_path(root).exists() else None,
                 'model':json.loads(model_path(root).read_text(encoding='utf-8')) if model_path(root).exists() else None}
-    raise ValueError('未知高度操作')
+    raise ValueError('Unknown height operation')
 
 
-HEIGHT_PAGE=r'''<!doctype html><html lang="zh"><meta charset="utf-8"><title>高度标定与模型</title>
+HEIGHT_PAGE=r'''<!doctype html><html lang="en"><meta charset="utf-8"><title>Height Calibration and Model</title>
 <style>body{font:16px system-ui;background:#17212b;color:#eee;margin:24px}p{max-width:1000px;line-height:1.6}button,input,textarea{font:inherit;margin:6px;padding:9px}canvas,img{max-width:100%;height:auto}textarea{width:90%;height:130px}pre{white-space:pre-wrap;word-break:break-all;background:#0d141a;padding:15px}label{display:block}</style>
-<h1>自动估高与高度辅助分类</h1>
-<p>① 清空棋盘并冻结画面。② 调整深度叠加层，让棋盘四边与 RGB 对齐。③ 在 RGB 上依次点击 a1、h1、h8、a8 所在的 8×8 区域外边角，不含木质外框。④ 检查深度内参并保存标定，再建立高度模型。</p>
-<button id="freeze">冻结空棋盘</button><button id="reset">清空四角</button><button id="calibrate">保存三维标定</button><button id="build">建立高度模型并验证</button><button id="report">查看高度报告</button>
-<p>深度相机真实内参（若未自动读取，需填写相机内参；不能凭图像大小猜测焦距）：</p><textarea id="intrinsics"></textarea>
-<label><input id="legacy" type="checkbox">确认已有旧样本采集时，相机位置、棋盘位置、深度分辨率与当前标定一致，允许复用旧样本</label>
-<p id="hint">标定和建立高度模型不需要重新训练 YOLO。更换相机位置后需重新标定。</p>
-<h3>RGB 与深度叠加：在 RGB 上点击四角</h3>
-<p>默认缩放只是适配显示，不代表相机已配准。调整透明度检查四边是否重合；若四边不能同时对齐，请勿确认，需要相机配准参数。本次手动对齐仅适用于当前空棋盘平面。</p>
-<label>深度透明度 <input id="opacity" type="range" min="0" max="1" step="0.05" value="0.4"></label>
-<label>深度横向缩放 <input id="sx" type="number" min="0.001" step="0.001" value="1">纵向缩放 <input id="sy" type="number" min="0.001" step="0.001" value="1"></label>
-<label>深度水平平移(px) <input id="tx" type="number" step="1" value="0">垂直平移(px) <input id="ty" type="number" step="1" value="0"></label>
-<label><input id="aligned" type="checkbox">已检查叠加图，空棋盘四边在 RGB 与深度中重合</label>
-<button id="undo">撤销上一角</button><canvas id="depth"></canvas><p id="corners"></p>
-<h3>RGB 参考图</h3><img id="rgb"><pre id="result">尚未操作。</pre>
+<h1>Automatic Height Estimation and Height-Assisted Classification</h1>
+<p>1. Clear the board and freeze the frame. 2. Adjust the depth overlay so all board edges align with RGB. 3. On RGB, click the outer corners of the 8x8 area in this order: a1, h1, h8, a8. Exclude the wooden frame. 4. Check depth intrinsics, save calibration, and build the height model.</p>
+<button id="freeze">Freeze Empty Board</button><button id="reset">Clear Corners</button><button id="calibrate">Save 3D Calibration</button><button id="build">Build and Validate Height Model</button><button id="report">View Height Report</button>
+<p>Actual depth-camera intrinsics (enter real camera values if they are not detected automatically; do not infer focal length from image size):</p><textarea id="intrinsics"></textarea>
+<label><input id="legacy" type="checkbox">I confirm that old samples used the same camera pose, board pose, and depth resolution as this calibration; allow reuse.</label>
+<p id="hint">Calibration and height-model building do not require YOLO retraining. Recalibrate after moving the camera.</p>
+<h3>RGB and Depth Overlay: Click Corners on RGB</h3>
+<p>Default scaling only fits the display and does not prove registration. Adjust opacity and verify all four edges overlap. If they cannot align simultaneously, do not confirm; camera registration parameters are required. This manual alignment applies only to the current empty-board plane.</p>
+<label>Depth Opacity <input id="opacity" type="range" min="0" max="1" step="0.05" value="0.4"></label>
+<label>Depth Horizontal Scale <input id="sx" type="number" min="0.001" step="0.001" value="1">Vertical Scale <input id="sy" type="number" min="0.001" step="0.001" value="1"></label>
+<label>Depth Horizontal Offset (px) <input id="tx" type="number" step="1" value="0">Vertical Offset (px) <input id="ty" type="number" step="1" value="0"></label>
+<label><input id="aligned" type="checkbox">I verified that all four empty-board edges overlap in RGB and depth.</label>
+<button id="undo">Undo Last Corner</button><canvas id="depth"></canvas><p id="corners"></p>
+<h3>RGB Reference Image</h3><img id="rgb"><pre id="result">No operation yet.</pre>
 <script>
 const $=id=>document.getElementById(id),canvas=$('depth'),ctx=canvas.getContext('2d');let points=[],img=null,rgbImg=null,token=null,busy=false;
 const transform=()=>['sx','sy','tx','ty'].map(id=>Number($(id).value));
-function draw(){if(!img||!rgbImg)return;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(rgbImg,0,0);const [sx,sy,tx,ty]=transform();ctx.save();ctx.globalAlpha=Number($('opacity').value);if(sx>0&&sy>0)ctx.drawImage(img,tx,ty,img.naturalWidth*sx,img.naturalHeight*sy);ctx.restore();ctx.strokeStyle='#00ff80';ctx.fillStyle='#00ff80';ctx.lineWidth=2;ctx.font='16px sans-serif';points.forEach((p,i)=>{ctx.beginPath();ctx.arc(...p,4,0,7);ctx.fill();ctx.fillText(['a1','h1','h8','a8'][i],p[0]+5,p[1]);});if(points.length>1){ctx.beginPath();ctx.moveTo(...points[0]);points.slice(1).forEach(p=>ctx.lineTo(...p));if(points.length===4)ctx.closePath();ctx.stroke();}$('corners').textContent='RGB 四角：'+JSON.stringify(points);}
+function draw(){if(!img||!rgbImg)return;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(rgbImg,0,0);const [sx,sy,tx,ty]=transform();ctx.save();ctx.globalAlpha=Number($('opacity').value);if(sx>0&&sy>0)ctx.drawImage(img,tx,ty,img.naturalWidth*sx,img.naturalHeight*sy);ctx.restore();ctx.strokeStyle='#00ff80';ctx.fillStyle='#00ff80';ctx.lineWidth=2;ctx.font='16px sans-serif';points.forEach((p,i)=>{ctx.beginPath();ctx.arc(...p,4,0,7);ctx.fill();ctx.fillText(['a1','h1','h8','a8'][i],p[0]+5,p[1]);});if(points.length>1){ctx.beginPath();ctx.moveTo(...points[0]);points.slice(1).forEach(p=>ctx.lineTo(...p));if(points.length===4)ctx.closePath();ctx.stroke();}$('corners').textContent='RGB corners: '+JSON.stringify(points);}
 ['sx','sy','tx','ty'].forEach(id=>$(id).oninput=()=>{$('aligned').checked=false;draw();});
 $('opacity').oninput=draw;
 $('undo').onclick=()=>{if(!busy){points.pop();draw();}};
 canvas.onclick=e=>{if(busy||!img||points.length===4)return;let r=canvas.getBoundingClientRect();points.push([(e.clientX-r.left)*canvas.width/r.width,(e.clientY-r.top)*canvas.height/r.height]);draw();};
-async function api(action,data={}){let r=await fetch('/api/height/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});let d=await r.json();if(!r.ok||!d.ok)throw Error(d.error||'操作失败');return d;}
-function work(fn){return async()=>{if(busy)return;busy=true;$('result').textContent='处理中…';try{await fn();}catch(e){$('result').textContent=e.message;}finally{busy=false;}};}
-$('freeze').onclick=work(async()=>{const d=await api('preview');token=d.token;points=[];img=new Image();rgbImg=new Image();img.src=d.depth_image;rgbImg.src=d.rgb_image;await Promise.all([img.decode(),rgbImg.decode()]);canvas.width=rgbImg.naturalWidth;canvas.height=rgbImg.naturalHeight;$('sx').value=canvas.width/img.naturalWidth;$('sy').value=canvas.height/img.naturalHeight;$('tx').value=0;$('ty').value=0;$('aligned').checked=false;$('rgb').src=d.rgb_image;$('intrinsics').value=JSON.stringify(d.intrinsics,null,2);draw();$('result').textContent='红色为无效深度。先对齐叠加层，再在 RGB 上点四角；内参必须使用深度相机真实参数。';});
+async function api(action,data={}){let r=await fetch('/api/height/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});let d=await r.json();if(!r.ok||!d.ok)throw Error(d.error||'Operation failed');return d;}
+function work(fn){return async()=>{if(busy)return;busy=true;$('result').textContent='Processing...';try{await fn();}catch(e){$('result').textContent=e.message;}finally{busy=false;}};}
+$('freeze').onclick=work(async()=>{const d=await api('preview');token=d.token;points=[];img=new Image();rgbImg=new Image();img.src=d.depth_image;rgbImg.src=d.rgb_image;await Promise.all([img.decode(),rgbImg.decode()]);canvas.width=rgbImg.naturalWidth;canvas.height=rgbImg.naturalHeight;$('sx').value=canvas.width/img.naturalWidth;$('sy').value=canvas.height/img.naturalHeight;$('tx').value=0;$('ty').value=0;$('aligned').checked=false;$('rgb').src=d.rgb_image;$('intrinsics').value=JSON.stringify(d.intrinsics,null,2);draw();$('result').textContent='Red indicates invalid depth. Align the overlay first, then click the four corners on RGB. Intrinsics must use the actual camera parameters.';});
 $('reset').onclick=()=>{if(!busy){points=[];draw();}};
-$('calibrate').onclick=work(async()=>{if(points.length!==4)throw Error('请先选取四角');if(!$('aligned').checked)throw Error('请先检查并确认棋盘四边已对齐');const d=await api('calibrate',{token,corners:points,corner_space:'rgb',depth_to_rgb:transform(),alignment_confirmed:$('aligned').checked,intrinsics:JSON.parse($('intrinsics').value),reuse_legacy:$('legacy').checked});$('result').textContent=JSON.stringify(d,null,2);});
+$('calibrate').onclick=work(async()=>{if(points.length!==4)throw Error('Select all four corners first.');if(!$('aligned').checked)throw Error('Verify and confirm that all four board edges align first.');const d=await api('calibrate',{token,corners:points,corner_space:'rgb',depth_to_rgb:transform(),alignment_confirmed:$('aligned').checked,intrinsics:JSON.parse($('intrinsics').value),reuse_legacy:$('legacy').checked});$('result').textContent=JSON.stringify(d,null,2);});
 $('build').onclick=work(async()=>{$('result').textContent=JSON.stringify(await api('build'),null,2);});
 $('report').onclick=work(async()=>{$('result').textContent=JSON.stringify(await api('report'),null,2);});
 </script></html>'''

@@ -1,0 +1,87 @@
+{
+  "entry_fix_deployed": true,
+  "physical_mapping_fixed": false,
+  "unit_tests_passed": 45,
+  "code_deployment": {
+    "ok": true,
+    "web_pid": 74006,
+    "backup": "/home/nvidia/hive_robot/DM_Control_Python/data/code_backups/board_v14_20261028T032213Z",
+    "log": "/home/nvidia/hive_robot/DM_Control_Python/data/web_control_v14_20261028T032213Z.log",
+    "protected_json_unchanged": true,
+    "motion_issued": false,
+    "hashes": {
+      "left_arm_board_grasp.py": "bcf42f69212b66edf4569a82f87b84f359219a04f397e2b256040c70d35f2756",
+      "left_arm_v3_1_model_control.py": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996",
+      "chessboard_vision_v3_0_web_control.py": "966ea385a8d91c11d0ecf9f21c84c9726d3a00e642155553f4c2eccf9b921767"
+    }
+  },
+  "latest_test": {
+    "request": {
+      "build": "seven-axis-board-grasp-v14-feedback-entry",
+      "start_rad": {
+        "shoulder_front": 0.699053943157196,
+        "shoulder_side": -2.8238728046417236,
+        "shoulder_rotate": 2.4790189266204834,
+        "elbow": 0.4530022144317627,
+        "arm_roll": -2.747577667236328,
+        "wrist_side": 0.11692225188016891,
+        "wrist": -2.9512856006622314
+      },
+      "x_mm": 110.1000032333008,
+      "y_mm": 190.23875931347507,
+      "piece": "white_knight",
+      "stage": "cartesian-check",
+      "board_model_sha256": "71c418c435f969101c8581d53a7fd6073487aa12a51c4bbf41f016134966f148",
+      "orientation_hint_count": 4
+    },
+    "hold_mode": "continued-terminal-motion-command",
+    "max_hold_error_deg": {
+      "shoulder_front": 0.04583292154189484,
+      "shoulder_side": 0.03303314414727357,
+      "shoulder_rotate": 0.023349438975205077,
+      "elbow": 0.5360428932572554,
+      "arm_roll": 0.016614835342707815,
+      "wrist_side": 0.2842266418877299,
+      "wrist": 0.06076402744011025
+    },
+    "tcp_board_mm": {
+      "start": [
+        110.08911941087501,
+        190.18476197041335,
+        48.490084102062184
+      ],
+      "nominal_end": [
+        110.09975701238942,
+        190.2378870634262,
+        51.54270065181831
+      ],
+      "motion_end": [
+        110.61560865759003,
+        188.68137200450414,
+        47.31245560287452
+      ],
+      "hold_end": [
+        110.61560865759003,
+        188.68137200450414,
+        47.31245560287452
+      ]
+    },
+    "motion_delta_mm": [
+      0.5264892467150162,
+      -1.5033899659092071,
+      -1.1776284991876622
+    ],
+    "hold_delta_mm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "tracking_delta_mm": [
+      0.5158516452006126,
+      -1.5565150589220593,
+      -4.230245048943786
+    ]
+  },
+  "physical_observation_pending": true,
+  "next_requirement": "Operator observation of the completed +3mm model Z probe. Elbow encoder did not move while wrist moved, so actual tracking must be resolved before inferring physical axis signs."
+}

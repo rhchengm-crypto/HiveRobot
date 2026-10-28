@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "purpose": "physical-board-alignment-evidence-only; not deployed calibration",
+  "source_motion_log": "arm_run_1793144094123_54424.txt",
+  "source_phase": "source_above end, before endpoint_settle attempt 1",
+  "source_model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+  "operator_observation": "gripper centre basically aligned with C4 before endpoint correction; correction pushed it toward D",
+  "physical_board_xy_mm": [
+    137.5,
+    192.5
+  ],
+  "physical_z_mm": null,
+  "physical_position_uncertainty_mm": null,
+  "confirmation_method": "operator visual estimate, not metrology",
+  "encoder_rad": {
+    "shoulder_front": 0.6124590039253235,
+    "shoulder_side": -2.8997864723205566,
+    "shoulder_rotate": 2.515259027481079,
+    "elbow": 0.7146944403648376,
+    "arm_roll": -2.661745548248291,
+    "wrist_side": 0.1989395022392273,
+    "wrist": -3.3064393997192383
+  },
+  "model_estimated_board_tcp_mm": [
+    110.14076973330275,
+    189.5705133404661,
+    153.0459221556454
+  ],
+  "original_commanded_board_xy_mm": [
+    132.5,
+    192.5
+  ],
+  "usable_constraints": "approximate XY only; height unmeasured",
+  "global_registration_changed": false
+}

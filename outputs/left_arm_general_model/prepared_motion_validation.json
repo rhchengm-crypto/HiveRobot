@@ -1,0 +1,22 @@
+{
+  "build": "seven-axis-rigid-body-motion-v3-prepared",
+  "changed_code_tests_passed": 13,
+  "tests": {
+    "worker": 3,
+    "motion_adapter": 10
+  },
+  "local_benchmark": "prepared_kernel_benchmark.json",
+  "source_model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+  "model_json_unchanged": true,
+  "previous_Jetson_shadow": {
+    "segment_1_stale_frames": 163,
+    "segment_1_frames": 784,
+    "segment_1_prepare_peak_ms": 8.496053000271786,
+    "segment_2_stale_frames": 0,
+    "segment_2_prepare_peak_ms": 6.155919001685106,
+    "model_hold_complete": true
+  },
+  "new_build_Jetson_validation_performed": false,
+  "freshness_limit_ms": 100,
+  "no_new_calibration_or_manual_dimensions_required": true
+}

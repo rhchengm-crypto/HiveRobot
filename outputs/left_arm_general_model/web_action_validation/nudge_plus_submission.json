@@ -1,0 +1,32 @@
+{
+  "status": 200,
+  "data": {
+    "ok": true,
+    "running": true,
+    "action": "nudge:arm_roll:+2deg",
+    "command": [
+      "python3",
+      "-u",
+      "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py",
+      "nudge-hold",
+      "--joint",
+      "arm_roll",
+      "--deg",
+      "2.000",
+      "--seconds",
+      "1.60",
+      "--max-deg",
+      "10",
+      "--hold-joints",
+      "shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side,wrist",
+      "--auto-gains"
+    ],
+    "command_text": "python3 -u /home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py nudge-hold --joint arm_roll --deg 2.000 --seconds 1.60 --max-deg 10 --hold-joints shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side,wrist --auto-gains",
+    "started_at": "2026-10-27 13:51:34",
+    "started_epoch": 1793134294.8628936,
+    "stdout": "",
+    "stderr": "",
+    "returncode": null,
+    "duration_s": null
+  }
+}

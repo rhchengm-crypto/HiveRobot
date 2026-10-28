@@ -22,6 +22,9 @@ from typing import Dict, Iterable, List, Optional, Set, Tuple
 
 import serial
 from DM_CAN import DM_Motor_Type, Motor, MotorControl
+from left_arm_v3_1_motion_dynamics import (
+    configured_model, begin_motion, prepare_frame, send_command, finish_motion, reference_derivatives,
+)
 
 
 SERIAL_PORT = "/dev/ttyACM0"
@@ -97,11 +100,15 @@ OLD_HOME_ORDER = [
     "arm_roll",
 ]
 
+# DM_CAN historically failed to clamp its 12-bit MIT kd field. Values above
+# 5.0 wrapped on the wire, so the arm was physically tuned with much smaller
+# effective damping: 6.0->1.0, 6.2->1.2, 6.5->1.5, and 7.0->2.0.  The driver
+# now clamps correctly; the tables below retain those measured on-wire gains.
 HOME_GAINS = {
     "wrist": {"kp": 22.0, "kd": 1.4, "seconds": 5.0},
     "wrist_side": {"kp": 16.0, "kd": 2.2, "seconds": 6.0},
     "elbow": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
-    "arm_roll": {"kp": 18.0, "kd": 6.0, "seconds": 12.0},
+    "arm_roll": {"kp": 18.0, "kd": 1.0, "seconds": 12.0},
     "shoulder_front": {"kp": 90.0, "kd": 4.0, "seconds": 6.0},
     "shoulder_side": {"kp": 70.0, "kd": 3.0, "seconds": 6.0},
     "shoulder_rotate": {"kp": 24.0, "kd": 4.5, "seconds": 8.0},
@@ -133,7 +140,7 @@ HOME_JOINT_DEADBANDS_DEG = {
 }
 
 HOME_COMPLIANT_HOLD_GAINS = {
-    "arm_roll": {"kp": 4.0, "kd": 6.0},
+    "arm_roll": {"kp": 4.0, "kd": 1.0},
     "shoulder_rotate": {"kp": 6.0, "kd": 5.0},
 }
 
@@ -144,10 +151,10 @@ HOME_COMPLIANT_HOLDS_BY_ACTIVE = {
 }
 
 COUPLED_HOME_MOVE_GAINS = {
-    "elbow": {"kp": 65.0, "kd": 6.5},
-    "shoulder_front": {"kp": 75.0, "kd": 7.0},
+    "elbow": {"kp": 65.0, "kd": 1.5},
+    "shoulder_front": {"kp": 75.0, "kd": 2.0},
     "shoulder_side": {"kp": 65.0, "kd": 4.5},
-    "arm_roll": {"kp": 18.0, "kd": 6.0},
+    "arm_roll": {"kp": 18.0, "kd": 1.0},
     "wrist_side": {"kp": 16.0, "kd": 2.2},
     "wrist": {"kp": 22.0, "kd": 1.4},
 }
@@ -197,8 +204,8 @@ CLEARANCE_VELOCITY_FF_JOINTS = {
 COUPLED_CLEARANCE_MOVE_GAINS = {
     "shoulder_front": {"kp": 124.0, "kd": 4.8},
     "shoulder_side": {"kp": 60.0, "kd": 5.0},
-    "elbow": {"kp": 65.0, "kd": 6.5},
-    "arm_roll": {"kp": 18.0, "kd": 6.0},
+    "elbow": {"kp": 65.0, "kd": 1.5},
+    "arm_roll": {"kp": 18.0, "kd": 1.0},
     "wrist_side": {"kp": 16.0, "kd": 2.2},
     "wrist": {"kp": 22.0, "kd": 1.4},
 }
@@ -229,14 +236,14 @@ CLEARANCE_HOLD_GAINS = {
     "wrist": {"kp": 18.0, "kd": 1.4},
     "wrist_side": {"kp": 18.0, "kd": 1.4},
     "arm_roll": {"kp": 26.0, "kd": 5.0},
-    "elbow": {"kp": 92.0, "kd": 6.2},
-    "shoulder_front": {"kp": 125.0, "kd": 6.5},
+    "elbow": {"kp": 92.0, "kd": 1.2},
+    "shoulder_front": {"kp": 125.0, "kd": 1.5},
     "shoulder_side": {"kp": 70.0, "kd": 5.0},
     "shoulder_rotate": {"kp": 45.0, "kd": 4.5},
 }
 
 CLEARANCE_COMPLIANT_HOLD_GAINS = {
-    "arm_roll": {"kp": 6.0, "kd": 6.0},
+    "arm_roll": {"kp": 6.0, "kd": 1.0},
     "wrist_side": {"kp": 8.0, "kd": 1.6},
     "shoulder_rotate": {"kp": 8.0, "kd": 4.0},
 }
@@ -355,7 +362,7 @@ NUDGE_LOW_SHOULDER_WRIST_SIDE_FINE_GAINS = {
 NUDGE_LOW_SHOULDER_WRIST_HOLD_GAINS = {
     "shoulder_rotate": {"kp": 24.0, "kd": 4.5},
     "shoulder_side": {"kp": 65.0, "kd": 4.5},
-    "arm_roll": {"kp": 12.0, "kd": 7.0},
+    "arm_roll": {"kp": 12.0, "kd": 2.0},
 }
 NUDGE_LOW_SHOULDER_WRIST_HOLD_TAU = {
     "arm_roll": HOLD_TAU_RULES[LOW_SHOULDER_POSTURE]["wrist"]["arm_roll"],
@@ -396,7 +403,7 @@ NUDGE_MIN_SECONDS = {
 
 PREHOME_CLEARANCE_GAINS = {
     "wrist_side": {"kp": 16.0, "kd": 2.2},
-    "arm_roll": {"kp": 12.0, "kd": 7.0},
+    "arm_roll": {"kp": 12.0, "kd": 2.0},
 }
 
 PREHOME_CLEARANCE_BASE_SECONDS = {
@@ -415,7 +422,7 @@ PREHOME_CLEARANCE_MAX_SECONDS = {
 }
 
 NUDGE_COMPLIANT_HOLD_GAINS = {
-    "arm_roll": {"kp": 4.0, "kd": 6.0},
+    "arm_roll": {"kp": 4.0, "kd": 1.0},
     "shoulder_rotate": {"kp": 6.0, "kd": 5.0},
     "wrist_side": {"kp": 6.0, "kd": 1.2},
     "wrist": {"kp": 8.0, "kd": 1.4},
@@ -423,30 +430,30 @@ NUDGE_COMPLIANT_HOLD_GAINS = {
 
 NUDGE_COMPLIANT_HOLD_GAINS_BY_ACTIVE = {
     "shoulder_front": {
-        "arm_roll": {"kp": 2.5, "kd": 7.0},
-        "shoulder_rotate": {"kp": 4.0, "kd": 6.0},
+        "arm_roll": {"kp": 2.5, "kd": 2.0},
+        "shoulder_rotate": {"kp": 4.0, "kd": 1.0},
         "wrist_side": {"kp": 4.0, "kd": 1.6},
         "wrist": {"kp": 6.0, "kd": 2.0},
     },
     "shoulder_side": {
-        "arm_roll": {"kp": 2.5, "kd": 7.0},
-        "shoulder_rotate": {"kp": 4.0, "kd": 6.0},
+        "arm_roll": {"kp": 2.5, "kd": 2.0},
+        "shoulder_rotate": {"kp": 4.0, "kd": 1.0},
         "wrist_side": {"kp": 4.0, "kd": 1.6},
         "wrist": {"kp": 6.0, "kd": 2.0},
     },
     "elbow": {
-        "arm_roll": {"kp": 2.5, "kd": 7.0},
-        "shoulder_rotate": {"kp": 4.0, "kd": 6.0},
+        "arm_roll": {"kp": 2.5, "kd": 2.0},
+        "shoulder_rotate": {"kp": 4.0, "kd": 1.0},
         "wrist_side": {"kp": 4.0, "kd": 1.6},
         "wrist": {"kp": 6.0, "kd": 2.0},
     },
     "arm_roll": {
-        "shoulder_rotate": {"kp": 4.0, "kd": 6.0},
+        "shoulder_rotate": {"kp": 4.0, "kd": 1.0},
         "wrist_side": {"kp": 4.0, "kd": 1.6},
         "wrist": {"kp": 6.0, "kd": 2.0},
     },
     "wrist": {
-        "arm_roll": {"kp": 8.0, "kd": 6.0},
+        "arm_roll": {"kp": 8.0, "kd": 1.0},
     },
 }
 
@@ -462,7 +469,7 @@ NUDGE_COMPLIANT_HOLDS_BY_ACTIVE = {
 POSTURE_HOLD_GAIN_RULES = {
     LOW_SHOULDER_POSTURE: {
         "*": {
-            "arm_roll": {"kp": 12.0, "kd": 7.0},
+            "arm_roll": {"kp": 12.0, "kd": 2.0},
             "shoulder_rotate": {"kp": 12.0, "kd": 5.0},
             "wrist_side": {"kp": 8.0, "kd": 1.6},
         },
@@ -491,7 +498,7 @@ NUDGE_LOW_SHOULDER_COMPLIANT_HOLD_GAINS_BY_ACTIVE = {
 NUDGE_LOW_SHOULDER_COMPLIANT_HOLD_GAINS_BY_ACTIVE.setdefault(
     "shoulder_front",
     {
-        "arm_roll": {"kp": 12.0, "kd": 7.0},
+        "arm_roll": {"kp": 12.0, "kd": 2.0},
         "shoulder_rotate": {"kp": 12.0, "kd": 5.0},
         "wrist_side": {"kp": 8.0, "kd": 1.6},
     },
@@ -557,9 +564,9 @@ CLEARANCE_BASE_HOLD_GAINS = {
 NUDGE_GAINS = {
     "wrist": {"kp": WRIST_ACTIVE_SOFT_GAINS["kp"], "kd": WRIST_ACTIVE_SOFT_GAINS["kd"]},
     "wrist_side": {"kp": 18.0, "kd": 1.2},
-    "arm_roll": {"kp": 12.0, "kd": 7.0},
+    "arm_roll": {"kp": 12.0, "kd": 2.0},
     "elbow": {"kp": 70.0, "kd": 3.0},
-    "shoulder_front": {"kp": 140.0, "kd": 5.2},
+    "shoulder_front": {"kp": 140.0, "kd": 0.2},
     "shoulder_side": {"kp": 70.0, "kd": 3.0},
     "shoulder_rotate": {"kp": 60.0, "kd": 3.0},
 }
@@ -626,6 +633,7 @@ def ensure_parent(path: str) -> None:
 
 class LeftArmV2:
     def __init__(self, port: str = SERIAL_PORT, baud: int = SERIAL_BAUD) -> None:
+        self.motion_dynamics_model = configured_model()
         self.serial = serial.Serial(port, baud, timeout=1.0)
         self.ctrl = MotorControl(self.serial)
         self.specs = {spec.name: spec for spec in ALL_MOTOR_SPECS}
@@ -638,6 +646,10 @@ class LeftArmV2:
 
     def close(self) -> None:
         self.serial.close()
+        config = (getattr(self, 'motion_dynamics_model', None) or {}).get('rigid_body_configuration')
+        if config is not None:
+            from left_arm_general_motion import close_runtime_configuration
+            close_runtime_configuration(config)
 
     def validate(self, names: Iterable[str]) -> List[str]:
         names = list(names)
@@ -878,16 +890,28 @@ class LeftArmV2:
     ) -> None:
         names = self.validate(targets.keys())
         starts = self.positions(names)
+        dynamics = begin_motion(self, names)
         self.hold_positions(starts, seconds=0.2, kp=kp, kd=kd)
         start_time = time.time()
         while time.time() - start_time < seconds:
             t = (time.time() - start_time) / max(seconds, 1e-6)
             s = smoothstep(t)
+            ds, dds = reference_derivatives('smoothstep', t, max(seconds, 1e-6))
+            prepare_frame(dynamics, {name: starts[name] * (1.0 - s) + targets[name] * s
+                                     for name in names}, t,
+                          {name: (targets[name]-starts[name])*ds for name in names},
+                          {name: (targets[name]-starts[name])*dds for name in names})
             for name in names:
                 target = starts[name] * (1.0 - s) + targets[name] * s
-                self.ctrl.controlMIT(self.motors[name], kp, kd, target, 0, 0)
+                send_command(self, dynamics, name, kp, kd, target, 0, 0)
             time.sleep(0.02)
-        self.hold_positions(targets, seconds=0.5, kp=kp, kd=kd)
+        start_time = time.time()
+        while time.time() - start_time < 0.5:
+            prepare_frame(dynamics, targets, 1.0, dict.fromkeys(names, 0.0), dict.fromkeys(names, 0.0))
+            for name in names:
+                send_command(self, dynamics, name, kp, kd, targets[name], 0, 0)
+            time.sleep(0.02)
+        finish_motion(dynamics)
 
     def move_targets_auto_gains(
         self,
@@ -899,6 +923,7 @@ class LeftArmV2:
     ) -> None:
         names = self.validate(targets.keys())
         starts = self.positions(names)
+        dynamics = begin_motion(self, names)
         start_time = time.time()
         while time.time() - start_time < 0.2:
             for name in names:
@@ -912,22 +937,29 @@ class LeftArmV2:
         while time.time() - start_time < seconds:
             t = (time.time() - start_time) / max(seconds, 1e-6)
             s = smoothstep(t)
+            ds, dds = reference_derivatives('smoothstep', t, max(seconds, 1e-6))
+            prepare_frame(dynamics, {name: starts[name] * (1.0 - s) + targets[name] * s
+                                     for name in names}, t,
+                          {name: (targets[name]-starts[name])*ds for name in names},
+                          {name: (targets[name]-starts[name])*dds for name in names})
             for name in names:
                 joint_gains = gains.get(name, {})
                 kp = joint_gains.get("kp", fallback_kp)
                 kd = joint_gains.get("kd", fallback_kd)
                 target = starts[name] * (1.0 - s) + targets[name] * s
-                self.ctrl.controlMIT(self.motors[name], kp, kd, target, 0, 0)
+                send_command(self, dynamics, name, kp, kd, target, 0, 0)
             time.sleep(0.02)
 
         start_time = time.time()
         while time.time() - start_time < 0.5:
+            prepare_frame(dynamics, targets, 1.0, dict.fromkeys(names, 0.0), dict.fromkeys(names, 0.0))
             for name in names:
                 joint_gains = gains.get(name, {})
                 kp = joint_gains.get("kp", fallback_kp)
                 kd = joint_gains.get("kd", fallback_kd)
-                self.ctrl.controlMIT(self.motors[name], kp, kd, targets[name], 0, 0)
+                send_command(self, dynamics, name, kp, kd, targets[name], 0, 0)
             time.sleep(0.02)
+        finish_motion(dynamics)
 
     def move_target_with_holds(
         self,
@@ -950,9 +982,13 @@ class LeftArmV2:
         linear_blend: float = 0.0,
         trace_names: Optional[List[str]] = None,
         trace_interval: float = 0.5,
+        max_velocity: Optional[float] = None,
+        max_position_error_deg: Optional[float] = None,
+        active_max_delta_deg: Optional[float] = None,
     ) -> None:
         self.validate([name] + list(hold_targets.keys()))
         start = self.positions([name])[name]
+        dynamics = begin_motion(self, [name] + list(hold_targets))
         delta = target - start
         if step_deg > 0:
             steps = int(math.ceil(abs(math.degrees(delta)) / step_deg))
@@ -964,6 +1000,39 @@ class LeftArmV2:
         trace_names = trace_names or []
         all_targets = dict(hold_targets)
         all_targets[name] = start
+        safety_names = [name] + list(hold_targets.keys())
+        safety_reference = dict(hold_targets)
+        safety_reference[name] = start
+        safety_counter = 0
+
+        def check_safety() -> None:
+            nonlocal safety_counter
+            if max_velocity is None and max_position_error_deg is None:
+                return
+            safety_counter += 1
+            if safety_counter % 8:
+                return
+            status = self.read_status(safety_names)
+            for safety_name, row in status.items():
+                velocity = abs(float(row["vel"]))
+                if max_velocity is not None and velocity > max_velocity:
+                    raise RuntimeError(
+                        f"nudge watchdog tripped for {safety_name}: "
+                        f"velocity {velocity:.3f}rad/s"
+                    )
+                if max_position_error_deg is None:
+                    continue
+                displacement_deg = abs(
+                    math.degrees(float(row["pos"]) - safety_reference[safety_name])
+                )
+                limit_deg = max_position_error_deg
+                if safety_name == name and active_max_delta_deg is not None:
+                    limit_deg += active_max_delta_deg
+                if displacement_deg > limit_deg:
+                    raise RuntimeError(
+                        f"nudge watchdog tripped for {safety_name}: "
+                        f"position displacement {displacement_deg:.2f}deg"
+                    )
         start_time = time.time()
         while time.time() - start_time < preload_seconds:
             for hold_name, hold_target in all_targets.items():
@@ -977,6 +1046,7 @@ class LeftArmV2:
                     joint_kd = joint_gains.get("kd", fallback_kd)
                     joint_tau = hold_tau.get(hold_name, 0.0)
                 self.ctrl.controlMIT(self.motors[hold_name], joint_kp, joint_kd, hold_target, 0, joint_tau)
+            check_safety()
             time.sleep(control_dt)
 
         previous = start
@@ -1002,13 +1072,24 @@ class LeftArmV2:
                     s = smoothstep(t)
                     active_velocity = 0.0
                 active_target = previous * (1.0 - s) + intermediate * s
-                self.ctrl.controlMIT(self.motors[name], kp, kd, active_target, active_velocity, active_tau)
+                frame_targets = dict(hold_targets)
+                frame_targets[name] = active_target
+                reference_kind = ('blend_smootherstep' if trajectory == 'blend_smootherstep'
+                                  else 'smootherstep' if active_velocity_ff and steps == 1 else 'smoothstep')
+                ds, dds = reference_derivatives(reference_kind, t, max(seconds_per_step, 1e-6), linear_blend)
+                reference_velocities = dict.fromkeys(frame_targets, 0.0)
+                reference_accelerations = dict.fromkeys(frame_targets, 0.0)
+                reference_velocities[name] = (intermediate-previous)*ds
+                reference_accelerations[name] = (intermediate-previous)*dds
+                prepare_frame(dynamics, frame_targets, (step - 1 + t) / steps,
+                              reference_velocities, reference_accelerations)
+                send_command(self, dynamics, name, kp, kd, active_target, active_velocity, active_tau)
                 for hold_name, hold_target in hold_targets.items():
                     joint_gains = hold_gains.get(hold_name, {})
                     joint_kp = joint_gains.get("kp", fallback_kp)
                     joint_kd = joint_gains.get("kd", fallback_kd)
-                    self.ctrl.controlMIT(
-                        self.motors[hold_name],
+                    send_command(
+                        self, dynamics, hold_name,
                         joint_kp,
                         joint_kd,
                         hold_target,
@@ -1025,6 +1106,7 @@ class LeftArmV2:
                         json.dumps(self.read_status(trace_names), ensure_ascii=False),
                     )
                     next_trace_time = now + trace_interval
+                check_safety()
                 time.sleep(control_dt)
             previous = intermediate
 
@@ -1032,6 +1114,7 @@ class LeftArmV2:
         final_targets[name] = target
         start_time = time.time()
         while time.time() - start_time < 0.5:
+            prepare_frame(dynamics, final_targets, 1.0, dict.fromkeys(final_targets, 0.0), dict.fromkeys(final_targets, 0.0))
             for hold_name, hold_target in final_targets.items():
                 if hold_name == name:
                     joint_kp = kp
@@ -1042,8 +1125,10 @@ class LeftArmV2:
                     joint_kp = joint_gains.get("kp", fallback_kp)
                     joint_kd = joint_gains.get("kd", fallback_kd)
                     joint_tau = hold_tau.get(hold_name, 0.0)
-                self.ctrl.controlMIT(self.motors[hold_name], joint_kp, joint_kd, hold_target, 0, joint_tau)
+                send_command(self, dynamics, hold_name, joint_kp, joint_kd, hold_target, 0, joint_tau)
+            check_safety()
             time.sleep(control_dt)
+        finish_motion(dynamics)
 
     def move_targets_with_holds(
         self,
@@ -1064,10 +1149,12 @@ class LeftArmV2:
         move_tau_ff: Optional[Dict[str, float]] = None,
         trajectory: str = "smoothstep",
         linear_blend: float = 0.0,
+        watchdog=None,
     ) -> None:
         active_names = self.validate(targets.keys())
         self.validate(list(hold_targets.keys()))
         starts = self.positions(active_names)
+        dynamics = begin_motion(self, active_names + list(hold_targets))
         hold_tau = hold_tau or {}
         progress_windows = progress_windows or {}
         pre_window_gains = pre_window_gains or {}
@@ -1121,6 +1208,8 @@ class LeftArmV2:
                 kp = gains.get("kp", fallback_kp)
                 kd = gains.get("kd", fallback_kd)
                 self.ctrl.controlMIT(self.motors[name], kp, kd, target, 0, tau)
+            if watchdog is not None:
+                watchdog(preload_targets)
             time.sleep(0.02)
 
         previous = dict(starts)
@@ -1141,6 +1230,9 @@ class LeftArmV2:
                 t = (time.time() - step_start) / max(seconds_per_step, 1e-6)
                 s = trajectory_fn(t)
                 ds_dt = trajectory_derivative_fn(t) / max(seconds_per_step, 1e-6)
+                commands = []
+                reference_velocities = dict.fromkeys(active_names + list(hold_targets), 0.0)
+                reference_accelerations = dict(reference_velocities)
                 for name in active_names:
                     gains = move_gains.get(name, {})
                     active_velocity = 0.0
@@ -1157,13 +1249,23 @@ class LeftArmV2:
                     kp = gains.get("kp", fallback_kp)
                     kd = gains.get("kd", fallback_kd)
                     target = previous[name] * (1.0 - local_s) + intermediates[name] * local_s
+                    ds, dds = reference_derivatives(trajectory, t, max(seconds_per_step, 1e-6),
+                                                    linear_blend, progress_windows.get(name))
+                    reference_velocities[name] = (intermediates[name]-previous[name])*ds
+                    reference_accelerations[name] = (intermediates[name]-previous[name])*dds
                     active_tau = active_tau_for_progress(name, t)
-                    self.ctrl.controlMIT(self.motors[name], kp, kd, target, active_velocity, active_tau)
+                    commands.append((name, kp, kd, target, active_velocity, active_tau))
                 for hold_name, hold_target in hold_targets.items():
                     gains = hold_gains.get(hold_name, {})
                     kp = gains.get("kp", fallback_kp)
                     kd = gains.get("kd", fallback_kd)
-                    self.ctrl.controlMIT(self.motors[hold_name], kp, kd, hold_target, 0, hold_tau.get(hold_name, 0.0))
+                    commands.append((hold_name, kp, kd, hold_target, 0, hold_tau.get(hold_name, 0.0)))
+                prepare_frame(dynamics, {row[0]: row[3] for row in commands}, (step - 1 + t) / steps,
+                              reference_velocities, reference_accelerations)
+                for command in commands:
+                    send_command(self, dynamics, *command)
+                if watchdog is not None:
+                    watchdog({row[0]: row[3] for row in commands})
                 time.sleep(control_dt)
             previous = intermediates
 
@@ -1171,6 +1273,7 @@ class LeftArmV2:
         final_targets.update(targets)
         start_time = time.time()
         while time.time() - start_time < 0.5:
+            prepare_frame(dynamics, final_targets, 1.0, dict.fromkeys(final_targets, 0.0), dict.fromkeys(final_targets, 0.0))
             for name, target in final_targets.items():
                 if name in targets:
                     gains = move_gains.get(name, {})
@@ -1180,8 +1283,11 @@ class LeftArmV2:
                     tau = hold_tau.get(name, 0.0)
                 kp = gains.get("kp", fallback_kp)
                 kd = gains.get("kd", fallback_kd)
-                self.ctrl.controlMIT(self.motors[name], kp, kd, target, 0, tau)
+                send_command(self, dynamics, name, kp, kd, target, 0, tau)
+            if watchdog is not None:
+                watchdog(final_targets)
             time.sleep(0.02)
+        finish_motion(dynamics)
 
 
 def load_home(path: str = HOME_PATH) -> Dict[str, float]:
@@ -1947,6 +2053,7 @@ def nudge_hold_tau_for(
     hold_targets: Dict[str, float],
     low_shoulder_front: bool = False,
     adaptive_active: Optional[str] = None,
+    use_adaptive: bool = True,
 ) -> Dict[str, float]:
     hold_tau = {
         hold_name: clamp_tau(hold_name, tau, HOLD_TAU_LIMITS)
@@ -1960,6 +2067,8 @@ def nudge_hold_tau_for(
         for hold_name, tau in low_rules.get(active, {}).items():
             if hold_name in hold_targets:
                 hold_tau[hold_name] = clamp_tau(hold_name, tau, HOLD_TAU_LIMITS)
+    if not use_adaptive:
+        return hold_tau
     return adaptive_hold_tau_for(adaptive_active or active, hold_targets, hold_tau, low_shoulder_front)
 
 
@@ -2075,6 +2184,20 @@ def build_parser() -> argparse.ArgumentParser:
     nudge_hold.add_argument("--max-deg", type=float, default=5.0)
     nudge_hold.add_argument("--hold-joints", default=common)
     nudge_hold.add_argument("--auto-gains", action="store_true")
+    nudge_hold.add_argument(
+        "--no-active-tau", action="store_true",
+        help="Disable active-joint feed-forward torque for a guarded probe.",
+    )
+    nudge_hold.add_argument(
+        "--no-adaptive-learning", action="store_true",
+        help="Do not update adaptive files from a guarded probe.",
+    )
+    nudge_hold.add_argument(
+        "--no-adaptive-compensation", action="store_true",
+        help="Ignore learned hold torque and target bias during a guarded probe.",
+    )
+    nudge_hold.add_argument("--max-velocity", type=float)
+    nudge_hold.add_argument("--max-position-error-deg", type=float)
 
     home = sub.add_parser("home")
     home.add_argument("--joints", default=",".join(DEFAULT_HOME_ORDER))
@@ -2387,8 +2510,9 @@ def main() -> None:
                 hold_targets,
                 low_shoulder_front,
                 adaptive_active=nudge_adaptive_active,
+                use_adaptive=not args.no_adaptive_compensation,
             )
-            hold_target_offsets = {
+            hold_target_offsets = {} if args.no_adaptive_compensation else {
                 hold_name: offset
                 for hold_name, offset in adaptive_hold_target_bias_for(
                     nudge_adaptive_active,
@@ -2396,6 +2520,8 @@ def main() -> None:
                     low_shoulder_front,
                 ).items()
             }
+            if args.no_adaptive_compensation:
+                print("v2.6 nudge-hold learned compensation disabled for guarded probe")
             if hold_target_offsets:
                 for hold_name, offset in hold_target_offsets.items():
                     hold_targets[hold_name] += offset
@@ -2405,7 +2531,9 @@ def main() -> None:
                     "hold_targets=",
                     json.dumps({joint: hold_targets[joint] for joint in hold_target_offsets}, ensure_ascii=False),
                 )
-            active_tau = nudge_active_tau_for(name, args.deg, low_shoulder_front)
+            active_tau = 0.0 if args.no_active_tau else nudge_active_tau_for(
+                name, args.deg, low_shoulder_front
+            )
             if active_tau and name in NUDGE_ACTIVE_TAU:
                 coupled_tau[name] = active_tau
             print(
@@ -2435,7 +2563,9 @@ def main() -> None:
                     "shoulder_front_pos=",
                     hold_targets.get("shoulder_front"),
                 )
-            active_tau = nudge_active_tau_for(name, args.deg, low_shoulder_front)
+            active_tau = 0.0 if args.no_active_tau else nudge_active_tau_for(
+                name, args.deg, low_shoulder_front
+            )
             if active_tau:
                 print("v2.6 nudge-hold active_tau=", {name: active_tau})
             if name in NUDGE_LOW_SHOULDER_GAINS and is_low_shoulder_front(current):
@@ -2536,6 +2666,9 @@ def main() -> None:
                 preload_seconds=preload_seconds,
                 trajectory=trajectory,
                 linear_blend=linear_blend,
+                max_velocity=args.max_velocity,
+                max_position_error_deg=args.max_position_error_deg,
+                active_max_delta_deg=abs(args.deg),
             )
             if name == "wrist_side" and is_low_shoulder_front(current):
                 wrist_side_pos = arm.positions([name])[name]
@@ -2590,6 +2723,9 @@ def main() -> None:
             arm.print_status(all_names)
             final_all_positions = arm.positions(all_names)
             active_error_deg = math.degrees(target - final_all_positions[name])
+            if args.no_adaptive_learning:
+                print("v2.6 nudge-hold adaptive learning disabled for guarded probe")
+                return
             active_tau_updates = update_adaptive_active_tau(
                 name,
                 args.deg,

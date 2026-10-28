@@ -108,8 +108,15 @@ class GeometryTests(unittest.TestCase):
             self.assertIn('grasp_confirmation',saved['grasp_anchors']['white_bishop:d4'])
             self.assertIn('workflow_validation',saved['placement_anchors']['white_bishop:c1'])
             self.assertIn('white_knight:b1',saved['placement_anchors'])
-            self.assertTrue(saved['placement_anchors']['white_rook:a1']
-                            ['workflow_validation']['placement_confirmed'])
+            # Runtime bundles can contain different taught-anchor subsets.
+            # Verify every supplied anchor and its evidence, without requiring
+            # an unrelated historical A1 entry to exist in the current bundle.
+            for section in ('placement_anchors','grasp_anchors'):
+                self.assertEqual(set(saved[section]),set(bundle[section]))
+                for key,incoming in bundle[section].items():
+                    for field in ('workflow_validation','grasp_confirmation'):
+                        if field in incoming:
+                            self.assertEqual(saved[section][key][field],incoming[field])
             self.assertFalse(result['motion_enabled'])
 
     def test_import_conflict_and_stale_preview_do_not_write(self):
@@ -122,7 +129,7 @@ class GeometryTests(unittest.TestCase):
             store.action('profile',dict(piece_class='white_bishop',piece_height_mm=60,
                 grip_height_mm=50,open_width_mm=30,closed_width_mm=15))
             changed=path.read_bytes()
-            with self.assertRaisesRegex(ValueError,'重新预览'):
+            with self.assertRaisesRegex(ValueError,'Preview again'):
                 store.action('import-anchors',{'geometry':bundle,
                     'expected_revision':preview['preview']['current_revision']})
             self.assertEqual(path.read_bytes(),changed)
@@ -133,7 +140,7 @@ class GeometryTests(unittest.TestCase):
             path.write_text(json.dumps(existing),encoding='utf-8')
             preview=store.action('import-anchors',{'geometry':bundle,'dry_run':True})
             self.assertEqual(preview['preview']['counts']['conflicts'],1)
-            with self.assertRaisesRegex(ValueError,'姿态冲突'):
+            with self.assertRaisesRegex(ValueError,'Pose conflicts'):
                 store.action('import-anchors',{'geometry':bundle,
                     'expected_revision':preview['preview']['current_revision']})
             self.assertEqual(store.read()['grasp_anchors']['white_bishop:d4']['pose_rad']['wrist'],0)
@@ -161,8 +168,8 @@ class GeometryTests(unittest.TestCase):
             self.assertEqual(saved['grasp_confirmation'],bundle['grasp_anchors']['white_bishop:d4']['grasp_confirmation'])
 
     def test_import_page_has_preview_and_write_controls(self):
-        self.assertIn('预览锚点',PAGE)
+        self.assertIn('Preview Anchors',PAGE)
         self.assertIn('/api/crown/import-anchors',PAGE)
-        self.assertIn('写入已预览锚点',PAGE)
+        self.assertIn('Write Previewed Anchors',PAGE)
 
 if __name__=='__main__':unittest.main()

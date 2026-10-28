@@ -1,0 +1,48 @@
+Serial port is open
+v3.1 inertia passive hold= {"arm_roll": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "elbow": {"nearest_distance_deg": 1.94574052597619, "source": "identified_gravity", "tau": 3.3542825641333414}, "shoulder_front": {"nearest_distance_deg": 0.8563725190605381, "source": "identified_gravity", "tau": 2.137236834102721}, "shoulder_rotate": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "wrist": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.55}, "wrist_side": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}}
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+{
+  "ok": true,
+  "saved": true,
+  "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json",
+  "joint": "shoulder_side",
+  "sample": {
+    "captured_at": "2026-10-15 13:20:06",
+    "pose_rad": {
+      "shoulder_front": 1.942282795906067,
+      "shoulder_side": -2.71248197555542,
+      "shoulder_rotate": 2.351987600326538,
+      "elbow": 0.8157854676246643,
+      "arm_roll": -2.6583123207092285,
+      "wrist_side": 0.30537116527557373,
+      "wrist": -1.101129174232483
+    },
+    "effective_inertia": 0.1723461846799389,
+    "method": "normalized_closed_loop_step_fit",
+    "test_kp": 40.0,
+    "test_kd": 3.0,
+    "measured_omega_n": 15.234533454692913,
+    "step_deg": 2.0,
+    "quality": {
+      "effective_inertia": 0.1723461846799389,
+      "inertia_mad": null,
+      "relative_mad": null,
+      "measured_omega_n": 15.234533454692913,
+      "estimated_zeta": 0.5712950045509843,
+      "normalized_fit_mse": 0.0030137041998221257,
+      "plateau_step_deg": 2.251271331571223,
+      "achieved_fraction": 1.1256356657856115,
+      "usable_samples": 57,
+      "peak_velocity": 0.20122100412845612,
+      "peak_acceleration": 1.7659680780106795,
+      "estimator": "normalized_closed_loop_step_fit"
+    },
+    "label": "shoulder_side_clearance_step_positive_repeat2"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "motion_issued": false,
+  "live_start_verified": false,
+  "example_home_start_rad": {
+    "shoulder_front": 0.8291370868682861,
+    "shoulder_side": -2.853627920150757,
+    "shoulder_rotate": 2.3432135581970215,
+    "elbow": -1.281567096710205,
+    "arm_roll": -2.6575493812561035,
+    "wrist_side": 0.16308079659938812,
+    "wrist": -2.0708401203155518
+  },
+  "recorded_target_rad": {
+    "shoulder_front": 0.7082093358039856,
+    "shoulder_side": -2.8852903842926025,
+    "shoulder_rotate": 2.4706263542175293,
+    "elbow": 0.45643550157546997,
+    "arm_roll": -2.6960785388946533,
+    "wrist_side": 0.14667734503746033,
+    "wrist": -2.9482338428497314
+  },
+  "route": [
+    {
+      "stage": "entry_clearance",
+      "encoder_rad": {
+        "shoulder_front": 1.9357976913452148,
+        "shoulder_side": -2.7143893241882324,
+        "shoulder_rotate": 2.3432135581970215,
+        "elbow": 0.8165484070777893,
+        "arm_roll": -2.649538516998291,
+        "wrist_side": 0.3057526648044586,
+        "wrist": -1.0313191413879395
+      }
+    },
+    {
+      "stage": "source_above",
+      "encoder_rad": {
+        "shoulder_front": 0.7082093358039856,
+        "shoulder_side": -2.8852903842926025,
+        "shoulder_rotate": 2.4706263542175293,
+        "elbow": 0.45643550157546997,
+        "arm_roll": -2.6960785388946533,
+        "wrist_side": 0.14667734503746033,
+        "wrist": -2.9482338428497314
+      }
+    }
+  ],
+  "blocked_edges": [
+    {
+      "route": "direct",
+      "transit_fraction": 0.5,
+      "code": "tool_board_intersection",
+      "tool_fraction": 0.8571428571428571,
+      "board_point_mm": [
+        63.798587847488,
+        -19.523298460886416,
+        -216.410147477977
+      ],
+      "minimum_height_mm": 5.0
+    }
+  ],
+  "physical_path_validated": false
+}

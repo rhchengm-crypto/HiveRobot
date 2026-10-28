@@ -1,0 +1,24 @@
+{
+  "build": "seven-axis-board-grasp-v4-latched-support",
+  "software_regression_tests": 190,
+  "software_regression_passed": 190,
+  "fault_support_tests": 11,
+  "hardware_tested": false,
+  "replayed_fault_velocity_rad_s": -0.212,
+  "feedback_watchdog_limit_rad_s": 0.2,
+  "verified_offline": [
+    "trajectory watchdog routes to same-process support before close",
+    "no next waypoint after stop",
+    "frozen position targets despite simulated drift",
+    "initial net torque matches measured feedback; load component does not expire",
+    "hold stays active beyond 60 simulated seconds",
+    "per-joint command errors and read errors do not disable other joints",
+    "broken log pipe does not exit support",
+    "explicit keyboard interruption remains effective",
+    "Web marks protective hold as running/aborted rather than successful completion",
+    "normal successful Model Hold and prior dynamics regressions pass"
+  ],
+  "scope": "new board executor trajectory exceptions; not power or motor-driver fault tolerance",
+  "next_hardware_test": "mechanically protected stationary injected software stop; no trajectory or enable frames",
+  "log": "fault_support_regression.log"
+}

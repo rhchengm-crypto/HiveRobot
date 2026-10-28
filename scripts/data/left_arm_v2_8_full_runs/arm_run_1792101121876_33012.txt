@@ -1,0 +1,82 @@
+v2.8 clearance local correction= {"build": "v2.8-clearance-nonblocking-v1", "clearance_file": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_table_clearance.json", "anchor_id": "8b20a284d5592a0c", "new_anchor": false, "nominal_target_rad": {"shoulder_front": 1.9357976913452148, "shoulder_side": -2.7143893241882324, "elbow": 0.8165484070777893, "shoulder_rotate": 1.9323643445968628, "arm_roll": -2.649538516998291, "wrist_side": 0.3057526648044586, "wrist": -1.0313191413879395}, "applied_bias_deg": {"shoulder_side": 0.18359548488994273, "elbow": 2.63274014118629, "arm_roll": 0.543136642799414, "wrist_side": 1.7135865457673125, "wrist": -0.820746824571414}, "validation_joints": ["shoulder_front", "shoulder_side", "elbow", "arm_roll", "wrist_side", "wrist"], "requested_max_delta_deg": 120.0, "effective_max_delta_deg": 125.0, "best_snapshot_created": false}
+Serial port is open
+Serial port is open
+v2 clearance target shoulder_front delta_deg= 63.38512538458047 target= 1.9357976913452148
+v2 clearance planned steps shoulder_front steps= 13 step_deg<= 5.0
+v2 clearance target shoulder_side delta_deg= 8.161379378869896 target= -2.7111849784851074
+v2 clearance planned steps shoulder_side steps= 2 step_deg<= 5.0
+v2 clearance target elbow delta_deg= 122.62733738576244 target= 0.8624983908909104
+v2 clearance planned steps elbow steps= 25 step_deg<= 5.0
+v2 clearance skip shoulder_rotate delta_deg= -23.38692971814967 deadband_deg= 180.0
+v2 clearance target arm_roll delta_deg= 1.439271122283427 target= -2.640058994293213
+v2 clearance planned steps arm_roll steps= 1 step_deg<= 5.0
+v2 clearance target wrist_side delta_deg= 9.53837164101804 target= 0.3356603920459747
+v2 clearance planned steps wrist_side steps= 2 step_deg<= 5.0
+v2 clearance target wrist delta_deg= 58.73941798328855 target= -1.045643875801999
+v2 clearance planned continuous wrist steps= 1
+v2.6 clearance coupled shoulder/roll/wrist active shoulder_front,shoulder_side,elbow,arm_roll,wrist_side,wrist hold joints: shoulder_rotate
+v2.6 clearance coupled shoulder/roll/wrist gains shoulder_front kp= 124.0 kd= 4.8 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains shoulder_side kp= 60.0 kd= 5.0 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains elbow kp= 65.0 kd= 6.5 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains arm_roll kp= 18.0 kd= 6.0 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains wrist_side kp= 16.0 kd= 2.2 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains wrist kp= 22.0 kd= 1.4 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist continuous interpolation steps_removed= 25 raw_seconds= 300.0 used_seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist progress windows= {"arm_roll": [0.35, 1.0], "wrist": [0.0, 1.0]}
+v2.6 clearance coupled shoulder/roll/wrist pre-window gains= {"wrist": {"kp": 6.0, "kd": 0.8}}
+v2.6 clearance coupled shoulder/roll/wrist velocity_ff_joints= shoulder_front
+v2.6 clearance coupled shoulder/roll/wrist move_tau_ff= {"shoulder_front": 1.0}
+v2.6 clearance coupled shoulder/roll/wrist control_dt= 0.01
+v2.6 clearance coupled shoulder/roll/wrist trajectory= blend_smootherstep
+v2.6 clearance coupled shoulder/roll/wrist linear_blend= 0.35
+enable shoulder_front
+enable shoulder_side
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+enable shoulder_rotate
+v2.2 continuous group step shoulder_front,shoulder_side,elbow,arm_roll,wrist_side,wrist 1/1 targets= {"shoulder_front": 1.9357976913452148, "shoulder_side": -2.7111849784851074, "elbow": 0.8624983908909103, "arm_roll": -2.640058994293213, "wrist_side": 0.3356603920459747, "wrist": -1.045643875801999}
+v2.6 clearance coupled shoulder/roll/wrist reached= {"shoulder_front": 1.9171053171157837, "shoulder_side": -2.72621488571167, "elbow": 0.7871748208999634, "arm_roll": -2.650301456451416, "wrist_side": 0.3065156042575836, "wrist": -1.0786221027374268}
+v2.6 clearance coupled wrist fine hold gains= {"shoulder_rotate": {"kp": 8.0, "kd": 4.0}, "shoulder_front": {"kp": 125.0, "kd": 6.5}, "shoulder_side": {"kp": 70.0, "kd": 5.0}, "elbow": {"kp": 92.0, "kd": 6.2}, "arm_roll": {"kp": 6.0, "kd": 6.0}, "wrist_side": {"kp": 8.0, "kd": 1.6}}
+v2.6 clearance coupled wrist settle before fine seconds= 1.0
+v2.6 clearance coupled wrist fine target delta_deg= 1.88951321922466 bias_deg= 1.5 target= -1.0194639370220842 kp= 26.0 kd= 4.7 seconds= 8.0
+v2 continuous step wrist 1/1 target= -1.0194639370220842
+{
+  "shoulder_front": {
+    "pos": 1.942282795906067,
+    "vel": -0.0019536020699888468,
+    "tau": 2.1401710510253906
+  },
+  "shoulder_side": {
+    "pos": -2.72163724899292,
+    "vel": -0.0019536020699888468,
+    "tau": 0.6905983090400696
+  },
+  "elbow": {
+    "pos": 0.8169298768043518,
+    "vel": -0.0019536020699888468,
+    "tau": 4.136752128601074
+  },
+  "shoulder_rotate": {
+    "pos": 2.3516061305999756,
+    "vel": 0.007326007355004549,
+    "tau": -0.12454212456941605
+  },
+  "arm_roll": {
+    "pos": -2.6537346839904785,
+    "vel": -0.021978022530674934,
+    "tau": 0.06593406945466995
+  },
+  "wrist_side": {
+    "pos": 0.3065156042575836,
+    "vel": -0.007326007355004549,
+    "tau": 0.21245421469211578
+  },
+  "wrist": {
+    "pos": -1.0271228551864624,
+    "vel": 0.007326007355004549,
+    "tau": 0.6617826819419861
+  }
+}
+v2.8 clearance final verification= {"status": "validated", "tolerance_deg": 0.5, "encoder_half_count_margin_deg": 0.011, "effective_tolerance_deg": 0.511, "errors_deg": {"shoulder_front": -0.37156912103786366, "shoulder_side": 0.4152755015367753, "elbow": -0.021856605344040804, "arm_roll": 0.24042265878444882, "wrist_side": -0.04371321068808161, "wrist": -0.21856605344040803}, "blocking_errors_deg": {}, "checked_at": "2026-10-15 14:52:26", "validated_at": "2026-10-15 14:52:26"}

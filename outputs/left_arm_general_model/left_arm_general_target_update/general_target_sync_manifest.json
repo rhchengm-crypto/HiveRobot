@@ -1,0 +1,30 @@
+{
+  "patch": "general-unnamed-joint-targets-v1",
+  "jetson_root": "/home/nvidia/hive_robot/DM_Control_Python",
+  "files": [
+    {
+      "source": "scripts/left_arm_general_move.py",
+      "destination": "left_arm_general_move.py",
+      "sha256": "83726a430153e01d0f02076d39a4b4145c3a59bbf22b49a055f9348128c0aaf2"
+    },
+    {
+      "source": "scripts/left_arm_v2_6.py",
+      "destination": "left_arm_v2_6.py",
+      "sha256": "74808a07de672e6692c52a03647d440ba437cc12358549cad07f5f095028dc25"
+    },
+    {
+      "source": "scripts/left_arm_v3_1_model_control.py",
+      "destination": "left_arm_v3_1_model_control.py",
+      "sha256": "0cdd979f20275988841f50631468aa05987517a2369060f4f2acb9fb5cb31369"
+    },
+    {
+      "source": "scripts/chessboard_vision_v3_0_web_control.py",
+      "destination": "chessboard_vision_v3_0_web_control.py",
+      "sha256": "863a0c77ba15cd0a2027758859dad19dc63d97454048fa22b8208f69820a73c4"
+    }
+  ],
+  "data_files_replaced": false,
+  "hardware_executed": false,
+  "offline_tests_passed": 152,
+  "scope": "Unnamed absolute seven-axis targets; ordinary jog and any saved replay use configured model; existing route takeover/learning/Clearance skip preserved."
+}

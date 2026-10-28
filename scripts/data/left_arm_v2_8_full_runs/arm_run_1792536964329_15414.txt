@@ -1,0 +1,290 @@
+Serial port is open
+v3.1 model hold reusing enabled motors; enable frames skipped= ["shoulder_front", "shoulder_side", "shoulder_rotate", "elbow", "arm_roll", "wrist_side", "wrist"]
+v3.1 model hold seamless takeover bridge= {"enabled": true, "joints": {"arm_roll": {"hold_tau_limits": [-0.8, 0.8], "load_support_tau": -0.05675214350223541, "measured_tau": -0.07081807404756546, "measured_velocity_rad_s": 0.021978022530674934, "takeover_tau": -0.06202686503529549, "target_rad": -2.650301456451416}, "elbow": {"hold_tau_limits": [-5.4, 5.4], "load_support_tau": 0.3166666030883789, "measured_tau": 4.42393159866333, "measured_velocity_rad_s": 0.0019536020699888468, "takeover_tau": 4.424713039491325, "target_rad": 0.8226520419120789}, "shoulder_front": {"hold_tau_limits": [-4.8, 3.8], "load_support_tau": 0.0, "measured_tau": 2.5914530754089355, "measured_velocity_rad_s": 0.0019536020699888468, "takeover_tau": 2.592234516236931, "target_rad": 1.9319828748703003}, "shoulder_rotate": {"hold_tau_limits": [-2.408302784152329, 1.0], "load_support_tau": -2.0608302566409114, "measured_tau": -2.405372381210327, "measured_velocity_rad_s": -0.007326007355004549, "takeover_tau": -2.408302784152329, "target_rad": 1.946860432624817}, "shoulder_side": {"hold_tau_limits": [-1.0, 1.811965823173523], "load_support_tau": 0.811965823173523, "measured_tau": 1.811965823173523, "measured_velocity_rad_s": -0.0019536020699888468, "takeover_tau": 1.8111843823455274, "target_rad": -2.7327001094818115}, "wrist": {"hold_tau_limits": [-0.7, 0.7], "load_support_tau": -0.10838829159736629, "measured_tau": 0.4029304087162018, "measured_velocity_rad_s": -0.03663003817200661, "takeover_tau": 0.3882783934473991, "target_rad": -1.0313191413879395}, "wrist_side": {"hold_tau_limits": [-0.45, 0.9255189299583435], "load_support_tau": 0.5406227129697799, "measured_tau": 0.9255189299583435, "measured_velocity_rad_s": -0.007326007355004549, "takeover_tau": 0.9225885270163416, "target_rad": 0.31452658772468567}}, "kd": 0.4, "kp": 2.0, "mode": "immediate-current-state-bridge"}
+{
+  "ok": true,
+  "reason": "duration_complete",
+  "duration_s": 5.004452705383301,
+  "final": {
+    "shoulder_front": {
+      "pos": 1.9319828748703003,
+      "vel": -0.0019536020699888468,
+      "tau": 2.577777862548828
+    },
+    "shoulder_side": {
+      "pos": -2.7327001094818115,
+      "vel": -0.005860805977135897,
+      "tau": 1.7982906103134155
+    },
+    "shoulder_rotate": {
+      "pos": 1.946860432624817,
+      "vel": -0.007326007355004549,
+      "tau": -2.415140390396118
+    },
+    "elbow": {
+      "pos": 0.8226520419120789,
+      "vel": -0.0019536020699888468,
+      "tau": 4.382905960083008
+    },
+    "arm_roll": {
+      "pos": -2.6506829261779785,
+      "vel": -0.007326007355004549,
+      "tau": -0.08058608323335648
+    },
+    "wrist_side": {
+      "pos": 0.31452658772468567,
+      "vel": -0.007326007355004549,
+      "tau": 0.920634925365448
+    },
+    "wrist": {
+      "pos": -1.0313191413879395,
+      "vel": -0.007326007355004549,
+      "tau": 0.3980464041233063
+    }
+  },
+  "final_error_deg": {
+    "shoulder_front": 0.0,
+    "shoulder_side": 0.0,
+    "shoulder_rotate": 0.0,
+    "elbow": 0.0,
+    "arm_roll": 0.021856605344040804,
+    "wrist_side": 0.0,
+    "wrist": 0.0
+  },
+  "max_velocity_rad_s": {
+    "shoulder_front": 0.005860805977135897,
+    "shoulder_side": 0.005860805977135897,
+    "shoulder_rotate": 0.021978022530674934,
+    "elbow": 0.005860805977135897,
+    "arm_roll": 0.021978022530674934,
+    "wrist_side": 0.03663003817200661,
+    "wrist": 0.12454212456941605
+  },
+  "max_abs_error_deg": {
+    "shoulder_front": 0.0,
+    "shoulder_side": 0.0,
+    "shoulder_rotate": 0.021856605344040804,
+    "elbow": 0.0,
+    "arm_roll": 0.021856605344040804,
+    "wrist_side": 0.0,
+    "wrist": 0.021856605344040804
+  },
+  "rejected_velocity_spikes": [],
+  "static_hold_bias_tau": {
+    "shoulder_front": 0.4512820243835449,
+    "shoulder_side": 0.46,
+    "shoulder_rotate": -0.22,
+    "elbow": 0.75,
+    "arm_roll": -0.08,
+    "wrist_side": 0.17,
+    "wrist": -0.17
+  },
+  "load_support": {
+    "shoulder_front": {
+      "measured_tau": 2.5914530754089355,
+      "model_tau_with_static_bias": 2.5914530754089355,
+      "static_hold_bias_tau": 0.4512820243835449,
+      "load_support_tau": 0.0,
+      "bridge_tau_ff": 2.592234516236931,
+      "model_tau_limits": [
+        -4.8,
+        3.8
+      ],
+      "hold_tau_limits": [
+        -4.8,
+        3.8
+      ],
+      "scope": "current-fixed-pose-hold-only"
+    },
+    "shoulder_side": {
+      "measured_tau": 1.811965823173523,
+      "model_tau_with_static_bias": 1.0,
+      "static_hold_bias_tau": 0.46,
+      "load_support_tau": 0.811965823173523,
+      "bridge_tau_ff": 1.8111843823455274,
+      "model_tau_limits": [
+        -1.0,
+        1.0
+      ],
+      "hold_tau_limits": [
+        -1.0,
+        1.811965823173523
+      ],
+      "scope": "current-fixed-pose-hold-only"
+    },
+    "shoulder_rotate": {
+      "measured_tau": -2.405372381210327,
+      "model_tau_with_static_bias": -0.344542124569416,
+      "static_hold_bias_tau": -0.22,
+      "load_support_tau": -2.0608302566409114,
+      "bridge_tau_ff": -2.408302784152329,
+      "model_tau_limits": [
+        -1.0,
+        1.0
+      ],
+      "hold_tau_limits": [
+        -2.408302784152329,
+        1.0
+      ],
+      "scope": "current-fixed-pose-hold-only"
+    },
+    "elbow": {
+      "measured_tau": 4.42393159866333,
+      "model_tau_with_static_bias": 4.107264995574951,
+      "static_hold_bias_tau": 0.75,
+      "load_support_tau": 0.3166666030883789,
+      "bridge_tau_ff": 4.424713039491325,
+      "model_tau_limits": [
+        -5.4,
+        5.4
+      ],
+      "hold_tau_limits": [
+        -5.4,
+        5.4
+      ],
+      "scope": "current-fixed-pose-hold-only"
+    },
+    "arm_roll": {
+      "measured_tau": -0.07081807404756546,
+      "model_tau_with_static_bias": -0.01406593054533005,
+      "static_hold_bias_tau": -0.08,
+      "load_support_tau": -0.05675214350223541,
+      "bridge_tau_ff": -0.06202686503529549,
+      "model_tau_limits": [
+        -0.8,
+        0.8
+      ],
+      "hold_tau_limits": [
+        -0.8,
+        0.8
+      ],
+      "scope": "current-fixed-pose-hold-only"
+    },
+    "wrist_side": {
+      "measured_tau": 0.9255189299583435,
+      "model_tau_with_static_bias": 0.3848962169885636,
+      "static_hold_bias_tau": 0.17,
+      "load_support_tau": 0.5406227129697799,
+      "bridge_tau_ff": 0.9225885270163416,
+      "model_tau_limits": [
+        -0.45,
+        0.45
+      ],
+      "hold_tau_limits": [
+        -0.45,
+        0.9255189299583435
+      ],
+      "scope": "current-fixed-pose-hold-only"
+    },
+    "wrist": {
+      "measured_tau": 0.4029304087162018,
+      "model_tau_with_static_bias": 0.5113187003135681,
+      "static_hold_bias_tau": -0.17,
+      "load_support_tau": -0.10838829159736629,
+      "bridge_tau_ff": 0.3882783934473991,
+      "model_tau_limits": [
+        -0.7,
+        0.7
+      ],
+      "hold_tau_limits": [
+        -0.7,
+        0.7
+      ],
+      "scope": "current-fixed-pose-hold-only"
+    }
+  },
+  "motor_enable_mode": "reused-existing-enable",
+  "seamless_takeover": {
+    "enabled": true,
+    "mode": "immediate-current-state-bridge",
+    "kp": 2.0,
+    "kd": 0.4,
+    "joints": {
+      "shoulder_front": {
+        "target_rad": 1.9319828748703003,
+        "measured_velocity_rad_s": 0.0019536020699888468,
+        "takeover_tau": 2.592234516236931,
+        "measured_tau": 2.5914530754089355,
+        "load_support_tau": 0.0,
+        "hold_tau_limits": [
+          -4.8,
+          3.8
+        ]
+      },
+      "shoulder_side": {
+        "target_rad": -2.7327001094818115,
+        "measured_velocity_rad_s": -0.0019536020699888468,
+        "takeover_tau": 1.8111843823455274,
+        "measured_tau": 1.811965823173523,
+        "load_support_tau": 0.811965823173523,
+        "hold_tau_limits": [
+          -1.0,
+          1.811965823173523
+        ]
+      },
+      "shoulder_rotate": {
+        "target_rad": 1.946860432624817,
+        "measured_velocity_rad_s": -0.007326007355004549,
+        "takeover_tau": -2.408302784152329,
+        "measured_tau": -2.405372381210327,
+        "load_support_tau": -2.0608302566409114,
+        "hold_tau_limits": [
+          -2.408302784152329,
+          1.0
+        ]
+      },
+      "elbow": {
+        "target_rad": 0.8226520419120789,
+        "measured_velocity_rad_s": 0.0019536020699888468,
+        "takeover_tau": 4.424713039491325,
+        "measured_tau": 4.42393159866333,
+        "load_support_tau": 0.3166666030883789,
+        "hold_tau_limits": [
+          -5.4,
+          5.4
+        ]
+      },
+      "arm_roll": {
+        "target_rad": -2.650301456451416,
+        "measured_velocity_rad_s": 0.021978022530674934,
+        "takeover_tau": -0.06202686503529549,
+        "measured_tau": -0.07081807404756546,
+        "load_support_tau": -0.05675214350223541,
+        "hold_tau_limits": [
+          -0.8,
+          0.8
+        ]
+      },
+      "wrist_side": {
+        "target_rad": 0.31452658772468567,
+        "measured_velocity_rad_s": -0.007326007355004549,
+        "takeover_tau": 0.9225885270163416,
+        "measured_tau": 0.9255189299583435,
+        "load_support_tau": 0.5406227129697799,
+        "hold_tau_limits": [
+          -0.45,
+          0.9255189299583435
+        ]
+      },
+      "wrist": {
+        "target_rad": -1.0313191413879395,
+        "measured_velocity_rad_s": -0.03663003817200661,
+        "takeover_tau": 0.3882783934473991,
+        "measured_tau": 0.4029304087162018,
+        "load_support_tau": -0.10838829159736629,
+        "hold_tau_limits": [
+          -0.7,
+          0.7
+        ]
+      }
+    }
+  },
+  "preflight_still": {
+    "enabled": false,
+    "reason": "replaced-by-immediate-seamless-takeover"
+  },
+  "post_enable_still": {
+    "enabled": false
+  },
+  "log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_model_runs.jsonl"
+}

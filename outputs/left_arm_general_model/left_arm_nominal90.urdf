@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="hive_left_arm_offline_kinematic_preview">
+  <!--KINEMATICS ONLY. No physical inertias, TCP, collision geometry, verified limits, transmissions or controller plugins. continuous describes a mathematical rotation only, not an unlimited physical joint.-->
+  <link name="cad_base" />
+  <link name="shoulder_front_link" />
+  <joint name="shoulder_front" type="continuous">
+    <parent link="cad_base" />
+    <child link="shoulder_front_link" />
+    <origin xyz="-0.038 0.09616110175009304 0.2314528980595277" rpy="-1.745329252324459 -0 0" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <link name="shoulder_side_link" />
+  <joint name="shoulder_side" type="continuous">
+    <parent link="shoulder_front_link" />
+    <child link="shoulder_side_link" />
+    <origin xyz="0.02354685310000277 -0.001878118050683553 0.04651789719860247" rpy="-1.570796326794897 -1.396263401265334 -1.570796326794897" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <link name="shoulder_rotate_link" />
+  <joint name="shoulder_rotate" type="continuous">
+    <parent link="shoulder_side_link" />
+    <child link="shoulder_rotate_link" />
+    <origin xyz="-0.008196742632517767 -0.04912732972915371 -0.01554685310000277" rpy="0 -1.570796326794897 -1.745329252324459" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <link name="elbow_link" />
+  <joint name="elbow" type="continuous">
+    <parent link="shoulder_rotate_link" />
+    <child link="elbow_link" />
+    <origin xyz="-0.004312160095687995 0.03812538236371187 -0.1845802672121492" rpy="-1.571126718482576 -2.879469536041281e-05 -0.08693354203951184" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <link name="arm_roll_link" />
+  <joint name="arm_roll" type="continuous">
+    <parent link="elbow_link" />
+    <child link="arm_roll_link" />
+    <origin xyz="-0.01197168105300952 0.1069471587967788 -0.03749999998783496" rpy="1.57079632712232 -0.08708939300719587 0.05998486880784645" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <link name="wrist_side_link" />
+  <joint name="wrist_side" type="continuous">
+    <parent link="arm_roll_link" />
+    <child link="wrist_side_link" />
+    <origin xyz="0.02083470809050879 -0.004830496317324559 -0.100001311490795" rpy="1.570796327159147 -0.170134176119674 1.483706934305801" />
+    <axis xyz="0 0 1" />
+  </joint>
+  <link name="wrist_link" />
+  <joint name="wrist" type="continuous">
+    <parent link="wrist_side_link" />
+    <child link="wrist_link" />
+    <origin xyz="-0.03211022407681555 -0.0881809829979821 -0.01963493825366001" rpy="1.57079631712378 -1.51081145759958 1.400662160002763" />
+    <axis xyz="0 0 1" />
+  </joint>
+</robot>

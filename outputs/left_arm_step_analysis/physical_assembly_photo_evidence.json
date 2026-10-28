@@ -1,0 +1,66 @@
+{
+  "photo_path": "C:\\Users\\rhche\\Desktop\\debug\\Weixin Image_20260909155021.jpg",
+  "photo_sha256": "f2e92e792d55b904b37b28ec9c425a390e0aa3a511248b81983f4b21bf795745",
+  "same_pose_as_encoder_baseline": true,
+  "same_pose_confirmation_source": "user explicit confirmation",
+  "baseline_file": "encoder_registration_baseline.json",
+  "observations": {
+    "M6": {
+      "joint": "shoulder_front",
+      "visibility": "occluded inside shoulder",
+      "source": "user annotation and clarification",
+      "mounting_orientation_solved": false
+    },
+    "M5": {
+      "joint": "shoulder_side",
+      "visibility": "silver circular mounting face and motor body visible",
+      "mounting_orientation_solved": false
+    },
+    "M4": {
+      "joint": "shoulder_rotate",
+      "visibility": "external cylindrical link housing visible; motor end interfaces partly obscured",
+      "mounting_orientation_solved": false
+    },
+    "M7": {
+      "joint": "elbow",
+      "visibility": "black cable/electronics end visible",
+      "mounting_orientation_solved": false
+    },
+    "M3": {
+      "joint": "arm_roll",
+      "visibility": "external cylindrical link housing visible; motor end interfaces partly obscured",
+      "mounting_orientation_solved": false
+    },
+    "M2": {
+      "joint": "wrist_side",
+      "visibility": "silver bracket and black motor/cable end partly visible",
+      "mounting_orientation_solved": false
+    },
+    "M1": {
+      "joint": "wrist",
+      "visibility": "black cable/electronics end and side bracket visible",
+      "mounting_orientation_solved": false
+    }
+  },
+  "encoder_signs_verified": false,
+  "encoder_offsets_verified": false,
+  "limitation": "Single photograph has perspective and occlusion; no exact 3D mounting correction or encoder offset inferred.",
+  "cad_review_image": "original_cad_mounting_review.png",
+  "comparison_notes": [
+    {
+      "status": "candidate interpretation, not confirmed",
+      "observation": "Wrist-side and wrist appearances differ together relative to elbow in the provided photograph and original CAD views.",
+      "possible_explanations": [
+        "different arm_roll joint pose",
+        "different mounting or proxy motor appearance",
+        "camera perspective"
+      ],
+      "action": "resolve joint-pose difference before treating any motor as individually flipped"
+    },
+    {
+      "status": "user-confirmed",
+      "observation": "M6 shoulder_front is inside shoulder and not visible in this image.",
+      "action": "use body attachment and M5 bracket for root registration; do not infer M6 end orientation from external M5"
+    }
+  ]
+}

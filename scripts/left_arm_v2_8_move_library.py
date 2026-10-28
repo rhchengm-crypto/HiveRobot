@@ -57,6 +57,7 @@ WHITE_KNIGHT_PLACE_B1_MOVE_NAME = "white_knight_place_b1"
 KNIGHT_B1_WRIST_INDUCED_ROLL_RECOVERY_ID = "restore-knight-b1-wrist-induced-roll-20260913-v1"
 PLACEMENT1_MAX_LEARNABLE_ERROR_DEG = 5.0
 PLACEMENT1_TERMINAL_SETTLE_SECONDS = 1.5
+PLACEMENT1_TERMINAL_TORQUE_HANDOFF_SECONDS = 0.5
 PLACEMENT1_SHARED_CLEARANCE_RECOVERY_ID = "restore-pre-placement1-clearance-20260911-v2"
 PLACEMENT1_WRIST_SIDE_WORSENING_RECOVERY_ID = "restore-placement1-wrist-side-20260911-2043-v1"
 PLACEMENT1_WRIST_SIDE_RETRY_RECOVERY_ID = "avoid-rejected-placement1-wrist-side-retry-20260911-v1"
@@ -81,6 +82,121 @@ def command_holds(arm, targets, gains, hold_tau, fallback_kp=3.0, fallback_kd=0.
             target,
             0,
             hold_tau.get(name, 0.0),
+        )
+
+
+def placement_terminal_torque_handoff(
+    arm,
+    targets: Dict[str, float],
+    gains: Dict[str, Dict[str, float]],
+    hold_tau: Dict[str, float],
+    joints: Iterable[str],
+    fallback_kp: float,
+    fallback_kd: float,
+    seconds: float = PLACEMENT1_TERMINAL_TORQUE_HANDOFF_SECONDS,
+) -> tuple[Dict[str, float], Dict[str, float], dict]:
+    """Replace terminal PD deflection with measured torque support.
+
+    Placement learning may intentionally command a position several degrees
+    beyond the reached clearance pose so the PD term supplies payload torque.
+    That is useful during the move, but it is a poor process handoff state: a
+    new controller sees a large hidden position error and the motor moves if
+    command refresh pauses.  Preserve the observed output torque while moving
+    each arm target to its measured position before the placement process
+    exits.  The claw target is left unchanged.
+    """
+    names = list(joints)
+    status = arm.read_status(names)
+    handoff_targets = dict(targets)
+    handoff_tau = dict(hold_tau)
+    diagnostics = {}
+    for name in names:
+        measured_pos = float(status[name]["pos"])
+        measured_tau = float(status[name]["tau"])
+        diagnostics[name] = {
+            "previous_target_rad": float(targets[name]),
+            "measured_position_rad": measured_pos,
+            "command_residual_deg": math.degrees(float(targets[name]) - measured_pos),
+            "measured_tau": measured_tau,
+        }
+        handoff_targets[name] = measured_pos
+        handoff_tau[name] = measured_tau
+    print(
+        "v2.8 placement terminal torque handoff= "
+        + json.dumps({
+            "seconds": float(seconds),
+            "mode": "measured-position-plus-measured-torque",
+            "joints": diagnostics,
+        }, ensure_ascii=False),
+        flush=True,
+    )
+    arm.hold_positions_with_gains(
+        handoff_targets,
+        seconds=float(seconds),
+        gains=gains,
+        fallback_kp=fallback_kp,
+        fallback_kd=fallback_kd,
+        hold_tau=handoff_tau,
+    )
+    return handoff_targets, handoff_tau, diagnostics
+
+
+def rook_group_continuous_holds(arm, targets, kwargs, controller, api):
+    """Keep pending A1 joints commanded and inherit active load at group entry."""
+    updated = dict(kwargs)
+    hold_targets = dict(updated.get("hold_targets", {}))
+    hold_gains = dict(updated.get("hold_gains", {}))
+    hold_tau = dict(updated.get("hold_tau", {}))
+    pending = [name for name in api.DEFAULT_JOINTS
+               if name not in targets and name not in hold_targets]
+    for name in pending:
+        hold_targets[name] = controller["hold_targets"][name]
+        hold_gains[name] = dict(controller["hold_gains"][name])
+        hold_tau[name] = float(controller["hold_tau"].get(name, 0.0))
+    status = arm.read_status(list(targets))
+    move_tau = dict(updated.get("move_tau_ff", {}))
+    starts = {}
+    for name in targets:
+        previous = move_tau.get(name, 0.0)
+        config = dict(previous) if isinstance(previous, dict) else {"end_tau": float(previous)}
+        end_tau = float(config.get("end_tau", config.get("tau", 0.0)))
+        kd = float(updated.get("move_gains", {}).get(name, {}).get(
+            "kd", updated.get("fallback_kd", 0.3)))
+        kd = max(0.0, min(5.0, kd))
+        # Active targets start at measured position. Preserve net output
+        # across that change, including the new controller's damping term.
+        start_tau = float(status[name]["tau"]) + kd * float(status[name]["vel"])
+        if not math.isfinite(start_tau):
+            raise RuntimeError(f"non-finite A1 group entry feedback for {name}")
+        config.update({"start_tau": start_tau, "end_tau": end_tau,
+                       "ramp_fraction": max(0.25, float(config.get("ramp_fraction", 0.25))),
+                       "ramp": "smoothstep"})
+        move_tau[name] = config
+        starts[name] = {"measured_tau": float(status[name]["tau"]),
+                        "start_tau": start_tau, "end_tau": end_tau}
+    updated.update({"hold_targets": hold_targets, "hold_gains": hold_gains,
+                    "hold_tau": hold_tau, "move_tau_ff": move_tau})
+    print("v2.8 White Rook Place_A1 continuous group entry=", json.dumps({
+        "active_joints": list(targets), "pending_hold_joints": pending,
+        "commanded_arm_joints": [name for name in api.DEFAULT_JOINTS
+                                 if name in targets or name in hold_targets],
+        "active_torque_ramps": starts,
+    }, ensure_ascii=False), flush=True)
+    return updated
+
+
+def remember_placement_group_controller(controller, targets, kwargs):
+    """Remember the exact terminal law for joints pending in the next group."""
+    controller["hold_targets"].update(kwargs.get("hold_targets", {}))
+    controller["hold_gains"].update(kwargs.get("hold_gains", {}))
+    controller["hold_tau"].update(kwargs.get("hold_tau", {}))
+    for name, target in targets.items():
+        controller["hold_targets"][name] = target
+        controller["hold_gains"][name] = dict(kwargs.get("move_gains", {}).get(name, {}))
+        config = kwargs.get("move_tau_ff", {}).get(name, 0.0)
+        controller["hold_tau"][name] = (
+            float(config.get("end_tau", config.get("tau", 0.0)))
+            if isinstance(config, dict) else float(config)
         )
 
 
@@ -657,14 +773,27 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
         fallback_kd=fallback_kd,
         hold_tau=final_hold_tau,
     )
+    learned_command_targets = {
+        name: float(wrist_hold_target if name == "wrist" else move_targets[name])
+        for name in validation_joints
+    }
+    final_hold_targets, final_hold_tau, terminal_handoff = placement_terminal_torque_handoff(
+        arm,
+        final_hold_targets,
+        final_hold_gains,
+        final_hold_tau,
+        validation_joints,
+        fallback_kp,
+        fallback_kd,
+    )
     final_positions = arm.positions(validation_joints)
     errors = clearance_errors_deg(nominal, final_positions, validation_joints)
     comparison = {
         name: {
             "nominal_clearance_rad": float(nominal[name]),
-            "learned_command_rad": float(
-                wrist_hold_target if name == "wrist" else move_targets[name]
-            ),
+            "learned_command_rad": learned_command_targets[name],
+            "handoff_target_rad": float(final_hold_targets[name]),
+            "handoff_tau": float(final_hold_tau[name]),
             "actual_rad": float(final_positions[name]),
             "error_deg": float(errors[name]),
         }
@@ -678,10 +807,18 @@ def run_placement1_on_arm(arm, clearance_file: str, fallback_kp: float, fallback
     clearance_feedback = None
     if callable(getattr(arm, "read_status", None)):
         clearance_feedback = {
-            "status": arm.read_status(["wrist_side", "arm_roll"]),
-            "command_target_rad": {name: move_targets[name] for name in ("wrist_side", "arm_roll")},
-            "terminal_feedforward_tau": {name: final_hold_tau.get(name, 0.0) for name in ("wrist_side", "arm_roll")},
-            "terminal_gains": {name: final_hold_gains[name] for name in ("wrist_side", "arm_roll")},
+            "status": arm.read_status(validation_joints),
+            "learned_command_target_rad": learned_command_targets,
+            "handoff_target_rad": {
+                name: final_hold_targets[name] for name in validation_joints
+            },
+            "terminal_feedforward_tau": {
+                name: final_hold_tau.get(name, 0.0) for name in validation_joints
+            },
+            "terminal_gains": {
+                name: final_hold_gains[name] for name in validation_joints
+            },
+            "torque_handoff": terminal_handoff,
         }
         print("v2.8 clearance joint feedback=", json.dumps(clearance_feedback, ensure_ascii=False), flush=True)
     if clearance_handoff is not None:
@@ -765,6 +902,16 @@ def run_white_bishop_place_on_arm(arm, moves_file: str, fallback_kp: float,
     replay_order, final_joint = legacy.resolve_replay_order(record)
     low_shoulder_pose = legacy.is_low_shoulder_pose(pose)
     claw_target = float(claw_hold["claw_hold_pos"])
+    continuous_rook = str(destination_move_name).casefold() == "white_rook_place_a1"
+    if continuous_rook:
+        missing_control = {
+            key: [name for name in api.DEFAULT_JOINTS if name not in claw_hold.get(key, {})]
+            for key in ("hold_targets", "hold_gains", "hold_tau")
+        }
+        missing_control = {key: names for key, names in missing_control.items() if names}
+        if missing_control:
+            raise RuntimeError("A1 requires the full Clearance controller handoff: "
+                               + json.dumps(missing_control))
 
     print(f"v2.8 {workflow_label} follow-up=", json.dumps({
         "move": move_name,
@@ -795,6 +942,19 @@ def run_white_bishop_place_on_arm(arm, moves_file: str, fallback_kp: float,
         "replay_entry", entry_gains, low_shoulder_pose
     )
     entry_tau = dict(legacy.REPLAY_ENTRY_HOLD_TAU)
+    if continuous_rook:
+        # The Clearance stage already exported its terminal targets, gains
+        # and support torques. Do not replace them with generic replay-entry
+        # gains and zero torque on six joints before beginning the A1 move.
+        current = {name: float(claw_hold["hold_targets"][name]) for name in api.DEFAULT_JOINTS}
+        entry_gains = {name: dict(claw_hold["hold_gains"][name]) for name in api.DEFAULT_JOINTS}
+        entry_tau = {name: float(claw_hold["hold_tau"][name]) for name in api.DEFAULT_JOINTS}
+        print("v2.8 White Rook Place_A1 inherited clearance controller=", json.dumps({
+            "hold_targets": current, "hold_gains": entry_gains, "hold_tau": entry_tau,
+        }, ensure_ascii=False), flush=True)
+    group_controller = {"hold_targets": dict(current),
+                        "hold_gains": {name: dict(gain) for name, gain in entry_gains.items()},
+                        "hold_tau": dict(entry_tau)}
     started = time.time()
     while time.time() - started < legacy.REPLAY_ENTRY_TAKEOVER_SECONDS:
         command_holds(arm, current, entry_gains, entry_tau, fallback_kp, fallback_kd)
@@ -829,9 +989,13 @@ def run_white_bishop_place_on_arm(arm, moves_file: str, fallback_kp: float,
         )
 
     def group_with_claw(self, targets, *call_args, **call_kwargs):
-        return current_group(
-            self, targets, *call_args, **add_claw_hold(call_kwargs)
-        )
+        updated = add_claw_hold(call_kwargs)
+        if continuous_rook:
+            updated = rook_group_continuous_holds(self, targets, updated, group_controller, api)
+        result = current_group(self, targets, *call_args, **updated)
+        if continuous_rook:
+            remember_placement_group_controller(group_controller, targets, updated)
+        return result
 
     api.LeftArmV2.move_target_with_holds = single_with_claw
     api.LeftArmV2.move_targets_with_holds = group_with_claw

@@ -1,0 +1,84 @@
+{
+  "stage": "general coupled nominal model fitted and integrated into operational trajectories; first physical apply test pending",
+  "active_reference_step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
+  "encoder_signs_used": {
+    "shoulder_front": 1,
+    "shoulder_side": 1,
+    "shoulder_rotate": -1,
+    "elbow": -1,
+    "arm_roll": -1,
+    "wrist_side": 1,
+    "wrist": -1
+  },
+  "kinematics": [
+    "seven moving links in confirmed chain order",
+    "CAD exact and nominal shoulder 90-degree variants",
+    "local transform, POE and exported URDF agreement",
+    "geometric Jacobian"
+  ],
+  "general_dynamics": [
+    "Newton-Euler inverse dynamics",
+    "coupled mass matrix",
+    "Coriolis/centrifugal bias",
+    "gravity and historical friction prior",
+    "70-column inertial regressor",
+    "C2 quintic q/dq/ddq reference with skip mask"
+  ],
+  "checks_passed": 154,
+  "hardware_commands_issued": false,
+  "model_promoted_to_runtime": false,
+  "physics_parameters_fabricated": false,
+  "default_validation_geometry": "CAD exact; nominal90 retained as optional simplification",
+  "report_files": [
+    "offline_validation.json",
+    "historical_data_identifiability.json",
+    "dynamic_identifiability_probe.json",
+    "remaining_physical_inputs.json",
+    "verification_tests.json"
+  ],
+  "artifact_files": [
+    "left_arm_cad_exact.json",
+    "left_arm_nominal90.json",
+    "left_arm_cad_exact.urdf",
+    "left_arm_nominal90.urdf",
+    "cad_fk_reference_overlay.png"
+  ],
+  "gravity_configuration": {
+    "source": "nominal-horizontal-shoulder-axes",
+    "status": "assumed_for_on_robot_validation",
+    "physically_measured": false,
+    "magnitude_m_s2": 9.80665,
+    "assumptions": [
+      "approved nominal 90-degree shoulder geometry",
+      "nominal shoulder_front and shoulder_side axes horizontal",
+      "down points toward negative CAD Z in approved reference pose"
+    ],
+    "user_instruction": "Use the CAD-based nominal direction directly; no additional physical angle or distance measurements."
+  },
+  "gravity_in_cad_frame_m_s2": [
+    -0.0,
+    -1.7029069047056824,
+    -9.65766495051499
+  ],
+  "latest_rigid_body_test_run": {
+    "tests": 19,
+    "passed": 19,
+    "hardware_executed": false
+  },
+  "gravity_default_used_by": [
+    "inverse_dynamics",
+    "gravity_torques",
+    "potential_energy",
+    "gravity_regressor",
+    "dynamics_regressor"
+  ],
+  "protected_existing_hold_learning_sources_and_identification_model_unchanged": true,
+  "runtime_adapter_implemented": true,
+  "nominal_parameters_fitted_from_existing_records": {
+    "gravity": 73,
+    "effective_inertia": 29
+  },
+  "physical_parameter_status": "estimated, not independently measured",
+  "latest_validation_report": "motion_integration_validation.json",
+  "deployment_package": "left_arm_general_motion_jetson.zip"
+}

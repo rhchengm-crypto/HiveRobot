@@ -1,0 +1,31 @@
+{
+  "returncode": 0,
+  "tests_run": 82,
+  "targets": [
+    "test_left_arm_rigid_body",
+    "test_left_arm_v31_model_control",
+    "test_left_arm_v28_home",
+    "test_left_arm_v31_motion_dynamics",
+    "test_chess_v30_dynamics_web.DynamicsWebTests.test_motion_dynamics_is_opt_in_and_does_not_leak_to_model_hold",
+    "test_chess_v30_dynamics_web.DynamicsWebTests.test_successful_motion_is_sequenced_into_model_hold",
+    "test_chess_v30_dynamics_web.DynamicsWebTests.test_failed_motion_does_not_start_model_hold"
+  ],
+  "protected_files_unchanged_during_checks": true,
+  "protected_sha256": {
+    "scripts/left_arm_v2_6.py": "75a1f4dc26d533146a9041c1ffb6dc0316eea4431943f711efbc353aad6957ed",
+    "scripts/left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+    "scripts/left_arm_v2_8_move_library.py": "7b86460a9f4514ff39d622498bbd60e73ec5b10784881d9f875991e9b7e939e2",
+    "scripts/left_arm_v3_1_model_control.py": "46a34461314e0edee79f5f7a3c0bd2e3d3a7cf4bb583f1e42b83a5748c673013",
+    "scripts/left_arm_v3_1_motion_dynamics.py": "a10a298a85a76cca697ff3f88a4559517b9c96247dbb6a93d6a783dea234f34f",
+    "scripts/chessboard_vision_v3_0_web_control.py": "34e173b16d8b1dcea87bad87b829214f76448681fbbe2438b1201ad17afaaa4e",
+    "scripts/left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f"
+  },
+  "new_rigid_body_module_imported_by_existing_runtime": false,
+  "test_detail_file": "test_results.txt",
+  "additional_reference_tests": {
+    "tests_run": 2,
+    "returncode": 0,
+    "target": "test_left_arm_rigid_body.ReferenceTests"
+  },
+  "total_test_cases_passed": 84
+}

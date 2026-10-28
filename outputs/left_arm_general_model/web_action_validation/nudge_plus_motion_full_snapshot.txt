@@ -1,0 +1,78 @@
+general motion configuration= {"build": "seven-axis-rigid-body-motion-v3-prepared", "mode": "apply", "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json", "workflow_action": "nudge:arm_roll:+2deg", "workflow_run_id": "9fab94a2269a57c6", "model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7", "gravity_in_cad_frame_m_s2": [-0.0, -1.7029069047056824, -9.65766495051499], "gravity_configuration": {"source": "nominal-horizontal-shoulder-axes", "status": "assumed_for_on_robot_validation", "physically_measured": false, "magnitude_m_s2": 9.80665, "assumptions": ["approved nominal 90-degree shoulder geometry", "nominal shoulder_front and shoulder_side axes horizontal", "down points toward negative CAD Z in approved reference pose"], "user_instruction": "Use the CAD-based nominal direction directly; no additional physical angle or distance measurements."}, "dynamics_parameters_available": true, "parameter_status": "nominal-estimate-from-existing-tests; not independently measured link mass properties", "identification_records": {"gravity_records_used": 73, "unique_inertia_records_used": 29}, "parameters_independently_verified": false, "missing_inertials": [], "torque_policy": "bounded-pose-relative-ID-plus-friction; legacy/adaptive baseline retained", "compute_backend": "independent-process-latest-reference-mailbox", "max_result_age_ms": 100.0, "torque_cap_Nm": 0.5, "log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_motion_runs.jsonl"}
+Serial port is open
+Serial port is open
+enable arm_roll
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable wrist_side
+enable wrist
+v2.6 nudge-hold active arm_roll delta_deg= 2.0 kp= 12.0 kd= 2.0 seconds= 1.6 hold joints: shoulder_front,shoulder_side,shoulder_rotate,elbow,wrist_side,wrist
+v2.6 nudge-hold hold_tau= {"shoulder_front": 3.8, "elbow": 2.2, "wrist": 0.55} control_dt= 0.01
+v2.6 nudge-hold compliant hold gains= {"shoulder_rotate": {"kp": 4.0, "kd": 1.0}, "wrist_side": {"kp": 4.0, "kd": 1.6}, "wrist": {"kp": 6.0, "kd": 2.0}}
+{
+  "start": {
+    "arm_roll": -2.654116153717041,
+    "shoulder_front": 1.942282795906067,
+    "shoulder_side": -2.72163724899292,
+    "shoulder_rotate": 2.3538949489593506,
+    "elbow": 0.8176928162574768,
+    "wrist_side": 0.3061341345310211,
+    "wrist": -1.0290303230285645
+  },
+  "requested_target": {
+    "arm_roll": -2.6192095686771544
+  },
+  "target": {
+    "arm_roll": -2.6192095686771544
+  },
+  "hold_targets": {
+    "shoulder_front": 1.942282795906067,
+    "shoulder_side": -2.72163724899292,
+    "shoulder_rotate": 2.3538949489593506,
+    "elbow": 0.8176928162574768,
+    "wrist_side": 0.3061341345310211,
+    "wrist": -1.0290303230285645
+  }
+}
+general motion begin= {"build": "seven-axis-rigid-body-motion-v3-prepared", "mode": "apply", "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json", "workflow_action": "nudge:arm_roll:+2deg", "workflow_run_id": "9fab94a2269a57c6", "model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7", "gravity_in_cad_frame_m_s2": [-0.0, -1.7029069047056824, -9.65766495051499], "gravity_configuration": {"source": "nominal-horizontal-shoulder-axes", "status": "assumed_for_on_robot_validation", "physically_measured": false, "magnitude_m_s2": 9.80665, "assumptions": ["approved nominal 90-degree shoulder geometry", "nominal shoulder_front and shoulder_side axes horizontal", "down points toward negative CAD Z in approved reference pose"], "user_instruction": "Use the CAD-based nominal direction directly; no additional physical angle or distance measurements."}, "dynamics_parameters_available": true, "parameter_status": "nominal-estimate-from-existing-tests; not independently measured link mass properties", "identification_records": {"gravity_records_used": 73, "unique_inertia_records_used": 29}, "parameters_independently_verified": false, "missing_inertials": [], "torque_policy": "bounded-pose-relative-ID-plus-friction; legacy/adaptive baseline retained", "compute_backend": "independent-process-latest-reference-mailbox", "max_result_age_ms": 100.0, "torque_cap_Nm": 0.5, "log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_motion_runs.jsonl", "commanded_joints": ["arm_roll", "shoulder_front", "shoulder_side", "shoulder_rotate", "elbow", "wrist_side", "wrist"], "legacy_sparse_layer_preserved": false}
+v2 continuous step arm_roll 1/1 target= -2.6192095686771544
+general motion complete= {"build": "seven-axis-rigid-body-motion-v3-prepared", "mode": "apply", "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json", "workflow_action": "nudge:arm_roll:+2deg", "workflow_run_id": "9fab94a2269a57c6", "model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7", "gravity_in_cad_frame_m_s2": [-0.0, -1.7029069047056824, -9.65766495051499], "gravity_configuration": {"source": "nominal-horizontal-shoulder-axes", "status": "assumed_for_on_robot_validation", "physically_measured": false, "magnitude_m_s2": 9.80665, "assumptions": ["approved nominal 90-degree shoulder geometry", "nominal shoulder_front and shoulder_side axes horizontal", "down points toward negative CAD Z in approved reference pose"], "user_instruction": "Use the CAD-based nominal direction directly; no additional physical angle or distance measurements."}, "dynamics_parameters_available": true, "parameter_status": "nominal-estimate-from-existing-tests; not independently measured link mass properties", "identification_records": {"gravity_records_used": 73, "unique_inertia_records_used": 29}, "parameters_independently_verified": false, "missing_inertials": [], "torque_policy": "bounded-pose-relative-ID-plus-friction; legacy/adaptive baseline retained", "compute_backend": "independent-process-latest-reference-mailbox", "max_result_age_ms": 100.0, "torque_cap_Nm": 0.5, "log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_motion_runs.jsonl", "commanded_joints": ["arm_roll", "shoulder_front", "shoulder_side", "shoulder_rotate", "elbow", "wrist_side", "wrist"], "session_started_at_utc": "2026-10-27T20:51:37.616885+00:00", "frames": 154, "peak_applied_delta_tau_Nm": {"arm_roll": 0.04167659954727879, "shoulder_front": 0.0017110815002702093, "shoulder_side": 0.004115347121735607, "shoulder_rotate": 0.010133960026369696, "elbow": 0.00020158807191819392, "wrist_side": 0.008856558206948697, "wrist": 0.0006086096383373328}, "peak_dynamics_compute_ms": 2.95726200010904, "peak_prepare_frame_ms": 0.8438390000264917, "dynamics_compute_ms": {"p50": 1.6887990000213904, "p99": 2.7669025200702877}, "dynamics_cpu_ms": {"p50": 7.498912000002633, "p99": 11.844839039999961}, "frame_interval_ms": {"p50": 13.59932299965294, "p99": 16.185656000197916, "max": 17.872792999696685}, "accepted_worker_results": 39, "pending_worker_frames": 1, "stale_worker_frames": 0, "worker_error_frames": 0, "worker_submission_skips": 0, "peak_result_age_ms": 59.13084199983132, "terminal_correction_zero": true, "dropped_reference_records": 0, "prediction_status": "available"}
+{
+  "arm_roll": {
+    "pos": -2.642671823501587,
+    "vel": -0.021978022530674934,
+    "tau": 0.25641027092933655
+  },
+  "shoulder_front": {
+    "pos": 1.9449530839920044,
+    "vel": -0.005860805977135897,
+    "tau": 3.411965847015381
+  },
+  "shoulder_side": {
+    "pos": -2.7220187187194824,
+    "vel": 0.0019536020699888468,
+    "tau": -0.03418803587555885
+  },
+  "shoulder_rotate": {
+    "pos": 2.3577096462249756,
+    "vel": -0.007326007355004549,
+    "tau": -0.026862027123570442
+  },
+  "elbow": {
+    "pos": 0.8024337887763977,
+    "vel": -0.005860805977135897,
+    "tau": 3.507692337036133
+  },
+  "wrist_side": {
+    "pos": 0.3057526648044586,
+    "vel": -0.007326007355004549,
+    "tau": -0.017094017937779427
+  },
+  "wrist": {
+    "pos": -1.0305562019348145,
+    "vel": -0.007326007355004549,
+    "tau": 0.5396825671195984
+  }
+}

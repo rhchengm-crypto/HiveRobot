@@ -1,0 +1,157 @@
+v2.8 Home captured-pose limit margin: requested_deg= 120.0 effective_deg= 122.02187135612442 largest_transition_deg= 121.02187135612442
+v2.8 Home pre-clearance fix: formal Home includes all selected joints= elbow,shoulder_front,shoulder_side,shoulder_rotate,wrist,wrist_side,arm_roll
+Serial port is open
+Serial port is open
+v2.8 Home staged path entry check= {"build": "v2.8-home-preclearance-shoulder-rotate-v2", "path": "current-to-clearance", "max_delta_deg": 120.0, "errors_deg": {"elbow": 50.3802441411825, "shoulder_front": 94.574975908674, "shoulder_side": 8.458629211548852, "shoulder_rotate": -45.8995747319702, "wrist": 109.30654989170554, "wrist_side": 9.092486988225312, "arm_roll": 10.382037802581122}, "blocking_errors_deg": {}, "legacy_direct_precheck_bypass_deg": 180.0}
+v2 home target elbow delta_deg= -70.64162721494192 target= -1.2956817150115967
+v2 home target shoulder_front delta_deg= 31.583276250475446 target= 0.8363851308822632
+v2 home target shoulder_side delta_deg= 0.48084531756889765 target= -2.853627920150757
+v2 home target shoulder_rotate delta_deg= -21.660223745024595 target= 2.3554208278656006
+v2 home target wrist delta_deg= 49.33110958230879 target= -2.0780880451202393
+v2 home target wrist_side delta_deg= 1.1365605533630467 target= 0.1668955534696579
+v2 home target arm_roll delta_deg= 9.901192485012224 target= -2.657930850982666
+v2.6 pre-home clearance wrist-first coupled order= wrist,wrist_side,arm_roll,elbow,shoulder_rotate,shoulder_side,shoulder_front
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+v2.6 pre-home clearance wrist-first active wrist delta_deg= 109.30654989170554 target= -1.0313191413879395 kp= 22.0 kd= 1.4 seconds= 12.0 hold joints: shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side
+v2.6 pre-home clearance wrist-first active_tau= {'wrist': 0.4}
+v2.6 pre-home clearance wrist-first hold_tau= {"shoulder_front": -6.393162250518799, "shoulder_side": 0.71, "shoulder_rotate": -0.8600000000000001, "elbow": 3.480341911315918, "arm_roll": -0.3427607989659096, "wrist_side": -0.2799999999999999}
+v2 continuous step wrist 1/1 target= -1.0313191413879395
+v2.6 pre-home clearance coupled active wrist_side,arm_roll,elbow,shoulder_rotate,shoulder_side,shoulder_front deltas_deg= {"wrist_side": 9.72633878848625, "arm_roll": 12.74259216087255, "elbow": 50.77366901379076, "shoulder_rotate": -45.20014970058255, "shoulder_side": 7.4313551000005935, "shoulder_front": 94.48754777975056} targets= {"wrist_side": 0.3057526648044586, "arm_roll": -2.649538516998291, "elbow": 0.8165484070777893, "shoulder_rotate": 1.9323643445968628, "shoulder_side": -2.7143893241882324, "shoulder_front": 1.9357976913452148} seconds= 12.0 hold joints: wrist
+v2.6 pre-home clearance coupled inherited move_tau_ff= {"wrist_side": {"start_tau": -0.20757021009922028, "end_tau": 0.0, "ramp_fraction": 0.35, "ramp": "smoothstep"}, "arm_roll": {"start_tau": -0.0317460335791111, "end_tau": -0.33121585857286884, "ramp_fraction": 0.35, "ramp": "smoothstep"}, "elbow": {"start_tau": 4.068376064300537, "end_tau": 0.0, "ramp_fraction": 0.35, "ramp": "smoothstep"}, "shoulder_rotate": {"start_tau": -0.7985348105430603, "end_tau": 0.0, "ramp_fraction": 0.35, "ramp": "smoothstep"}, "shoulder_side": {"start_tau": -0.5948718190193176, "end_tau": 0.0, "ramp_fraction": 0.35, "ramp": "smoothstep"}, "shoulder_front": {"start_tau": -6.611965656280518, "end_tau": 2.4, "ramp_fraction": 0.35, "ramp": "smoothstep"}}
+v2.6 pre-home clearance coupled hold_tau= {"wrist": 0.5054945349693298}
+v2.2 continuous group step wrist_side,arm_roll,elbow,shoulder_rotate,shoulder_side,shoulder_front 1/1 targets= {"wrist_side": 0.3057526648044586, "arm_roll": -2.649538516998291, "elbow": 0.8165484070777893, "shoulder_rotate": 1.9323643445968628, "shoulder_side": -2.7143893241882324, "shoulder_front": 1.9357976913452148}
+v2.6 home coupled shoulder/roll/wrist active elbow,shoulder_front,shoulder_side,arm_roll,wrist_side,wrist,shoulder_rotate hold joints: 
+v2.6 home coupled shoulder/roll/wrist gains elbow kp= 65.0 kd= 6.5 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains shoulder_front kp= 75.0 kd= 7.0 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains shoulder_side kp= 65.0 kd= 4.5 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains arm_roll kp= 18.0 kd= 6.0 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains wrist_side kp= 16.0 kd= 2.2 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains wrist kp= 22.0 kd= 1.4 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains shoulder_rotate kp= 24.0 kd= 4.5 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist progress windows= {"elbow": [0.3, 1.0], "shoulder_front": [0.3, 1.0], "shoulder_side": [0.3, 1.0], "arm_roll": [0.3, 1.0], "wrist_side": [0.3, 1.0], "wrist": [0.0, 0.3], "shoulder_rotate": [0.3, 1.0]}
+v2.6 home coupled shoulder/roll/wrist pre-window gains= {"elbow": {"kp": 65.0, "kd": 6.5}, "shoulder_front": {"kp": 124.0, "kd": 4.8}, "shoulder_side": {"kp": 60.0, "kd": 5.0}, "arm_roll": {"kp": 18.0, "kd": 6.0}, "wrist_side": {"kp": 16.0, "kd": 2.2}, "shoulder_rotate": {"kp": 24.0, "kd": 4.5}}
+v2.6 home pre-clearance handoff move_tau_ff= {"elbow": {"start_tau": 4.820512771606445, "end_tau": 0.0, "ramp_fraction": 0.45, "ramp": "smoothstep"}, "shoulder_front": {"start_tau": 3.15213680267334, "end_tau": 1.0, "ramp_fraction": 0.45, "ramp": "smoothstep"}, "shoulder_side": {"start_tau": 1.4290598630905151, "end_tau": 0.0, "ramp_fraction": 0.45, "ramp": "smoothstep"}, "arm_roll": {"start_tau": 0.041514042764902115, "end_tau": 0.0, "ramp_fraction": 0.45, "ramp": "smoothstep"}, "wrist_side": {"start_tau": 1.037851095199585, "end_tau": 0.0, "ramp_fraction": 0.45, "ramp": "smoothstep"}, "wrist": {"start_tau": 0.4810744822025299, "end_tau": 0.0, "ramp_fraction": 0.45, "ramp": "smoothstep"}, "shoulder_rotate": {"start_tau": -1.8730158805847168, "end_tau": 0.0, "ramp_fraction": 0.45, "ramp": "smoothstep"}}
+v2.6 home pre-clearance handoff preload_seconds= 0.5
+v2.6 home coupled shoulder/roll/wrist command bias deg= {"shoulder_side": 1.0}
+v2.6 home coupled shoulder/roll/wrist control_dt= 0.01
+v2.6 home coupled shoulder/roll/wrist trajectory= blend_smootherstep
+v2.6 home coupled shoulder/roll/wrist linear_blend= 0.35
+enable skip elbow
+enable skip shoulder_front
+enable skip shoulder_side
+enable skip arm_roll
+enable skip wrist_side
+enable skip wrist
+enable skip shoulder_rotate
+v2.2 continuous group step elbow,shoulder_front,shoulder_side,arm_roll,wrist_side,wrist,shoulder_rotate 1/1 targets= {"elbow": -1.2956817150115967, "shoulder_front": 0.8363851308822632, "shoulder_side": -2.8361746276308137, "arm_roll": -2.657930850982666, "wrist_side": 0.1668955534696579, "wrist": -2.0780880451202393, "shoulder_rotate": 2.3554208278656006}
+v2.6 home coupled shoulder/roll/wrist reached= {"elbow": -1.2827115058898926, "shoulder_front": 0.8405813574790955, "shoulder_side": -2.832646608352661, "arm_roll": -2.657930850982666, "wrist_side": 0.1661325991153717, "wrist": -2.0780880451202393, "shoulder_rotate": 2.352750539779663}
+{
+  "elbow": {
+    "pos": -1.2827115058898926,
+    "vel": -0.0019536020699888468,
+    "tau": -0.9094017148017883
+  },
+  "shoulder_front": {
+    "pos": 0.8405813574790955,
+    "vel": -0.0019536020699888468,
+    "tau": 0.6222222447395325
+  },
+  "shoulder_side": {
+    "pos": -2.832646608352661,
+    "vel": -0.0019536020699888468,
+    "tau": -0.29401710629463196
+  },
+  "shoulder_rotate": {
+    "pos": 2.3546578884124756,
+    "vel": 0.7106227278709412,
+    "tau": 0.31990233063697815
+  },
+  "wrist": {
+    "pos": -2.0780880451202393,
+    "vel": -0.007326007355004549,
+    "tau": -0.026862027123570442
+  },
+  "wrist_side": {
+    "pos": 0.1661325991153717,
+    "vel": 0.007326007355004549,
+    "tau": -0.012210012413561344
+  },
+  "arm_roll": {
+    "pos": -2.657167911529541,
+    "vel": 0.095238097012043,
+    "tau": -0.03663003817200661
+  }
+}
+v2.8 Home verification correction pass: recomputing from fresh joint positions
+Serial port is open
+Serial port is open
+v2 home target elbow delta_deg= -0.7431382420757273 target= -1.2956817150115967
+v2 home skip shoulder_front delta_deg= -0.24042607387903384 deadband_deg= 0.5
+v2 home target shoulder_side delta_deg= -1.2021406146789242 target= -2.853627920150757
+v2 home skip shoulder_rotate delta_deg= 0.3278627405389521 deadband_deg= 3.0
+v2 home skip wrist delta_deg= 0.0 deadband_deg= 0.5
+v2 home skip wrist_side delta_deg= 0.04371406446172786 deadband_deg= 0.5
+v2 home skip arm_roll delta_deg= 0.0 deadband_deg= 3.0
+v2 home auto gains elbow kp= 70.0 kd= 3.0 seconds= 6.0
+v2 home active elbow hold joints: shoulder_front, shoulder_side, shoulder_rotate, wrist, wrist_side, arm_roll
+enable elbow
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable wrist
+enable wrist_side
+enable arm_roll
+v2 continuous step elbow 1/1 target= -1.2956817150115967
+v2 home auto gains shoulder_side kp= 70.0 kd= 3.0 seconds= 6.0
+v2 home active shoulder_side hold joints: elbow, shoulder_front, shoulder_rotate, wrist, wrist_side, arm_roll
+enable skip shoulder_side
+enable skip elbow
+enable skip shoulder_front
+enable skip shoulder_rotate
+enable skip wrist
+enable skip wrist_side
+enable skip arm_roll
+v2 continuous step shoulder_side 1/1 target= -2.853627920150757
+{
+  "elbow": {
+    "pos": -1.281567096710205,
+    "vel": -0.005860805977135897,
+    "tau": -0.9914529919624329
+  },
+  "shoulder_front": {
+    "pos": 0.8337147831916809,
+    "vel": -0.0019536020699888468,
+    "tau": 0.1299145370721817
+  },
+  "shoulder_side": {
+    "pos": -2.8456168174743652,
+    "vel": -0.0019536020699888468,
+    "tau": -0.6222222447395325
+  },
+  "shoulder_rotate": {
+    "pos": 2.3500800132751465,
+    "vel": -0.007326007355004549,
+    "tau": -0.0317460335791111
+  },
+  "wrist": {
+    "pos": -2.0780880451202393,
+    "vel": -0.021978022530674934,
+    "tau": -0.017094017937779427
+  },
+  "wrist_side": {
+    "pos": 0.1661325991153717,
+    "vel": -0.007326007355004549,
+    "tau": -0.012210012413561344
+  },
+  "arm_roll": {
+    "pos": -2.6575493812561035,
+    "vel": -0.021978022530674934,
+    "tau": -0.11965811997652054
+  }
+}

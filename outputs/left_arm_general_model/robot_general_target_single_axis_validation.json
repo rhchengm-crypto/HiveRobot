@@ -1,0 +1,151 @@
+{
+  "source_attachment": "C:\\Users\\rhche\\.codex\\attachments\\f5c5b4d7-f40b-438b-8271-caafcee0bf4b\\Pasted text.txt",
+  "source_sha256": "342f1ae4f3e3481736ea6265d0a851b873d60bbf268f81aee218f577ea78e925",
+  "action": "dynamics:move-target",
+  "run_id": "f67e2b4e16f82f08",
+  "motion_ok": true,
+  "motion_issued": true,
+  "model_mode": "apply",
+  "motion_plan": {
+    "start_rad": {
+      "shoulder_front": 0.8291370868682861,
+      "shoulder_side": -2.853627920150757,
+      "shoulder_rotate": 2.3432135581970215,
+      "elbow": -1.281567096710205,
+      "arm_roll": -2.6575493812561035,
+      "wrist_side": 0.16308079659938812,
+      "wrist": -2.0708401203155518
+    },
+    "targets_rad": {
+      "shoulder_front": 0.8291370868682861,
+      "shoulder_side": -2.853627920150757,
+      "shoulder_rotate": 2.3432135581970215,
+      "elbow": -1.281567096710205,
+      "arm_roll": -2.6575493812561035,
+      "wrist_side": 0.16308079659938812,
+      "wrist": -1.9835736577
+    },
+    "active_joints": [
+      "wrist"
+    ],
+    "held_joints": [
+      "shoulder_front",
+      "shoulder_side",
+      "shoulder_rotate",
+      "elbow",
+      "arm_roll",
+      "wrist_side"
+    ],
+    "delta_deg": {
+      "shoulder_front": 0.0,
+      "shoulder_side": 0.0,
+      "shoulder_rotate": 0.0,
+      "elbow": 0.0,
+      "arm_roll": 0.0,
+      "wrist_side": 0.0,
+      "wrist": 5.000000000907292
+    },
+    "seconds": 8.0,
+    "trajectory": "smootherstep",
+    "reference_peak_velocity_rad_s": 0.020453077175519932,
+    "path_validation": "joint-interpolation-only; no collision or mechanical-limit validation"
+  },
+  "motion_summary": {
+    "build": "seven-axis-rigid-body-motion-v3-prepared",
+    "mode": "apply",
+    "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json",
+    "workflow_action": "dynamics:move-target",
+    "workflow_run_id": "f67e2b4e16f82f08",
+    "model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "gravity_in_cad_frame_m_s2": [
+      -0.0,
+      -1.7029069047056824,
+      -9.65766495051499
+    ],
+    "gravity_configuration": {
+      "source": "nominal-horizontal-shoulder-axes",
+      "status": "assumed_for_on_robot_validation",
+      "physically_measured": false,
+      "magnitude_m_s2": 9.80665,
+      "assumptions": [
+        "approved nominal 90-degree shoulder geometry",
+        "nominal shoulder_front and shoulder_side axes horizontal",
+        "down points toward negative CAD Z in approved reference pose"
+      ],
+      "user_instruction": "Use the CAD-based nominal direction directly; no additional physical angle or distance measurements."
+    },
+    "dynamics_parameters_available": true,
+    "parameter_status": "nominal-estimate-from-existing-tests; not independently measured link mass properties",
+    "identification_records": {
+      "gravity_records_used": 73,
+      "unique_inertia_records_used": 29
+    },
+    "parameters_independently_verified": false,
+    "missing_inertials": [],
+    "torque_policy": "bounded-pose-relative-ID-plus-friction; legacy/adaptive baseline retained",
+    "compute_backend": "independent-process-latest-reference-mailbox",
+    "max_result_age_ms": 100.0,
+    "torque_cap_Nm": 0.5,
+    "log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_motion_runs.jsonl",
+    "commanded_joints": [
+      "wrist",
+      "shoulder_front",
+      "shoulder_side",
+      "shoulder_rotate",
+      "elbow",
+      "arm_roll",
+      "wrist_side"
+    ],
+    "session_started_at_utc": "2026-10-22T00:36:37.207656+00:00",
+    "frames": 488,
+    "peak_applied_delta_tau_Nm": {
+      "wrist": 0.07518379607213056,
+      "shoulder_front": 0.01688243408911173,
+      "shoulder_side": 0.0006598190265350225,
+      "shoulder_rotate": 0.00034437644271027927,
+      "elbow": 0.016960545822214425,
+      "arm_roll": 0.00036127563924102994,
+      "wrist_side": 2.3642656738608674e-05
+    },
+    "peak_dynamics_compute_ms": 7.732403000773047,
+    "peak_prepare_frame_ms": 4.365616998256883,
+    "dynamics_compute_ms": {
+      "p50": 1.760740498866653,
+      "p99": 4.863659009715775
+    },
+    "dynamics_cpu_ms": {
+      "p50": 7.697135999997329,
+      "p99": 25.974937920000794
+    },
+    "frame_interval_ms": {
+      "p50": 14.224616999854334,
+      "p99": 40.11044859944376,
+      "max": 48.54331100068521
+    },
+    "accepted_worker_results": 124,
+    "pending_worker_frames": 1,
+    "stale_worker_frames": 3,
+    "worker_error_frames": 0,
+    "worker_submission_skips": 1,
+    "peak_result_age_ms": 137.45607499913604,
+    "terminal_correction_zero": true,
+    "dropped_reference_records": 0,
+    "prediction_status": "available"
+  },
+  "hold_ok": true,
+  "hold_reason": "duration_complete",
+  "hold_duration_s": 5.029972791671753,
+  "hold_peak_abs_error_deg": 0.021863435533210816,
+  "hold_final_pose": {
+    "shoulder_front": 0.8226520419120789,
+    "shoulder_side": -2.853627920150757,
+    "shoulder_rotate": 2.342832088470459,
+    "elbow": -1.281567096710205,
+    "arm_roll": -2.6575493812561035,
+    "wrist_side": 0.16308079659938812,
+    "wrist": -1.9880597591400146
+  },
+  "user_reported_vibration": false,
+  "new_point_single_axis_test_passed": true,
+  "next_test": "Unnamed simultaneous arm_roll +5deg and wrist returning to its previous starting angle; unchanged parameters."
+}

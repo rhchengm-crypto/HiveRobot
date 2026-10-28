@@ -1,0 +1,986 @@
+{
+  "scope": "offline audit only; no controller, model or learning data modified",
+  "model_path": "scripts\\left_arm_v3_1_dynamics.json",
+  "model_sha256": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+  "model_updated_at": "2026-10-20 16:49:22",
+  "gain_units_verified": true,
+  "gravity_total": 73,
+  "inertia_total": 29,
+  "joints": {
+    "shoulder_front": {
+      "gravity_count": 17,
+      "inertia_count": 4,
+      "gravity_directions": {
+        "stationary": 8,
+        "positive": 5,
+        "negative": 4
+      },
+      "gravity_source_counts": {
+        "manual-quasi-static": 17
+      },
+      "zero_tau_mad_count": 16,
+      "sampled_pose_span_deg": {
+        "shoulder_front": 73.63603038528652,
+        "shoulder_side": 10.338338252271381,
+        "shoulder_rotate": 46.92684884351846,
+        "elbow": 121.52458010922652,
+        "arm_roll": 16.56755273759305,
+        "wrist_side": 49.15625503200918,
+        "wrist": 91.38386713221445
+      },
+      "measured_holding_tau_range_nm": [
+        -4.4376068115234375,
+        3.411965847015381
+      ],
+      "inertia_range": [
+        0.16079633681167171,
+        0.2800788630107806
+      ],
+      "inertia_methods": {
+        "normalized_closed_loop_step_fit": 4
+      },
+      "inertia_duplicate_capture_and_pose_count": 0,
+      "inertia_peak_acceleration_missing": 0,
+      "nearby_pose_largest_tau_difference": {
+        "distance_rms_deg": 0.47377816379711707,
+        "absolute_tau_difference_nm": 1.3264957703649998,
+        "left_captured_at": "2026-10-14 14:17:05",
+        "right_captured_at": "2026-10-15 20:35:41",
+        "left_direction": "negative",
+        "right_direction": "stationary"
+      },
+      "illustrative_15_column_harmonic_design": {
+        "rows": 17,
+        "columns": 15,
+        "rank": 15,
+        "full_column_rank": true,
+        "singular_values": [
+          11.006838943255708,
+          3.2026898901859444,
+          1.8536516464641435,
+          1.025961544742038,
+          0.30063134786327217,
+          0.10420011441249098,
+          0.041581537410276315,
+          0.020140701494580998,
+          0.012864719616108149,
+          0.009397437856135163,
+          0.004456629706548903,
+          0.002392695609370839,
+          0.0011946388387706834,
+          0.0002324642156224456,
+          5.4208904944917775e-05
+        ],
+        "condition_if_full_column_rank": 203044.8494475192,
+        "warning": "Coverage diagnostic only. Actual rigid-body parameter identifiability requires verified seven-axis geometry and a shared regressor."
+      },
+      "configured_friction": {
+        "coulomb": 0.66,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-14 14:21:07"
+      }
+    },
+    "shoulder_side": {
+      "gravity_count": 8,
+      "inertia_count": 4,
+      "gravity_directions": {
+        "stationary": 6,
+        "positive": 1,
+        "negative": 1
+      },
+      "gravity_source_counts": {
+        "manual-quasi-static": 8
+      },
+      "zero_tau_mad_count": 8,
+      "sampled_pose_span_deg": {
+        "shoulder_front": 68.45593637157339,
+        "shoulder_side": 10.688043937776033,
+        "shoulder_rotate": 46.883135632830374,
+        "elbow": 121.52458010922652,
+        "arm_roll": 16.436413105528803,
+        "wrist_side": 49.17811163735322,
+        "wrist": 91.3620105268704
+      },
+      "measured_holding_tau_range_nm": [
+        -0.4444444477558136,
+        1.6341880559921265
+      ],
+      "inertia_range": [
+        0.15002050657557808,
+        0.4246522923264835
+      ],
+      "inertia_methods": {
+        "normalized_closed_loop_step_fit": 4
+      },
+      "inertia_duplicate_capture_and_pose_count": 0,
+      "inertia_peak_acceleration_missing": 0,
+      "nearby_pose_largest_tau_difference": {
+        "distance_rms_deg": 0.0,
+        "absolute_tau_difference_nm": 0.0,
+        "left_captured_at": "2026-10-15 20:35:41",
+        "right_captured_at": "2026-10-15 20:38:15",
+        "left_direction": "stationary",
+        "right_direction": "stationary"
+      },
+      "illustrative_15_column_harmonic_design": {
+        "rows": 8,
+        "columns": 15,
+        "rank": 7,
+        "full_column_rank": false,
+        "singular_values": [
+          7.449903984753955,
+          2.4099933351387866,
+          1.3966952022760848,
+          0.8519668636113339,
+          0.11656821523429056,
+          0.024960189036273884,
+          0.006823337992899014,
+          9.730264288584677e-18
+        ],
+        "condition_if_full_column_rank": null,
+        "warning": "Coverage diagnostic only. Actual rigid-body parameter identifiability requires verified seven-axis geometry and a shared regressor."
+      },
+      "configured_friction": {
+        "coulomb": 0.46,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-14 14:58:36"
+      }
+    },
+    "shoulder_rotate": {
+      "gravity_count": 8,
+      "inertia_count": 2,
+      "gravity_directions": {
+        "stationary": 6,
+        "positive": 1,
+        "negative": 1
+      },
+      "gravity_source_counts": {
+        "manual-quasi-static": 8
+      },
+      "zero_tau_mad_count": 5,
+      "sampled_pose_span_deg": {
+        "shoulder_front": 68.45593637157339,
+        "shoulder_side": 10.338338252271381,
+        "shoulder_rotate": 46.904992238174415,
+        "elbow": 121.41529708250631,
+        "arm_roll": 16.458269710872845,
+        "wrist_side": 49.17811163735322,
+        "wrist": 91.3620105268704
+      },
+      "measured_holding_tau_range_nm": [
+        -1.4578754901885986,
+        0.19291819632053375
+      ],
+      "inertia_range": [
+        0.00903788780178258,
+        0.009687070682629648
+      ],
+      "inertia_methods": {
+        "normalized_closed_loop_step_fit": 2
+      },
+      "inertia_duplicate_capture_and_pose_count": 0,
+      "inertia_peak_acceleration_missing": 1,
+      "nearby_pose_largest_tau_difference": {
+        "distance_rms_deg": 0.0,
+        "absolute_tau_difference_nm": 0.0,
+        "left_captured_at": "2026-10-15 20:35:41",
+        "right_captured_at": "2026-10-15 20:38:15",
+        "left_direction": "stationary",
+        "right_direction": "stationary"
+      },
+      "illustrative_15_column_harmonic_design": {
+        "rows": 8,
+        "columns": 15,
+        "rank": 7,
+        "full_column_rank": false,
+        "singular_values": [
+          7.450975497136006,
+          2.416406701102921,
+          1.383869664439084,
+          0.8506778000619508,
+          0.060836589796042076,
+          0.03718908871508191,
+          0.010521848376637371,
+          1.1033950288538025e-17
+        ],
+        "condition_if_full_column_rank": null,
+        "warning": "Coverage diagnostic only. Actual rigid-body parameter identifiability requires verified seven-axis geometry and a shared regressor."
+      },
+      "configured_friction": {
+        "coulomb": 0.22,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-15 13:47:52"
+      }
+    },
+    "elbow": {
+      "gravity_count": 14,
+      "inertia_count": 5,
+      "gravity_directions": {
+        "stationary": 11,
+        "negative": 3
+      },
+      "gravity_source_counts": {
+        "manual-quasi-static": 14
+      },
+      "zero_tau_mad_count": 14,
+      "sampled_pose_span_deg": {
+        "shoulder_front": 67.2319459817396,
+        "shoulder_side": 9.24548066431266,
+        "shoulder_rotate": 46.883135632830374,
+        "elbow": 121.41529708250631,
+        "arm_roll": 20.91708550294887,
+        "wrist_side": 48.89397064523881,
+        "wrist": 91.14343764324083
+      },
+      "measured_holding_tau_range_nm": [
+        -1.0324786901474,
+        4.068376064300537
+      ],
+      "inertia_range": [
+        0.04776166937253475,
+        0.2899633417483065
+      ],
+      "inertia_methods": {
+        "normalized_closed_loop_step_fit": 5
+      },
+      "inertia_duplicate_capture_and_pose_count": 0,
+      "inertia_peak_acceleration_missing": 0,
+      "nearby_pose_largest_tau_difference": {
+        "distance_rms_deg": 0.02185709321877945,
+        "absolute_tau_difference_nm": 0.027350425720214844,
+        "left_captured_at": "2026-10-14 13:33:34",
+        "right_captured_at": "2026-10-14 13:41:05",
+        "left_direction": "stationary",
+        "right_direction": "stationary"
+      },
+      "illustrative_15_column_harmonic_design": {
+        "rows": 14,
+        "columns": 15,
+        "rank": 13,
+        "full_column_rank": false,
+        "singular_values": [
+          10.125878883471456,
+          2.4116372480896815,
+          1.5295094431130671,
+          1.0097016012424738,
+          0.5333996348998181,
+          0.06709001755955668,
+          0.04444853818062779,
+          0.022760653700248764,
+          0.013268287191948447,
+          0.00036033155249626773,
+          0.0001336795556179798,
+          6.346250640422186e-05,
+          2.678418625406107e-05,
+          4.2317462862717484e-21
+        ],
+        "condition_if_full_column_rank": null,
+        "warning": "Coverage diagnostic only. Actual rigid-body parameter identifiability requires verified seven-axis geometry and a shared regressor."
+      },
+      "configured_friction": {
+        "coulomb": 0.75,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-12 17:26:54"
+      }
+    },
+    "arm_roll": {
+      "gravity_count": 8,
+      "inertia_count": 5,
+      "gravity_directions": {
+        "stationary": 6,
+        "positive": 1,
+        "negative": 1
+      },
+      "gravity_source_counts": {
+        "manual-quasi-static": 8
+      },
+      "zero_tau_mad_count": 8,
+      "sampled_pose_span_deg": {
+        "shoulder_front": 68.45593637157339,
+        "shoulder_side": 10.338338252271381,
+        "shoulder_rotate": 46.92684884351846,
+        "elbow": 121.41529708250631,
+        "arm_roll": 18.600258015723863,
+        "wrist_side": 49.15625503200918,
+        "wrist": 91.3620105268704
+      },
+      "measured_holding_tau_range_nm": [
+        -0.9352869391441345,
+        0.10989011079072952
+      ],
+      "inertia_range": [
+        0.007867122262756333,
+        0.010382883752081379
+      ],
+      "inertia_methods": {
+        "normalized_closed_loop_step_fit": 5
+      },
+      "inertia_duplicate_capture_and_pose_count": 0,
+      "inertia_peak_acceleration_missing": 5,
+      "nearby_pose_largest_tau_difference": {
+        "distance_rms_deg": 0.473994173518493,
+        "absolute_tau_difference_nm": 0.0,
+        "left_captured_at": "2026-10-15 13:59:34",
+        "right_captured_at": "2026-10-15 20:35:41",
+        "left_direction": "stationary",
+        "right_direction": "stationary"
+      },
+      "illustrative_15_column_harmonic_design": {
+        "rows": 8,
+        "columns": 15,
+        "rank": 7,
+        "full_column_rank": false,
+        "singular_values": [
+          7.453463508462032,
+          2.4058855210137784,
+          1.380624158102361,
+          0.8571068398026419,
+          0.11702254113359818,
+          0.053499357364171524,
+          0.016879889129999975,
+          2.1246169688853973e-18
+        ],
+        "condition_if_full_column_rank": null,
+        "warning": "Coverage diagnostic only. Actual rigid-body parameter identifiability requires verified seven-axis geometry and a shared regressor."
+      },
+      "configured_friction": {
+        "coulomb": 0.08,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-15 14:04:47"
+      }
+    },
+    "wrist_side": {
+      "gravity_count": 8,
+      "inertia_count": 3,
+      "gravity_directions": {
+        "stationary": 6,
+        "positive": 1,
+        "negative": 1
+      },
+      "gravity_source_counts": {
+        "manual-quasi-static": 8
+      },
+      "zero_tau_mad_count": 7,
+      "sampled_pose_span_deg": {
+        "shoulder_front": 68.45593637157339,
+        "shoulder_side": 10.294625041583298,
+        "shoulder_rotate": 46.904992238174415,
+        "elbow": 121.41529708250631,
+        "arm_roll": 16.436413105528803,
+        "wrist_side": 49.15625503200918,
+        "wrist": 91.82099923909527
+      },
+      "measured_holding_tau_range_nm": [
+        -0.12942613661289215,
+        0.2271062284708023
+      ],
+      "inertia_range": [
+        0.01938419181774353,
+        0.029390084641925343
+      ],
+      "inertia_methods": {
+        "normalized_closed_loop_step_fit": 3
+      },
+      "inertia_duplicate_capture_and_pose_count": 0,
+      "inertia_peak_acceleration_missing": 2,
+      "nearby_pose_largest_tau_difference": {
+        "distance_rms_deg": 0.0,
+        "absolute_tau_difference_nm": 0.0,
+        "left_captured_at": "2026-10-15 20:35:41",
+        "right_captured_at": "2026-10-15 20:38:15",
+        "left_direction": "stationary",
+        "right_direction": "stationary"
+      },
+      "illustrative_15_column_harmonic_design": {
+        "rows": 8,
+        "columns": 15,
+        "rank": 7,
+        "full_column_rank": false,
+        "singular_values": [
+          7.451406590620461,
+          2.413180501529276,
+          1.383268207680336,
+          0.8560751939004693,
+          0.07731765585829553,
+          0.022911062622183107,
+          0.017351645686732472,
+          3.535389440402871e-18
+        ],
+        "condition_if_full_column_rank": null,
+        "warning": "Coverage diagnostic only. Actual rigid-body parameter identifiability requires verified seven-axis geometry and a shared regressor."
+      },
+      "configured_friction": {
+        "coulomb": 0.17,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-15 14:23:48"
+      }
+    },
+    "wrist": {
+      "gravity_count": 10,
+      "inertia_count": 6,
+      "gravity_directions": {
+        "stationary": 8,
+        "positive": 1,
+        "negative": 1
+      },
+      "gravity_source_counts": {
+        "manual-quasi-static": 10
+      },
+      "zero_tau_mad_count": 8,
+      "sampled_pose_span_deg": {
+        "shoulder_front": 68.47779297691743,
+        "shoulder_side": 10.338338252271381,
+        "shoulder_rotate": 46.904992238174415,
+        "elbow": 121.48086689853844,
+        "arm_roll": 16.458269710872845,
+        "wrist_side": 49.17811163735322,
+        "wrist": 91.3620105268704
+      },
+      "measured_holding_tau_range_nm": [
+        -0.23687423765659332,
+        0.6813187003135681
+      ],
+      "inertia_range": [
+        0.016297984153833715,
+        0.022268898960217446
+      ],
+      "inertia_methods": {
+        "normalized_closed_loop_step_fit": 6
+      },
+      "inertia_duplicate_capture_and_pose_count": 0,
+      "inertia_peak_acceleration_missing": 3,
+      "nearby_pose_largest_tau_difference": {
+        "distance_rms_deg": 0.0,
+        "absolute_tau_difference_nm": 0.004884004592895508,
+        "left_captured_at": "2026-10-15 20:35:41",
+        "right_captured_at": "2026-10-15 20:38:15",
+        "left_direction": "stationary",
+        "right_direction": "stationary"
+      },
+      "illustrative_15_column_harmonic_design": {
+        "rows": 10,
+        "columns": 15,
+        "rank": 9,
+        "full_column_rank": false,
+        "singular_values": [
+          8.224218734731291,
+          2.8424495558150045,
+          1.80565821103648,
+          1.0097994248544748,
+          0.045858249454649724,
+          0.022406570147739575,
+          0.0021056920363526836,
+          0.0008802683105759119,
+          0.00017372947046585696,
+          4.1790561870583273e-17
+        ],
+        "condition_if_full_column_rank": null,
+        "warning": "Coverage diagnostic only. Actual rigid-body parameter identifiability requires verified seven-axis geometry and a shared regressor."
+      },
+      "configured_friction": {
+        "coulomb": 0.17,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-15 20:53:12"
+      }
+    }
+  },
+  "current_controller_motor_specs": [
+    {
+      "joint": "shoulder_front",
+      "motor_type": "DM4340",
+      "slave_id": "0x1E",
+      "master_id": "0x0E"
+    },
+    {
+      "joint": "shoulder_side",
+      "motor_type": "DM4340",
+      "slave_id": "0x1F",
+      "master_id": "0x0F"
+    },
+    {
+      "joint": "shoulder_rotate",
+      "motor_type": "DM4310",
+      "slave_id": "0x20",
+      "master_id": "0x10"
+    },
+    {
+      "joint": "elbow",
+      "motor_type": "DM4340",
+      "slave_id": "0x21",
+      "master_id": "0x11"
+    },
+    {
+      "joint": "arm_roll",
+      "motor_type": "DM4310",
+      "slave_id": "0x22",
+      "master_id": "0x12"
+    },
+    {
+      "joint": "wrist_side",
+      "motor_type": "DM4310",
+      "slave_id": "0x2A",
+      "master_id": "0x1A"
+    },
+    {
+      "joint": "wrist",
+      "motor_type": "DM4310",
+      "slave_id": "0x29",
+      "master_id": "0x19"
+    },
+    {
+      "joint": "claw",
+      "motor_type": "DM4310",
+      "slave_id": "0x28",
+      "master_id": "0x18"
+    }
+  ],
+  "urdf_candidates": [
+    {
+      "path": "roboparty_rpo_hardware\\rpo_hardware-main\\V1.0\\atom01_mechanic\\03_URDF\\urdf\\Atom01_urdf.urdf",
+      "sha256": "90aa4db12d426b3ff7c6ddec8bbd50f80d379e5722a347dd9b405b72e1ecb563",
+      "left_arm_revolute_joint_count": 5,
+      "joints": [
+        {
+          "joint": "left_arm_pitch_joint",
+          "parent": "torso_link",
+          "child": "left_arm_pitch_link",
+          "origin": {
+            "xyz": "0 0.121749999999383 0.206175860782433",
+            "rpy": "0 0 0"
+          },
+          "axis": {
+            "xyz": "0 1 0"
+          },
+          "limit": {
+            "lower": "-1.57",
+            "upper": "1.57",
+            "effort": "18",
+            "velocity": "3.7692"
+          },
+          "mass_kg": 0.48107005,
+          "com_origin": {
+            "xyz": "-0.00309185 0.0495522 0.00013831",
+            "rpy": "0 0 0"
+          },
+          "inertia_tensor": {
+            "ixx": "0.001385",
+            "ixy": "-0.00009105",
+            "ixz": "-0.00000128",
+            "iyy": "0.00012361",
+            "iyz": "-0.00000294",
+            "izz": "0.00142017"
+          },
+          "principal_inertias": [
+            0.00011706467645605692,
+            0.0013914986715510573,
+            0.0014202166519928856
+          ],
+          "positive_mass_and_inertia": true,
+          "principal_triangle_inequality": true
+        },
+        {
+          "joint": "left_arm_roll_joint",
+          "parent": "left_arm_pitch_link",
+          "child": "left_arm_roll_link",
+          "origin": {
+            "xyz": "0.0200000000000018 0.056 0",
+            "rpy": "0 0 0"
+          },
+          "axis": {
+            "xyz": "1 0 0"
+          },
+          "limit": {
+            "lower": "-0.25",
+            "upper": "1",
+            "effort": "18",
+            "velocity": "3.7692"
+          },
+          "mass_kg": 0.10569114,
+          "com_origin": {
+            "xyz": "-0.00460348 0 -0.02346753",
+            "rpy": "0 0 0"
+          },
+          "inertia_tensor": {
+            "ixx": "0.000117",
+            "ixy": "0",
+            "ixz": "-0.00003547",
+            "iyy": "0.00013391",
+            "iyz": "0",
+            "izz": "0.00003756"
+          },
+          "principal_inertias": [
+            2.4027776572240682e-05,
+            0.00013053222342775933,
+            0.00013391
+          ],
+          "positive_mass_and_inertia": true,
+          "principal_triangle_inequality": true
+        },
+        {
+          "joint": "left_arm_yaw_joint",
+          "parent": "left_arm_roll_link",
+          "child": "left_arm_yaw_link",
+          "origin": {
+            "xyz": "-0.0200000000000002 0 -0.049999999999998",
+            "rpy": "0 0 0"
+          },
+          "axis": {
+            "xyz": "0 0 1"
+          },
+          "limit": {
+            "lower": "-0.6",
+            "upper": "1.3",
+            "effort": "18",
+            "velocity": "3.7692"
+          },
+          "mass_kg": 1.15030164,
+          "com_origin": {
+            "xyz": " -0.00007689 -0.00130242 -0.10578475",
+            "rpy": "0 0 0"
+          },
+          "inertia_tensor": {
+            "ixx": "0.01924211",
+            "ixy": "-0.0000003",
+            "ixz": "-0.00001105",
+            "iyy": "0.01920722",
+            "iyz": "-0.0002861",
+            "izz": "0.00040341"
+          },
+          "principal_inertias": [
+            0.0003990515114448883,
+            0.01921157143517599,
+            0.01924211705337913
+          ],
+          "positive_mass_and_inertia": true,
+          "principal_triangle_inequality": true
+        },
+        {
+          "joint": "left_elbow_pitch_joint",
+          "parent": "left_arm_yaw_link",
+          "child": "left_elbow_pitch_link",
+          "origin": {
+            "xyz": "0 0.0199999999999982 -0.188749999999997",
+            "rpy": "0 0 0"
+          },
+          "axis": {
+            "xyz": "0 1 0"
+          },
+          "limit": {
+            "lower": "-0.6",
+            "upper": "3.14",
+            "effort": "18",
+            "velocity": "3.7692"
+          },
+          "mass_kg": 0.10324612,
+          "com_origin": {
+            "xyz": "0.0241777072763705  -0.00451573 0.00015985",
+            "rpy": "0 0 0"
+          },
+          "inertia_tensor": {
+            "ixx": "0.00003728",
+            "ixy": "-0.0000346",
+            "ixz": "-0.00000071",
+            "iyy": " 0.00011225",
+            "iyz": "-0.00000014",
+            "izz": "0.00012911"
+          },
+          "principal_inertias": [
+            2.3747586691126526e-05,
+            0.00012577268564521073,
+            0.0001291197276636627
+          ],
+          "positive_mass_and_inertia": true,
+          "principal_triangle_inequality": true
+        },
+        {
+          "joint": "left_elbow_yaw_joint",
+          "parent": "left_elbow_pitch_link",
+          "child": "left_elbow_yaw_link",
+          "origin": {
+            "xyz": "0.0499999999999968 -0.0199999999999994 0",
+            "rpy": "0 0 0"
+          },
+          "axis": {
+            "xyz": "1 0 0"
+          },
+          "limit": {
+            "lower": "-1.57",
+            "upper": "1.57",
+            "effort": "18",
+            "velocity": "3.7692"
+          },
+          "mass_kg": 0.67956658,
+          "com_origin": {
+            "xyz": "0.05255763  -0.00004832 0.00003217",
+            "rpy": "0 0 0"
+          },
+          "inertia_tensor": {
+            "ixx": "0.00028087",
+            "ixy": "-0.00000226",
+            "ixz": "-0.00000062",
+            "iyy": "0.0032603",
+            "iyz": "-0.00000036",
+            "izz": "0.00326171"
+          },
+          "principal_inertias": [
+            0.0002808681566429477,
+            0.0032602152450174047,
+            0.003261796598339646
+          ],
+          "positive_mass_and_inertia": true,
+          "principal_triangle_inequality": true
+        }
+      ],
+      "five_descendant_link_mass_kg": 2.5198755299999998,
+      "missing_current_joints": [
+        "wrist_side",
+        "wrist"
+      ],
+      "missing_tool_description": "No wrist/claw links or attached payload description in this arm chain.",
+      "deployment_approved": false
+    },
+    {
+      "path": "roboparty_rpo_hardware\\rpo_hardware-main\\V2.0\\roboto_origin_mechanic\\03_URDF\\urdf\\roboto_origin.urdf",
+      "sha256": "310e74493a6fc29d07b58286d6891f1cd3c0b82107c53e7a20d071efa9ea0ab9",
+      "left_arm_revolute_joint_count": 5,
+      "joints": [
+        {
+          "joint": "left_arm_pitch_joint",
+          "parent": "torso_link",
+          "child": "left_arm_pitch_link",
+          "origin": {
+            "xyz": "0 0.121749999999383 0.206175860782433",
+            "rpy": "0 0 0"
+          },
+          "axis": {
+            "xyz": "0 1 0"
+          },
+          "limit": {
+            "lower": "-1.57",
+            "upper": "1.57",
+            "effort": "18",
+            "velocity": "3.7692"
+          },
+          "mass_kg": 0.47284363,
+          "com_origin": {
+            "xyz": "-0.00436523 0.04995146 0.0",
+            "rpy": "0 0 0"
+          },
+          "inertia_tensor": {
+            "ixx": "0.00015644",
+            "ixy": "0.00002207",
+            "ixz": "0.0",
+            "iyy": "0.00008197",
+            "iyz": "0.0",
+            "izz": "0.00018907"
+          },
+          "principal_inertias": [
+            7.592070579297844e-05,
+            0.00016248929420702157,
+            0.00018907
+          ],
+          "positive_mass_and_inertia": true,
+          "principal_triangle_inequality": true
+        },
+        {
+          "joint": "left_arm_roll_joint",
+          "parent": "left_arm_pitch_link",
+          "child": "left_arm_roll_link",
+          "origin": {
+            "xyz": "0.0200000000000018 0.056 0",
+            "rpy": "0 0 0"
+          },
+          "axis": {
+            "xyz": "1 0 0"
+          },
+          "limit": {
+            "lower": "-0.25",
+            "upper": "1",
+            "effort": "18",
+            "velocity": "3.7692"
+          },
+          "mass_kg": 0.08401883,
+          "com_origin": {
+            "xyz": "-0.0029007 0.0 -0.02197112",
+            "rpy": "0 0 0"
+          },
+          "inertia_tensor": {
+            "ixx": "0.00004601",
+            "ixy": "0.0",
+            "ixz": "-0.00001743",
+            "iyy": "0.00005649",
+            "iyz": "0.0",
+            "izz": "0.00002712"
+          },
+          "principal_inertias": [
+            1.674044641107902e-05,
+            5.6389553588920986e-05,
+            5.649000000000001e-05
+          ],
+          "positive_mass_and_inertia": true,
+          "principal_triangle_inequality": true
+        },
+        {
+          "joint": "left_arm_yaw_joint",
+          "parent": "left_arm_roll_link",
+          "child": "left_arm_yaw_link",
+          "origin": {
+            "xyz": "-0.0200000000000002 0 -0.049999999999998",
+            "rpy": "0 0 0"
+          },
+          "axis": {
+            "xyz": "0 0 -1"
+          },
+          "limit": {
+            "lower": "-1.57",
+            "upper": "1.57",
+            "effort": "18",
+            "velocity": "3.7692"
+          },
+          "mass_kg": 1.15324354,
+          "com_origin": {
+            "xyz": "-0.00004328 -0.0018211 -0.10615895",
+            "rpy": "0 0 0"
+          },
+          "inertia_tensor": {
+            "ixx": "0.00619553",
+            "ixy": "-0.00000002",
+            "ixz": "-0.00000077",
+            "iyy": "0.00615816",
+            "iyz": "-0.0001812",
+            "izz": "0.0003308"
+          },
+          "principal_inertias": [
+            0.00032517097687881694,
+            0.006163788921573124,
+            0.006195530101548061
+          ],
+          "positive_mass_and_inertia": true,
+          "principal_triangle_inequality": true
+        },
+        {
+          "joint": "left_elbow_pitch_joint",
+          "parent": "left_arm_yaw_link",
+          "child": "left_elbow_pitch_link",
+          "origin": {
+            "xyz": "0 0.0199999999999982 -0.188749999999997",
+            "rpy": "0 0 0"
+          },
+          "axis": {
+            "xyz": "0 1 0"
+          },
+          "limit": {
+            "lower": "-0.6",
+            "upper": "1.57",
+            "effort": "18",
+            "velocity": "3.7692"
+          },
+          "mass_kg": 0.09168684,
+          "com_origin": {
+            "xyz": "0.02378501 -0.00433076 0.0",
+            "rpy": "0 0 0"
+          },
+          "inertia_tensor": {
+            "ixx": "0.00003059",
+            "ixy": "0.00002004",
+            "ixz": "0.0",
+            "iyy": "0.00005023",
+            "iyz": "0.0",
+            "izz": "0.00006277"
+          },
+          "principal_inertias": [
+            1.8093324620365153e-05,
+            6.272667537963485e-05,
+            6.277e-05
+          ],
+          "positive_mass_and_inertia": true,
+          "principal_triangle_inequality": true
+        },
+        {
+          "joint": "left_elbow_yaw_joint",
+          "parent": "left_elbow_pitch_link",
+          "child": "left_elbow_yaw_link",
+          "origin": {
+            "xyz": "0.0499999999999968 -0.0199999999999994 0",
+            "rpy": "0 0 0"
+          },
+          "axis": {
+            "xyz": "1 0 0"
+          },
+          "limit": {
+            "lower": "-1.57",
+            "upper": "1.57",
+            "effort": "18",
+            "velocity": "3.7692"
+          },
+          "mass_kg": 0.68145595,
+          "com_origin": {
+            "xyz": "0.05317619 -0.0000345 -0.00001992",
+            "rpy": "0 0 0"
+          },
+          "inertia_tensor": {
+            "ixx": "0.00024481",
+            "ixy": "-0.00000008",
+            "ixz": "-0.00000014",
+            "iyy": "0.00132562",
+            "iyz": "-0.0000006",
+            "izz": "0.00132647"
+          },
+          "principal_inertias": [
+            0.0002448099759467154,
+            0.0013253097449007626,
+            0.001326780279152522
+          ],
+          "positive_mass_and_inertia": true,
+          "principal_triangle_inequality": true
+        }
+      ],
+      "five_descendant_link_mass_kg": 2.48324879,
+      "missing_current_joints": [
+        "wrist_side",
+        "wrist"
+      ],
+      "missing_tool_description": "No wrist/claw links or attached payload description in this arm chain.",
+      "deployment_approved": false
+    }
+  ],
+  "missing_local_raw_logs": [
+    "left_arm_v3_1_inertia_runs.jsonl",
+    "left_arm_v3_1_model_runs.jsonl"
+  ],
+  "known_structure_difference_evidence": {
+    "wrist_side_and_wrist": "Present in current controller, absent from both candidate URDF arm chains.",
+    "historical_tip_shortening_mm": 40,
+    "historical_tip_shortening_date": "2026-07-08",
+    "historical_source": "左臂装机测试记录_20260703.md:451",
+    "current_geometry_confirmation": "User confirms no updated CAD/URDF/dimension drawing is available; current transforms remain unverified."
+  },
+  "not_identified_by_current_json": [
+    "encoder-to-geometric zero/sign mapping",
+    "current seven-axis link transforms and tool/payload geometry",
+    "complete physical link mass/first moments/inertia tensors",
+    "off-diagonal joint coupling terms",
+    "velocity-dependent friction from sustained motion",
+    "joint-side torque scale/bias and per-feedback timing uncertainty",
+    "structural compliance and usable closed-loop bandwidth"
+  ],
+  "preserved_runtime_behavior": [
+    "existing Model Hold takeover",
+    "existing adaptive learning",
+    "ordinary Clearance shoulder_rotate active-target skip"
+  ]
+}

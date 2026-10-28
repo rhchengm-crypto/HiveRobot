@@ -1,0 +1,1072 @@
+{
+  "schema": 1,
+  "type": "offline_serial_rigid_body_model",
+  "geometry_variant": "cad_exact",
+  "units": {
+    "length": "m",
+    "angle": "rad",
+    "mass": "kg",
+    "torque": "N*m"
+  },
+  "joint_order": [
+    "shoulder_front",
+    "shoulder_side",
+    "shoulder_rotate",
+    "elbow",
+    "arm_roll",
+    "wrist_side",
+    "wrist"
+  ],
+  "joints": {
+    "shoulder_front": {
+      "parent_link": "cad_base",
+      "child_link": "shoulder_front_link",
+      "axis_in_joint_frame": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "axis_in_cad_reference": [
+        0.0,
+        0.9848077529548818,
+        -0.17364817799204443
+      ],
+      "axis_point_in_cad_reference_m": [
+        -0.038,
+        0.09616110175009304,
+        0.23145289805952765
+      ],
+      "parent_to_joint_at_reference": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.038
+        ],
+        [
+          0.0,
+          -0.17364817799204443,
+          0.9848077529548818,
+          0.09616110175009304
+        ],
+        [
+          0.0,
+          -0.9848077529548818,
+          -0.17364817799204443,
+          0.23145289805952765
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cad_reference_link_transform": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.038
+        ],
+        [
+          0.0,
+          -0.17364817799204443,
+          0.9848077529548818,
+          0.09616110175009304
+        ],
+        [
+          0.0,
+          -0.9848077529548818,
+          -0.17364817799204443,
+          0.23145289805952765
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "encoder_sign": 1,
+      "reference_encoder_rad": 0.7688639760017395,
+      "friction_prior": {
+        "coulomb": 0.66,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-14 14:21:07",
+        "status": "historical prior, not newly identified during direction registration"
+      },
+      "cad_label": "M6"
+    },
+    "shoulder_side": {
+      "parent_link": "shoulder_front_link",
+      "child_link": "shoulder_side_link",
+      "axis_in_joint_frame": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "axis_in_cad_reference": [
+        0.9991495746988093,
+        -0.039192667988185485,
+        -0.012808674996138863
+      ],
+      "axis_point_in_cad_reference_m": [
+        -0.014453146899997231,
+        0.1422984193399901,
+        0.22522473518424677
+      ],
+      "parent_to_joint_at_reference": [
+        [
+          0.03918944789304172,
+          0.012818523824037647,
+          0.9991495746988093,
+          0.02354685310000277
+        ],
+        [
+          -0.1730199995909727,
+          -0.9847268405080999,
+          0.01941981782807243,
+          -0.0018781180506835526
+        ],
+        [
+          0.9841383372856576,
+          -0.17363391094457412,
+          -0.0363730402181799,
+          0.04651789719860247
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cad_reference_link_transform": [
+        [
+          0.03918944789304172,
+          0.012818523824037647,
+          0.9991495746988093,
+          -0.014453146899997231
+        ],
+        [
+          0.9992316722241985,
+          2.168404344971009e-19,
+          -0.039192667988185485,
+          0.1422984193399901
+        ],
+        [
+          -0.0005023921483341534,
+          0.9999178393483001,
+          -0.012808674996138863,
+          0.22522473518424677
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "encoder_sign": 1,
+      "reference_encoder_rad": -2.8379874229431152,
+      "friction_prior": {
+        "coulomb": 0.46,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-14 14:58:36",
+        "status": "historical prior, not newly identified during direction registration"
+      },
+      "cad_label": "M5"
+    },
+    "shoulder_rotate": {
+      "parent_link": "shoulder_side_link",
+      "child_link": "shoulder_rotate_link",
+      "axis_in_joint_frame": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "axis_in_cad_reference": [
+        0.0,
+        0.17364817799204443,
+        0.9848077529548818
+      ],
+      "axis_point_in_cad_reference_m": [
+        -0.03,
+        0.13410167670747233,
+        0.17609740545509306
+      ],
+      "parent_to_joint_at_reference": [
+        [
+          0.03918944789304172,
+          0.9841383372856576,
+          0.1730199995909727,
+          -0.008775036252220925
+        ],
+        [
+          0.012818523824037647,
+          -0.17363391094457412,
+          0.9847268405080999,
+          -0.04932258110257809
+        ],
+        [
+          0.9991495746988093,
+          -0.0363730402181799,
+          -0.01941981782807243,
+          -0.014583123450262872
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cad_reference_link_transform": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.03
+        ],
+        [
+          0.0,
+          0.9848077529548818,
+          0.17364817799204443,
+          0.13410167670747233
+        ],
+        [
+          0.0,
+          -0.17364817799204443,
+          0.9848077529548818,
+          0.17609740545509306
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "encoder_sign": -1,
+      "reference_encoder_rad": 2.365720510482788,
+      "friction_prior": {
+        "coulomb": 0.22,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-15 13:47:52",
+        "status": "historical prior, not newly identified during direction registration"
+      },
+      "cad_label": "M4"
+    },
+    "elbow": {
+      "parent_link": "shoulder_rotate_link",
+      "child_link": "elbow_link",
+      "axis_in_joint_frame": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "axis_in_cad_reference": [
+        0.08682408896562273,
+        0.9810313566115689,
+        -0.17331778593137628
+      ],
+      "axis_point_in_cad_reference_m": [
+        -0.034312160095687994,
+        0.1395958217489507,
+        -0.01229907592062379
+      ],
+      "parent_to_joint_at_reference": [
+        [
+          0.9962236584097416,
+          0.0,
+          0.08682408896562273,
+          -0.004312160095687995
+        ],
+        [
+          -0.08682408419082745,
+          -0.00033164408287466066,
+          0.9962236036235173,
+          0.038125382363711866
+        ],
+        [
+          2.87946953564337e-05,
+          -0.9999999450060997,
+          -0.00033039168153134853,
+          -0.1845802672121492
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cad_reference_link_transform": [
+        [
+          0.9962236584097416,
+          0.0,
+          0.08682408896562273,
+          -0.034312160095687994
+        ],
+        [
+          -0.08550003110794975,
+          -0.1739747741064904,
+          0.9810313566115689,
+          0.1395958217489507
+        ],
+        [
+          0.015105201264796041,
+          -0.9847501094057292,
+          -0.17331778593137628,
+          -0.01229907592062379
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "encoder_sign": -1,
+      "reference_encoder_rad": -1.27927827835083,
+      "friction_prior": {
+        "coulomb": 0.75,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-12 17:26:54",
+        "status": "historical prior, not newly identified during direction registration"
+      },
+      "cad_label": "M7"
+    },
+    "arm_roll": {
+      "parent_link": "elbow_link",
+      "child_link": "arm_roll_link",
+      "axis_in_joint_frame": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "axis_in_cad_reference": [
+        0.059722514974570345,
+        0.16853623792823783,
+        0.9838845245810652
+      ],
+      "axis_point_in_cad_reference_m": [
+        -0.049494535326786354,
+        0.08522461719739738,
+        -0.11129671992784904
+      ],
+      "parent_to_joint_at_reference": [
+        [
+          0.9944183785624766,
+          -0.08682290862326858,
+          0.05994890253683105,
+          -0.011971681053009518
+        ],
+        [
+          0.0597217030683959,
+          -0.005214316636033871,
+          -0.9982014471461307,
+          0.10694715879677875
+        ],
+        [
+          0.08697934559299274,
+          0.996210115106354,
+          -3.2618283555868577e-10,
+          -0.03749999998783496
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cad_reference_link_transform": [
+        [
+          0.9982150175213316,
+          1.734723475976807e-18,
+          0.059722514974570345,
+          -0.049494535326786354
+        ],
+        [
+          -0.010083406697707631,
+          0.9856438816399995,
+          0.16853623792823783,
+          0.08522461719739738
+        ],
+        [
+          -0.0588651314808385,
+          -0.16883761010401377,
+          0.9838845245810652,
+          -0.11129671992784904
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "encoder_sign": -1,
+      "reference_encoder_rad": -2.6689937114715576,
+      "friction_prior": {
+        "coulomb": 0.08,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-15 14:04:47",
+        "status": "historical prior, not newly identified during direction registration"
+      },
+      "cad_label": "M3"
+    },
+    "wrist_side": {
+      "parent_link": "arm_roll_link",
+      "child_link": "wrist_side_link",
+      "axis_in_joint_frame": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "axis_in_cad_reference": [
+        0.9944318975347151,
+        -0.09577585105149954,
+        -0.04395665502363589
+      ],
+      "axis_point_in_cad_reference_m": [
+        -0.034669346648152966,
+        0.06339953839528882,
+        -0.2100973311187322
+      ],
+      "parent_to_joint_at_reference": [
+        [
+          0.08572354232062201,
+          -0.014726871742345816,
+          0.9962101151567821,
+          0.020834708090508792
+        ],
+        [
+          0.98182689109644,
+          -0.16867290671767404,
+          -0.08697934501541715,
+          -0.004830496317324559
+        ],
+        [
+          0.1693145894833185,
+          0.9855620578066587,
+          -3.5899146110230213e-10,
+          -0.10000131149079496
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cad_reference_link_transform": [
+        [
+          0.09568242040540101,
+          0.044159660221406404,
+          0.9944318975347151,
+          -0.034669346648152966
+        ],
+        [
+          0.9954029266359232,
+          0.0,
+          -0.09577585105149954,
+          0.06339953839528882
+        ],
+        [
+          -0.004229429039850249,
+          0.9990244863911646,
+          -0.04395665502363589,
+          -0.2100973311187322
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "encoder_sign": 1,
+      "reference_encoder_rad": 0.1661325991153717,
+      "friction_prior": {
+        "coulomb": 0.17,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-15 14:23:48",
+        "status": "historical prior, not newly identified during direction registration"
+      },
+      "cad_label": "M2"
+    },
+    "wrist": {
+      "parent_link": "wrist_side_link",
+      "child_link": "wrist_link",
+      "axis_in_joint_frame": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "axis_in_cad_reference": [
+        0.08682408896562273,
+        0.9810313566115689,
+        -0.17331778593137628
+      ],
+      "axis_point_in_cad_reference_m": [
+        -0.06116138176032706,
+        0.033317480295879276,
+        -0.29719339824634616
+      ],
+      "parent_to_joint_at_reference": [
+        [
+          0.010150223332569736,
+          -0.1690100685967079,
+          0.9855620577514311,
+          -0.03211022407681555
+        ],
+        [
+          0.05908336419529866,
+          -0.9837894722727017,
+          -0.16931458980479194,
+          -0.0881809829979821
+        ],
+        [
+          0.9982014471246095,
+          0.05994890289517684,
+          5.797728526326304e-10,
+          -0.019634938253660014
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "cad_reference_link_transform": [
+        [
+          0.9962236584097416,
+          0.0,
+          0.08682408896562273,
+          -0.06116138176032706
+        ],
+        [
+          -0.08550003110794975,
+          -0.1739747741064904,
+          0.9810313566115689,
+          0.033317480295879276
+        ],
+        [
+          0.015105201264796041,
+          -0.9847501094057292,
+          -0.17331778593137628,
+          -0.29719339824634616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "encoder_sign": -1,
+      "reference_encoder_rad": -2.0780880451202393,
+      "friction_prior": {
+        "coulomb": 0.17,
+        "viscous": 0.0,
+        "identified": true,
+        "method": "symmetric-low-speed-identification",
+        "updated_at": "2026-10-15 20:53:12",
+        "status": "historical prior, not newly identified during direction registration"
+      },
+      "cad_label": "M1"
+    }
+  },
+  "links": {
+    "shoulder_front_link": {
+      "parent_joint": "shoulder_front",
+      "inertial": {
+        "mass_kg": 3e-06,
+        "com_m": [
+          0.011773426550001385,
+          -0.0009390590253417716,
+          0.023258948599301242
+        ],
+        "inertia_com_kg_m2": [
+          [
+            1.6652799861898932e-09,
+            9.118501190018635e-12,
+            -2.258502871042864e-10
+          ],
+          [
+            9.118501190018635e-12,
+            1.7788756427797028e-09,
+            1.80140207764141e-11
+          ],
+          [
+            -2.258502871042864e-10,
+            1.80140207764141e-11,
+            1.333425256200842e-09
+          ]
+        ]
+      },
+      "physical_ownership": "rigid body downstream of this joint, including attached motor/rotor/brackets; CAD part ownership not yet mass-verified"
+    },
+    "shoulder_side_link": {
+      "parent_joint": "shoulder_side",
+      "inertial": {
+        "mass_kg": 1.2819491475994396,
+        "com_m": [
+          -0.007020022841210484,
+          -0.039458030254851964,
+          -0.01166648852204202
+        ],
+        "inertia_com_kg_m2": [
+          [
+            0.0005502839191307706,
+            -4.85137238900315e-06,
+            -1.4343970017483974e-06
+          ],
+          [
+            -4.85137238900315e-06,
+            0.0005238785172348889,
+            -8.062435347104806e-06
+          ],
+          [
+            -1.4343970017483974e-06,
+            -8.062435347104806e-06,
+            0.0005487632257746367
+          ]
+        ]
+      },
+      "physical_ownership": "rigid body downstream of this joint, including attached motor/rotor/brackets; CAD part ownership not yet mass-verified"
+    },
+    "shoulder_rotate_link": {
+      "parent_joint": "shoulder_rotate",
+      "inertial": {
+        "mass_kg": 3e-06,
+        "com_m": [
+          -0.0021560800478439973,
+          0.019062691181855933,
+          -0.0922901336060746
+        ],
+        "inertia_com_kg_m2": [
+          [
+            1.588457673673526e-08,
+            6.787533254371328e-11,
+            -3.2861170803513826e-10
+          ],
+          [
+            6.787533254371328e-11,
+            1.5292143150587163e-08,
+            2.9053761316886393e-09
+          ],
+          [
+            -3.2861170803513826e-10,
+            2.9053761316886393e-09,
+            1.8261626249710615e-09
+          ]
+        ]
+      },
+      "physical_ownership": "rigid body downstream of this joint, including attached motor/rotor/brackets; CAD part ownership not yet mass-verified"
+    },
+    "elbow_link": {
+      "parent_joint": "elbow",
+      "inertial": {
+        "mass_kg": 3e-06,
+        "com_m": [
+          -0.005985840526504759,
+          0.05347357939838937,
+          -0.018749999993917466
+        ],
+        "inertia_com_kg_m2": [
+          [
+            6.138806449555802e-09,
+            4.904888570554549e-10,
+            -1.7198523402163296e-10
+          ],
+          [
+            4.904888570554549e-10,
+            1.8120055968278882e-09,
+            1.536403455134559e-09
+          ],
+          [
+            -1.7198523402163296e-10,
+            1.536403455134559e-09,
+            5.654986645698694e-09
+          ]
+        ]
+      },
+      "physical_ownership": "rigid body downstream of this joint, including attached motor/rotor/brackets; CAD part ownership not yet mass-verified"
+    },
+    "arm_roll_link": {
+      "parent_joint": "arm_roll",
+      "inertial": {
+        "mass_kg": 2.067440708274142,
+        "com_m": [
+          0.008600790989290254,
+          -0.001994080695508811,
+          -0.0412816140764194
+        ],
+        "inertia_com_kg_m2": [
+          [
+            0.002548695112772723,
+            1.7159785412579994e-05,
+            0.0003552432158998193
+          ],
+          [
+            1.7159785412579994e-05,
+            0.0026187295582253156,
+            -8.236261524299115e-05
+          ],
+          [
+            0.0003552432158998193,
+            -8.236261524299115e-05,
+            0.0009176307449381994
+          ]
+        ]
+      },
+      "physical_ownership": "rigid body downstream of this joint, including attached motor/rotor/brackets; CAD part ownership not yet mass-verified"
+    },
+    "wrist_side_link": {
+      "parent_joint": "wrist_side",
+      "inertial": {
+        "mass_kg": 3e-06,
+        "com_m": [
+          -0.016055112038407777,
+          -0.04409049149899106,
+          -0.009817469126830007
+        ],
+        "inertia_com_kg_m2": [
+          [
+            4.186925583132683e-09,
+            -1.0299050332577266e-09,
+            -2.2932520196119704e-10
+          ],
+          [
+            -1.0299050332577266e-09,
+            1.7336336784939456e-09,
+            -6.297720528755218e-10
+          ],
+          [
+            -2.2932520196119704e-10,
+            -6.297720528755218e-10,
+            4.421726163935101e-09
+          ]
+        ]
+      },
+      "physical_ownership": "rigid body downstream of this joint, including attached motor/rotor/brackets; CAD part ownership not yet mass-verified"
+    },
+    "wrist_link": {
+      "parent_joint": "wrist",
+      "inertial": {
+        "mass_kg": 0.28689337319325897,
+        "com_m": [
+          -0.003756055301765231,
+          0.07138248467929333,
+          0.011437184512331246
+        ],
+        "inertia_com_kg_m2": [
+          [
+            0.0005022576993705115,
+            1.9789286442718608e-05,
+            3.170717878897305e-06
+          ],
+          [
+            1.9789286442718608e-05,
+            0.00012721069086583166,
+            -6.025835676763821e-05
+          ],
+          [
+            3.170717878897305e-06,
+            -6.025835676763821e-05,
+            0.0004936441537190472
+          ]
+        ]
+      },
+      "physical_ownership": "rigid body downstream of this joint, including attached motor/rotor/brackets; CAD part ownership not yet mass-verified"
+    }
+  },
+  "base_frame": "original revised STEP reference axes and origin; nominal gravity installation configured",
+  "end_frame": "wrist_link",
+  "end_frame_is_tcp": false,
+  "tool_tcp_transform": null,
+  "gravity_in_cad_frame_m_s2": [
+    -0.0,
+    -1.7029069047056824,
+    -9.65766495051499
+  ],
+  "claw_and_payload_policy": "For a fixed claw state, combine tool/payload mass properties into wrist_link. TCP is not needed for joint-space inverse dynamics. Moving-finger dynamics are not included in this seven-axis model.",
+  "reflected_rotor_inertias_kg_m2": [
+    0.0,
+    0.08811773990476389,
+    0.006010796036206639,
+    0.0,
+    0.0073929226579344115,
+    0.013971734739846068,
+    0.017710770702359303
+  ],
+  "physical_joint_limits": null,
+  "hardware_execution_enabled": false,
+  "gravity_configuration": {
+    "source": "nominal-horizontal-shoulder-axes",
+    "status": "assumed_for_on_robot_validation",
+    "physically_measured": false,
+    "magnitude_m_s2": 9.80665,
+    "assumptions": [
+      "approved nominal 90-degree shoulder geometry",
+      "nominal shoulder_front and shoulder_side axes horizontal",
+      "down points toward negative CAD Z in approved reference pose"
+    ],
+    "user_instruction": "Use the CAD-based nominal direction directly; no additional physical angle or distance measurements."
+  },
+  "sources": {
+    "approved_step_path": "C:\\Users\\rhche\\Documents\\WeChat Files\\wxid_6245222452021\\FileStorage\\File\\2026-10\\RB000152_02_手臂完整(2).step",
+    "approved_step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
+    "registration_path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\left_arm_step_analysis\\revised_2\\kinematic_calibration.json",
+    "registration_sha256": "964366579d8edb04b5b0b12b5868b4c3ff617d10a7616802a0916d6328533a67",
+    "historical_dynamics_path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\left_arm_v3_1_dynamics.json",
+    "historical_dynamics_updated_at": "2026-10-20 16:49:22"
+  },
+  "nominal_geometry_note": "Only the M5 axis direction is orthogonalized to M6 and M4 in nominal90. All reference origins and encoder signs stay fixed. Exact geometry is retained for CAD comparison.",
+  "missing_for_physical_prediction": [],
+  "preserved_existing_behaviors": [
+    "Model Hold takeover",
+    "adaptive learning and saved state",
+    "ordinary Clearance shoulder_rotate active-target skip"
+  ],
+  "dynamic_inertial_parameter_order": [
+    "mass",
+    "hx",
+    "hy",
+    "hz",
+    "Ixx",
+    "Iyy",
+    "Izz",
+    "Ixy",
+    "Ixz",
+    "Iyz"
+  ],
+  "parameter_status": "nominal-estimate-from-existing-tests; not independently measured link mass properties",
+  "runtime_apply_requires_explicit_opt_in": true,
+  "identification": {
+    "gravity_records_used": 73,
+    "unique_inertia_records_used": 29,
+    "inertia_records": [
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:22:43",
+        "label": "shoulder_front_home_step_positive",
+        "effective_inertia": 0.16079633681167171
+      },
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:23:45",
+        "label": "shoulder_front_home_step_positive_repeat2",
+        "effective_inertia": 0.18472564713038625
+      },
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:31:52",
+        "label": "shoulder_front_clearance_step_positive",
+        "effective_inertia": 0.2800788630107806
+      },
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:32:39",
+        "label": "shoulder_front_clearance_step_positive_repeat2",
+        "effective_inertia": 0.261309267008994
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:15:46",
+        "label": "shoulder_side_home_step_positive_repeat2",
+        "effective_inertia": 0.4246522923264835
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:17:11",
+        "label": "shoulder_side_home_step_positive_repeat3",
+        "effective_inertia": 0.4101764398651533
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:18:58",
+        "label": "shoulder_side_clearance_step_positive",
+        "effective_inertia": 0.15002050657557808
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:20:06",
+        "label": "shoulder_side_clearance_step_positive_repeat2",
+        "effective_inertia": 0.1723461846799389
+      },
+      {
+        "joint": "shoulder_rotate",
+        "captured_at": "2026-10-15 13:54:34",
+        "label": "shoulder_rotate_home_step_positive_kp18",
+        "effective_inertia": 0.009687070682629648
+      },
+      {
+        "joint": "shoulder_rotate",
+        "captured_at": "2026-10-15 13:56:37",
+        "label": "shoulder_rotate_home_step_negative_kp18",
+        "effective_inertia": 0.00903788780178258
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-13 17:32:38",
+        "label": "elbow_home_step_reprocessed",
+        "effective_inertia": 0.04776166937253475
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-13 17:56:44",
+        "label": "elbow_clearance_step_positive_reprocessed",
+        "effective_inertia": 0.21221605780551
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-13 18:00:16",
+        "label": "elbow_clearance_step_positive",
+        "effective_inertia": 0.18472564713038625
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-14 13:46:40",
+        "label": "elbow_d4_grasp_step_positive",
+        "effective_inertia": 0.2899633417483065
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-14 13:50:38",
+        "label": "elbow_d4_grasp_step_positive_repeat2",
+        "effective_inertia": 0.2899633417483065
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:08:00",
+        "label": "arm_roll_home_step_positive_kp12",
+        "effective_inertia": 0.009687070682629648
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:10:09",
+        "label": "arm_roll_home_step_positive_kp12_repeat2",
+        "effective_inertia": 0.010382883752081379
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:11:05",
+        "label": "arm_roll_home_step_negative_kp12",
+        "effective_inertia": 0.007867122262756333
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:13:38",
+        "label": "arm_roll_clearance_step_positive_kp12",
+        "effective_inertia": 0.00903788780178258
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:14:25",
+        "label": "arm_roll_clearance_step_positive_kp12_repeat2",
+        "effective_inertia": 0.00903788780178258
+      },
+      {
+        "joint": "wrist_side",
+        "captured_at": "2026-10-15 14:28:01",
+        "label": "wrist_side_home_step_positive_kp8",
+        "effective_inertia": 0.020068294251632784
+      },
+      {
+        "joint": "wrist_side",
+        "captured_at": "2026-10-15 14:32:48",
+        "label": "wrist_side_home_step_positive_kp8_repeat2_rehome",
+        "effective_inertia": 0.01938419181774353
+      },
+      {
+        "joint": "wrist_side",
+        "captured_at": "2026-10-16 13:40:54",
+        "label": "wrist_side_clearance_step_negative_kp16_kd1",
+        "effective_inertia": 0.029390084641925343
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 20:58:28",
+        "label": "wrist_home_step_positive_kp10",
+        "effective_inertia": 0.01746865284734181
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:01:28",
+        "label": "wrist_home_step_positive_kp10_repeat3_reprocessed",
+        "effective_inertia": 0.016297984153833715
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:04:03",
+        "label": "wrist_home_step_negative_kp10",
+        "effective_inertia": 0.020068294251632784
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:13:30",
+        "label": "wrist_clearance_step_positive_kp10",
+        "effective_inertia": 0.021509780731846884
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:14:08",
+        "label": "wrist_clearance_step_positive_kp10_repeat2",
+        "effective_inertia": 0.021509780731846884
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:18:02",
+        "label": "wrist_d4_step_positive_kp10_reprocessed",
+        "effective_inertia": 0.022268898960217446
+      }
+    ],
+    "fit_columns": 28,
+    "fit_design_rank": 20,
+    "iterations": 11,
+    "gravity_training_rmse_with_nuisance_Nm": 0.3900828094729635,
+    "effective_inertia_training_rmse_kg_m2": 0.09824524835861957,
+    "effective_inertia_median_relative_error": 0.14307073266770487,
+    "total_nominal_mass_kg": 3.6362952290668407,
+    "nominal_shape_radius_m": 0.0285,
+    "claw_CAD_bbox_center_m": [
+      -0.065849089745,
+      0.031821266443,
+      -0.420545278977
+    ],
+    "assumptions": [
+      "scalar closed-loop effective inertia approximates M_ii as a soft constraint",
+      "CAD segments use nonnegative cylinder mixtures at 20/50/80 percent",
+      "claw bounding-box centre defines only a nominal mass distribution, not a measured COM or TCP",
+      "diagonal residual inertias are fitted nuisance drive/shape priors, not measured rotor inertias",
+      "static offset and approach nuisance terms are not deployed feedforward",
+      "rank deficiency is regularized; the inferred masses are not uniquely identified"
+    ],
+    "physical_parameters_independently_verified": false,
+    "link_mass_interpretation": "effective lumped bodies; near-zero fitted mass does not mean the physical link is absent",
+    "fit_is_not_hardware_validation": true
+  },
+  "identification_sources": {
+    "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\left_arm_general_model\\left_arm_cad_exact.json": "2622f6bf143050f1d9b7de95db774629ede13347389b9a758e8b8bc2f2e6c41f",
+    "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+    "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\left_arm_step_analysis\\revised_2\\step_inspection.json": "fce26d8a9d080c7ac7e8e28c9b8dd8ecf4587cbe3a45ff872633ad8af9059a8e"
+  }
+}

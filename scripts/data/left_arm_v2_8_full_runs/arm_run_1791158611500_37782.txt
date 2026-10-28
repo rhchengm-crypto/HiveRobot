@@ -1,0 +1,164 @@
+v2.8 Home captured-pose limit margin: requested_deg= 120.0 effective_deg= 122.02187135612442 largest_transition_deg= 121.02187135612442
+v2.8 Home pre-clearance fix: formal Home includes all selected joints= elbow,shoulder_front,shoulder_side,shoulder_rotate,wrist,wrist_side,arm_roll
+Serial port is open
+Serial port is open
+v2.8 Home staged path entry check= {"build": "v2.8-home-staged-path-guard-v1", "path": "current-to-clearance", "max_delta_deg": 120.0, "errors_deg": {"elbow": -1.245846995177836, "shoulder_front": 29.244588742811814, "shoulder_side": -13.944732775551472, "shoulder_rotate": -26.272042604698076, "wrist": 72.04046404422569, "wrist_side": 29.87843627420452, "arm_roll": 11.256315676721094}, "blocking_errors_deg": {}, "legacy_direct_precheck_bypass_deg": 180.0}
+v2 home target elbow delta_deg= -122.26771835130225 target= -1.2956817150115967
+v2 home target shoulder_front delta_deg= -33.74711091538675 target= 0.8363851308822632
+v2 home target shoulder_side delta_deg= -21.922516669531426 target= -2.853627920150757
+v2 home target shoulder_rotate delta_deg= -2.0326916177524748 target= 2.3554208278656006
+v2 home target wrist delta_deg= 12.065023734828944 target= -2.0780880451202393
+v2 home target wrist_side delta_deg= 21.922509839342258 target= 0.1668955534696579
+v2 home target arm_roll delta_deg= 10.775470359152196 target= -2.657930850982666
+v2.6 pre-home clearance wrist-first coupled order= wrist,wrist_side,arm_roll,elbow,shoulder_rotate,shoulder_side,shoulder_front
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+v2.6 pre-home clearance wrist-first active wrist delta_deg= 72.04046404422569 target= -1.0313191413879395 kp= 22.0 kd= 1.4 seconds= 6.0 hold joints: shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side
+v2.6 pre-home clearance wrist-first active_tau= {'wrist': 0.4}
+v2.6 pre-home clearance wrist-first hold_tau= {"shoulder_front": 1.166123468575764, "shoulder_side": 0.71, "shoulder_rotate": -0.8500000000000001, "elbow": 3.2199999999999998, "arm_roll": -0.3327607989659096, "wrist_side": -0.2599999999999999}
+v2 continuous step wrist 1/1 target= -1.0313191413879395
+v2.6 pre-home clearance coupled skip shoulder_rotate delta_deg= -26.293899210042117 deadband_deg= 180.0
+v2.6 pre-home clearance coupled active wrist_side,arm_roll,elbow,shoulder_side,shoulder_front deltas_deg= {"wrist_side": 30.118862348083557, "arm_roll": 10.36018119723708, "elbow": -0.7431348269811423, "shoulder_rotate": -26.293899210042117, "shoulder_side": -13.944732775551472, "shoulder_front": 28.720016554176496} targets= {"wrist_side": 0.3057526648044586, "arm_roll": -2.649538516998291, "elbow": 0.8165484070777893, "shoulder_side": -2.7143893241882324, "shoulder_front": 1.9357976913452148} seconds= 20.0 hold joints: wrist,shoulder_rotate
+v2.6 pre-home clearance coupled active_tau= {"arm_roll": -0.32381536420759377, "shoulder_front": 2.4}
+v2.6 pre-home clearance coupled hold_tau= {"wrist": 0.39, "shoulder_rotate": -0.8816575889616571}
+v2.2 continuous group step wrist_side,arm_roll,elbow,shoulder_side,shoulder_front 1/1 targets= {"wrist_side": 0.3057526648044586, "arm_roll": -2.649538516998291, "elbow": 0.8165484070777893, "shoulder_side": -2.7143893241882324, "shoulder_front": 1.9357976913452148}
+v2.6 home coupled shoulder/roll/wrist active elbow,shoulder_front,shoulder_side,arm_roll,wrist_side,wrist hold joints: shoulder_rotate
+v2.6 home coupled shoulder/roll/wrist gains elbow kp= 65.0 kd= 6.5 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains shoulder_front kp= 75.0 kd= 7.0 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains shoulder_side kp= 65.0 kd= 4.5 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains arm_roll kp= 18.0 kd= 6.0 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains wrist_side kp= 16.0 kd= 2.2 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains wrist kp= 22.0 kd= 1.4 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist progress windows= {"arm_roll": [0.65, 1.0], "wrist": [0.35, 1.0]}
+v2.6 home coupled shoulder/roll/wrist pre-window gains= {"wrist": {"kp": 6.0, "kd": 0.8}}
+v2.6 home coupled shoulder/roll/wrist command bias deg= {"shoulder_side": 1.0}
+v2.6 home coupled shoulder/roll/wrist control_dt= 0.01
+v2.6 home coupled shoulder/roll/wrist trajectory= blend_smootherstep
+v2.6 home coupled shoulder/roll/wrist linear_blend= 0.35
+enable skip elbow
+enable skip shoulder_front
+enable skip shoulder_side
+enable skip arm_roll
+enable skip wrist_side
+enable skip wrist
+enable skip shoulder_rotate
+v2.2 continuous group step elbow,shoulder_front,shoulder_side,arm_roll,wrist_side,wrist 1/1 targets= {"elbow": -1.2956817150115967, "shoulder_front": 0.8363851308822632, "shoulder_side": -2.8361746276308137, "arm_roll": -2.657930850982666, "wrist_side": 0.1668955534696579, "wrist": -2.0780880451202393}
+v2.6 home coupled shoulder/roll/wrist reached= {"elbow": -1.28080415725708, "shoulder_front": 0.8272297382354736, "shoulder_side": -2.8364615440368652, "arm_roll": -2.6674678325653076, "wrist_side": 0.16918440163135529, "wrist": -2.0716030597686768}
+v2 home auto gains shoulder_rotate kp= 24.0 kd= 4.5 seconds= 8.0
+v2 home active shoulder_rotate hold joints: elbow, shoulder_front, shoulder_side, wrist, wrist_side, arm_roll
+enable skip shoulder_rotate
+enable skip elbow
+enable skip shoulder_front
+enable skip shoulder_side
+enable skip wrist
+enable skip wrist_side
+enable skip arm_roll
+v2 continuous step shoulder_rotate 1/1 target= 2.3554208278656006
+{
+  "elbow": {
+    "pos": -1.28080415725708,
+    "vel": -0.0019536020699888468,
+    "tau": -1.0324786901474
+  },
+  "shoulder_front": {
+    "pos": 0.8272297382354736,
+    "vel": -0.0019536020699888468,
+    "tau": 0.5948718190193176
+  },
+  "shoulder_side": {
+    "pos": -2.8364615440368652,
+    "vel": -0.0019536020699888468,
+    "tau": -0.047863248735666275
+  },
+  "shoulder_rotate": {
+    "pos": 2.365720510482788,
+    "vel": -0.007326007355004549,
+    "tau": -0.2905983030796051
+  },
+  "wrist": {
+    "pos": -2.0716030597686768,
+    "vel": -0.007326007355004549,
+    "tau": -0.13919414579868317
+  },
+  "wrist_side": {
+    "pos": 0.16956588625907898,
+    "vel": -0.007326007355004549,
+    "tau": -0.06593406945466995
+  },
+  "arm_roll": {
+    "pos": -2.6682307720184326,
+    "vel": -0.007326007355004549,
+    "tau": 0.026862027123570442
+  }
+}
+v2.8 Home verification correction pass: recomputing from fresh joint positions
+Serial port is open
+Serial port is open
+v2 home target elbow delta_deg= -0.8524212687959314 target= -1.2956817150115967
+v2 home target shoulder_front delta_deg= 0.5245653584461493 target= 0.8363851308822632
+v2 home target shoulder_side delta_deg= -0.9835609008601761 target= -2.853627920150757
+v2 home skip shoulder_rotate delta_deg= -0.5901283442891017 deadband_deg= 3.0
+v2 home skip wrist delta_deg= -0.37156229084869363 deadband_deg= 0.5
+v2 home skip wrist_side delta_deg= -0.13114133961153732 deadband_deg= 0.5
+v2 home skip arm_roll delta_deg= 0.5901420046674417 deadband_deg= 3.0
+v2.6 home coupled shoulder/roll/wrist active elbow,shoulder_front,shoulder_side hold joints: shoulder_rotate, wrist, wrist_side, arm_roll
+v2.6 home coupled shoulder/roll/wrist gains elbow kp= 65.0 kd= 6.5 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains shoulder_front kp= 75.0 kd= 7.0 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist gains shoulder_side kp= 65.0 kd= 4.5 seconds= 16.0
+v2.6 home coupled shoulder/roll/wrist progress windows= {"arm_roll": [0.65, 1.0], "wrist": [0.35, 1.0]}
+v2.6 home coupled shoulder/roll/wrist pre-window gains= {"wrist": {"kp": 6.0, "kd": 0.8}}
+v2.6 home coupled shoulder/roll/wrist command bias deg= {"shoulder_side": 1.0}
+v2.6 home coupled shoulder/roll/wrist control_dt= 0.01
+v2.6 home coupled shoulder/roll/wrist trajectory= blend_smootherstep
+v2.6 home coupled shoulder/roll/wrist linear_blend= 0.35
+enable elbow
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable wrist
+enable wrist_side
+enable arm_roll
+v2.2 continuous group step elbow,shoulder_front,shoulder_side 1/1 targets= {"elbow": -1.2956817150115967, "shoulder_front": 0.8363851308822632, "shoulder_side": -2.8361746276308137}
+v2.6 home coupled shoulder/roll/wrist reached= {"elbow": -1.2796597480773926, "shoulder_front": 0.8184558153152466, "shoulder_side": -2.8364615440368652}
+{
+  "elbow": {
+    "pos": -1.2796597480773926,
+    "vel": -0.0019536020699888468,
+    "tau": -1.100854754447937
+  },
+  "shoulder_front": {
+    "pos": 0.8184558153152466,
+    "vel": -0.005860805977135897,
+    "tau": 1.292307734489441
+  },
+  "shoulder_side": {
+    "pos": -2.8364615440368652,
+    "vel": -0.0019536020699888468,
+    "tau": -0.047863248735666275
+  },
+  "shoulder_rotate": {
+    "pos": 2.3661019802093506,
+    "vel": 0.007326007355004549,
+    "tau": -0.0317460335791111
+  },
+  "wrist": {
+    "pos": -2.0708401203155518,
+    "vel": -0.021978022530674934,
+    "tau": -0.021978022530674934
+  },
+  "wrist_side": {
+    "pos": 0.16956588625907898,
+    "vel": -0.021978022530674934,
+    "tau": -0.017094017937779427
+  },
+  "arm_roll": {
+    "pos": -2.6689937114715576,
+    "vel": -0.007326007355004549,
+    "tau": -0.017094017937779427
+  }
+}

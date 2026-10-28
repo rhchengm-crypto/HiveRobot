@@ -1,0 +1,332 @@
+{
+  "source": "Jetson sync inspected locally; original data not modified",
+  "required_files": [
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_general_dynamics.json",
+      "bytes": 31263,
+      "sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v3_1_dynamics.json",
+      "bytes": 85181,
+      "sha256": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_general_motion_runs.jsonl",
+      "bytes": 10933087,
+      "sha256": "2c2b743f927b20b571da7638bdf21ad309c02c286312d080268c13dacf8f39ae"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v3_1_model_runs.jsonl",
+      "bytes": 6038039,
+      "sha256": "5a780efa551e4bf9073efc5e6b2ac8ddec35adcc88c978406f9139fc8bcec389"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_6_adaptive_hold_tau.json",
+      "bytes": 38143,
+      "sha256": "d1cea98dcee96f4ac7e9d9618aeeb9196eef5d73e8d95f50d0e5d3a1c98cdf87"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_6_adaptive_active_tau.json",
+      "bytes": 1359,
+      "sha256": "85b47425b6d485a437c3562c2c03cef214d62169fce41b7e4df897abd7372d7c"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_6_adaptive_target_bias.json",
+      "bytes": 2877,
+      "sha256": "c6ed63842f8a37a22fb70fe2f086631378af852ea3e3bf93d6b707dfce26e62e"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_6_adaptive_hold_target_bias.json",
+      "bytes": 25761,
+      "sha256": "935ee941d36abb37b5834c12485814ece3a97d250aca8a4c34e71957cb40e0bd"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_8_local_target_bias.json",
+      "bytes": 55124,
+      "sha256": "74a356a715cc4f66c409fdeb859152add24d7ecc1052222eb6aa8687a779a965"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_8_clearance_bias.json",
+      "bytes": 14910,
+      "sha256": "a95b0c794fa06e7c521479639cd3c9a825efb353f1b563faf9813e388d97c64e"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_8_placement1_clearance_bias.json",
+      "bytes": 5469,
+      "sha256": "db590f8d6a17ab20dcac5e953c44406bad53acd36cf56888985c880f9799cd2e"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_8_placement_c4_clearance_bias.json",
+      "bytes": 4734,
+      "sha256": "99c304f77db50b897833265667248adb3ef9be1d9435ff345c4436881524b6ab"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_6_saved_moves.json",
+      "bytes": 9081,
+      "sha256": "162a50728df6eec0226f6bb34cb29a417641142a2fee4909d54d2d0feaefdaf1"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_home.json",
+      "bytes": 555,
+      "sha256": "b50735e9ae53e24cea91045c3ce2528e26ecd9dbb4990e8295e9a616c0d74d39"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_table_clearance.json",
+      "bytes": 543,
+      "sha256": "dead14fe6a7bcdca9ccfd8235ed268b3c10c557b32d953de4f98d736cd59b2b1"
+    },
+    {
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts\\data\\left_arm_v2_claw_home.json",
+      "bytes": 187,
+      "sha256": "5af1c6983a4e39c8b73901c588d3adf09cc99f11e2dac3ed136e84bd3dab5476"
+    }
+  ],
+  "missing_files": [],
+  "full_log_files": 569,
+  "motion_log_records": 95,
+  "hold_log_records": 985,
+  "current_apply_segments": 77,
+  "current_apply_frames": 61198,
+  "current_apply_worker_errors": 0,
+  "current_apply_terminal_zero_all": true,
+  "workflow_runs": [
+    {
+      "action": "white-bishop-placement",
+      "run_id": "a8b0a2e690e25192",
+      "segments": 12,
+      "frames": 10927,
+      "stale_frames": 15,
+      "worker_errors": 0,
+      "all_terminal_corrections_zero": true,
+      "peak_prepare_frame_ms": 3.2705809990147827,
+      "bounded_desired_cap_fraction_of_fresh_logged_samples": {
+        "shoulder_front": 0.2669,
+        "shoulder_side": 0.154,
+        "elbow": 0.1718,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0,
+        "wrist": 0.0,
+        "shoulder_rotate": 0.0607
+      },
+      "peak_raw_predicted_delta_tau_Nm_in_logged_samples": {
+        "shoulder_front": 7.055324056173172,
+        "shoulder_side": 1.8560856005904842,
+        "shoulder_rotate": 1.1870669381632442,
+        "elbow": 4.352561493374904,
+        "arm_roll": 0.10028003291763671,
+        "wrist_side": 0.2205279622289694,
+        "wrist": 0.38837019745439205
+      }
+    },
+    {
+      "action": "home",
+      "run_id": "e7e9e0ff49e35399",
+      "segments": 6,
+      "frames": 3947,
+      "stale_frames": 6,
+      "worker_errors": 0,
+      "all_terminal_corrections_zero": true,
+      "peak_prepare_frame_ms": 2.7831839997816132,
+      "bounded_desired_cap_fraction_of_fresh_logged_samples": {
+        "wrist": 0.0,
+        "shoulder_front": 0.3863,
+        "shoulder_side": 0.1402,
+        "shoulder_rotate": 0.1009,
+        "elbow": 0.1932,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0
+      },
+      "peak_raw_predicted_delta_tau_Nm_in_logged_samples": {
+        "shoulder_front": 2.7645246458284243,
+        "shoulder_side": 0.8366801446219861,
+        "shoulder_rotate": 0.7918163651616346,
+        "elbow": 4.132929703483113,
+        "arm_roll": 0.21954480715890531,
+        "wrist_side": 0.09896406749250798,
+        "wrist": 0.3335768344161324
+      }
+    },
+    {
+      "action": "white-knight-place-b1",
+      "run_id": "1ae60162608005e1",
+      "segments": 12,
+      "frames": 11128,
+      "stale_frames": 12,
+      "worker_errors": 0,
+      "all_terminal_corrections_zero": true,
+      "peak_prepare_frame_ms": 5.357535999792162,
+      "bounded_desired_cap_fraction_of_fresh_logged_samples": {
+        "shoulder_front": 0.2777,
+        "shoulder_side": 0.1205,
+        "elbow": 0.198,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0,
+        "wrist": 0.0,
+        "shoulder_rotate": 0.0327
+      },
+      "peak_raw_predicted_delta_tau_Nm_in_logged_samples": {
+        "shoulder_front": 7.788907060873438,
+        "shoulder_side": 1.9170256717648426,
+        "shoulder_rotate": 1.3229541987679627,
+        "elbow": 4.337297147771892,
+        "arm_roll": 0.11791967172338703,
+        "wrist_side": 0.22322156527804782,
+        "wrist": 0.38788584212653804
+      }
+    },
+    {
+      "action": "home",
+      "run_id": "ebb28fa6953216e7",
+      "segments": 6,
+      "frames": 4027,
+      "stale_frames": 3,
+      "worker_errors": 0,
+      "all_terminal_corrections_zero": true,
+      "peak_prepare_frame_ms": 3.225413998734439,
+      "bounded_desired_cap_fraction_of_fresh_logged_samples": {
+        "wrist": 0.0,
+        "shoulder_front": 0.3983,
+        "shoulder_side": 0.1655,
+        "shoulder_rotate": 0.1086,
+        "elbow": 0.1776,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0
+      },
+      "peak_raw_predicted_delta_tau_Nm_in_logged_samples": {
+        "shoulder_front": 3.339569550133743,
+        "shoulder_side": 1.1968139410863095,
+        "shoulder_rotate": 0.842137295290029,
+        "elbow": 4.114957072519654,
+        "arm_roll": 0.2100057500895703,
+        "wrist_side": 0.13350397666527128,
+        "wrist": 0.331735003663844
+      }
+    },
+    {
+      "action": "replay-move:white_rook_place_A1",
+      "run_id": "3f15ccf18d383636",
+      "segments": 5,
+      "frames": 4868,
+      "stale_frames": 7,
+      "worker_errors": 0,
+      "all_terminal_corrections_zero": true,
+      "peak_prepare_frame_ms": 2.930558001025929,
+      "bounded_desired_cap_fraction_of_fresh_logged_samples": {
+        "shoulder_front": 0.2597,
+        "shoulder_side": 0.1177,
+        "elbow": 0.2226,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0,
+        "wrist": 0.0,
+        "shoulder_rotate": 0.165
+      },
+      "peak_raw_predicted_delta_tau_Nm_in_logged_samples": {
+        "shoulder_front": 2.935017048768415,
+        "shoulder_side": 1.083736912334288,
+        "shoulder_rotate": 0.9078407993651363,
+        "elbow": 4.325804509275926,
+        "arm_roll": 0.2862158727385054,
+        "wrist_side": 0.167703650826391,
+        "wrist": 0.3868801786921447
+      }
+    },
+    {
+      "action": "home",
+      "run_id": "a970ae3c0391cd5a",
+      "segments": 6,
+      "frames": 4024,
+      "stale_frames": 1,
+      "worker_errors": 0,
+      "all_terminal_corrections_zero": true,
+      "peak_prepare_frame_ms": 8.983297000668244,
+      "bounded_desired_cap_fraction_of_fresh_logged_samples": {
+        "wrist": 0.0,
+        "shoulder_front": 0.378,
+        "shoulder_side": 0.0979,
+        "shoulder_rotate": 0.0842,
+        "elbow": 0.1924,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0
+      },
+      "peak_raw_predicted_delta_tau_Nm_in_logged_samples": {
+        "shoulder_front": 2.4032462005172275,
+        "shoulder_side": 0.7801206735885566,
+        "shoulder_rotate": 1.252796413951508,
+        "elbow": 3.9728030841258306,
+        "arm_roll": 0.1982409339477141,
+        "wrist_side": 0.24905582667493814,
+        "wrist": 0.3082521465308397
+      }
+    },
+    {
+      "action": "v3-c4-white-rook-place-a1",
+      "run_id": "9e895babd8916d38",
+      "segments": 12,
+      "frames": 10815,
+      "stale_frames": 19,
+      "worker_errors": 0,
+      "all_terminal_corrections_zero": true,
+      "peak_prepare_frame_ms": 8.785563999481383,
+      "bounded_desired_cap_fraction_of_fresh_logged_samples": {
+        "shoulder_front": 0.2667,
+        "shoulder_side": 0.0916,
+        "elbow": 0.1781,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0,
+        "wrist": 0.0,
+        "shoulder_rotate": 0.0304
+      },
+      "peak_raw_predicted_delta_tau_Nm_in_logged_samples": {
+        "shoulder_front": 7.786284034216424,
+        "shoulder_side": 1.9135638893261124,
+        "shoulder_rotate": 1.327085086720703,
+        "elbow": 4.1394895356644295,
+        "arm_roll": 0.18956970032086198,
+        "wrist_side": 0.23623483568859613,
+        "wrist": 0.3777675903008667
+      }
+    },
+    {
+      "action": "home",
+      "run_id": "24aef53d53e36db3",
+      "segments": 6,
+      "frames": 3946,
+      "stale_frames": 2,
+      "worker_errors": 0,
+      "all_terminal_corrections_zero": true,
+      "peak_prepare_frame_ms": 2.5884679998853244,
+      "bounded_desired_cap_fraction_of_fresh_logged_samples": {
+        "wrist": 0.0,
+        "shoulder_front": 0.3846,
+        "shoulder_side": 0.0923,
+        "shoulder_rotate": 0.0872,
+        "elbow": 0.2017,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0
+      },
+      "peak_raw_predicted_delta_tau_Nm_in_logged_samples": {
+        "shoulder_front": 2.386792954103871,
+        "shoulder_side": 0.7888533745445324,
+        "shoulder_rotate": 1.2720092085994175,
+        "elbow": 3.957129096860331,
+        "arm_roll": 0.1963882007060058,
+        "wrist_side": 0.2509526521658008,
+        "wrist": 0.3080677381429605
+      }
+    }
+  ],
+  "latest_hold_event": {
+    "time": "2026-10-21 17:13:04",
+    "event": "model_hold_end",
+    "reason": "duration_complete",
+    "duration_s": 5.033542156219482
+  },
+  "general_target_hardware_test_present": false,
+  "interpretation_limits": [
+    "Motion traces contain reference states and model predictions, not sufficient synchronized measured motion/current to prove tracking improvement or identify full dynamics.",
+    "Cap fraction refers to logged fresh desired corrections, not actual applied torque or full-frame duration.",
+    "Full workflow contains more stages than the last-four summaries; all stages inspected here.",
+    "No code/model/learning thresholds changed by this audit."
+  ]
+}

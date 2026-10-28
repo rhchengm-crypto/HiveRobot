@@ -1,0 +1,84 @@
+Serial port is open
+Serial port is open
+enable wrist_side
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist
+v2.6 nudge-hold adaptive hold target bias= {"arm_roll": 0.6000000000000001, "elbow": 0.6229217900416254} hold_targets= {"arm_roll": -2.6581402662330293, "elbow": -1.2535286843776703}
+v2.6 nudge-hold active wrist_side delta_deg= -2.0 kp= 24.0 kd= 2.4 seconds= 4.5 hold joints: shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist
+v2.6 nudge-hold hold_tau= {"shoulder_front": 1.2, "shoulder_side": 0.7, "shoulder_rotate": -0.8, "elbow": 2.21, "arm_roll": -0.5805926424155223, "wrist": 0.55} control_dt= 0.01
+v2.6 nudge-hold adjusted shoulder_front hold_tau= 1.2 shoulder_front_pos= 0.8302815556526184
+v2.6 nudge-hold low shoulder gains active wrist_side shoulder_front_pos= 0.8302815556526184
+v2.6 nudge-hold low shoulder adaptive hold gains= {"arm_roll": {"kp": 12.0, "kd": 7.0}, "shoulder_rotate": {"kp": 12.0, "kd": 5.0}}
+{
+  "start": {
+    "wrist_side": 0.19321736693382263,
+    "shoulder_front": 0.8302815556526184,
+    "shoulder_side": -2.8524835109710693,
+    "shoulder_rotate": 2.3378729820251465,
+    "elbow": -1.2644007205963135,
+    "arm_roll": -2.668612241744995,
+    "wrist": -2.0525290966033936
+  },
+  "requested_target": {
+    "wrist_side": 0.15831078189393605
+  },
+  "target": {
+    "wrist_side": 0.15831078189393605
+  },
+  "hold_targets": {
+    "shoulder_front": 0.8302815556526184,
+    "shoulder_side": -2.8524835109710693,
+    "shoulder_rotate": 2.3378729820251465,
+    "elbow": -1.2535286843776703,
+    "arm_roll": -2.6581402662330293,
+    "wrist": -2.0525290966033936
+  }
+}
+v2 continuous step wrist_side 1/1 target= 0.15831078189393605
+v2.6 nudge-hold low shoulder wrist_side fine skip delta_deg= -0.22958764637601453 deadband_deg= 0.8
+{
+  "wrist_side": {
+    "pos": 0.16231784224510193,
+    "vel": 0.007326007355004549,
+    "tau": -0.12942613661289215
+  },
+  "shoulder_front": {
+    "pos": 0.8314259648323059,
+    "vel": -0.0019536020699888468,
+    "tau": 1.0188034772872925
+  },
+  "shoulder_side": {
+    "pos": -2.8509573936462402,
+    "vel": -0.0019536020699888468,
+    "tau": 0.5264957547187805
+  },
+  "shoulder_rotate": {
+    "pos": 2.2840847969055176,
+    "vel": -0.021978022530674934,
+    "tau": -0.19291819632053375
+  },
+  "elbow": {
+    "pos": -1.2251087427139282,
+    "vel": -0.0019536020699888468,
+    "tau": -0.4444444477558136
+  },
+  "arm_roll": {
+    "pos": -2.703326463699341,
+    "vel": -0.007326007355004549,
+    "tau": -0.06593406945466995
+  },
+  "wrist": {
+    "pos": -2.0258259773254395,
+    "vel": -0.021978022530674934,
+    "tau": 0.05616605654358864
+  }
+}
+v2.6 nudge-hold hold error diagnostics {"shoulder_rotate": {"nominal_error_deg": 3.081835995023113, "applied_target_error_deg": 3.081835995023113, "hold_target_bias_deg": 0.0}, "elbow": {"nominal_error_deg": -2.2512645013820527, "applied_target_error_deg": -1.6283427113404274, "hold_target_bias_deg": 0.6229217900416254}, "arm_roll": {"nominal_error_deg": 1.9889784070643932, "applied_target_error_deg": 2.5889784070643813, "hold_target_bias_deg": 0.5999999999999881}, "wrist": {"nominal_error_deg": -1.5299760344611963, "applied_target_error_deg": -1.5299760344611963, "hold_target_bias_deg": 0.0}}
+v2.6 nudge-hold adaptive hold tau observation active-induced errors {"shoulder_rotate": {"before_active": 0.0, "final": 3.081835995023113}, "elbow": {"before_active": 0.0, "final": -2.2512645013820527}, "arm_roll": {"before_active": 0.0, "final": 1.9889784070643932}, "wrist": {"before_active": 0.0, "final": -1.5299760344611963}}
+v2.6 nudge-hold adaptive hold tau updates {"shoulder_rotate": {"tau": -0.8246546879601849, "previous_tau": -0.8, "base_tau": -0.8, "applied_tau": -0.8, "delta_tau": -0.024654687960184885, "search_direction": -1.0, "successful_direction": 0.0, "last_error_deg": 3.081835995023113, "best_error_deg": 3.081835995023113, "best_tau": -0.8, "step_scale": 0.8, "learning_state": "plateau", "refined_best": false, "samples": 1, "updated_at": "2026-10-15 14:22:52", "label": "nudge-hold-induced"}, "elbow": {"tau": 2.1900000000000004, "previous_tau": 2.21, "base_tau": 2.2, "applied_tau": 2.21, "delta_tau": -0.019999999999999574, "search_direction": -1.0, "successful_direction": 0.0, "last_error_deg": -2.2512645013820527, "best_error_deg": 1.2458435800832508, "best_tau": 2.2, "step_scale": 0.4, "learning_state": "backoff", "refined_best": false, "samples": 2, "updated_at": "2026-10-15 14:22:52", "label": "nudge-hold-induced"}, "arm_roll": {"tau": -0.590776211859692, "previous_tau": -0.5805926424155223, "base_tau": -0.5805926424155223, "applied_tau": -0.5805926424155223, "delta_tau": -0.010183569444169649, "search_direction": -1.0, "successful_direction": -1.0, "last_error_deg": 1.9889784070643932, "best_error_deg": 1.9889784070643932, "best_tau": -0.5805926424155223, "step_scale": 0.5120000000000001, "learning_state": "improved", "refined_best": true, "samples": 7, "updated_at": "2026-10-15 14:22:52", "label": "nudge-hold-induced"}, "wrist": {"tau": 0.5377601917243104, "previous_tau": 0.55, "base_tau": 0.55, "applied_tau": 0.55, "delta_tau": -0.012239808275689601, "search_direction": -1.0, "successful_direction": 0.0, "last_error_deg": -1.5299760344611963, "best_error_deg": 1.5299760344611963, "best_tau": 0.55, "step_scale": 0.8, "learning_state": "plateau", "refined_best": false, "samples": 1, "updated_at": "2026-10-15 14:22:52", "label": "nudge-hold-induced"}}
+v2.6 nudge-hold adaptive hold target bias waiting for hold-tau learning {"arm_roll": 1.9889784070643932}
+v2.6 nudge-hold adaptive hold target bias updates {"shoulder_rotate": {"bias_deg": 0.75, "previous_bias_deg": 0.0, "base_bias_deg": 0.0, "delta_bias_deg": 0.75, "last_error_deg": 3.081835995023113, "best_error_deg": 3.081835995023113, "best_bias_deg": 0.0, "step_scale": 1.0, "learning_state": "plateau", "refined_best": false, "samples": 1, "updated_at": "2026-10-15 14:22:52", "label": "nudge-hold-induced"}, "elbow": {"bias_deg": 0.0, "previous_bias_deg": 0.6229217900416254, "base_bias_deg": 0.0, "delta_bias_deg": -0.6229217900416254, "last_error_deg": -2.2512645013820527, "best_error_deg": 1.2458435800832508, "best_bias_deg": 0.0, "step_scale": 0.5, "learning_state": "backoff", "refined_best": false, "samples": 2, "updated_at": "2026-10-15 14:22:52", "label": "nudge-hold-induced"}, "wrist": {"bias_deg": -0.75, "previous_bias_deg": 0.0, "base_bias_deg": 0.0, "delta_bias_deg": -0.75, "last_error_deg": -1.5299760344611963, "best_error_deg": 1.5299760344611963, "best_bias_deg": 0.0, "step_scale": 1.0, "learning_state": "plateau", "refined_best": false, "samples": 1, "updated_at": "2026-10-15 14:22:52", "label": "nudge-hold-induced"}}

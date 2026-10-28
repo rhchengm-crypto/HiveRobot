@@ -91,6 +91,20 @@ cd /home/nvidia/hive_robot/DM_Control_Python
 source ~/.bashrc
 python3 chessboard_vision_v2_7_web_control.py --port 8097
 python3 chessboard_vision_v2_8_web_control.py --enable-execute
+python3 chessboard_vision_v3_0_web_control.py --enable-execute
+cd /home/nvidia/hive_robot/DM_Control_Python
+
+python3 -u chessboard_vision_v3_0_web_control.py \
+  --host 0.0.0.0 \
+  --port 8100 \
+  --python-bin python3 \
+  --arm-script left_arm_v2_8.py \
+  --move-script left_arm_v3_0_move_library.py \
+  --enable-execute \
+  --dynamics-model data/left_arm_v3_1_dynamics.json \
+  --motion-dynamics \
+  --rigid-body-model data/left_arm_general_dynamics.json \
+  --rigid-body-mode apply
 ```
 
 终端启动成功后会打印：

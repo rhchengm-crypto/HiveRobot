@@ -26,7 +26,7 @@ class C4ConfirmedRoutingTests(unittest.TestCase):
             v30.classify_c4_route("white_bishop"),
         )
         self.assertEqual(pending.consume(token)["route"]["piece_type"], "bishop")
-        with self.assertRaisesRegex(ValueError, "失效或已使用"):
+        with self.assertRaisesRegex(ValueError, "expired or was already used"):
             pending.consume(token)
 
     def test_confirmation_expires(self):
@@ -36,14 +36,14 @@ class C4ConfirmedRoutingTests(unittest.TestCase):
             v30.classify_c4_route("white_knight"),
         )
         time.sleep(0.001)
-        with self.assertRaisesRegex(ValueError, "失效或已使用"):
+        with self.assertRaisesRegex(ValueError, "expired or was already used"):
             pending.consume(token)
 
     def test_page_contains_explicit_confirmation_and_prediction(self):
         page = v30.ARM_HTML_PAGE
-        self.assertIn("识别 C4 并确认执行", page)
+        self.assertIn("Inspect C4 and Confirm Execution", page)
         self.assertIn('id="c4ConfirmModal"', page)
-        self.assertIn("识别正确，执行机械臂", page)
+        self.assertIn("Recognition Is Correct - Run Robot Arm", page)
         self.assertIn("prediction_image_url", page)
         self.assertIn("/api/v3/c4/inspect", page)
         self.assertIn("/api/v3/c4/execute", page)

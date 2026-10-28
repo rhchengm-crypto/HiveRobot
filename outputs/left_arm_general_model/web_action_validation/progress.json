@@ -1,0 +1,55 @@
+{
+  "empty_placement_test_user_confirmed": true,
+  "tests": [
+    {
+      "test": "home",
+      "action": "home",
+      "completed": true,
+      "segments": 6,
+      "all_apply": true,
+      "workflow_run_ids": [
+        "a23c9b11588f2fe0"
+      ],
+      "all_terminal_zero": true,
+      "worker_errors": 0
+    },
+    {
+      "test": "clearance",
+      "action": "table-clearance",
+      "completed": true,
+      "segments": 2,
+      "all_apply": true,
+      "workflow_run_ids": [
+        "af4447a620e11c45"
+      ],
+      "all_terminal_zero": true,
+      "worker_errors": 0
+    },
+    {
+      "test": "nudge_plus",
+      "action": "nudge:arm_roll:+2deg",
+      "completed": true,
+      "segments": 1,
+      "all_apply": true,
+      "workflow_run_ids": [
+        "9fab94a2269a57c6"
+      ],
+      "all_terminal_zero": true,
+      "worker_errors": 0
+    },
+    {
+      "test": "nudge_minus",
+      "action": "nudge:arm_roll:-2deg",
+      "completed": true,
+      "segments": 1,
+      "all_apply": true,
+      "workflow_run_ids": [
+        "8776bdfaea023b6a"
+      ],
+      "all_terminal_zero": true,
+      "worker_errors": 0
+    }
+  ],
+  "source_files_modified": false,
+  "learning_disabled": false
+}

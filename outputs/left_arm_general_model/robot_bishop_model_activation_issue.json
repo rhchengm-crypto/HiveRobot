@@ -1,0 +1,29 @@
+{
+  "source_attachment": "C:\\Users\\rhche\\.codex\\attachments\\7158aa2e-0d20-4ff6-8aee-7d9d0d248fb1\\Pasted text.txt",
+  "action": "white-bishop-placement",
+  "motion_ok": true,
+  "hold_ok": true,
+  "hold_state": "complete",
+  "command": [
+    "python3",
+    "-u",
+    "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v3_0_move_library.py",
+    "replay-move",
+    "--name",
+    "bishop01",
+    "--moves-file",
+    "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_6_saved_moves.json",
+    "--python-bin",
+    "python3",
+    "--white-bishop-placement"
+  ],
+  "model_motion_verified": false,
+  "reason": "outer replay-move command has no --execute; old Web env filter omitted model opt-in; supplied summaries contain previous Home records",
+  "patch_validation": {
+    "web_tests_passed": 26,
+    "motion_adapter_tests_passed": 11,
+    "nested_replay_subprocess_inherits_models": true,
+    "latest_workflow_only_summary": true
+  },
+  "on_robot_patch_retest_performed": false
+}

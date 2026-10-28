@@ -1,0 +1,57 @@
+{
+  "source_sha256": "87d58d2c3a42ccb16f41573221622d821e20c5221bd2cd800b157cc5960fc52a",
+  "mapping_source": "user-confirmed",
+  "controller_joint_names": {
+    "M1": "wrist",
+    "M2": "wrist_side",
+    "M3": "arm_roll",
+    "M4": "shoulder_rotate",
+    "M5": "shoulder_side",
+    "M6": "shoulder_front",
+    "M7": "elbow"
+  },
+  "model_axis_angle_constraints": [
+    {
+      "pair": [
+        "M6",
+        "M5"
+      ],
+      "model_axis_angle_deg": 90.0,
+      "source": "user-approved nominal orthogonality"
+    },
+    {
+      "pair": [
+        "M5",
+        "M4"
+      ],
+      "model_axis_angle_deg": 90.0,
+      "source": "user-approved nominal orthogonality"
+    }
+  ],
+  "distance_verification": {
+    "scope": "six listed CAD datum-center distances",
+    "pairs": [
+      "M6-M5",
+      "M5-M4",
+      "M4-M7",
+      "M7-M3",
+      "M3-M2",
+      "M2-M1"
+    ],
+    "source": "user physical review",
+    "user_statement": "其他距离基本正确",
+    "status": "approximately confirmed; use CAD distances for modeling",
+    "measured_values_mm": null,
+    "measurement_tolerance_mm": null
+  },
+  "physical_motor_orientation_review": {
+    "source": "user correction",
+    "statement": "CAD motor orientation differs from physical assembly; align CAD to physical assembly before encoder registration",
+    "affected_motors": null,
+    "physical_motor_mounting_orientation_verified": false,
+    "orientation_corrections": null,
+    "status": "photo and encoder baseline paired; CAD orientation comparison pending",
+    "original_step_preserved": true,
+    "photo_evidence": "physical_assembly_photo_evidence.json"
+  }
+}

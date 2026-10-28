@@ -1,0 +1,48 @@
+Serial port is open
+v3.1 inertia passive hold= {"arm_roll": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "elbow": {"nearest_distance_deg": 6.8081981107559955, "source": "identified_gravity", "tau": 1.103330652215435}, "shoulder_rotate": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "shoulder_side": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "wrist": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.55}, "wrist_side": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}}
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+{
+  "ok": true,
+  "saved": true,
+  "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json",
+  "joint": "shoulder_front",
+  "sample": {
+    "captured_at": "2026-10-14 14:22:43",
+    "pose_rad": {
+      "shoulder_front": 0.8321889042854309,
+      "shoulder_side": -2.8513388633728027,
+      "shoulder_rotate": 2.2871365547180176,
+      "elbow": -1.1655985116958618,
+      "arm_roll": -2.6796748638153076,
+      "wrist_side": 0.14400701224803925,
+      "wrist": -1.9426642656326294
+    },
+    "effective_inertia": 0.16079633681167171,
+    "method": "normalized_closed_loop_step_fit",
+    "test_kp": 40.0,
+    "test_kd": 3.0,
+    "measured_omega_n": 15.77218710120619,
+    "step_deg": 2.0,
+    "quality": {
+      "effective_inertia": 0.16079633681167171,
+      "inertia_mad": null,
+      "relative_mad": null,
+      "measured_omega_n": 15.77218710120619,
+      "estimated_zeta": 0.5914570162952321,
+      "normalized_fit_mse": 0.00809849718520213,
+      "plateau_step_deg": 2.2512645013820527,
+      "achieved_fraction": 1.1365605533630467,
+      "usable_samples": 57,
+      "peak_velocity": 0.20512820780277252,
+      "peak_acceleration": 1.7151231684981685,
+      "estimator": "normalized_closed_loop_step_fit"
+    },
+    "label": "shoulder_front_home_step_positive"
+  }
+}

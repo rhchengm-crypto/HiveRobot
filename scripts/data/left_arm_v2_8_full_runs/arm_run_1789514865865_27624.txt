@@ -1,0 +1,15 @@
+v2.8 pose-local correction= {"build": "v2.8-multiflow-anchor-save-merge", "move": "white_pawn_D5", "anchor_id": "f69a021e12a137cc", "new_anchor": false, "nearest_rms_deg": 0.0, "nearest_max_deg": 0.0, "shared_v2_6_baseline": true, "local_samples": {"arm_roll": 1, "elbow": 2, "shoulder_front": 7, "shoulder_side": 2, "wrist": 2}}
+v2.6 replay pre-step table clearance command= python3 -u /home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py clearance --clearance-file /home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_table_clearance.json --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute
+v2.8 clearance local correction= {"build": "v2.8-wrist-first-zero-tau-handoff-v4", "clearance_file": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_table_clearance.json", "anchor_id": "8b20a284d5592a0c", "new_anchor": false, "nominal_target_rad": {"shoulder_front": 1.9357976913452148, "shoulder_side": -2.7143893241882324, "elbow": 0.8165484070777893, "shoulder_rotate": 1.9323643445968628, "arm_roll": -2.649538516998291, "wrist_side": 0.3057526648044586, "wrist": -1.0313191413879395}, "applied_bias_deg": {"shoulder_side": 0.18359548488994273, "elbow": 2.63274014118629, "arm_roll": 0.543136642799414, "wrist_side": 1.5376378845400223, "wrist": -0.820746824571414}, "validation_joints": ["shoulder_front", "shoulder_side", "elbow", "shoulder_rotate", "arm_roll", "wrist_side", "wrist"], "requested_max_delta_deg": 120.0, "effective_max_delta_deg": 125.0, "best_snapshot_created": false}
+Serial port is open
+Serial port is open
+v2.8 Bishop-style Clearance plan= {"build": "v2.8-wrist-first-zero-tau-handoff-v4", "sequence": ["wrist-retract", "shoulder-escape", "remaining-joints-coupled"], "deltas_deg": {"shoulder_front": 64.25940325872044, "shoulder_side": 8.161379378869896, "elbow": 123.15190274420858, "shoulder_rotate": -23.343216507461587, "arm_roll": 0.3901267450127883, "wrist_side": 9.537278383864018, "wrist": 37.38517988289136}, "seconds_per_stage": 12.0, "trajectory": "blend_smootherstep"}
+enable shoulder_front
+enable shoulder_side
+enable elbow
+enable shoulder_rotate
+enable arm_roll
+enable wrist_side
+enable wrist
+v2.8 Bishop-style Clearance wrist-first= {"target_rad": -1.045643875801999, "held_joints": ["shoulder_front", "shoulder_side", "elbow", "shoulder_rotate", "arm_roll", "wrist_side"], "hold_tau": {"shoulder_front": 0.0, "shoulder_side": 0.0, "elbow": 0.0, "shoulder_rotate": 0.0, "arm_roll": 0.0, "wrist_side": 0.0}, "gains": {"kp": 22.0, "kd": 1.4}}
+v2 continuous step wrist 1/1 target= -1.045643875801999

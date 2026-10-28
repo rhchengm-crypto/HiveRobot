@@ -1,0 +1,48 @@
+{
+  "encoder_pose_rad": {
+    "shoulder_front": 0.693331778049469,
+    "shoulder_side": -2.8284504413604736,
+    "shoulder_rotate": 2.487029790878296,
+    "elbow": 0.4530022144317627,
+    "arm_roll": -2.7449073791503906,
+    "wrist_side": 0.11692225188016891,
+    "wrist": -2.951667070388794
+  },
+  "board_axis_definition": "X toward H, Y toward rank 8, Z away from board",
+  "units": "mm per encoder rad",
+  "jacobian_encoder_to_board": [
+    [
+      -3.78668797153837,
+      -336.65611876037303,
+      419.3563554288261,
+      25.374220872545923,
+      -145.1290750443822,
+      -213.91344203684048,
+      29.281222462892952
+    ],
+    [
+      -361.0284806697811,
+      14.297043560639878,
+      -119.09237190485065,
+      125.30485792953799,
+      35.38247266665858,
+      57.212467164017156,
+      140.5718330008186
+    ],
+    [
+      -415.94006448084406,
+      -94.85048934320264,
+      4.54898966790639,
+      438.4812447364887,
+      -21.451045374309416,
+      -18.443340740064045,
+      139.259960358067
+    ]
+  ],
+  "max_independent_poe_finite_difference_error": 6.132910357337096e-08,
+  "registration_signs_and_references_match": true,
+  "board_transform_roundtrip_matches": true,
+  "runtime_signs_changed": false,
+  "physical_direction_verified": false,
+  "physical_limitation": "Four historical anchors and coupled-motion observations do not uniquely identify a wrong physical axis, TCP or board registration."
+}

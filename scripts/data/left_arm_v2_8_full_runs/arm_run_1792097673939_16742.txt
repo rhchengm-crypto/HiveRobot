@@ -1,0 +1,48 @@
+Serial port is open
+v3.1 inertia passive hold= {"arm_roll": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "elbow": {"nearest_distance_deg": 5.1122063682905265, "source": "identified_gravity", "tau": 1.0155225530725}, "shoulder_front": {"nearest_distance_deg": 6.0925314619217446, "source": "identified_gravity", "tau": 0.5605611049764958}, "shoulder_side": {"nearest_distance_deg": 4.971178984636276, "source": "identified_gravity", "tau": -0.11274140767751567}, "wrist": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.55}, "wrist_side": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}}
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+{
+  "ok": true,
+  "saved": true,
+  "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json",
+  "joint": "shoulder_rotate",
+  "sample": {
+    "captured_at": "2026-10-15 13:54:34",
+    "pose_rad": {
+      "shoulder_front": 0.8455405235290527,
+      "shoulder_side": -2.853627920150757,
+      "shoulder_rotate": 2.365720510482788,
+      "elbow": -1.0790035724639893,
+      "arm_roll": -2.67242693901062,
+      "wrist_side": 0.16956588625907898,
+      "wrist": -1.6577019691467285
+    },
+    "effective_inertia": 0.009687070682629648,
+    "method": "normalized_closed_loop_step_fit",
+    "test_kp": 18.0,
+    "test_kd": 1.0,
+    "measured_omega_n": 43.106227658417836,
+    "step_deg": 3.0,
+    "quality": {
+      "effective_inertia": 0.009687070682629648,
+      "inertia_mad": null,
+      "relative_mad": null,
+      "measured_omega_n": 43.106227658417836,
+      "estimated_zeta": 1.1973952127338288,
+      "normalized_fit_mse": 0.0008017826913383979,
+      "plateau_step_deg": 2.5354072010437534,
+      "achieved_fraction": 0.8524212687959313,
+      "usable_samples": 61,
+      "peak_velocity": 0.7252747416496277,
+      "peak_acceleration": 0.44247257271941826,
+      "estimator": "normalized_closed_loop_step_fit"
+    },
+    "label": "shoulder_rotate_home_step_positive_kp18"
+  }
+}

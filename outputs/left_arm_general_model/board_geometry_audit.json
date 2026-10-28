@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "motion_issued": false,
+  "source_sha256": {
+    "scripts\\data\\left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "scripts\\data\\chess_crown_geometry_v2_8.json": "baba89671df47a7380223b87a328b862f2b82080ed2493558ce6a6fe0c4adc8b",
+    "scripts\\data\\left_arm_v2_6_saved_moves.json": "162a50728df6eec0226f6bb34cb29a417641142a2fee4909d54d2d0feaefdaf1"
+  },
+  "board_size_mm": 440,
+  "square_size_mm": 55,
+  "board_coordinates": "outer a1 corner; X toward h1, Y toward a8, Z above playing surface",
+  "saved_joint_poses": [
+    "pawn01",
+    "bishop01",
+    "white_bishop_place",
+    "white_knight_c4",
+    "white_knight_place_b1",
+    "white_pawn_D5",
+    "white_rook_A5",
+    "white_rook_place_A1",
+    "white_pawn_place_D2",
+    "white_queen_D1",
+    "A1_take",
+    "A4_take"
+  ],
+  "explicit_correspondences": [
+    {
+      "id": "grasp_anchors/white_knight:c4",
+      "saved_move_name": "white_knight_c4",
+      "board_tcp_mm": [
+        137.5,
+        192.5,
+        55.0
+      ]
+    },
+    {
+      "id": "grasp_anchors/white_bishop:d4",
+      "saved_move_name": "bishop01",
+      "board_tcp_mm": [
+        192.5,
+        192.5,
+        55.0
+      ]
+    },
+    {
+      "id": "placement_anchors/white_bishop:c1",
+      "saved_move_name": "white_bishop_place",
+      "board_tcp_mm": [
+        137.5,
+        27.5,
+        55.0
+      ]
+    },
+    {
+      "id": "placement_anchors/white_knight:b1",
+      "saved_move_name": "white_knight_place_b1",
+      "board_tcp_mm": [
+        82.5,
+        27.5,
+        55.0
+      ]
+    }
+  ],
+  "missing_runtime_inputs": [
+    "wrist-to-finger-contact TCP",
+    "physical joint limits",
+    "board-to-CAD registration",
+    "piece grasp profiles"
+  ],
+  "runtime_controllers_changed": false,
+  "anchor_fit_candidate": {
+    "status": "historical-anchor-estimate-only",
+    "runtime_enabled": false,
+    "board_to_cad_rotation": [
+      [
+        -0.013716508537895225,
+        0.9432237896720824,
+        -0.33187458473068626
+      ],
+      [
+        -0.9551075295301265,
+        -0.11059325204980579,
+        -0.2748431182254842
+      ],
+      [
+        -0.29594165713597875,
+        0.31320602675824055,
+        0.9023970968337209
+      ]
+    ],
+    "board_to_cad_translation_m": [
+      0.15718394248286655,
+      0.1417712958393086,
+      -0.1644587450113072
+    ],
+    "tcp_in_wrist_frame_m": [
+      -0.10509883420686986,
+      0.1359516546972543,
+      0.008455408775230072
+    ],
+    "tcp_distance_mm": 172.04682881157916,
+    "fit_errors_mm": {
+      "grasp_anchors/white_knight:c4": 10.235312805395603,
+      "grasp_anchors/white_bishop:d4": 13.639415308571921,
+      "placement_anchors/white_bishop:c1": 9.755573267638917,
+      "placement_anchors/white_knight:b1": 6.159314870751257
+    },
+    "independent_check_points": 0,
+    "warning": "Shared contact point and historical pose applicability are not independently verified."
+  }
+}

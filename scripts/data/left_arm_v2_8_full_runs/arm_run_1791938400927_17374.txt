@@ -1,0 +1,44 @@
+Serial port is open
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+{
+  "ok": true,
+  "saved": true,
+  "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json",
+  "joint": "elbow",
+  "sample": {
+    "captured_at": "2026-10-13 17:40:01",
+    "pose_rad": {
+      "shoulder_front": 0.8176928162574768,
+      "shoulder_side": -2.857442617416382,
+      "shoulder_rotate": 2.340543270111084,
+      "elbow": -1.1972609758377075,
+      "arm_roll": -2.6621270179748535,
+      "wrist_side": 0.16994735598564148,
+      "wrist": -1.796177625656128
+    },
+    "effective_inertia": 4.107360152425104,
+    "method": "guarded_small_step_acceleration_fit",
+    "test_kp": 40.0,
+    "test_kd": 3.0,
+    "measured_omega_n": 3.1206754392294456,
+    "step_deg": -2.0,
+    "quality": {
+      "effective_inertia": 4.107360152425104,
+      "inertia_mad": 2.2996767651697647,
+      "relative_mad": 0.5598916773373206,
+      "measured_omega_n": 3.1206754392294456,
+      "achieved_fraction": 0.546425378884775,
+      "usable_samples": 14,
+      "peak_velocity": 0.14261294901371002,
+      "peak_acceleration": 1.1675691914986464,
+      "estimator": "acceleration_ratio"
+    },
+    "label": "elbow_home_step_negative"
+  }
+}

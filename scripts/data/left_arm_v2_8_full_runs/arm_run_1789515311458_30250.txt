@@ -1,0 +1,190 @@
+v2.8 pose-local correction= {"build": "v2.8-multiflow-anchor-save-merge", "move": "white_pawn_D5", "anchor_id": "f69a021e12a137cc", "new_anchor": false, "nearest_rms_deg": 0.0, "nearest_max_deg": 0.0, "shared_v2_6_baseline": true, "local_samples": {"arm_roll": 1, "elbow": 2, "shoulder_front": 7, "shoulder_side": 2, "wrist": 2}}
+v2.6 replay pre-step table clearance command= python3 -u /home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py clearance --clearance-file /home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_table_clearance.json --deadband-deg 0.5 --max-delta-deg 120 --step-deg 5 --execute
+v2.8 clearance local correction= {"build": "v2.8-coupled-clearance-home-wrist-first-v6", "clearance_file": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_table_clearance.json", "anchor_id": "8b20a284d5592a0c", "new_anchor": false, "nominal_target_rad": {"shoulder_front": 1.9357976913452148, "shoulder_side": -2.7143893241882324, "elbow": 0.8165484070777893, "shoulder_rotate": 1.9323643445968628, "arm_roll": -2.649538516998291, "wrist_side": 0.3057526648044586, "wrist": -1.0313191413879395}, "applied_bias_deg": {"shoulder_side": 0.18359548488994273, "elbow": 2.63274014118629, "arm_roll": 0.543136642799414, "wrist_side": 1.5376378845400223, "wrist": -0.820746824571414}, "validation_joints": ["shoulder_front", "shoulder_side", "elbow", "shoulder_rotate", "arm_roll", "wrist_side", "wrist"], "requested_max_delta_deg": 120.0, "effective_max_delta_deg": 125.0, "best_snapshot_created": false}
+Serial port is open
+Serial port is open
+v2 clearance target shoulder_front delta_deg= 64.63096896466372 target= 1.9357976913452148
+v2 clearance planned steps shoulder_front steps= 13 step_deg<= 5.0
+v2 clearance target shoulder_side delta_deg= 8.161379378869896 target= -2.7111849784851074
+v2 clearance planned steps shoulder_side steps= 2 step_deg<= 5.0
+v2 clearance target elbow delta_deg= 122.99889967661113 target= 0.8624983908909104
+v2 clearance planned steps elbow steps= 25 step_deg<= 5.0
+v2 clearance target shoulder_rotate delta_deg= -23.518069350213914 target= 1.9323643445968628
+v2 clearance planned steps shoulder_rotate steps= 5 step_deg<= 5.0
+v2 clearance target arm_roll delta_deg= -0.8994266306639591 target= -2.640058994293213
+v2 clearance planned steps arm_roll steps= 1 step_deg<= 5.0
+v2 clearance target wrist_side delta_deg= 9.537278383864018 target= 0.33258950859308245
+v2 clearance planned steps wrist_side steps= 2 step_deg<= 5.0
+v2 clearance target wrist delta_deg= 37.77860560927326 target= -1.045643875801999
+v2 clearance planned continuous wrist steps= 1
+v2.6 clearance coupled shoulder/roll/wrist active shoulder_front,shoulder_side,elbow,arm_roll,wrist_side,wrist,shoulder_rotate hold joints: 
+v2.6 clearance coupled shoulder/roll/wrist gains shoulder_front kp= 124.0 kd= 4.8 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains shoulder_side kp= 60.0 kd= 5.0 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains elbow kp= 65.0 kd= 6.5 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains arm_roll kp= 18.0 kd= 6.0 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains wrist_side kp= 16.0 kd= 2.2 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains wrist kp= 22.0 kd= 1.4 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist gains shoulder_rotate kp= 24.0 kd= 4.5 seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist continuous interpolation steps_removed= 25 raw_seconds= 300.0 used_seconds= 12.0
+v2.6 clearance coupled shoulder/roll/wrist progress windows= {"arm_roll": [0.35, 1.0], "wrist": [0.0, 1.0]}
+v2.6 clearance coupled shoulder/roll/wrist pre-window gains= {"wrist": {"kp": 6.0, "kd": 0.8}}
+v2.6 clearance coupled shoulder/roll/wrist velocity_ff_joints= shoulder_front
+v2.6 clearance coupled shoulder/roll/wrist move_tau_ff= {"shoulder_front": 1.0}
+v2.6 clearance coupled shoulder/roll/wrist control_dt= 0.01
+v2.6 clearance coupled shoulder/roll/wrist trajectory= blend_smootherstep
+v2.6 clearance coupled shoulder/roll/wrist linear_blend= 0.35
+enable shoulder_front
+enable shoulder_side
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+enable shoulder_rotate
+v2.2 continuous group step shoulder_front,shoulder_side,elbow,arm_roll,wrist_side,wrist,shoulder_rotate 1/1 targets= {"shoulder_front": 1.9357976913452148, "shoulder_side": -2.7111849784851074, "elbow": 0.8624983908909103, "arm_roll": -2.640058994293213, "wrist_side": 0.33258950859308245, "wrist": -1.045643875801999, "shoulder_rotate": 1.9323643445968628}
+v2.6 clearance coupled shoulder/roll/wrist reached= {"shoulder_front": 1.9190127849578857, "shoulder_side": -2.738422155380249, "elbow": 0.7883192300796509, "arm_roll": -2.628175735473633, "wrist_side": 0.24967575073242188, "wrist": -1.0782406330108643, "shoulder_rotate": 2.0067520141601562}
+v2.6 clearance coupled wrist fine hold gains= {"shoulder_front": {"kp": 125.0, "kd": 6.5}, "shoulder_side": {"kp": 70.0, "kd": 5.0}, "elbow": {"kp": 92.0, "kd": 6.2}, "arm_roll": {"kp": 6.0, "kd": 6.0}, "wrist_side": {"kp": 8.0, "kd": 1.6}, "shoulder_rotate": {"kp": 8.0, "kd": 4.0}}
+v2.6 clearance coupled wrist settle before fine seconds= 1.0
+v2.6 clearance coupled wrist fine target delta_deg= 1.8676566138806192 bias_deg= 1.5 target= -1.0194639370220842 kp= 26.0 kd= 4.7 seconds= 8.0
+v2 continuous step wrist 1/1 target= -1.0194639370220842
+v2.8 Clearance residual fine= {"joint": "wrist_side", "attempt": 1, "max_attempts": 3, "nominal_error_deg": 3.2348279635631676, "bias_deg": 1.5, "target_rad": 0.33193260358437354, "strategy": "position_residual", "active_tau": 0.0, "seconds": 6.0, "kp": 24.0, "kd": 3.0, "hold_targets_rad": {"shoulder_front": 1.942282795906067, "shoulder_side": -2.7288854122161865, "shoulder_rotate": 2.044518232345581, "elbow": 0.8169298768043518, "arm_roll": -2.627412796020508, "wrist": -1.025978446006775}, "inherited_hold_tau": {"shoulder_front": 2.153846263885498, "shoulder_side": 1.196581244468689, "shoulder_rotate": -0.920634925365448, "elbow": 4.123076915740967, "arm_roll": -0.09035409241914749, "wrist": 0.6617826819419861}}
+v2 continuous step wrist_side 1/1 target= 0.33193260358437354
+v2.8 Clearance residual fine= {"joint": "wrist_side", "attempt": 2, "max_attempts": 3, "nominal_error_deg": 1.9015536932355224, "bias_deg": 0.0, "target_rad": 0.3057526648044586, "strategy": "measured_load_feedforward", "active_tau": 1.0, "seconds": 6.0, "kp": 24.0, "kd": 3.0, "hold_targets_rad": {"shoulder_front": 1.942282795906067, "shoulder_side": -2.7288854122161865, "shoulder_rotate": 2.044518232345581, "elbow": 0.8169298768043518, "arm_roll": -2.627412796020508, "wrist": -1.025978446006775}, "inherited_hold_tau": {"shoulder_front": 2.126495838165283, "shoulder_side": 1.1555556058883667, "shoulder_rotate": -0.9841269850730896, "elbow": 4.041025638580322, "arm_roll": -0.14407815039157867, "wrist": 0.6471306681632996}}
+v2 continuous step wrist_side 1/1 target= 0.3057526648044586
+v2.8 Clearance residual fine= {"joint": "wrist_side", "attempt": 3, "max_attempts": 3, "nominal_error_deg": 0.9835626084074687, "bias_deg": 0.0, "target_rad": 0.3057526648044586, "strategy": "measured_load_feedforward", "active_tau": 1.0, "seconds": 6.0, "kp": 24.0, "kd": 3.0, "hold_targets_rad": {"shoulder_front": 1.942282795906067, "shoulder_side": -2.7288854122161865, "shoulder_rotate": 2.044518232345581, "elbow": 0.8169298768043518, "arm_roll": -2.6277942657470703, "wrist": -1.025978446006775}, "inherited_hold_tau": {"shoulder_front": 2.0991454124450684, "shoulder_side": 1.1145299673080444, "shoulder_rotate": -1.047619104385376, "elbow": 3.9452991485595703, "arm_roll": -0.17826618254184723, "wrist": 0.632478654384613}}
+v2 continuous step wrist_side 1/1 target= 0.3057526648044586
+v2.8 Clearance residual fine result= [{"joint": "wrist_side", "attempt": 1, "final_error_deg": 1.9015536932355224}, {"joint": "wrist_side", "attempt": 2, "final_error_deg": 0.9835626084074687}, {"joint": "wrist_side", "attempt": 3, "final_error_deg": 0.9835626084074687}]
+{
+  "shoulder_front": {
+    "pos": 1.942282795906067,
+    "vel": -0.0019536020699888468,
+    "tau": 2.0717949867248535
+  },
+  "shoulder_side": {
+    "pos": -2.7288854122161865,
+    "vel": -0.0019536020699888468,
+    "tau": 1.0735043287277222
+  },
+  "elbow": {
+    "pos": 0.8169298768043518,
+    "vel": -0.0019536020699888468,
+    "tau": 3.876923084259033
+  },
+  "shoulder_rotate": {
+    "pos": 2.044518232345581,
+    "vel": -0.007326007355004549,
+    "tau": -1.1013431549072266
+  },
+  "arm_roll": {
+    "pos": -2.628175735473633,
+    "vel": 0.007326007355004549,
+    "tau": -0.2173382192850113
+  },
+  "wrist_side": {
+    "pos": 0.28858625888824463,
+    "vel": -0.021978022530674934,
+    "tau": 1.3699634075164795
+  },
+  "wrist": {
+    "pos": -1.0263599157333374,
+    "vel": -0.021978022530674934,
+    "tau": 0.6178266406059265
+  }
+}
+v2.8 clearance final verification= {"status": "training", "tolerance_deg": 0.5, "encoder_half_count_margin_deg": 0.011, "effective_tolerance_deg": 0.511, "errors_deg": {"shoulder_front": -0.37156912103786366, "shoulder_side": 0.8305646634518905, "shoulder_rotate": -6.4259444239855465, "elbow": -0.021856605344040804, "arm_roll": -1.223997220022965, "wrist_side": 0.9835626084074687, "wrist": -0.30599930500574124}, "blocking_errors_deg": {"shoulder_side": 0.8305646634518905, "shoulder_rotate": -6.4259444239855465, "arm_roll": -1.223997220022965, "wrist_side": 0.9835626084074687}, "checked_at": "2026-09-15 16:35:57"}
+v2.8 clearance residual accepted for follow-up= {"status": "proceeding", "blocks_followup": false, "tolerance_deg": 0.5, "blocking_errors_deg": {"shoulder_side": 0.8305646634518905, "shoulder_rotate": -6.4259444239855465, "arm_roll": -1.223997220022965, "wrist_side": 0.9835626084074687}, "learning_changed": false, "best_snapshot_retained": true}
+v2.8 Clearance final training status= {"status": "training incomplete", "tolerance_deg": 0.5, "errors_deg": {"shoulder_front": -0.37156912103786366, "shoulder_side": 0.8305646634518905, "elbow": -0.021856605344040804, "shoulder_rotate": -6.4259444239855465, "arm_roll": -1.223997220022965, "wrist_side": 0.9835626084074687, "wrist": -0.30599930500574124}, "blocking_errors_deg": {"shoulder_side": 0.8305646634518905, "shoulder_rotate": -6.4259444239855465, "arm_roll": -1.223997220022965, "wrist_side": 0.9835626084074687}}
+Serial port is open
+Serial port is open
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+v2.6 replay move name= white_pawn_D5 order= shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side final= wrist replay_style= adaptive
+v2.6 replay target pose= {"shoulder_front": 0.2817196846008301, "shoulder_side": -2.865072011947632, "shoulder_rotate": 2.7487220764160156, "elbow": -0.06580453366041183, "arm_roll": -2.834172487258911, "wrist_side": 0.15583276748657227, "wrist": -2.9497597217559814}
+v2.6 replay shoulder_front handoff config= {"entry_takeover_seconds": 0.5, "entry_hold_tau": 3.0, "descent_tau": 3.0, "group_preload_seconds": 0.8}
+v2.6 replay entry takeover hold seconds= 0.5 hold_tau= {"shoulder_front": 3.0}
+v2.6 replay after_clearance errors_deg= {"shoulder_front": -95.1869711035909, "shoulder_side": -7.453211705344634, "shoulder_rotate": 37.41908208488814, "elbow": -47.84483950145969, "arm_roll": -11.846457681388536, "wrist_side": -7.059791101604607, "wrist": -108.60713169050706}
+v2.6 replay adaptive plan {"deltas_deg": {"shoulder_front": -100.72697110359091, "shoulder_side": -8.220388115185294, "shoulder_rotate": 37.084406749746485, "elbow": -45.66046435249895, "arm_roll": -10.542762884049129, "wrist_side": -7.059791101604607}, "groups": [["shoulder_front", "shoulder_side", "elbow"], ["shoulder_rotate", "arm_roll", "wrist_side"]], "soft_group_delta_deg": 18.0, "force_split_deg": 28.0}
+v2.6 replay adaptive group target bias shoulder_front bias_deg= -5.54 nominal_target= 0.2817196846008301 biased_target= 0.18502844404034424
+v2.6 replay adaptive group target bias shoulder_side bias_deg= -0.7671764098406701 nominal_target= -2.865072011947632 biased_target= -2.878461766242981
+v2.6 replay adaptive group target bias elbow bias_deg= 2.1843751489607373 nominal_target= -0.06580453366041183 biased_target= -0.02767999521230538
+v2.6 replay adaptive group active group-1 shoulder_front,shoulder_side,elbow deltas_deg= {"shoulder_front": -100.72697110359091, "shoulder_side": -8.220388115185294, "elbow": -45.66046435249895} targets= {"shoulder_front": 0.18502844404034424, "shoulder_side": -2.878461766242981, "elbow": -0.02767999521230538} seconds= 20.0 hold joints: wrist
+v2.6 replay adaptive group active_tau= {"shoulder_front": {"start_tau": 3.0, "end_tau": 1.0, "ramp_fraction": 0.25, "ramp": "smoothstep"}}
+v2.6 replay adaptive group shoulder_front preload_seconds= 0.8
+v2.2 continuous group step shoulder_front,shoulder_side,elbow 1/1 targets= {"shoulder_front": 0.18502844404034424, "shoulder_side": -2.878461766242981, "elbow": -0.027679995212305353}
+v2.6 replay adaptive group target bias shoulder_rotate bias_deg= -0.2909621244535814 nominal_target= 2.7487220764160156 biased_target= 2.7436438293457033
+v2.6 replay adaptive group target bias arm_roll bias_deg= 1.303694797339403 nominal_target= -2.834172487258911 biased_target= -2.8114187206042183
+v2.6 replay adaptive group hold target bias pending hold-tau improvement wrist_side ["shoulder_front"]
+v2.6 replay adaptive group hold target bias= {"elbow": 2.0209951296233966} hold_targets= {"elbow": 0.007593023966392477}
+v2.6 replay adaptive group active group-2 shoulder_rotate,arm_roll,wrist_side deltas_deg= {"shoulder_rotate": 42.76720610146713, "arm_roll": -10.061903906101891, "wrist_side": -7.147219230528063} targets= {"shoulder_rotate": 2.7436438293457033, "arm_roll": -2.8114187206042183, "wrist_side": 0.15583276748657227} seconds= 18.81757068464554 hold joints: wrist,shoulder_front,shoulder_side,elbow
+v2.6 replay adaptive group active_tau= {"arm_roll": -0.30148700401151846, "wrist_side": -0.35}
+v2.6 replay adaptive group completed hold targets= {"shoulder_front": 0.18502844404034424, "shoulder_side": -2.878461766242981, "elbow": -0.02767999521230538}
+v2.6 replay adaptive group hold_tau= {"wrist": 0.55, "shoulder_front": 1.3449028443207662, "elbow": 4.117268775272362, "shoulder_side": 0.69}
+v2.6 replay adaptive group soft hold overrides gains= {"elbow": {"kp": 25.0, "kd": 3.0}} tau= {"elbow": {"adaptive_tau": 4.117268775272362, "soft_cap_skipped": 3.2}}
+v2.2 continuous group step shoulder_rotate,arm_roll,wrist_side 1/1 targets= {"shoulder_rotate": 2.7436438293457033, "arm_roll": -2.8114187206042183, "wrist_side": 0.15583276748657227}
+v2.6 replay adaptive group active tau updates {"arm_roll:negative": {"tau": -0.3021864153825278, "previous_tau": -0.3060023718298668, "applied_tau": -0.30148700401151846, "delta_tau": 0.0038159564473390084, "direction": "negative", "last_error_deg": 0.9539891118347542, "best_error_deg": 0.6807542242775642, "best_tau": -0.3060023718298668, "step_scale": 0.2, "learning_state": "plateau", "refined_best": false, "samples": 239, "updated_at": "2026-09-15 16:36:40", "label": "replay-adaptive-group"}}
+v2.6 replay adaptive hold tau observation replay-adaptive-group active= wrist_side errors_deg= {"shoulder_front": -0.4371389370699861, "shoulder_side": -0.1311396320642448, "elbow": 0.15299837184240125}
+v2.6 replay adaptive hold target bias observation replay-adaptive-group-soft-hold active= wrist_side errors_deg= {"elbow": 0.15299837184240125}
+v2.8 pre-wrist verification= {"tolerance_deg": 0.5, "encoder_half_count_margin_deg": 0.011, "effective_tolerance_deg": 0.511, "blocking_errors_deg": {}, "extra_correction_motion": false}
+v2.8 pre-wrist joint feedback= {"status": {"arm_roll": {"pos": -2.828068971633911, "vel": 0.007326007355004549, "tau": -0.12942613661289215}, "wrist_side": {"pos": 0.16155488789081573, "vel": -0.007326007355004549, "tau": -0.5103785395622253}}, "nominal_target_rad": {"arm_roll": -2.834172487258911, "wrist_side": 0.15583276748657227}, "nominal_error_deg": {"arm_roll": -0.34970568550465286, "wrist_side": -0.3278533490288433}}
+v2.6 replay correction decisions= {"shoulder_side": {"error_deg": -0.1311396320642448, "samples": 58, "learning_state": "plateau", "step_scale": 0.2, "best_error_deg": 1.09284392758038, "decision": "below_error_deadband"}, "elbow": {"error_deg": 0.15299837184240125, "samples": 28, "learning_state": "plateau", "step_scale": 0.2, "best_error_deg": 1.005420921298802, "decision": "below_error_deadband"}} enabled= False
+v2.6 replay correction skipped selected= 
+v2.6 replay final wrist adaptive target bias wrist bias_deg= -1.2582397491274184 nominal_target= -2.9497597217559814 biased_target= -2.9717201481577225
+v2.6 replay final wrist hold target bias pending hold-tau improvement ["shoulder_front", "shoulder_side", "wrist_side"]
+v2.6 replay final wrist adaptive hold target bias= {"shoulder_rotate": 0.6065497016336046, "elbow": 1.0106822053306894, "arm_roll": 1.159540025110117} hold_targets= {"shoulder_rotate": 2.754230118716199, "elbow": -0.05083512682491441, "arm_roll": -2.791180929357389}
+v2.6 replay final wrist carried hold targets= {"shoulder_front": 0.18502844404034424, "shoulder_side": -2.878461766242981, "elbow": -0.02767999521230538, "shoulder_rotate": 2.7436438293457033, "arm_roll": -2.8114187206042183}
+v2.6 replay final wrist frozen hold targets= {"elbow": {"previous_target": -0.02767999521230538, "frozen_target": -0.06847485899925232, "nominal_error_deg": 0.15299837184240125}}
+v2.6 replay final wrist soft hold overrides gains= {"elbow": {"kp": 25.0, "kd": 3.0}} tau= {"elbow": {"adaptive_tau": 3.21, "soft_cap_skipped": 3.2}}
+v2.6 replay final wrist frozen hold overrides gains= {"elbow": {"kp": 25.0, "kd": 3.0}} tau= {"elbow": {"previous_tau": 3.21, "tau": 3.2}}
+v2.6 replay final wrist active delta_deg= -110.80521912980659 target= -2.9717201481577225 kp= 22.0 kd= 1.4 seconds= 12.0 hold joints: shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side
+v2.6 replay final wrist hold_tau= {"shoulder_front": 1.166123468575764, "elbow": 3.2, "arm_roll": -0.3427607989659096, "shoulder_rotate": -0.8600000000000001, "shoulder_side": 0.71, "wrist_side": -0.2799999999999999}
+v2.6 replay final wrist low shoulder wrist_side hold gains= {"kp": 24.0, "kd": 2.4} hold_tau= -0.2799999999999999
+v2.6 replay final wrist low shoulder adaptive hold gains= {"arm_roll": {"kp": 12.0, "kd": 7.0}, "shoulder_rotate": {"kp": 24.0, "kd": 4.5}, "shoulder_side": {"kp": 65.0, "kd": 4.5}, "wrist_side": {"kp": 24.0, "kd": 2.4}} hold_tau= {"arm_roll": -0.3427607989659096, "shoulder_rotate": -0.8600000000000001, "shoulder_side": 0.71}
+v2.6 replay final wrist trajectory= blend_smootherstep linear_blend= 0.35 active_velocity_ff= False active_tau= 0.0
+v2 continuous step wrist 1/1 target= -2.9717201481577225
+v2.6 replay adaptive hold tau observation replay-final-wrist active= wrist errors_deg= {"shoulder_front": -0.15299965250287062, "shoulder_side": -0.17485284275232643, "shoulder_rotate": 0.5027155832912785, "elbow": -0.06557109669259178, "arm_roll": -0.39341889619273446, "wrist_side": 0.48085300153171395}
+v2.6 replay adaptive hold target bias observation replay-final-wrist-soft-hold active= wrist errors_deg= {"elbow": -0.06557109669259178}
+v2.6 replay final errors_deg= {"shoulder_front": -0.15299965250287062, "shoulder_side": -0.17485284275232643, "shoulder_rotate": 0.5027155832912785, "elbow": -0.06557109669259178, "arm_roll": -0.39341889619273446, "wrist_side": 0.48085300153171395, "wrist": -0.3715759512270337}
+v2.6 replay adaptive target bias skipped final-wrist induced errors {"shoulder_rotate": {"before_final_wrist": -0.021856605344040804, "final": 0.5027155832912785}}
+v2.6 replay adaptive hold target bias updates {"shoulder_rotate": {"bias_deg": 0.782500155785552, "previous_bias_deg": 0.6065497016336046, "delta_bias_deg": 0.17595045415194743, "last_error_deg": 0.5027155832912785, "best_error_deg": 0.5901420046674417, "best_bias_deg": 0.4, "step_scale": 1.0, "learning_state": "integrating", "samples": 3, "updated_at": "2026-09-15 16:36:53", "label": "replay-final-wrist-induced"}}
+{
+  "shoulder_front": {
+    "pos": 0.28439003229141235,
+    "vel": -0.0019536020699888468,
+    "tau": -6.324786186218262
+  },
+  "shoulder_side": {
+    "pos": -2.862020254135132,
+    "vel": -0.0019536020699888468,
+    "tau": -0.41709402203559875
+  },
+  "shoulder_rotate": {
+    "pos": 2.739948034286499,
+    "vel": 0.007326007355004549,
+    "tau": -0.5592185854911804
+  },
+  "elbow": {
+    "pos": -0.06466010212898254,
+    "vel": -0.0019536020699888468,
+    "tau": 3.507692337036133
+  },
+  "arm_roll": {
+    "pos": -2.827306032180786,
+    "vel": 0.007326007355004549,
+    "tau": 0.06593406945466995
+  },
+  "wrist_side": {
+    "pos": 0.14744029939174652,
+    "vel": 0.007326007355004549,
+    "tau": -0.10012210160493851
+  },
+  "wrist": {
+    "pos": -2.94327449798584,
+    "vel": -0.021978022530674934,
+    "tau": -0.6520146727561951
+  }
+}
+v2.8 final verification= {"status": "validated", "tolerance_deg": 0.5, "encoder_half_count_margin_deg": 0.011, "effective_tolerance_deg": 0.511, "errors_deg": {"shoulder_front": -0.15299965250287062, "shoulder_side": -0.17485284275232643, "shoulder_rotate": 0.5027155832912785, "elbow": -0.06557109669259178, "arm_roll": -0.39341889619273446, "wrist_side": 0.48085300153171395, "wrist": -0.3715759512270337}, "blocking_errors_deg": {}, "checked_at": "2026-09-15 16:36:53", "validated_at": "2026-09-15 16:36:53"}

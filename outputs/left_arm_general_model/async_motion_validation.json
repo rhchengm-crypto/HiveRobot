@@ -1,0 +1,31 @@
+{
+  "build": "seven-axis-rigid-body-motion-v2-async",
+  "related_tests_passed": 140,
+  "test_suites": {
+    "test_left_arm_general_motion": 10,
+    "test_left_arm_dynamics_worker": 2,
+    "test_left_arm_v31_motion_dynamics": 8,
+    "test_left_arm_v28_home": 15,
+    "test_left_arm_v31_model_control": 42,
+    "test_chess_v30_dynamics_web": 23,
+    "test_left_arm_v28_local_bias": 40
+  },
+  "real_process_slow_worker_test": ">=150ms per inverse-dynamics call; command loop continued; expired results unused",
+  "numerical_equivalence_test": "worker output matches synchronous calculation to 1e-12",
+  "on_robot_validation_of_this_build": false,
+  "model_json_changed": false,
+  "previous_shadow_observation": {
+    "frames": [
+      616,
+      481
+    ],
+    "synchronous_compute_peaks_ms": [
+      63.742438000190305,
+      14.815269999417069
+    ],
+    "terminal_correction_zero": true,
+    "new_applied_delta_tau_zero": true,
+    "model_hold_complete": true
+  },
+  "retest": "same existing Clearance path in shadow; inspect command-side timings, freshness and hold completion"
+}

@@ -15,20 +15,20 @@ def depth_m(depth, encoding):
         return depth.astype(np.float64)*.001
     if str(encoding).lower() == '32fc1' and depth.dtype == np.float32:
         return depth.astype(np.float64)
-    raise ValueError('深度必须为 16UC1(mm) 或 32FC1(m)')
+    raise ValueError('Depth must be 16UC1 (mm) or 32FC1 (m).')
 
 
 def rays(shape, info):
     h,w=shape
     if (info.get('height'),info.get('width')) != (h,w):
-        raise ValueError('深度内参分辨率不匹配')
+        raise ValueError('Depth intrinsics resolution does not match.')
     k=np.asarray(info['K'],dtype=float).reshape(3,3)
     d=np.asarray(info.get('D',[]),dtype=float)
-    if d.size not in (0,4,5,8,12,14):raise ValueError('畸变系数长度无效')
+    if d.size not in (0,4,5,8,12,14):raise ValueError('Invalid distortion coefficient count.')
     if not np.isfinite(k).all() or k[0,0]<=0 or k[1,1]<=0 or not np.isfinite(d).all():
-        raise ValueError('相机内参无效')
+        raise ValueError('Invalid camera intrinsics.')
     if info.get('distortion_model','plumb_bob') not in ('plumb_bob','rational_polynomial',''):
-        raise ValueError('暂不支持此深度镜头畸变模型')
+        raise ValueError('This depth-lens distortion model is not supported.')
     y,x=np.mgrid[:h,:w]
     xy=cv2.undistortPoints(np.stack([x,y],axis=-1).astype(np.float64).reshape(-1,1,2),k,d if d.size else None)
     return np.column_stack([xy.reshape(-1,2),np.ones(h*w)]).reshape(h,w,3)
@@ -40,15 +40,15 @@ def fit_board(depth, encoding, info, corners):
     corners=np.asarray(corners,dtype=float)
     h,w=z.shape
     if corners.shape!=(4,2) or not np.isfinite(corners).all() or np.any(corners<0) or np.any(corners[:,0]>=w) or np.any(corners[:,1]>=h):
-        raise ValueError('请在深度图内依次选取 a1,h1,h8,a8 四个棋盘外边角')
+        raise ValueError('Select the four outer board corners a1, h1, h8, and a8 in that order on the depth image.')
     poly=np.rint(corners).astype(np.int32)
     if not cv2.isContourConvex(poly) or cv2.contourArea(poly)<400:
-        raise ValueError('四角顺序或面积不正确')
+        raise ValueError('The corner order or enclosed area is invalid.')
     mask=np.zeros(z.shape,np.uint8);cv2.fillConvexPoly(mask,poly,1)
     mask=cv2.erode(mask,np.ones((5,5),np.uint8))>0
     valid=mask & np.isfinite(z) & (z>.1) & (z<3)
     if valid.sum()<300 or valid.sum()<mask.sum()*.7:
-        raise ValueError('空棋盘有效深度不足')
+        raise ValueError('The empty board does not contain enough valid depth data.')
     points=(ray*z[...,None])[valid]
     points=points[np.linspace(0,len(points)-1,min(4000,len(points))).astype(int)]
     rng=np.random.default_rng(41);best=np.zeros(len(points),bool)
@@ -58,7 +58,7 @@ def fit_board(depth, encoding, info, corners):
         if length<1e-8:continue
         n/=length;inliers=np.abs((points-a)@n)<.003
         if inliers.sum()>best.sum():best=inliers
-    if best.mean()<.85:raise ValueError('棋盘平面不稳定，请清空棋盘并检查深度四角')
+    if best.mean()<.85:raise ValueError('The board plane is unstable. Clear the board and verify the depth corners.')
     center=points[best].mean(axis=0)
     _,_,vh=np.linalg.svd(points[best]-center,full_matrices=False)
     n=vh[-1]
@@ -68,18 +68,18 @@ def fit_board(depth, encoding, info, corners):
     cr=cv2.undistortPoints(corners.reshape(-1,1,2),np.asarray(info['K'],float).reshape(3,3),np.asarray(info.get('D',[]),float) if info.get('D') else None).reshape(-1,2)
     cr=np.column_stack([cr,np.ones(4)])
     denom=cr@n
-    if np.any(np.abs(denom)<.05):raise ValueError('视角太倾斜，无法建立棋盘坐标')
+    if np.any(np.abs(denom)<.05):raise ValueError('The viewing angle is too steep to establish board coordinates.')
     xyz=cr*(-offset/denom)[:,None]
     lengths=np.linalg.norm(np.roll(xyz,-1,axis=0)-xyz,axis=1)
     if np.any(np.abs(lengths-BOARD_SIZE_MM/1000)>.045):
-        edges='，'.join(f'{name}={value*1000:.1f}mm' for name,value in zip(('a1→h1','h1→h8','h8→a8','a8→a1'),lengths))
-        raise ValueError(f'三维棋盘边长与 {BOARD_SIZE_MM:g}mm 不符：{edges}。允许偏差 ±45mm，无需点选到完全精确。请检查是否选了 8×8 区域外边角（不含木框）、RGB/深度对齐、深度内参及单位。')
+        edges=', '.join(f'{name}={value*1000:.1f}mm' for name,value in zip(('a1-to-h1','h1-to-h8','h8-to-a8','a8-to-a1'),lengths))
+        raise ValueError(f'The reconstructed 3D board edge length does not match {BOARD_SIZE_MM:g} mm: {edges}. A +/-45 mm tolerance is allowed, so pixel-perfect clicking is unnecessary. Verify the outer corners of the 8x8 area (excluding the wooden frame), RGB/depth alignment, depth intrinsics, and units.')
     # Least-squares frame from all four corners; vertical projection is
     # implicit because its two axes lie in the fitted board plane.
     design=np.array([[0,0,1],[1,0,1],[1,1,1],[0,1,1]],float)
     frame=np.linalg.lstsq(design,xyz,rcond=None)[0]
     basis=frame[:2].T
-    if np.linalg.cond(basis)>1.3:raise ValueError('棋盘四角不是近似正方形')
+    if np.linalg.cond(basis)>1.3:raise ValueError('The board corners do not form an approximate square.')
     result={'schema':1,'created_at':time.time(),'depth_shape':list(z.shape),'intrinsics':info,
             'depth_corners':corners.tolist(),'normal':n.tolist(),'offset_m':offset,
             'origin':frame[2].tolist(),'basis':basis.tolist(),'plane_rmse_mm':rmse*1000,
@@ -90,7 +90,7 @@ def fit_board(depth, encoding, info, corners):
 
 def estimate_heights(depth, encoding, calibration, squares):
     z=depth_m(depth,encoding)
-    if list(z.shape)!=calibration['depth_shape']:raise ValueError('深度分辨率改变，请重新标定高度')
+    if list(z.shape)!=calibration['depth_shape']:raise ValueError('Depth resolution changed. Recalibrate height.')
     points=rays(z.shape,calibration['intrinsics'])*z[...,None]
     finite=np.isfinite(points).all(axis=2)&(z>.1)&(z<3)
     xyz=np.nan_to_num(points,nan=0,posinf=0,neginf=0)
@@ -99,7 +99,7 @@ def estimate_heights(depth, encoding, calibration, squares):
     board=finite&(uv[...,0]>.02)&(uv[...,0]<.98)&(uv[...,1]>.02)&(uv[...,1]<.98)
     near=board&(np.abs(heights)<.015)
     if near.sum()<200 or near.sum()<max(1,board.sum())*.4 or abs(float(np.median(heights[near])))>.003:
-        raise ValueError('当前棋盘与高度标定不一致或遮挡过多，请清空检查并重新标定')
+        raise ValueError('The current board does not match the height calibration or is heavily occluded. Clear it, inspect it, and recalibrate.')
     out={}
     for s in squares:
         s=normalize_square(s);col=ord(s[0])-97;row=int(s[1])-1
@@ -172,7 +172,7 @@ def build_model(root):
     result={'schema':1,'calibration_id':calibration['id'],'built_at':time.time(),'profiles':profiles,
             'measurements':records,'test_results':test,'skipped_samples':errors,
             'active_classes':[c for c,p in profiles.items() if p['validated']],
-            'class_status':{c:('已验证' if profiles.get(c,{}).get('validated') else '需要至少2份有效train、1份val及尺量误差校验') for c in CHESS_PIECE_YOLO_CLASSES},
+            'class_status':{c:('Validated' if profiles.get(c,{}).get('validated') else 'Requires at least 2 valid train samples, 1 val sample, and measured-error validation') for c in CHESS_PIECE_YOLO_CLASSES},
             'note':'Test samples are reported only; never used to fit ranges or enable a class.'}
     atomic_write(model_path(root),json.dumps(result,ensure_ascii=False,indent=2))
     return result

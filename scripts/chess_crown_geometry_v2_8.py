@@ -12,7 +12,7 @@ from chessboard_vision_v2_7 import CHESS_PIECE_YOLO_CLASSES, normalize_square
 def array(value, shape):
     result=np.asarray(value,dtype=float)
     if result.shape!=shape or not np.isfinite(result).all():
-        raise ValueError('坐标维度错误或包含无效数值')
+        raise ValueError('Coordinate dimensions are invalid or contain non-finite values.')
     return result
 
 
@@ -20,7 +20,7 @@ def fit_transform(samples, max_error_mm=3.):
     """Fit a rigid transform, with separate held-out verification points."""
     groups={split:[s for s in samples if s.get('split')==split] for split in ('train','check')}
     if len(groups['train'])<3 or len(groups['check'])<2:
-        raise ValueError('至少需要3个不共线标定点，以及2个独立检查点')
+        raise ValueError('At least 3 non-collinear calibration points and 2 independent check points are required.')
     points={}
     for split,rows in groups.items():
         a=np.array([array(s['board_mm'],(3,)) for s in rows])
@@ -28,17 +28,17 @@ def fit_transform(samples, max_error_mm=3.):
         points[split]=(a,b)
     a,b=points['train'];ac=a-a.mean(0);bc=b-b.mean(0)
     if np.linalg.svd(ac,compute_uv=False)[1]<20 or np.linalg.svd(bc,compute_uv=False)[1]<20:
-        raise ValueError('标定点分布过窄或共线，请分散到棋盘不同区域')
+        raise ValueError('Calibration points are too close together or collinear. Spread them across different board areas.')
     u,_,vt=np.linalg.svd(ac.T@bc)
     d=np.eye(3);d[2,2]=np.linalg.det(vt.T@u.T)
     r=vt.T@d@u.T;t=b.mean(0)-r@a.mean(0)
     errors={split:np.linalg.norm(x@r.T+t-y,axis=1).tolist() for split,(x,y) in points.items()}
     if max(errors['train']+errors['check'])>max_error_mm:
-        raise ValueError('坐标标定误差超过3mm：'+json.dumps(errors))
+        raise ValueError('Coordinate calibration error exceeds 3 mm: '+json.dumps(errors))
     # Repeating fitted points is not independent verification.
     for q in points['check'][0]:
         if np.min(np.linalg.norm(a-q,axis=1))<10:
-            raise ValueError('检查点须距离标定点至少10mm')
+            raise ValueError('Each check point must be at least 10 mm from every calibration point.')
     result={'rotation':r.tolist(),'translation_mm':t.tolist(),'errors_mm':errors,
             'created_at':time.time(),'samples':samples,'units':'mm'}
     result['id']=hashlib.sha256(json.dumps(result,sort_keys=True).encode()).hexdigest()[:20]
@@ -50,23 +50,23 @@ def crown_point(ray_origin, ray_direction, board_from_camera, crown_height_mm):
     transform=array(board_from_camera,(4,4))
     origin=transform[:3,:3]@array(ray_origin,(3,))+transform[:3,3]
     direction=transform[:3,:3]@array(ray_direction,(3,))
-    if abs(direction[2])<1e-8:raise ValueError('视线与棋冠平面平行')
+    if abs(direction[2])<1e-8:raise ValueError('The viewing ray is parallel to the crown plane.')
     distance=(float(crown_height_mm)-origin[2])/direction[2]
-    if not np.isfinite(distance) or distance<=0:raise ValueError('棋冠平面不在相机前方')
+    if not np.isfinite(distance) or distance<=0:raise ValueError('The crown plane is not in front of the camera.')
     return origin+distance*direction
 
 
 def validate_profile(data):
     cls=data['piece_class']
-    if cls not in CHESS_PIECE_YOLO_CLASSES:raise ValueError('棋子类别无效')
+    if cls not in CHESS_PIECE_YOLO_CLASSES:raise ValueError('Invalid piece class.')
     height=float(data['grip_height_mm']);total=float(data['piece_height_mm'])
     width=float(data['open_width_mm']);closed=float(data['closed_width_mm'])
     if not all(np.isfinite([height,total,width,closed])) or not 0<height<=total<=200 or not 0<=closed<width<=150:
-        raise ValueError('请检查棋子高度、棋冠夹持高度和夹爪开合宽度')
+        raise ValueError('Check piece height, crown grip height, and claw opening/closing widths.')
     orientation=str(data.get('orientation','front'))
-    if orientation not in ('front','back','left','right'):raise ValueError('朝向无效')
+    if orientation not in ('front','back','left','right'):raise ValueError('Invalid orientation.')
     offset=array(data.get('tcp_offset_mm',[0,0,0]),(3,))
-    if np.linalg.norm(offset)>300:raise ValueError('工具偏移超过300mm，请检查单位')
+    if np.linalg.norm(offset)>300:raise ValueError('Tool offset exceeds 300 mm. Check the units.')
     return dict(piece_class=cls,orientation=orientation,grip_height_mm=height,
                 piece_height_mm=total,open_width_mm=width,closed_width_mm=closed,
                 tcp_offset_mm=offset.tolist())
@@ -75,21 +75,21 @@ def validate_profile(data):
 def validate_placement_anchor(data):
     """Validate a taught joint pose tied to one chessboard destination."""
     cls=str(data['piece_class'])
-    if cls not in CHESS_PIECE_YOLO_CLASSES:raise ValueError('棋子类别无效')
+    if cls not in CHESS_PIECE_YOLO_CLASSES:raise ValueError('Invalid piece class.')
     square=normalize_square(data['target_square'])
     move_name=str(data['saved_move_name']).strip()
-    if not move_name:raise ValueError('saved move 名称不能为空')
+    if not move_name:raise ValueError('Saved Move name cannot be empty.')
     joint_names=('shoulder_front','shoulder_side','shoulder_rotate','elbow',
                  'arm_roll','wrist_side','wrist')
     pose=data.get('pose_rad',{})
-    if set(pose)!=set(joint_names):raise ValueError('放置姿态必须包含七个定位关节')
+    if set(pose)!=set(joint_names):raise ValueError('The placement pose must contain all seven positioning joints.')
     pose={name:float(pose[name]) for name in joint_names}
-    if not np.isfinite(list(pose.values())).all():raise ValueError('关节姿态包含无效数值')
+    if not np.isfinite(list(pose.values())).all():raise ValueError('The joint pose contains invalid values.')
     tolerance=float(data.get('tolerance_deg',.5))
     errors={name:float(value) for name,value in data.get('validation_errors_deg',{}).items()}
-    if errors and set(errors)!=set(joint_names):raise ValueError('验证误差必须包含七个定位关节')
+    if errors and set(errors)!=set(joint_names):raise ValueError('Validation errors must contain all seven positioning joints.')
     if not np.isfinite([tolerance,*errors.values()]).all() or tolerance<=0:
-        raise ValueError('验证阈值或误差无效')
+        raise ValueError('Invalid validation tolerance or errors.')
     validated=bool(errors) and max(abs(value) for value in errors.values())<=tolerance
     board_tcp=data.get('board_tcp_mm')
     if board_tcp is not None:board_tcp=array(board_tcp,(3,)).tolist()
@@ -102,7 +102,7 @@ def validate_placement_anchor(data):
             'updated_at':str(data.get('updated_at','')) or time.strftime('%Y-%m-%d %H:%M:%S')}
     if 'workflow_validation' in data:
         if not isinstance(data['workflow_validation'], dict):
-            raise ValueError('workflow_validation 必须是对象')
+            raise ValueError('workflow_validation must be an object.')
         anchor['workflow_validation'] = data['workflow_validation']
     return anchor
 
@@ -131,21 +131,21 @@ def validate_grasp_anchor(data):
     width=data.get('grip_section_width_mm')
     anchor['grip_section_width_mm']=float(width) if width is not None else None
     if width is not None and (not np.isfinite(anchor['grip_section_width_mm']) or anchor['grip_section_width_mm']<=0):
-        raise ValueError('棋冠夹持宽度无效')
+        raise ValueError('Invalid crown grip width.')
     anchor['grip_dimensions_source']=str(data.get('grip_dimensions_source',''))
     anchor['pose_source']=str(data.get('pose_source',''))
     for field in ('contact_confirmation_method',):
         if field in data: anchor[field]=str(data[field])
     for field in ('workflow_validation','grasp_confirmation'):
         if field in data:
-            if not isinstance(data[field],dict):raise ValueError(field+' 必须是对象')
+            if not isinstance(data[field],dict):raise ValueError(field+' must be an object.')
             anchor[field]=data[field]
     return anchor
 
 
 def validate_anchor_bundle(data):
     if not isinstance(data,dict) or data.get('schema')!=1:
-        raise ValueError('几何文件 schema 必须为 1')
+        raise ValueError('Geometry file schema must be 1.')
     result={}
     for section,validator,square_field in (
         ('placement_anchors',validate_placement_anchor,'target_square'),
@@ -153,16 +153,16 @@ def validate_anchor_bundle(data):
     ):
         records=data.get(section,{})
         if not isinstance(records,dict) or len(records)>128:
-            raise ValueError(section+' 必须是至多128条记录的对象')
+            raise ValueError(section+' must be an object containing no more than 128 records.')
         checked={}
         for key,raw in records.items():
-            if not isinstance(raw,dict):raise ValueError(str(key)+' 必须是对象')
+            if not isinstance(raw,dict):raise ValueError(str(key)+' must be an object.')
             anchor=validator(raw)
             expected=anchor['piece_class']+':'+anchor[square_field]
-            if key!=expected:raise ValueError('锚点键与内容不符: '+str(key))
+            if key!=expected:raise ValueError('Anchor key does not match its content: '+str(key))
             checked[key]=anchor
         result[section]=checked
-    if not any(result.values()):raise ValueError('文件中没有可导入的锚点')
+    if not any(result.values()):raise ValueError('The file contains no importable anchors.')
     return result
 
 
@@ -177,7 +177,7 @@ def merge_anchor_bundle(current,bundle):
     changes={'new':[],'updated':[],'unchanged':[],'conflicts':[]}
     for section in ('placement_anchors','grasp_anchors'):
         saved=result.setdefault(section,{})
-        if not isinstance(saved,dict):raise ValueError('机器人几何文件中的 '+section+' 格式无效')
+        if not isinstance(saved,dict):raise ValueError('In the robot geometry file, '+section+' has an invalid format.')
         for key,incoming in bundle[section].items():
             label=section+':'+key
             old=saved.get(key)
@@ -186,18 +186,18 @@ def merge_anchor_bundle(current,bundle):
                 changes['new'].append(label)
                 continue
             if not isinstance(old,dict) or old.get('saved_move_name')!=incoming['saved_move_name']:
-                changes['conflicts'].append(label+' (saved move 不同)')
+                changes['conflicts'].append(label+' (different Saved Move)')
                 continue
             old_pose=old.get('pose_rad')
             if not isinstance(old_pose,dict) or set(old_pose)!=set(incoming['pose_rad']):
-                changes['conflicts'].append(label+' (关节姿态不完整)')
+                changes['conflicts'].append(label+' (incomplete joint pose)')
                 continue
             try:
                 pose_difference=max(abs(float(old_pose[j])-v) for j,v in incoming['pose_rad'].items())
             except (TypeError,ValueError):
                 pose_difference=float('inf')
             if not np.isfinite(pose_difference) or pose_difference>1e-4:
-                changes['conflicts'].append(label+' (关节姿态不同)')
+                changes['conflicts'].append(label+' (different joint pose)')
                 continue
             merged=copy.deepcopy(old)
             if section=='grasp_anchors':
@@ -220,10 +220,10 @@ def merge_anchor_bundle(current,bundle):
 def coordinate_plan(calibration,profile,source_xy,target_square,clearance_mm=120):
     """Coordinates only: cannot establish arm/link collision safety or IK."""
     xy=array(source_xy,(2,));s=normalize_square(target_square)
-    if np.any(xy<0) or np.any(xy>=440):raise ValueError('取棋位置不在棋盘内')
+    if np.any(xy<0) or np.any(xy>=440):raise ValueError('The pickup location is outside the board.')
     clearance=float(clearance_mm)
     if not np.isfinite(clearance) or clearance<profile['piece_height_mm']+30 or clearance>400:
-        raise ValueError('上方预览高度至少高于棋子30mm，且不得超过400mm')
+        raise ValueError('Preview clearance must be at least 30 mm above the piece and no more than 400 mm.')
     target=np.array([(ord(s[0])-97+.5)*55,(int(s[1])-.5)*55])
     grip=profile['grip_height_mm'];offset=np.array(profile['tcp_offset_mm'])
     r=array(calibration['rotation'],(3,3));t=array(calibration['translation_mm'],(3,))
@@ -234,7 +234,7 @@ def coordinate_plan(calibration,profile,source_xy,target_square,clearance_mm=120
         board=np.array([pos[0],pos[1],z])+offset
         result.append({'stage':name,'tcp_board_mm':board.tolist(),'tcp_arm_mm':(r@board+t).tolist()})
     return {'waypoints':result,'executable':False,
-            'reason':'仅坐标预览：尚需确认实际运动学、工具姿态、关节限位和整条路径碰撞检查',
+            'reason':'Coordinate preview only: actual kinematics, tool orientation, joint limits, and full-path collision checks still require validation.',
             'calibration_id':calibration['id'],'profile':profile,'target_square':s}
 
 
@@ -255,9 +255,9 @@ class GeometryStore:
             if data.get('dry_run') is True:
                 return {'ok':True,'preview':preview}
             if changes['conflicts']:
-                raise ValueError('存在姿态冲突，未写入：'+', '.join(changes['conflicts']))
+                raise ValueError('Pose conflicts found; nothing was written: '+', '.join(changes['conflicts']))
             if data.get('expected_revision')!=revision:
-                raise ValueError('机器人端数据已变化，请重新预览后写入')
+                raise ValueError('Robot-side data changed. Preview again before writing.')
             backup=None
             if self.path.exists():
                 backup=self.path.with_name(self.path.name+'.bak.'+str(time.time_ns()))
@@ -279,42 +279,42 @@ class GeometryStore:
                 anchor['piece_class']+':'+anchor['source_square']
             ]=anchor
         elif action=='plan':
-            if not current['calibration']:raise ValueError('请先完成坐标标定及独立检查')
+            if not current['calibration']:raise ValueError('Complete coordinate calibration and independent checks first.')
             p=current['profiles'].get(data['profile'])
-            if not p:raise ValueError('请先保存该棋子朝向的棋冠参数')
+            if not p:raise ValueError('Save crown parameters for this piece orientation first.')
             return {'ok':True,'plan':coordinate_plan(current['calibration'],p,data['source_xy_mm'],data['target_square'],data.get('clearance_mm',120))}
-        else:raise ValueError('未知几何操作')
+        else:raise ValueError('Unknown geometry operation')
         atomic_write(self.path,json.dumps(current,ensure_ascii=False,indent=2))
         return {'ok':True,'data':current,'motion_enabled':False}
 
 
-PAGE='''<!doctype html><html lang="zh"><meta charset="utf-8"><title>v2.8 棋冠几何示教</title>
+PAGE='''<!doctype html><html lang="en"><meta charset="utf-8"><title>v2.8 Crown Geometry Teaching</title>
 <style>body{background:#17212b;color:#eee;font:16px system-ui;padding:24px}textarea{width:95%;height:180px}button,input,select{font:inherit;margin:5px;padding:8px}pre{white-space:pre-wrap}p{max-width:1000px}</style>
-<h1>棋冠抓取：标定与坐标预览</h1>
-<p>此阶段不运动机械臂。棋盘坐标：a1外角为原点，X向h1，Y向a8，Z离开棋盘，单位mm。机械臂坐标必须来自已确认的工具中心测量；不要填写相机坐标或把关节角当坐标。</p>
-<h2>1. 坐标对应点</h2><p>输入至少3个分散、不共线的train点，另加2个未参与拟合的check点。每个点的棋盘坐标和机械臂坐标必须表示同一工具中心位置。</p>
-<textarea id="samples" placeholder='[{"split":"train","board_mm":[0,0,0],"arm_mm":[实测X,实测Y,实测Z]}, ...]'></textarea><br><button onclick="send('calibrate',{samples:JSON.parse(el('samples').value)})">拟合并验证坐标</button>
-<h2>2. 棋冠夹持参数</h2><p>分别记录类别和朝向。夹持高度是夹爪夹住棋冠的位置距棋盘的高度。TCP偏移以固定抓取姿态下的棋盘轴表示，当前不支持任意旋转姿态。</p>
+<h1>Crown Grasping: Calibration and Coordinate Preview</h1>
+<p>This page does not move the robot arm. Board coordinates use the outer a1 corner as origin, X toward h1, Y toward a8, and Z away from the board, in millimeters. Robot coordinates must come from confirmed tool-center measurements; do not enter camera coordinates or joint angles.</p>
+<h2>1. Coordinate Correspondences</h2><p>Enter at least 3 spread-out, non-collinear train points and 2 check points excluded from fitting. Each board/robot coordinate pair must represent the same tool-center position.</p>
+<textarea id="samples" placeholder='[{"split":"train","board_mm":[0,0,0],"arm_mm":[measuredX,measuredY,measuredZ]}, ...]'></textarea><br><button onclick="send('calibrate',{samples:JSON.parse(el('samples').value)})">Fit and Validate Coordinates</button>
+<h2>2. Crown Grip Parameters</h2><p>Record each class and orientation separately. Grip height is the height above the board where the claw holds the crown. TCP offset uses board axes at a fixed grasp orientation; arbitrary rotated poses are not currently supported.</p>
 <select id="cls">__CLASSES__</select><select id="orientation"><option>front</option><option>back</option><option>left</option><option>right</option></select><br>
-<label>棋子全高<input id="total" type="number"></label><label>夹持高度<input id="grip" type="number"></label><br>
-<label>张开宽度<input id="open" type="number"></label><label>夹持宽度<input id="closed" type="number"></label><br>
-<label>TCP偏移 XYZ(mm)<input id="offset" value="0,0,0"></label><button onclick="profile()">保存棋冠参数</button>
-<h2>3. 抓放坐标预览</h2><p>当前为手动输入实际取棋XY的坐标检查；尚未接入视觉棋冠定位和自动目标选择。D4中心为192.5,192.5，实际偏心时应使用实测位置。</p>
-<input id="source" value="192.5,192.5"><input id="target" value="c1"><label>上方高度<input id="clearance" type="number" value="120"></label>
-<button onclick="send('plan',{profile:el('cls').value+':'+el('orientation').value,source_xy_mm:vec('source'),target_square:el('target').value,clearance_mm:num('clearance')})">生成坐标预览（不执行）</button>
-<h2>4. 从本机导入已验证锚点</h2>
-<p>选择本机的 chess_crown_geometry_v2_8.json。先预览新增、更新及冲突记录；写入仅合并抓取与放置锚点，不改动机器人已有标定、参数或其他训练数据。姿态不一致的同名锚点会拒绝写入。</p>
+<label>Piece Height<input id="total" type="number"></label><label>Grip Height<input id="grip" type="number"></label><br>
+<label>Open Width<input id="open" type="number"></label><label>Grip Width<input id="closed" type="number"></label><br>
+<label>TCP Offset XYZ (mm)<input id="offset" value="0,0,0"></label><button onclick="profile()">Save Crown Parameters</button>
+<h2>3. Pick-and-Place Coordinate Preview</h2><p>This preview checks manually entered pickup XY coordinates. Visual crown localization and automatic target selection are not connected yet. The D4 center is 192.5,192.5; use the measured position when the piece is offset.</p>
+<input id="source" value="192.5,192.5"><input id="target" value="c1"><label>Clearance Height<input id="clearance" type="number" value="120"></label>
+<button onclick="send('plan',{profile:el('cls').value+':'+el('orientation').value,source_xy_mm:vec('source'),target_square:el('target').value,clearance_mm:num('clearance')})">Generate Coordinate Preview (No Execution)</button>
+<h2>4. Import Validated Anchors from This Computer</h2>
+<p>Select the local chess_crown_geometry_v2_8.json file. Preview new, updated, and conflicting records first. Writing only merges grasp and placement anchors; it does not change existing robot calibration, parameters, or other training data. A same-name anchor with a different pose is rejected.</p>
 <input id="anchorFile" type="file" accept=".json,application/json" onchange="resetImport()">
-<button onclick="previewImport()">预览锚点</button>
-<button id="writeAnchors" onclick="writeImport()" disabled>写入已预览锚点</button>
+<button onclick="previewImport()">Preview Anchors</button>
+<button id="writeAnchors" onclick="writeImport()" disabled>Write Previewed Anchors</button>
 <pre id="importResult"></pre>
-<button onclick="send('status',{})">读取已保存数据</button><pre id="result"></pre>
+<button onclick="send('status',{})">Read Saved Data</button><pre id="result"></pre>
 <script>const el=id=>document.getElementById(id),num=id=>Number(el(id).value),vec=id=>el(id).value.split(',').map(Number);
 async function send(action,data){try{let r=await fetch('/api/crown/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});let d=await r.json();el('result').textContent=JSON.stringify(d,null,2);}catch(e){el('result').textContent=e.message;}}
 function profile(){send('profile',{piece_class:el('cls').value,orientation:el('orientation').value,piece_height_mm:num('total'),grip_height_mm:num('grip'),open_width_mm:num('open'),closed_width_mm:num('closed'),tcp_offset_mm:vec('offset')});}
 let pendingImport=null;
 function resetImport(){pendingImport=null;el('writeAnchors').disabled=true;el('importResult').textContent='';}
 async function anchorRequest(body){let response=await fetch('/api/crown/import-anchors',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});let result=await response.json();if(!response.ok||!result.ok)throw Error(result.error||result.message||JSON.stringify(result));return result;}
-async function previewImport(){resetImport();try{let file=el('anchorFile').files[0];if(!file)throw Error('请先选择几何 JSON 文件');let geometry=JSON.parse(await file.text());let result=await anchorRequest({geometry,dry_run:true});pendingImport={geometry,expected_revision:result.preview.current_revision};el('importResult').textContent=JSON.stringify(result.preview,null,2);el('writeAnchors').disabled=result.preview.counts.conflicts>0;}catch(e){el('importResult').textContent=e.message;}}
-async function writeImport(){if(!pendingImport)return;el('writeAnchors').disabled=true;try{let result=await anchorRequest(pendingImport);el('importResult').textContent=JSON.stringify(result,null,2);pendingImport=null;}catch(e){el('importResult').textContent=e.message+'；请重新预览后再写入';pendingImport=null;}}
+async function previewImport(){resetImport();try{let file=el('anchorFile').files[0];if(!file)throw Error('Select a geometry JSON file first.');let geometry=JSON.parse(await file.text());let result=await anchorRequest({geometry,dry_run:true});pendingImport={geometry,expected_revision:result.preview.current_revision};el('importResult').textContent=JSON.stringify(result.preview,null,2);el('writeAnchors').disabled=result.preview.counts.conflicts>0;}catch(e){el('importResult').textContent=e.message;}}
+async function writeImport(){if(!pendingImport)return;el('writeAnchors').disabled=true;try{let result=await anchorRequest(pendingImport);el('importResult').textContent=JSON.stringify(result,null,2);pendingImport=null;}catch(e){el('importResult').textContent=e.message+'. Preview again before writing.';pendingImport=null;}}
 </script></html>'''.replace('__CLASSES__',''.join('<option>'+c+'</option>' for c in CHESS_PIECE_YOLO_CLASSES))

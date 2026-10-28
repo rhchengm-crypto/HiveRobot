@@ -1,0 +1,41 @@
+{
+  "jetson_root": "/home/nvidia/hive_robot/DM_Control_Python",
+  "files": [
+    {
+      "source": "scripts/left_arm_v2_6.py",
+      "destination": "left_arm_v2_6.py",
+      "sha256": "3ce40ebbdc9d41d9b6ea73250014613a3f84b327b0328565aa999908aa03a72c"
+    },
+    {
+      "source": "scripts/left_arm_v3_1_motion_dynamics.py",
+      "destination": "left_arm_v3_1_motion_dynamics.py",
+      "sha256": "7143f3ef1dde0ed307d54ccda20827e1ff927a1385f4b7841555b1b26604d613"
+    },
+    {
+      "source": "scripts/left_arm_rigid_body.py",
+      "destination": "left_arm_rigid_body.py",
+      "sha256": "4ea8673a58ecde110e3bd2414eec4c7a6543dfd5546a54534734283e984f7cfd"
+    },
+    {
+      "source": "scripts/left_arm_general_motion.py",
+      "destination": "left_arm_general_motion.py",
+      "sha256": "f5c4743d627ed7bca74b016f9f7354e2403e731d85763fcd8ff4f8a6d5b6f223"
+    },
+    {
+      "source": "scripts/chessboard_vision_v3_0_web_control.py",
+      "destination": "chessboard_vision_v3_0_web_control.py",
+      "sha256": "1f914ae7a0fc4ebdd23bbe8a49aa059406f7fddca7fc4b8348b0b9250ddcbd0e"
+    },
+    {
+      "source": "outputs/left_arm_general_model/left_arm_general_dynamics.json",
+      "destination": "data/left_arm_general_dynamics.json",
+      "sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+    }
+  ],
+  "does_not_replace": [
+    "data/left_arm_v3_1_dynamics.json",
+    "adaptive learning files",
+    "saved poses and moves"
+  ],
+  "first_motion": "ordinary Table Clearance from validated Home, followed by existing Model Hold"
+}

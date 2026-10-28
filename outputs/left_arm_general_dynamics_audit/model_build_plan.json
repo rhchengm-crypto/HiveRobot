@@ -1,0 +1,188 @@
+{
+  "status": "analysis-only; not an executable robot model",
+  "goal": "One joint-space rigid-body model for any feasible arm trajectory; no action-name-specific control gains.",
+  "preserve": [
+    "current Model Hold takeover implementation",
+    "current adaptive learning and its saved data",
+    "ordinary Clearance shoulder_rotate active-target skip"
+  ],
+  "mechanical_measurement_template": {
+    "reference_pose": {
+      "description": null,
+      "encoder_angles_rad": {
+        "shoulder_front": null,
+        "shoulder_side": null,
+        "shoulder_rotate": null,
+        "elbow": null,
+        "arm_roll": null,
+        "wrist_side": null,
+        "wrist": null
+      },
+      "claw_position_rad": null,
+      "base_orientation_or_gravity_vector": null
+    },
+    "coordinate_convention": "Choose one fixed torso/shoulder frame and record its physical forward/left/up directions. Record units in metres/radians/kg.",
+    "physical_joint_order_from_body_to_tool": null,
+    "axes_at_reference_pose": {
+      "shoulder_front": {
+        "axis_point_in_reference_frame_m": null,
+        "axis_direction_for_increasing_encoder_in_reference_frame": null,
+        "matches_stock_axis_geometry": null
+      },
+      "shoulder_side": {
+        "axis_point_in_reference_frame_m": null,
+        "axis_direction_for_increasing_encoder_in_reference_frame": null,
+        "matches_stock_axis_geometry": null
+      },
+      "shoulder_rotate": {
+        "axis_point_in_reference_frame_m": null,
+        "axis_direction_for_increasing_encoder_in_reference_frame": null,
+        "matches_stock_axis_geometry": null
+      },
+      "elbow": {
+        "axis_point_in_reference_frame_m": null,
+        "axis_direction_for_increasing_encoder_in_reference_frame": null,
+        "matches_stock_axis_geometry": null
+      },
+      "arm_roll": {
+        "axis_point_in_reference_frame_m": null,
+        "axis_direction_for_increasing_encoder_in_reference_frame": null,
+        "matches_stock_axis_geometry": null
+      },
+      "wrist_side": {
+        "axis_point_in_reference_frame_m": null,
+        "axis_direction_for_increasing_encoder_in_reference_frame": null,
+        "matches_stock_axis_geometry": null
+      },
+      "wrist": {
+        "axis_point_in_reference_frame_m": null,
+        "axis_direction_for_increasing_encoder_in_reference_frame": null,
+        "matches_stock_axis_geometry": null
+      }
+    },
+    "tool": {
+      "wrist_side_to_wrist_mount_geometry": null,
+      "wrist_to_claw_mount_geometry": null,
+      "claw_body_mass_kg": null,
+      "claw_body_com_in_known_frame_m": null,
+      "normal_payload_mass_kg": null,
+      "normal_payload_com_in_tool_frame_m": null,
+      "claw_open_closed_com_change": null
+    },
+    "mass_properties": {
+      "per_link_motor_and_bracket_mass_or_verified_parts_list": null,
+      "link_com_estimates_and_uncertainty": null,
+      "inertia_prior": "Use verified CAD or simplified physical shapes, then identify observable base parameters. Do not require manual measurement of every inertia tensor component."
+    },
+    "hardware_mapping": {
+      "current_controller_specs": [
+        {
+          "joint": "shoulder_front",
+          "motor_type": "DM4340",
+          "slave_id": "0x1E",
+          "master_id": "0x0E"
+        },
+        {
+          "joint": "shoulder_side",
+          "motor_type": "DM4340",
+          "slave_id": "0x1F",
+          "master_id": "0x0F"
+        },
+        {
+          "joint": "shoulder_rotate",
+          "motor_type": "DM4310",
+          "slave_id": "0x20",
+          "master_id": "0x10"
+        },
+        {
+          "joint": "elbow",
+          "motor_type": "DM4340",
+          "slave_id": "0x21",
+          "master_id": "0x11"
+        },
+        {
+          "joint": "arm_roll",
+          "motor_type": "DM4310",
+          "slave_id": "0x22",
+          "master_id": "0x12"
+        },
+        {
+          "joint": "wrist_side",
+          "motor_type": "DM4310",
+          "slave_id": "0x2A",
+          "master_id": "0x1A"
+        },
+        {
+          "joint": "wrist",
+          "motor_type": "DM4310",
+          "slave_id": "0x29",
+          "master_id": "0x19"
+        },
+        {
+          "joint": "claw",
+          "motor_type": "DM4310",
+          "slave_id": "0x28",
+          "master_id": "0x18"
+        }
+      ],
+      "encoder_to_geometry_offsets_rad": {
+        "shoulder_front": null,
+        "shoulder_side": null,
+        "shoulder_rotate": null,
+        "elbow": null,
+        "arm_roll": null,
+        "wrist_side": null,
+        "wrist": null
+      },
+      "motor_to_output_units_and_torque_bias_evidence": null
+    }
+  },
+  "existing_data_reuse": {
+    "gravity": "Retain original records. Fit a shared potential-energy/rigid-body gravity regressor after geometry verification; model approach-direction/static-friction bias separately. Do not treat 73 rows as 73 independent calibrated poses.",
+    "inertia": "Use the 29 closed-loop effective-inertia results as weak local checks/priors. They do not identify off-diagonal mass terms, rotor inertia separately, or the full friction model.",
+    "raw_inertia_log_exact_jetson_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_inertia_runs.jsonl",
+    "raw_hold_log_exact_jetson_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_model_runs.jsonl",
+    "raw_log_limitations": "Existing inertia traces densely record only the excited joint; hold logs represent near-static conditions. Neither replaces synchronized dynamic multi-joint data."
+  },
+  "unified_identification": {
+    "static": "Geometry-informed representative workspace configurations, both approach directions, all joint torques. Exclude contact and record payload, base pose, claw state and temperature where available.",
+    "dynamic": "Design bounded joint-space excitation using regressor rank/conditioning and torque/velocity/acceleration constraints. Use multiple velocity levels and coupled motions, independent of chess action names.",
+    "log_fields": [
+      "monotonic send/receive timestamps per joint",
+      "all seven measured positions, velocities and torques",
+      "q_ref, dq_ref, ddq_ref",
+      "all actual MIT kp, kd, q, dq, tau fields after limits/quantization",
+      "enable/mode/error/contact state",
+      "payload and claw state",
+      "bus cycle duration and feedback age",
+      "adaptive contribution and model contribution as separate fields"
+    ],
+    "fit": "Constrained physically consistent base inertial parameters, torque bias and friction; CAD priors and reflected drive inertia where needed. Log torque is motor-estimated output and needs a known scale/bias model.",
+    "validation": "Hold out entire configurations and trajectory runs rather than random adjacent samples. Check residuals, positive mass matrices, torque envelopes, timing and structural bandwidth. Do not accept low training error as extrapolation evidence.",
+    "sample_count_policy": "Determine additional data by actual regressor rank/conditioning and held-out performance after geometry exists; no unsupported fixed pose count."
+  },
+  "runtime_design": {
+    "reference_contract": [
+      "q_ref[7]",
+      "dq_ref[7]",
+      "ddq_ref[7]",
+      "monotonic_time",
+      "active/hold/skip mask"
+    ],
+    "trajectory_change_needed": "Analytic derivatives with at least continuous acceleration for inertial feed-forward. Current linear_blend derivative is nonzero at segment endpoints; existing progress windows use cubic smoothstep and lack second-derivative outputs.",
+    "model_outputs": [
+      "full M(q)",
+      "c(q,dq)",
+      "g(q,base_gravity)",
+      "friction(q,dq,history)",
+      "joint-level feedback gains"
+    ],
+    "control": "Full model feed-forward plus single joint-side MIT PD feedback law. Do not add a second equivalent PD loop unintentionally. Bandwidth/damping are joint-level settings, not action-level parameters.",
+    "learning_transition": "Keep existing learners enabled and saved files intact. Separate old total-support/target-bias values from a new model residual so gravity/friction are not counted twice. Validate in shadow mode before changing control ownership.",
+    "model_storage": "Keep the existing v3.1 JSON and Model Hold interface intact. Store verified physical geometry and identified global parameters separately with frame, payload, units, provenance and uncertainty metadata.",
+    "trajectory_feasibility": "Use unified torque/speed/acceleration limits and time scaling; slowing cannot fix a gravity load above the static torque envelope.",
+    "rollout": "Offline fit and held-out validation -> shadow predictions on existing motion -> bounded activation. Representative validation remains necessary, but new action names do not get separate controller tuning."
+  },
+  "primary_algorithm_reference": "https://gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/jnrh2023/template/algorithm.html#regressor",
+  "model_sha256": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f"
+}

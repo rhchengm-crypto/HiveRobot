@@ -20,3 +20,10 @@
 *.SLDASM -text
 *.stl -text
 *.STL -text
+
+# Deployment and calibration metadata bind these files by SHA-256. Preserve
+# the tested/deployed bytes instead of normalizing line endings on checkout.
+scripts/*.py -text
+scripts/*.md -text
+scripts/data/** -text
+outputs/** -text

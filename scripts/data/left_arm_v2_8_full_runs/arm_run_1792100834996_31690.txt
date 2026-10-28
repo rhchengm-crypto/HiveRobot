@@ -1,0 +1,42 @@
+Serial port is open
+Serial port is open
+enable wrist
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+v2.6 nudge-hold adaptive hold target bias= {"arm_roll": 2.1965973254484163, "elbow": 0.0, "shoulder_rotate": 0.7212748065425165} hold_targets= {"arm_roll": -2.6268411585363562, "elbow": -1.281567096710205, "shoulder_rotate": 2.379072070121765}
+v2.6 nudge-hold active wrist delta_deg= 2.0 kp= 22.0 kd= 4.7 seconds= 6.0 hold joints: shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side
+v2.6 nudge-hold hold_tau= {"shoulder_front": 1.2, "shoulder_side": 0.7, "shoulder_rotate": -0.8115403969046803, "elbow": 2.21, "arm_roll": -0.49, "wrist_side": -0.35} control_dt= 0.01
+v2.6 nudge-hold adjusted shoulder_front hold_tau= 1.2 shoulder_front_pos= 0.8291370868682861
+v2.6 nudge-hold active_tau= {'wrist': 0.4}
+v2.6 nudge-hold low shoulder adaptive hold gains= {"shoulder_side": {"kp": 65.0, "kd": 4.5}, "wrist_side": {"kp": 24.0, "kd": 2.4}, "shoulder_rotate": {"kp": 24.0, "kd": 4.5}, "arm_roll": {"kp": 12.0, "kd": 7.0}}
+v2.6 nudge-hold compliant hold gains= {"arm_roll": {"kp": 12.0, "kd": 7.0}}
+{
+  "start": {
+    "wrist": -2.0708401203155518,
+    "shoulder_front": 0.8291370868682861,
+    "shoulder_side": -2.853627920150757,
+    "shoulder_rotate": 2.366483449935913,
+    "elbow": -1.281567096710205,
+    "arm_roll": -2.6651790142059326,
+    "wrist_side": 0.16918440163135529
+  },
+  "requested_target": {
+    "wrist": -2.035933535275665
+  },
+  "target": {
+    "wrist": -2.035933535275665
+  },
+  "hold_targets": {
+    "shoulder_front": 0.8291370868682861,
+    "shoulder_side": -2.853627920150757,
+    "shoulder_rotate": 2.379072070121765,
+    "elbow": -1.281567096710205,
+    "arm_roll": -2.6268411585363562,
+    "wrist_side": 0.16918440163135529
+  }
+}
+v2 continuous step wrist 1/1 target= -2.035933535275665

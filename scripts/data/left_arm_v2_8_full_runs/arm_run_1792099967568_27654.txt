@@ -1,0 +1,48 @@
+Serial port is open
+v3.1 inertia passive hold= {"arm_roll": {"nearest_distance_deg": 0.4524097171102566, "source": "identified_gravity", "tau": -0.011994806330487493}, "elbow": {"nearest_distance_deg": 7.633403681118615, "source": "identified_gravity", "tau": 1.1453261863272162}, "shoulder_front": {"nearest_distance_deg": 0.45067164872278526, "source": "identified_gravity", "tau": 0.06104450576033507}, "shoulder_rotate": {"nearest_distance_deg": 0.71357731083758, "source": "identified_gravity", "tau": 0.008697171596072518}, "shoulder_side": {"nearest_distance_deg": 0.6813831810961095, "source": "identified_gravity", "tau": -0.07907047369456113}, "wrist": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.55}}
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+{
+  "ok": true,
+  "saved": true,
+  "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json",
+  "joint": "wrist_side",
+  "sample": {
+    "captured_at": "2026-10-15 14:32:48",
+    "pose_rad": {
+      "shoulder_front": 0.8146410584449768,
+      "shoulder_side": -2.8345539569854736,
+      "shoulder_rotate": 2.3424506187438965,
+      "elbow": -1.1919203996658325,
+      "arm_roll": -2.6651790142059326,
+      "wrist_side": 0.17071031033992767,
+      "wrist": -2.0029373168945312
+    },
+    "effective_inertia": 0.01938419181774353,
+    "method": "normalized_closed_loop_step_fit",
+    "test_kp": 8.0,
+    "test_kd": 0.6,
+    "measured_omega_n": 20.315201958954166,
+    "step_deg": 3.0,
+    "quality": {
+      "effective_inertia": 0.01938419181774353,
+      "inertia_mad": null,
+      "relative_mad": null,
+      "measured_omega_n": 20.315201958954166,
+      "estimated_zeta": 0.7618200734607812,
+      "normalized_fit_mse": 0.0002998910793144937,
+      "plateau_step_deg": 2.7976881727195355,
+      "achieved_fraction": 0.9398482593545253,
+      "usable_samples": 57,
+      "peak_velocity": 0.4908424913883209,
+      "peak_acceleration": null,
+      "estimator": "normalized_closed_loop_step_fit"
+    },
+    "label": "wrist_side_home_step_positive_kp8_repeat2_rehome"
+  }
+}

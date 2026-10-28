@@ -986,7 +986,7 @@ HTML_PAGE = """<!doctype html>
   <main>
     <section class="viewer">
       <img id="overlay" src="__INITIAL_VIEWER_SRC__" alt="chessboard vision viewer">
-      <p id="predictionNote" class="hint" hidden>本次识别静态图：黄色棋盘网格、绿色预测框、预测类别与置信度。绿色不代表识别正确。<a id="predictionLink" target="_blank" rel="noopener">打开识别图</a></p>
+      <p id="predictionNote" class="hint" hidden>Detection snapshot: yellow board grid, green prediction boxes, predicted classes, and confidence scores. A green box does not mean the classification is correct.<a id="predictionLink" target="_blank" rel="noopener">Open prediction image</a></p>
     </section>
     <aside>
       <section class="panel">
@@ -1017,20 +1017,20 @@ HTML_PAGE = """<!doctype html>
         <pre id="result">Ready.</pre>
       </section>
       <section class="panel">
-        <h3>Height Samples / 棋子高度采样</h3>
-        <p class="hint">先完成三维标定。每次只放一枚棋子并保持静止；保存时自动估高，尺量值可用于验证测量误差。</p>
-        <a href="/height-setup" target="_blank" rel="noopener" style="color:#7dd3fc">高度标定 / 建立高度模型 / 验证报告</a>
-        <label>棋子类别（黑白全部 12 类）<select id="heightClass">__HEIGHT_CLASS_OPTIONS__</select></label>
-        <label>格子<input id="heightSquare" value="d5"></label>
-        <label>尺量高度 mm（可选；每类至少留一次校验）<input id="heightMm" type="number" min="1" max="250" step="0.1" placeholder="自动估高，尺量值用于校验"></label>
-        <label>实物编号（可选，区分同类不同棋子）<input id="heightPieceId" placeholder="例如 white_bishop_1"></label>
-        <label>朝向<select id="heightOrientation"><option value="front">正面</option><option value="back">背面</option><option value="left">左侧</option><option value="right">右侧</option><option value="other">其他</option></select></label>
-        <label>用途<select id="heightSplit"><option value="train">train</option><option value="val">val</option><option value="test">test</option></select></label>
-        <label>备注<input id="heightNotes" placeholder="光照、轻微偏移等"></label>
-        <button id="heightSave" onclick="saveHeightSample()">Save Height Sample / 保存高度样本</button>
-        <button onclick="refreshHeightSamples()">Height Sample Counts / 各类数量</button>
-        <pre id="heightStatus">先完成空棋盘三维标定，再采样并建立高度模型。验证通过的类别会自动参与识别。</pre>
-        <div class="tableWrap"><table><thead><tr><th>类别</th><th>train</th><th>val</th><th>test</th><th>总数</th><th>尺量高度 mm</th></tr></thead><tbody id="heightCounts"></tbody></table></div>
+        <h3>Piece Height Samples</h3>
+        <p class="hint">Complete 3D calibration first. Place one piece at a time and keep it still. Height is estimated when saved; a measured value can be used to validate measurement error.</p>
+        <a href="/height-setup" target="_blank" rel="noopener" style="color:#7dd3fc">Height Calibration / Build Model / Validation Report</a>
+        <label>Piece Class (all 12 white and black classes)<select id="heightClass">__HEIGHT_CLASS_OPTIONS__</select></label>
+        <label>Square<input id="heightSquare" value="d5"></label>
+        <label>Measured Height (mm, optional; provide at least one validation per class)<input id="heightMm" type="number" min="1" max="250" step="0.1" placeholder="Automatically estimated; measured value is used for validation"></label>
+        <label>Physical Piece ID (optional; distinguishes pieces of the same class)<input id="heightPieceId" placeholder="e.g. white_bishop_1"></label>
+        <label>Orientation<select id="heightOrientation"><option value="front">Front</option><option value="back">Back</option><option value="left">Left</option><option value="right">Right</option><option value="other">Other</option></select></label>
+        <label>Dataset Split<select id="heightSplit"><option value="train">train</option><option value="val">val</option><option value="test">test</option></select></label>
+        <label>Notes<input id="heightNotes" placeholder="Lighting, small offsets, etc."></label>
+        <button id="heightSave" onclick="saveHeightSample()">Save Height Sample</button>
+        <button onclick="refreshHeightSamples()">Height Sample Counts</button>
+        <pre id="heightStatus">Calibrate the empty board in 3D, then capture samples and build the height model. Validated classes are used automatically during recognition.</pre>
+        <div class="tableWrap"><table><thead><tr><th>Class</th><th>train</th><th>val</th><th>test</th><th>Total</th><th>Measured Height (mm)</th></tr></thead><tbody id="heightCounts"></tbody></table></div>
       </section>
       <section class="panel">
         <label>YOLO rank-4 labels
@@ -1040,7 +1040,7 @@ HTML_PAGE = """<!doctype html>
           <input id="yoloSplit" value="__YOLO_SPLIT__">
         </label>
         <button onclick="saveYoloSample()">Save YOLO Sample</button>
-        <a href="/yolo-labels" target="_blank" rel="noopener" style="color:#7dd3fc">Review YOLO Labels / 复核完整棋子框</a>
+        <a href="/yolo-labels" target="_blank" rel="noopener" style="color:#7dd3fc">Review YOLO Labels</a>
         <button onclick="startYoloTrain()">Start YOLO Train</button>
         <button onclick="stopYoloTrain()">Stop YOLO Train</button>
         <button onclick="refreshYoloStatus()">YOLO Train Status</button>
@@ -1083,11 +1083,11 @@ HTML_PAGE = """<!doctype html>
       try {
         const response = await fetch('/api/height/status');
         const data = await response.json();
-        if (!response.ok || !data.ok) throw new Error(data.error || '读取失败');
+        if (!response.ok || !data.ok) throw new Error(data.error || 'Failed to load');
         const body = document.getElementById('heightCounts'); body.replaceChildren();
         for (const [name, item] of Object.entries(data.classes)) {
           const row = document.createElement('tr');
-          const range = item.min_height_mm !== null ? item.min_height_mm + '–' + item.max_height_mm : '未填尺量值';
+          const range = item.min_height_mm !== null ? item.min_height_mm + '–' + item.max_height_mm : 'No measured value';
           for (const value of [name,item.train,item.val,item.test,item.total,range]) {
             const cell = document.createElement('td'); cell.textContent = value; row.appendChild(cell);
           }
@@ -1099,7 +1099,7 @@ HTML_PAGE = """<!doctype html>
 
     async function saveHeightSample() {
       const button = document.getElementById('heightSave'), status = document.getElementById('heightStatus');
-      button.disabled = true; status.textContent = '正在采集 RGB/depth…';
+      button.disabled = true; status.textContent = 'Capturing RGB/depth...';
       try {
         const response = await fetch('/api/height/capture', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
           piece_class:document.getElementById('heightClass').value,square:document.getElementById('heightSquare').value,
@@ -1108,8 +1108,8 @@ HTML_PAGE = """<!doctype html>
           notes:document.getElementById('heightNotes').value
         })});
         const data = await response.json();
-        if (!response.ok || !data.ok) throw new Error(data.error || '保存失败');
-        status.textContent = '保存成功；新增样本后请重新建立高度模型。' + JSON.stringify(data,null,2);
+        if (!response.ok || !data.ok) throw new Error(data.error || 'Failed to save');
+        status.textContent = 'Saved successfully. Rebuild the height model after adding samples.' + JSON.stringify(data,null,2);
         await refreshHeightSamples();
       } catch (error) { status.textContent = error.message; }
       finally { button.disabled = false; }
@@ -1286,7 +1286,7 @@ HTML_PAGE = """<!doctype html>
       const res = await fetch('/api/yolo/add-sample?' + params.toString());
       const data = await res.json();
       status.textContent = JSON.stringify(data, null, 2);
-      if (data.ok) status.textContent += '\\n样本框待复核：请打开「Review YOLO Labels」重画完整棋子框并保存。';
+      if (data.ok) status.textContent += '\\nThe sample box needs review. Open Review YOLO Labels, redraw the full-piece box, and save it.';
     }
 
     async function startYoloTrain() {
@@ -1345,7 +1345,7 @@ HTML_PAGE = """<!doctype html>
         row.innerHTML =
           '<td>' + square + '</td>' +
           '<td>' + String(info.piece_class || '') + '</td>' +
-          '<td>' + (info.identity_method === 'height_assisted_yolo' ? '高度辅助；原 RGB ' : '') + Number(info.confidence || 0).toFixed(2) + '</td>' +
+          '<td>' + (info.identity_method === 'height_assisted_yolo' ? 'Height-assisted; original RGB ' : '') + Number(info.confidence || 0).toFixed(2) + '</td>' +
           '<td>' + String(plan.place || plan.reason || '') + '</td>';
         tbody.appendChild(row);
       }
@@ -1553,9 +1553,9 @@ def make_handler(state: VisionState):
             if urlparse(self.path).path.startswith('/api/height/') and action in ('preview','calibrate','build','report'):
                 try:
                     size=int(self.headers.get('Content-Length','0'))
-                    if not 0<size<=16000:raise ValueError('无效请求')
+                    if not 0<size<=16000:raise ValueError('Invalid request')
                     data=json.loads(self.rfile.read(size))
-                    if not isinstance(data,dict):raise ValueError('无效参数')
+                    if not isinstance(data,dict):raise ValueError('Invalid parameters')
                     self.send_json(handle_height_action(state,action,data))
                 except (ValueError,OSError,KeyError,TypeError,np.linalg.LinAlgError) as exc:
                     self.send_json({'ok':False,'error':str(exc)},HTTPStatus.BAD_REQUEST)
@@ -1660,10 +1660,10 @@ def make_handler(state: VisionState):
             try:
                 size = int(self.headers.get('Content-Length','0'))
                 if not 0 < size <= 16000:
-                    raise ValueError('无效采样请求')
+                    raise ValueError('Invalid sampling request')
                 payload = json.loads(self.rfile.read(size))
                 if not isinstance(payload, dict):
-                    raise ValueError('无效采样参数')
+                    raise ValueError('Invalid sampling parameters')
                 capture = state.camera.height_snapshot()
                 with open(state.calibration_path, encoding='utf-8') as file:
                     calibration = json.load(file)

@@ -1,0 +1,79 @@
+Serial port is open
+Serial port is open
+enable elbow
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable arm_roll
+enable wrist_side
+enable wrist
+v2.6 nudge-hold adaptive hold target bias= {"arm_roll": -0.7500000000000001, "shoulder_rotate": -1.29642196379019, "wrist": -0.7500000000000001} hold_targets= {"arm_roll": -2.596251561873478, "shoulder_rotate": 2.3240199539727744, "wrist": -1.9336286332540933}
+v2.6 nudge-hold active elbow delta_deg= 10.0 kp= 70.0 kd= 3.0 seconds= 3.2 hold joints: shoulder_front,shoulder_side,shoulder_rotate,arm_roll,wrist_side,wrist
+v2.6 nudge-hold hold_tau= {"shoulder_front": 1.2, "wrist": 0.47897542897371104} control_dt= 0.01
+v2.6 nudge-hold adjusted shoulder_front hold_tau= 1.2 shoulder_front_pos= 0.8848325610160828
+v2.6 nudge-hold low shoulder adaptive hold gains= {"arm_roll": {"kp": 12.0, "kd": 7.0}, "shoulder_rotate": {"kp": 12.0, "kd": 5.0}, "wrist_side": {"kp": 8.0, "kd": 1.6}}
+v2.6 nudge-hold compliant hold gains= {"arm_roll": {"kp": 12.0, "kd": 7.0}, "wrist": {"kp": 6.0, "kd": 2.0}, "shoulder_rotate": {"kp": 12.0, "kd": 5.0}, "wrist_side": {"kp": 8.0, "kd": 1.6}}
+{
+  "start": {
+    "elbow": -0.8253223299980164,
+    "shoulder_front": 0.8848325610160828,
+    "shoulder_side": -2.825780153274536,
+    "shoulder_rotate": 2.346646785736084,
+    "arm_roll": -2.5831615924835205,
+    "wrist_side": 0.1508735716342926,
+    "wrist": -1.9205386638641357
+  },
+  "requested_target": {
+    "elbow": -0.6507894047985834
+  },
+  "target": {
+    "elbow": -0.6507894047985834
+  },
+  "hold_targets": {
+    "shoulder_front": 0.8848325610160828,
+    "shoulder_side": -2.825780153274536,
+    "shoulder_rotate": 2.3240199539727744,
+    "arm_roll": -2.596251561873478,
+    "wrist_side": 0.1508735716342926,
+    "wrist": -1.9336286332540933
+  }
+}
+v2 continuous step elbow 1/1 target= -0.6507894047985834
+{
+  "elbow": {
+    "pos": -0.6929503083229065,
+    "vel": -0.0019536020699888468,
+    "tau": 2.8786325454711914
+  },
+  "shoulder_front": {
+    "pos": 0.8978027105331421,
+    "vel": -0.0019536020699888468,
+    "tau": -0.458119660615921
+  },
+  "shoulder_side": {
+    "pos": -2.825780153274536,
+    "vel": -0.005860805977135897,
+    "tau": -0.0615384615957737
+  },
+  "shoulder_rotate": {
+    "pos": 2.346646785736084,
+    "vel": -0.007326007355004549,
+    "tau": -0.31990233063697815
+  },
+  "arm_roll": {
+    "pos": -2.591172695159912,
+    "vel": 0.007326007355004549,
+    "tau": -0.08547008782625198
+  },
+  "wrist_side": {
+    "pos": 0.1508735716342926,
+    "vel": -0.007326007355004549,
+    "tau": -0.021978022530674934
+  },
+  "wrist": {
+    "pos": -1.9167238473892212,
+    "vel": 0.007326007355004549,
+    "tau": 0.3589743673801422
+  }
+}
+v2.6 nudge-hold hold error diagnostics {"shoulder_rotate": {"nominal_error_deg": 0.0, "applied_target_error_deg": -1.2964219637901944, "hold_target_bias_deg": -1.2964219637901944}, "arm_roll": {"nominal_error_deg": 0.4590023726031969, "applied_target_error_deg": -0.29099762739680735, "hold_target_bias_deg": -0.7500000000000042}, "wrist": {"nominal_error_deg": -0.19671627828553723, "applied_target_error_deg": -0.9467162782855415, "hold_target_bias_deg": -0.7500000000000042}}

@@ -150,11 +150,11 @@ def handle_post(handler, root):
         handler.send_json({"error": str(exc)}, 400)
 
 
-PAGE = r'''<!doctype html><html lang="zh"><meta charset="utf-8"><title>棋子标注复核</title>
+PAGE = r'''<!doctype html><html lang="en"><meta charset="utf-8"><title>Piece Label Review</title>
 <style>body{font:16px system-ui;background:#161c23;color:#eee;margin:24px}button,select{font:inherit;margin:5px;padding:8px}canvas{max-width:100%;height:auto;display:block;touch-action:none;background:#333}p{max-width:1000px;line-height:1.6}#status{white-space:pre-wrap;color:#ffd979}</style>
-<h1>完整棋子标注</h1><p>选择图片和框，在原图上从棋冠左上方拖到整个底座右下方，重画选中的框。框可跨格；贴近完整轮廓，避免大块背景。检查类别，并给画面中的每枚棋子标注。绿色框为当前选中项。保存会备份旧标签。</p>
-<select id="sample"></select><button id="prev">上一张</button><button id="next">下一张</button><button id="reload">撤销本页修改</button><br>
-<select id="box"></select><select id="cls"></select><button id="add">新增框</button><button id="remove">删除选中框</button><button id="save">确认完整并保存 → 下一张</button>
+<h1>Full-Piece Labels</h1><p>Select an image and box. Redraw the selected box on the original image from the crown's upper-left edge to the base's lower-right edge. A box may cross squares; fit the full silhouette closely and avoid large background areas. Verify the class and label every piece in the image. The selected box is green. Saving creates a backup of the previous labels.</p>
+<select id="sample"></select><button id="prev">Previous</button><button id="next">Next</button><button id="reload">Discard Page Changes</button><br>
+<select id="box"></select><select id="cls"></select><button id="add">Add Box</button><button id="remove">Delete Selected Box</button><button id="save">Confirm Complete and Save -&gt; Next</button>
 <p id="status"></p><canvas id="canvas"></canvas>
 <script>
 const $=id=>document.getElementById(id), canvas=$('canvas'),ctx=canvas.getContext('2d');
@@ -163,8 +163,8 @@ async function api(url,options){const r=await fetch(url,options);const d=await r
 function options(el,items){el.replaceChildren(...items.map(([value,label])=>new Option(label,value)));}
 function draw(){ctx.drawImage(img,0,0);rows.forEach((r,i)=>{let [c,x,y,w,h]=r;x=(x-w/2)*canvas.width;y=(y-h/2)*canvas.height;ctx.strokeStyle=i===Number($('box').value)?'#00ff88':'#ffcc33';ctx.lineWidth=2;ctx.strokeRect(x,y,w*canvas.width,h*canvas.height);ctx.font='14px sans-serif';ctx.fillStyle=ctx.strokeStyle;ctx.fillText(classes[c],x,Math.max(14,y-4));});}
 function boxes(selected=0){options($('box'),rows.map((r,i)=>[i,`${i+1}: ${classes[r[0]]}`]));$('box').value=String(Math.min(selected,rows.length-1));if(rows.length)$('cls').value=rows[Number($('box').value)][0];draw();}
-async function openSample(index,force=false){if(busy)return;if(dirty&&!force&&!confirm('放弃当前未保存修改？')){$('sample').value=current.key;return;}busy=true;try{
-const key=entries[index].key,d=await api('/api/labels/sample?key='+encodeURIComponent(key));const fresh=new Image();fresh.src='/api/labels/image?key='+encodeURIComponent(key)+'&t='+Date.now();await fresh.decode();img=fresh;current=d;rows=d.rows;canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;$('sample').value=key;dirty=false;boxes();$('status').textContent=`${index+1}/${entries.length} · ${entries[index].reviewed?'已复核':'待复核'} · ${key}`;
+async function openSample(index,force=false){if(busy)return;if(dirty&&!force&&!confirm('Discard current unsaved changes?')){$('sample').value=current.key;return;}busy=true;try{
+const key=entries[index].key,d=await api('/api/labels/sample?key='+encodeURIComponent(key));const fresh=new Image();fresh.src='/api/labels/image?key='+encodeURIComponent(key)+'&t='+Date.now();await fresh.decode();img=fresh;current=d;rows=d.rows;canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;$('sample').value=key;dirty=false;boxes();$('status').textContent=`${index+1}/${entries.length} · ${entries[index].reviewed?'Reviewed':'Needs Review'} · ${key}`;
 }finally{busy=false;}}
 function index(){return entries.findIndex(e=>e.key===current?.key);}
 function point(e){const r=canvas.getBoundingClientRect();return [Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))];}
@@ -179,10 +179,10 @@ $('reload').onclick=action(()=>openSample(index()));$('box').onchange=()=>{if(ro
 $('cls').onchange=()=>{if(busy||!rows.length)return;const i=Number($('box').value);rows[i][0]=Number($('cls').value);dirty=true;boxes(i);};
 $('add').onclick=()=>{if(busy||!current)return;rows.push([Number($('cls').value),.5,.5,.1,.1]);dirty=true;boxes(rows.length-1);};
 $('remove').onclick=()=>{if(busy||!rows.length)return;rows.splice(Number($('box').value),1);dirty=true;boxes();};
-$('save').onclick=action(async()=>{if(busy||!current)return;busy=true;try{const d=await api('/api/labels/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:current.key,revision:current.revision,rows})});current=d;dirty=false;entries[index()].reviewed=true;refreshList();$('status').textContent='已保存并备份旧标签';}finally{busy=false;}if(index()<entries.length-1)await openSample(index()+1);});
-function refreshList(){const key=current?.key;options($('sample'),entries.map(e=>[e.key,(e.reviewed?'✓ ':'待复核 ')+e.key]));if(key)$('sample').value=key;}
+$('save').onclick=action(async()=>{if(busy||!current)return;busy=true;try{const d=await api('/api/labels/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:current.key,revision:current.revision,rows})});current=d;dirty=false;entries[index()].reviewed=true;refreshList();$('status').textContent='Saved and backed up previous labels';}finally{busy=false;}if(index()<entries.length-1)await openSample(index()+1);});
+function refreshList(){const key=current?.key;options($('sample'),entries.map(e=>[e.key,(e.reviewed?'✓ ':'Needs Review ')+e.key]));if(key)$('sample').value=key;}
 window.onbeforeunload=e=>{if(dirty){e.preventDefault();e.returnValue='';}};
-(async()=>{const d=await api('/api/labels/list');entries=d.samples;classes=d.classes;options($('cls'),classes.map((c,i)=>[i,c]));refreshList();if(entries.length)await openSample(Math.max(0,entries.findIndex(e=>!e.reviewed)));else $('status').textContent='没有训练图片，请先保存样本。';})().catch(e=>$('status').textContent=e.message);
+(async()=>{const d=await api('/api/labels/list');entries=d.samples;classes=d.classes;options($('cls'),classes.map((c,i)=>[i,c]));refreshList();if(entries.length)await openSample(Math.max(0,entries.findIndex(e=>!e.reviewed)));else $('status').textContent='No training images are available. Save samples first.';})().catch(e=>$('status').textContent=e.message);
 </script></html>'''
 
 

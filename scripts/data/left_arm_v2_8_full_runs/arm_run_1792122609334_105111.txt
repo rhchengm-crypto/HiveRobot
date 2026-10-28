@@ -1,0 +1,50 @@
+v2.8 Home captured-pose limit margin: requested_deg= 120.0 effective_deg= 122.02187135612442 largest_transition_deg= 121.02187135612442
+v2.8 Home pre-clearance fix: formal Home includes all selected joints= elbow,shoulder_front,shoulder_side,shoulder_rotate,wrist,wrist_side,arm_roll
+Serial port is open
+Serial port is open
+v2.8 Home staged path entry check= {"build": "v2.8-home-staged-path-guard-v1", "path": "current-to-clearance", "max_delta_deg": 120.0, "errors_deg": {"elbow": 120.16945008732849, "shoulder_front": 64.01897376974682, "shoulder_side": 6.884926306021233, "shoulder_rotate": -23.38692971814967, "wrist": 58.68588693372, "wrist_side": 7.824785095250729, "arm_roll": 0.9179910848280538}, "blocking_errors_deg": {"elbow": 120.16945008732849}, "legacy_direct_precheck_bypass_deg": 180.0}
+[stderr] Traceback (most recent call last):
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py", line 501, in <module>
+[stderr]     main()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py", line 476, in main
+[stderr]     legacy.main()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6.py", line 2770, in main
+[stderr]     current = arm.positions(ordered)
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py", line 467, in positions_with_staged_entry_check
+[stderr]     raise RuntimeError(
+[stderr] RuntimeError: v2.8 Home refused: current-to-clearance delta exceeds --max-delta-deg: elbow=120.17deg
+[stderr] Error in sys.excepthook:
+[stderr] Traceback (most recent call last):
+[stderr]   File "/usr/lib/python3/dist-packages/apport_python_hook.py", line 72, in apport_excepthook
+[stderr]     from apport.fileutils import likely_packaged, get_recent_crashes
+[stderr]   File "/usr/lib/python3/dist-packages/apport/__init__.py", line 5, in <module>
+[stderr]     from apport.report import Report
+[stderr]   File "/usr/lib/python3/dist-packages/apport/report.py", line 32, in <module>
+[stderr]     import apport.fileutils
+[stderr]   File "/usr/lib/python3/dist-packages/apport/fileutils.py", line 12, in <module>
+[stderr]     import os, glob, subprocess, os.path, time, pwd, sys, requests_unixsocket
+[stderr]   File "/usr/lib/python3/dist-packages/requests_unixsocket/__init__.py", line 1, in <module>
+[stderr]     import requests
+[stderr]   File "/usr/lib/python3/dist-packages/requests/__init__.py", line 95, in <module>
+[stderr]     from urllib3.contrib import pyopenssl
+[stderr]   File "/usr/lib/python3/dist-packages/urllib3/contrib/pyopenssl.py", line 46, in <module>
+[stderr]     import OpenSSL.SSL
+[stderr]   File "/usr/lib/python3/dist-packages/OpenSSL/__init__.py", line 8, in <module>
+[stderr]     from OpenSSL import crypto, SSL
+[stderr]   File "/usr/lib/python3/dist-packages/OpenSSL/crypto.py", line 1553, in <module>
+[stderr]     class X509StoreFlags(object):
+[stderr]   File "/usr/lib/python3/dist-packages/OpenSSL/crypto.py", line 1571, in X509StoreFlags
+[stderr]     NOTIFY_POLICY = _lib.X509_V_FLAG_NOTIFY_POLICY
+[stderr] AttributeError: module 'lib' has no attribute 'X509_V_FLAG_NOTIFY_POLICY'
+[stderr] 
+[stderr] Original exception was:
+[stderr] Traceback (most recent call last):
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py", line 501, in <module>
+[stderr]     main()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py", line 476, in main
+[stderr]     legacy.main()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6.py", line 2770, in main
+[stderr]     current = arm.positions(ordered)
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py", line 467, in positions_with_staged_entry_check
+[stderr]     raise RuntimeError(
+[stderr] RuntimeError: v2.8 Home refused: current-to-clearance delta exceeds --max-delta-deg: elbow=120.17deg

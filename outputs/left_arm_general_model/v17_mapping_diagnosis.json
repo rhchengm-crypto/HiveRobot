@@ -1,0 +1,112 @@
+{
+  "status": "diagnosis-incomplete-physical-jacobian-not-observed",
+  "source_log": "arm_run_1793160008611_79906.txt",
+  "motion_issued_this_audit": false,
+  "production_code_changed": false,
+  "constraints": {
+    "shoulder_rotate_kp_cap": 36,
+    "shoulder_rotate_kd": 4.5,
+    "coordinate_offsets_added": false,
+    "replayed_pose_used": false,
+    "takeover_adaptive_and_clearance_skip_unchanged": true
+  },
+  "operator_observed_B_drift_mm": 8,
+  "model_reconstructed_contact_delta_mm": [
+    -0.8017490152347619,
+    1.1783466232360524,
+    -85.10007240578935
+  ],
+  "axis_attribution": [
+    {
+      "joint": "shoulder_front",
+      "nominal_descent_deg": 4.177493462926259,
+      "actual_descent_deg": 3.9561070389739155,
+      "planned_model_X_mm": -0.19177757104652882,
+      "actual_model_X_mm": -0.17985465612182153,
+      "max_abs_tracking_error_deg": 0.8163463953359795
+    },
+    {
+      "joint": "shoulder_side",
+      "nominal_descent_deg": 0.6366024895485694,
+      "actual_descent_deg": 0.6775684260436049,
+      "planned_model_X_mm": -3.223779052746265,
+      "actual_model_X_mm": -3.440875698466027,
+      "max_abs_tracking_error_deg": 0.38808033485041726
+    },
+    {
+      "joint": "shoulder_rotate",
+      "nominal_descent_deg": -1.6569235656167096,
+      "actual_descent_deg": -1.661129326903781,
+      "planned_model_X_mm": -11.996224181443486,
+      "actual_model_X_mm": -12.003583817806517,
+      "max_abs_tracking_error_deg": 0.20667247179036036
+    },
+    {
+      "joint": "elbow",
+      "nominal_descent_deg": -12.627096874940987,
+      "actual_descent_deg": -12.69888065773176,
+      "planned_model_X_mm": 0.7250556536371775,
+      "actual_model_X_mm": 0.8644930258710424,
+      "max_abs_tracking_error_deg": 0.5305555334162567
+    },
+    {
+      "joint": "arm_roll",
+      "nominal_descent_deg": -0.3950500063123528,
+      "actual_descent_deg": -0.24042265878444882,
+      "planned_model_X_mm": 1.1413399412478584,
+      "actual_model_X_mm": 0.6829307501230439,
+      "max_abs_tracking_error_deg": 0.14754801625600833
+    },
+    {
+      "joint": "wrist_side",
+      "nominal_descent_deg": -1.8912445895470895,
+      "actual_descent_deg": -1.7922689589680258,
+      "planned_model_X_mm": 6.430820791280588,
+      "actual_model_X_mm": 6.246993807524764,
+      "max_abs_tracking_error_deg": 0.3493768068717347
+    },
+    {
+      "joint": "wrist",
+      "nominal_descent_deg": 16.80650918474375,
+      "actual_descent_deg": 16.807989056755837,
+      "planned_model_X_mm": 7.112839100431523,
+      "actual_model_X_mm": 7.028147573640729,
+      "max_abs_tracking_error_deg": 0.3957868719990433
+    }
+  ],
+  "historical_board_fit_errors_mm": {
+    "white_knight:c4": 17.8779040080602,
+    "white_bishop:d4": 19.152617665727483,
+    "white_bishop:c1": 7.669277638648843,
+    "white_knight:b1": 10.238036482125887
+  },
+  "conclusions": [
+    "Three observed axes have intentionally nonzero IK targets.",
+    "Encoder feedback through the current geometry predicts about 0.8 mm toward B, not the observed 8 mm.",
+    "Tracking residuals alone do not validate the physical Cartesian mapping.",
+    "No evidence yet uniquely identifies a wrong joint sign, joint reference, board registration, tool frame, or unobserved compliance.",
+    "Historical fit residuals identify uncertain registration, not proof of the cause of this descent."
+  ],
+  "next_discriminating_observation": {
+    "type": "isolated-axis board-relative displacement",
+    "first_joint": "shoulder_rotate",
+    "encoder_delta_deg": 1,
+    "physical_direction_and_magnitude_required": true,
+    "other_six_targets_held": true,
+    "not_a_grasp_or_angle_replay_workaround": true
+  },
+  "runtime_hashes": {
+    "left_arm_board_grasp.py": "5a7c4733ea83d3b1bddad65a2e624d974fd09850bea45ceb6590d47109a05e98",
+    "left_arm_board_kinematics.py": "1784df490b4b7a1db68ccd369350932ef9621cac03944f93974af32653cefebf",
+    "left_arm_v3_1_model_control.py": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996"
+  },
+  "latest_full_run": {
+    "log": "arm_run_1793161074626_82286.txt",
+    "physical_B_drift_mm": 15.0,
+    "entry_alignment_visually_accurate": true,
+    "phase": "vertical descent only",
+    "model_reconstructed_B_drift_mm": 0.7593855618625156,
+    "runtime_algorithm_changed_since_v17": false,
+    "physical_orientation_change_not_yet_observed": true
+  }
+}

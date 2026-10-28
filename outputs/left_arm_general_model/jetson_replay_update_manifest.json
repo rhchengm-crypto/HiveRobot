@@ -1,0 +1,21 @@
+{
+  "patch": "replay-workflow-model-propagation",
+  "numerical_build": "seven-axis-rigid-body-motion-v3-prepared",
+  "jetson_root": "/home/nvidia/hive_robot/DM_Control_Python",
+  "files": [
+    {
+      "source": "scripts/chessboard_vision_v3_0_web_control.py",
+      "destination": "chessboard_vision_v3_0_web_control.py",
+      "sha256": "624d19968265d5ef2aacc58d8b275b5823ed71079a45b0b47bee6a1a88b83170"
+    },
+    {
+      "source": "scripts/left_arm_general_motion.py",
+      "destination": "left_arm_general_motion.py",
+      "sha256": "0c1884f859308741a85a98f19cb7dacf599665dae1b0b6f6ff74218ec9ded23b"
+    }
+  ],
+  "model_json_changed": false,
+  "hold_controller_learning_and_clearance_sources_changed": false,
+  "summary_command": "python3 left_arm_general_motion.py --summary --action white-bishop-placement --last 4",
+  "needs_retest": "White Bishop Placement with actual model activation; previous run did not receive model env"
+}

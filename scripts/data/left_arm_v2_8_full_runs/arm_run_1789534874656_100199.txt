@@ -1,0 +1,23 @@
+v2.8 Home captured-pose limit margin: requested_deg= 120.0 effective_deg= 122.02187135612442 largest_transition_deg= 121.02187135612442
+v2.8 Home pre-clearance fix: formal Home includes all selected joints= elbow,shoulder_front,shoulder_side,shoulder_rotate,wrist,wrist_side,arm_roll
+Serial port is open
+Serial port is open
+v2.8 Home staged path entry check= {"build": "v2.8-home-independent-elbow-rigid-chain-v26", "path": "current-to-clearance", "max_delta_deg": 120.0, "errors_deg": {"elbow": 50.51138548079404, "shoulder_front": 93.94112410841308, "shoulder_side": 8.240063158108443, "shoulder_rotate": -46.79570921145421, "wrist": 0.37156912103786366, "wrist_side": 8.240066573203029, "arm_roll": 10.403894407925163}, "blocking_errors_deg": {}, "legacy_direct_precheck_bypass_deg": 180.0}
+v2 home target elbow delta_deg= -70.51048587533037 target= -1.2956817150115967
+v2 home target shoulder_front delta_deg= 30.949424450214508 target= 0.8363851308822632
+v2 home target shoulder_side delta_deg= 0.2622792641284896 target= -2.853627920150757
+v2 home target shoulder_rotate delta_deg= -22.55635822450861 target= 2.3554208278656006
+v2 home target wrist delta_deg= -59.60387118835888 target= -2.0780880451202393
+v2 home target wrist_side delta_deg= 0.2841401383407617 target= 0.1668955534696579
+v2 home target arm_roll delta_deg= 9.923049090356265 target= -2.657930850982666
+v2.6 pre-home clearance safe staged order= wrist,independent-elbow,placement-style-coupled-clearance selected= wrist,wrist_side,arm_roll,elbow,shoulder_rotate,shoulder_side,shoulder_front
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+v2.6 pre-home clearance wrist-first skip wrist delta_deg= 0.37156912103786366 deadband_deg= 0.5
+v2.6 pre-home clearance elbow-first escape= {"delta_deg": 50.51138548079404, "seconds": 12.0, "preload_seconds": 1.0, "trajectory": "smootherstep", "move_gains": {"kp": 92.0, "kd": 6.2}, "rigid_hold_gains": {"shoulder_front": {"kp": 125.0, "kd": 6.5}, "shoulder_side": {"kp": 70.0, "kd": 5.0}, "shoulder_rotate": {"kp": 45.0, "kd": 4.5}, "arm_roll": {"kp": 26.0, "kd": 5.0}, "wrist_side": {"kp": 18.0, "kd": 1.4}, "wrist": {"kp": 18.0, "kd": 1.4}}, "target_rad": 0.8165484070777893, "held_joints": ["shoulder_front", "shoulder_side", "shoulder_rotate", "arm_roll", "wrist_side", "wrist"], "active_tau": 0.0, "hold_tau": {"shoulder_front": 1.2, "elbow": 2.2, "wrist": 0.39, "arm_roll": -0.55, "shoulder_rotate": -0.8, "shoulder_side": 0.7, "wrist_side": -0.35}}
+v2.2 continuous group step elbow 1/1 targets= {"elbow": 0.8165484070777893}

@@ -1,0 +1,30 @@
+{
+  "build": "seven-axis-rigid-body-motion-v2-async",
+  "jetson_root": "/home/nvidia/hive_robot/DM_Control_Python",
+  "files": [
+    {
+      "source": "scripts/left_arm_v2_6.py",
+      "destination": "left_arm_v2_6.py",
+      "sha256": "10014b2b1aff872f2d0f7c9048534e2fdc8dcd9dc8e8f9c313a5937231496cc6"
+    },
+    {
+      "source": "scripts/left_arm_v3_1_motion_dynamics.py",
+      "destination": "left_arm_v3_1_motion_dynamics.py",
+      "sha256": "2266cb7b7f14fc7c8af715bd1ba1f7a9c9a4221096a2576d533076f88551fd7f"
+    },
+    {
+      "source": "scripts/left_arm_general_motion.py",
+      "destination": "left_arm_general_motion.py",
+      "sha256": "2081f01bdce41a4eaa5e1d0b39e335c938a970c33a7ad131d8e523d1ea67d834"
+    },
+    {
+      "source": "scripts/left_arm_dynamics_worker.py",
+      "destination": "left_arm_dynamics_worker.py",
+      "sha256": "bec85bc3420d6bb2e6f8bae80cb385ffc0f07dabe31aa514ff735fa20bdbb6f3"
+    }
+  ],
+  "model_json_changed": false,
+  "original_hold_identification_and_learning_sources_changed": false,
+  "summary_command": "python3 left_arm_general_motion.py --summary --last 2",
+  "first_test_mode": "shadow"
+}

@@ -1,0 +1,85 @@
+{
+  "preview": {
+    "ok": true,
+    "running": false,
+    "action": "dynamics:move-target",
+    "command": [
+      "python3",
+      "-u",
+      "left_arm_general_move.py",
+      "--model",
+      "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json",
+      "--mode",
+      "apply",
+      "--targets-json",
+      "{\"shoulder_front\": 0.7696269154548645, \"shoulder_side\": -2.853627920150757, \"shoulder_rotate\": 2.342832088470459, \"elbow\": -1.2796597480773926, \"arm_roll\": -2.5747692584991455, \"wrist_side\": 0.16308079659938812, \"wrist\": -1.9090943336486816}",
+      "--no-model-hold",
+      "--seconds",
+      "8.0",
+      "--max-delta-deg",
+      "5.0",
+      "--max-velocity",
+      "0.3",
+      "--max-error-deg",
+      "5.0"
+    ],
+    "command_text": "python3 -u left_arm_general_move.py --model /home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json --mode apply --targets-json {\"shoulder_front\": 0.7696269154548645, \"shoulder_side\": -2.853627920150757, \"shoulder_rotate\": 2.342832088470459, \"elbow\": -1.2796597480773926, \"arm_roll\": -2.5747692584991455, \"wrist_side\": 0.16308079659938812, \"wrist\": -1.9090943336486816} --no-model-hold --seconds 8.0 --max-delta-deg 5.0 --max-velocity 0.3 --max-error-deg 5.0",
+    "started_at": "2026-10-27 13:25:09",
+    "stdout": "general motion configuration= {\"build\": \"seven-axis-rigid-body-motion-v3-prepared\", \"mode\": \"apply\", \"model\": \"/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json\", \"workflow_action\": null, \"workflow_run_id\": null, \"model_sha256\": \"83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7\", \"gravity_in_cad_frame_m_s2\": [-0.0, -1.7029069047056824, -9.65766495051499], \"gravity_configuration\": {\"source\": \"nominal-horizontal-shoulder-axes\", \"status\": \"assumed_for_on_robot_validation\", \"physically_measured\": false, \"magnitude_m_s2\": 9.80665, \"assumptions\": [\"approved nominal 90-degree shoulder geometry\", \"nominal shoulder_front and shoulder_side axes horizontal\", \"down points toward negative CAD Z in approved reference pose\"], \"user_instruction\": \"Use the CAD-based nominal direction directly; no additional physical angle or distance measurements.\"}, \"dynamics_parameters_available\": true, \"parameter_status\": \"nominal-estimate-from-existing-tests; not independently measured link mass properties\", \"identification_records\": {\"gravity_records_used\": 73, \"unique_inertia_records_used\": 29}, \"parameters_independently_verified\": false, \"missing_inertials\": [], \"torque_policy\": \"bounded-pose-relative-ID-plus-friction; legacy/adaptive baseline retained\", \"compute_backend\": \"independent-process-latest-reference-mailbox\", \"max_result_age_ms\": 100.0, \"torque_cap_Nm\": 0.5, \"log\": \"/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_motion_runs.jsonl\"}\ngeneral motion configuration= {\"build\": \"seven-axis-rigid-body-motion-v3-prepared\", \"mode\": \"apply\", \"model\": \"/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json\", \"workflow_action\": \"general-move\", \"workflow_run_id\": \"3b53a6e61387a4a3\", \"model_sha256\": \"83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7\", \"gravity_in_cad_frame_m_s2\": [-0.0, -1.7029069047056824, -9.65766495051499], \"gravity_configuration\": {\"source\": \"nominal-horizontal-shoulder-axes\", \"status\": \"assumed_for_on_robot_validation\", \"physically_measured\": false, \"magnitude_m_s2\": 9.80665, \"assumptions\": [\"approved nominal 90-degree shoulder geometry\", \"nominal shoulder_front and shoulder_side axes horizontal\", \"down points toward negative CAD Z in approved reference pose\"], \"user_instruction\": \"Use the CAD-based nominal direction directly; no additional physical angle or distance measurements.\"}, \"dynamics_parameters_available\": true, \"parameter_status\": \"nominal-estimate-from-existing-tests; not independently measured link mass properties\", \"identification_records\": {\"gravity_records_used\": 73, \"unique_inertia_records_used\": 29}, \"parameters_independently_verified\": false, \"missing_inertials\": [], \"torque_policy\": \"bounded-pose-relative-ID-plus-friction; legacy/adaptive baseline retained\", \"compute_backend\": \"independent-process-latest-reference-mailbox\", \"max_result_age_ms\": 100.0, \"torque_cap_Nm\": 0.5, \"log\": \"/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_motion_runs.jsonl\"}\nSerial port is open\ngeneral target plan= {\"start_rad\": {\"shoulder_front\": 0.777256429195404, \"shoulder_side\": -2.817387580871582, \"shoulder_rotate\": 2.377164840698242, \"elbow\": -1.264782190322876, \"arm_roll\": -2.5747692584991455, \"wrist_side\": 0.1966506391763687, \"wrist\": -1.9090943336486816}, \"targets_rad\": {\"shoulder_front\": 0.7696269154548645, \"shoulder_side\": -2.853627920150757, \"shoulder_rotate\": 2.342832088470459, \"elbow\": -1.2796597480773926, \"arm_roll\": -2.5747692584991455, \"wrist_side\": 0.16308079659938812, \"wrist\": -1.9090943336486816}, \"active_joints\": [\"shoulder_front\", \"shoulder_side\", \"shoulder_rotate\", \"elbow\", \"arm_roll\", \"wrist_side\", \"wrist\"], \"held_joints\": [], \"delta_deg\": {\"shoulder_front\": -0.4371389370699861, \"shoulder_side\": -2.0764184888188963, \"shoulder_rotate\": -1.9671218017203522, \"elbow\": -0.8524212687959314, \"arm_roll\": 0.0, \"wrist_side\": -1.9234102985795631, \"wrist\": 0.0}, \"seconds\": 8.0, \"trajectory\": \"smootherstep\", \"reference_peak_velocity_rad_s\": 0.008493829518556595, \"path_validation\": \"joint-interpolation-only; no collision or mechanical-limit validation\"}\n{\"ok\": true, \"motion_issued\": false, \"plan\": {\"start_rad\": {\"shoulder_front\": 0.777256429195404, \"shoulder_side\": -2.817387580871582, \"shoulder_rotate\": 2.377164840698242, \"elbow\": -1.264782190322876, \"arm_roll\": -2.5747692584991455, \"wrist_side\": 0.1966506391763687, \"wrist\": -1.9090943336486816}, \"targets_rad\": {\"shoulder_front\": 0.7696269154548645, \"shoulder_side\": -2.853627920150757, \"shoulder_rotate\": 2.342832088470459, \"elbow\": -1.2796597480773926, \"arm_roll\": -2.5747692584991455, \"wrist_side\": 0.16308079659938812, \"wrist\": -1.9090943336486816}, \"active_joints\": [\"shoulder_front\", \"shoulder_side\", \"shoulder_rotate\", \"elbow\", \"arm_roll\", \"wrist_side\", \"wrist\"], \"held_joints\": [], \"delta_deg\": {\"shoulder_front\": -0.4371389370699861, \"shoulder_side\": -2.0764184888188963, \"shoulder_rotate\": -1.9671218017203522, \"elbow\": -0.8524212687959314, \"arm_roll\": 0.0, \"wrist_side\": -1.9234102985795631, \"wrist\": 0.0}, \"seconds\": 8.0, \"trajectory\": \"smootherstep\", \"reference_peak_velocity_rad_s\": 0.008493829518556595, \"path_validation\": \"joint-interpolation-only; no collision or mechanical-limit validation\"}}\n",
+    "stderr": "",
+    "returncode": 0,
+    "duration_s": 1.383,
+    "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1793132709668_8493.txt",
+    "finished_at": "2026-10-27 13:25:11"
+  },
+  "submission": {
+    "status": 200,
+    "data": {
+      "ok": true,
+      "running": true,
+      "action": "dynamics:move-target",
+      "command": [
+        "python3",
+        "-u",
+        "left_arm_general_move.py",
+        "--model",
+        "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json",
+        "--mode",
+        "apply",
+        "--targets-json",
+        "{\"shoulder_front\": 0.7696269154548645, \"shoulder_side\": -2.853627920150757, \"shoulder_rotate\": 2.342832088470459, \"elbow\": -1.2796597480773926, \"arm_roll\": -2.5747692584991455, \"wrist_side\": 0.16308079659938812, \"wrist\": -1.9090943336486816}",
+        "--no-model-hold",
+        "--seconds",
+        "8.0",
+        "--max-delta-deg",
+        "5.0",
+        "--max-velocity",
+        "0.3",
+        "--max-error-deg",
+        "5.0",
+        "--execute"
+      ],
+      "command_text": "python3 -u left_arm_general_move.py --model /home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json --mode apply --targets-json {\"shoulder_front\": 0.7696269154548645, \"shoulder_side\": -2.853627920150757, \"shoulder_rotate\": 2.342832088470459, \"elbow\": -1.2796597480773926, \"arm_roll\": -2.5747692584991455, \"wrist_side\": 0.16308079659938812, \"wrist\": -1.9090943336486816} --no-model-hold --seconds 8.0 --max-delta-deg 5.0 --max-velocity 0.3 --max-error-deg 5.0 --execute",
+      "started_at": "2026-10-27 13:25:13",
+      "started_epoch": 1793132713.1740332,
+      "stdout": "",
+      "stderr": "",
+      "returncode": null,
+      "duration_s": null,
+      "post_move_model_hold": {
+        "enabled": true,
+        "state": "waiting-for-motion",
+        "seconds": 5,
+        "joints": [
+          "shoulder_front",
+          "shoulder_side",
+          "shoulder_rotate",
+          "elbow",
+          "arm_roll",
+          "wrist_side",
+          "wrist"
+        ]
+      }
+    }
+  }
+}

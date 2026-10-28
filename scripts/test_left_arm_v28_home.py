@@ -9,6 +9,7 @@ from left_arm_v2_8 import (
     clearance_validation_joints,
     captured_home_transition_limit,
     ensure_clearance_best_snapshot,
+    errors_over_limit_deg,
     fine_correct_clearance_wrist_side,
     home_clearance_entry_errors_deg,
     is_fixed_prehome,
@@ -61,6 +62,12 @@ class HomeWrapperTests(unittest.TestCase):
         effective = captured_home_transition_limit(120.0, [121.02187135612442])
         self.assertGreater(effective, 121.52)
         self.assertLess(effective, 122.1)
+
+    def test_staged_entry_uses_effective_captured_pose_limit(self):
+        effective = captured_home_transition_limit(120.0, [121.02187135612442])
+        errors = {"elbow": 120.10388027129636}
+        self.assertEqual(errors_over_limit_deg(errors, effective), {})
+        self.assertEqual(errors_over_limit_deg(errors, 120.0), errors)
 
     def test_staged_home_checks_live_entry_against_clearance(self):
         errors = home_clearance_entry_errors_deg(

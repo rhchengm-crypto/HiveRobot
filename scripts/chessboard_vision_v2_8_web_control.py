@@ -22,17 +22,17 @@ WEB_VERSION = "v2.8-optional-motion-gate"
 V28_MOVE_SCRIPT = str(Path(__file__).parent / 'left_arm_v2_8_move_library.py')
 V28_ARM_SCRIPT = str(Path(__file__).parent / 'left_arm_v2_8.py')
 
-HTML_PAGE = """<!doctype html><html lang="zh"><meta charset="utf-8">
+HTML_PAGE = """<!doctype html><html lang="en"><meta charset="utf-8">
 <title>HiveRobot v2.8</title><style>
 body{margin:0;background:#101821;color:#eee;font:16px system-ui}header{padding:12px;display:flex;gap:12px;align-items:center}button,a{font:inherit;padding:8px;color:inherit}button{background:#28445b;border:1px solid #66849a;cursor:pointer}button[aria-selected=true]{background:#326d58}iframe{border:0;width:100%;height:calc(100vh - 76px)}[hidden]{display:none}a{margin-left:auto}
 </style><header><strong>HiveRobot v2.8</strong>
-<button id="vision-tab" aria-selected="true" onclick="showPanel('vision')">棋盘识别与训练</button>
-<button id="arm-tab" aria-selected="false" onclick="showPanel('arm')">机械臂控制</button>
-<button id="crown-tab" aria-selected="false" onclick="showPanel('crown')">棋冠几何示教</button>
-<a id="open" href="/vision" target="_blank" rel="noopener">单独打开当前页面</a></header>
-<iframe id="vision" src="/vision" title="棋盘识别与训练"></iframe>
-<iframe id="arm" src="/arm" title="机械臂控制" hidden></iframe>
-<iframe id="crown" src="/crown" title="棋冠几何示教" hidden></iframe>
+<button id="vision-tab" aria-selected="true" onclick="showPanel('vision')">Board Recognition and Training</button>
+<button id="arm-tab" aria-selected="false" onclick="showPanel('arm')">Robot Arm Control</button>
+<button id="crown-tab" aria-selected="false" onclick="showPanel('crown')">Crown Geometry Teaching</button>
+<a id="open" href="/vision" target="_blank" rel="noopener">Open Current Page</a></header>
+<iframe id="vision" src="/vision" title="Board Recognition and Training"></iframe>
+<iframe id="arm" src="/arm" title="Robot Arm Control" hidden></iframe>
+<iframe id="crown" src="/crown" title="Crown Geometry Teaching" hidden></iframe>
 <script>function showPanel(name){for(const id of ['vision','arm','crown']){document.getElementById(id).hidden=id!==name;document.getElementById(id+'-tab').setAttribute('aria-selected',String(id===name));}document.getElementById('open').href='/'+name;}</script></html>"""
 
 
@@ -54,19 +54,19 @@ def build_arm_page() -> str:
     page = page.replace(action_name, restore_action_name, 1)
     replay_button = '            <button type="button" class="primary" onclick="replayMove()">Replay</button>'
     replay_controls = replay_button + """
-            <label class="inline-option" title="Replay 命令结束后调用现有 Claw Close 压力停止流程">
-              <input id="closeClawAfterReplay" type="checkbox"> Replay 后合拢夹爪
+            <label class="inline-option" title="Run the existing pressure-stop Claw Close flow after Replay finishes">
+              <input id="closeClawAfterReplay" type="checkbox"> Close Claw After Replay
             </label>
-            <label class="inline-option" title="勾选后，任一受检关节超出 0.5° 时停止后续动作；未勾选时仍记录并学习误差，但流程继续">
-              <input id="enableMotionGate" type="checkbox"> 启用 0.5° 门禁
+            <label class="inline-option" title="When enabled, stop subsequent motion if any checked joint exceeds 0.5 degrees. When disabled, errors are still recorded and learned while the flow continues.">
+              <input id="enableMotionGate" type="checkbox"> Enable 0.5 Degree Gate
             </label>
-            <label class="inline-option" title="选择一个多流程动作；none 只执行所选 Saved Move 的 Replay">
-              多流程
+            <label class="inline-option" title="Select one multi-step flow. None only replays the selected Saved Move.">
+              Multi-Step Flow
               <select id="multiFlowSelect">
                 <option value="none">none</option>
-                <option value="placement1">Placement1：夹取后到 Clearance</option>
-                <option value="placement_a5">Placement A5：夹取后到 Clearance</option>
-                <option value="placement_c4">Placement_C4：夹取后到 Clearance</option>
+                <option value="placement1">Placement1: Grasp to Clearance</option>
+                <option value="placement_a5">Placement A5: Grasp to Clearance</option>
+                <option value="placement_c4">Placement_C4: Grasp to Clearance</option>
                 <option value="white_bishop_placement">White Bishop Placement</option>
                 <option value="white_knight_place_b1">white knight place_B1</option>
               </select>
@@ -78,7 +78,7 @@ def build_arm_page() -> str:
     if copy_button not in page:
         raise RuntimeError("v2.8 arm page injection failed: Debug Output copy button was not found")
     page = page.replace(copy_button, (
-        '          <a href="/api/arm/full-run-log" target="_blank" rel="noopener">完整运行日志</a>\n'
+        '          <a href="/api/arm/full-run-log" target="_blank" rel="noopener">Full Run Log</a>\n'
         + copy_button
     ), 1)
 
@@ -101,16 +101,16 @@ def build_arm_page() -> str:
         return;
       }
       const suffix = whiteKnightPlaceB1
-        ? '，随后完整执行 Placement_C4，从 Clearance 执行 white_knight_place_b1，最后 Claw Home 张爪'
+        ? ', then run Placement_C4, continue from Clearance with white_knight_place_b1, and finish with Claw Home'
         : whiteBishopPlacement
-        ? '，随后完整执行 Placement1，从 Clearance 执行 White Bishop Placement，最后 Claw Home 张爪'
+        ? ', then run Placement1, continue from Clearance with White Bishop Placement, and finish with Claw Home'
         : placementC4
-        ? '，随后从 C4 夹取并回到 Clearance'
+        ? ', then grasp at C4 and return to Clearance'
         : placementA5
-        ? '，随后从 A5 夹取并回到 Clearance'
+        ? ', then grasp at A5 and return to Clearance'
         : placement1
-        ? '，随后夹取并回到 Clearance'
-        : (closeAfterReplay ? '，随后使用压力停止逻辑合拢夹爪' : '');
+        ? ', then grasp and return to Clearance'
+        : (closeAfterReplay ? ', then close the claw using pressure-stop logic' : '');
       if (!confirm('Replay move via table clearance first: ' + name + suffix + '?')) return;
       try {
         const res = await fetch('/api/move/replay', {
@@ -124,12 +124,12 @@ def build_arm_page() -> str:
         document.getElementById('output').textContent = formatOutput(data);
         setStatus(data.ok ? 'Replay running/finished: ' + name : 'Replay failed to start: ' + name);
         if (data.ok && closeAfterReplay && !placement1 && !placementA5 && !placementC4 && !whiteBishopPlacement && !whiteKnightPlaceB1) {
-          setStatus('Replay running: ' + name + '；结束后将合拢夹爪。');
+          setStatus('Replay running: ' + name + '; the claw will close when Replay finishes.');
           const finished = await waitForRunIdle('replay-move:' + name, 300000);
           if (finished) {
             document.getElementById('command').textContent = finished.command_text || document.getElementById('command').textContent;
             document.getElementById('output').textContent = formatOutput(finished);
-            setStatus('Replay finished: ' + name + '；正在合拢夹爪。');
+            setStatus('Replay finished: ' + name + '; closing the claw.');
             await runAction('claw-close', true);
             return;
           }
@@ -390,10 +390,10 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
                 run = run_state.snapshot() or {}
                 log_path = run.get('full_log_path')
                 if not log_path:
-                    return self.send_json({'ok': False, 'error': '尚无完整运行日志'}, HTTPStatus.NOT_FOUND)
+                    return self.send_json({'ok': False, 'error': 'No full run log is available'}, HTTPStatus.NOT_FOUND)
                 resolved = Path(log_path).resolve()
                 if resolved.parent != run_state.full_log_dir or not resolved.is_file():
-                    return self.send_json({'ok': False, 'error': '运行日志不存在'}, HTTPStatus.NOT_FOUND)
+                    return self.send_json({'ok': False, 'error': 'The run log does not exist'}, HTTPStatus.NOT_FOUND)
                 return self.send_bytes(resolved.read_bytes(), 'text/plain; charset=utf-8')
             if path == '/crown':
                 return self.send_bytes(CROWN_PAGE.encode('utf-8'), 'text/html; charset=utf-8')
@@ -417,9 +417,9 @@ def make_handler(vision_state, stream_state, run_state, ctrl_cfg, args):
             if path.startswith('/api/crown/'):
                 try:
                     size=int(self.headers.get('Content-Length','0'))
-                    if not 0<size<=100000:raise ValueError('请求大小无效')
+                    if not 0<size<=100000:raise ValueError('Invalid request size')
                     data=json.loads(self.rfile.read(size))
-                    if not isinstance(data,dict):raise ValueError('参数必须是对象')
+                    if not isinstance(data,dict):raise ValueError('Parameters must be an object')
                     with geometry_lock:
                         result=geometry.action(path.rsplit('/',1)[-1],data)
                     return self.send_json(result)

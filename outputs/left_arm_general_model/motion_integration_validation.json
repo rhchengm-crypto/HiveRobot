@@ -1,0 +1,34 @@
+{
+  "tests_passed": 154,
+  "test_suites": {
+    "test_left_arm_v31_model_control": 42,
+    "test_left_arm_v28_home": 15,
+    "test_left_arm_v28_local_bias": 40,
+    "test_chess_v30_dynamics_web": 23,
+    "test_left_arm_rigid_body": 19,
+    "test_left_arm_v31_motion_dynamics": 8,
+    "test_left_arm_general_motion": 7
+  },
+  "hardware_execution_performed": false,
+  "runtime_adapter_implemented": true,
+  "test_modes": [
+    "shadow",
+    "apply"
+  ],
+  "shadow_preserves_every_command": true,
+  "apply_preserves_q_dq_kp_kd_claw_and_skipped_joint_mask": true,
+  "apply_delta_tau_limit_Nm": 0.5,
+  "apply_delta_tau_slew_Nm_per_s": 1.5,
+  "terminal_correction_zero_before_learning": true,
+  "identification_samples_used": {
+    "gravity": 73,
+    "unique_effective_inertia": 29
+  },
+  "physical_parameters_status": "regularized CAD-shape-based nominal estimate; not uniquely identified or independently measured",
+  "protected_files_unchanged": [
+    "scripts/left_arm_v3_1_dynamics.json",
+    "scripts/left_arm_v3_1_model_control.py",
+    "scripts/left_arm_v2_8.py",
+    "scripts/left_arm_v2_8_move_library.py"
+  ]
+}

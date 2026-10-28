@@ -1,0 +1,19 @@
+{
+  "build": "seven-axis-board-grasp-v3-preview-only",
+  "execution_suspended": true,
+  "reason": "Operator reported red indication and downward arm motion after automatic seven-axis disable on velocity watchdog.",
+  "operator_status": "mechanically supported; no injury reported",
+  "tests_run_this_update": 55,
+  "tests_passed": 55,
+  "hardware_motion_tested": false,
+  "failed_run_id": "222fe23699ceefc2",
+  "wrist_velocity_rad_s": -0.212,
+  "watchdog_limit_rad_s": 0.2,
+  "entry_waypoints_completed": 25,
+  "model_hold_state": "skipped-motion-failed",
+  "fault_stop_repair_validated": false,
+  "required_files": {
+    "left_arm_board_grasp.py": "c1fac5e65231c6462fd709825acbcacbdf31594acfef9db12ddcb36675d6fe48",
+    "chessboard_vision_v3_0_web_control.py": "0015fc4b9fc5235a02ddeca2d7313387e00d2fcaf1e6949eca98e3c76cfcefeb"
+  }
+}

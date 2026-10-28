@@ -1,0 +1,96 @@
+Serial port is open
+Serial port is open
+enable wrist
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+v2.6 nudge-hold learned compensation disabled for guarded probe
+v2.6 nudge-hold active wrist delta_deg= 2.0 kp= 6.0 kd= 0.8 seconds= 6.0 hold joints: shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side
+v2.6 nudge-hold hold_tau= {"shoulder_front": 1.2, "shoulder_side": 0.7, "shoulder_rotate": -0.8, "elbow": 2.2, "arm_roll": -0.55, "wrist_side": -0.35} control_dt= 0.01
+v2.6 nudge-hold adjusted shoulder_front hold_tau= 1.2 shoulder_front_pos= 0.8291370868682861
+v2.6 nudge-hold low shoulder adaptive hold gains= {"arm_roll": {"kp": 12.0, "kd": 7.0}, "shoulder_rotate": {"kp": 24.0, "kd": 4.5}, "wrist_side": {"kp": 24.0, "kd": 2.4}, "shoulder_side": {"kp": 65.0, "kd": 4.5}}
+v2.6 nudge-hold compliant hold gains= {"arm_roll": {"kp": 12.0, "kd": 7.0}}
+{
+  "start": {
+    "wrist": -2.0708401203155518,
+    "shoulder_front": 0.8291370868682861,
+    "shoulder_side": -2.853627920150757,
+    "shoulder_rotate": 2.365720510482788,
+    "elbow": -1.281567096710205,
+    "arm_roll": -2.6651790142059326,
+    "wrist_side": 0.16918440163135529
+  },
+  "requested_target": {
+    "wrist": -2.035933535275665
+  },
+  "target": {
+    "wrist": -2.035933535275665
+  },
+  "hold_targets": {
+    "shoulder_front": 0.8291370868682861,
+    "shoulder_side": -2.853627920150757,
+    "shoulder_rotate": 2.365720510482788,
+    "elbow": -1.281567096710205,
+    "arm_roll": -2.6651790142059326,
+    "wrist_side": 0.16918440163135529
+  }
+}
+v2 continuous step wrist 1/1 target= -2.035933535275665
+nudge watchdog tripped for arm_roll: position displacement 2.05deg
+disable wrist
+[stderr] Traceback (most recent call last):
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py", line 501, in <module>
+[stderr]     main()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py", line 385, in main
+[stderr]     legacy.main()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6.py", line 2595, in main
+[stderr]     arm.move_target_with_holds(
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6.py", line 1075, in move_target_with_holds
+[stderr]     check_safety()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6.py", line 1009, in check_safety
+[stderr]     trip_safety(
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6.py", line 983, in trip_safety
+[stderr]     raise RuntimeError(message)
+[stderr] RuntimeError: nudge watchdog tripped for arm_roll: position displacement 2.05deg
+[stderr] Error in sys.excepthook:
+[stderr] Traceback (most recent call last):
+[stderr]   File "/usr/lib/python3/dist-packages/apport_python_hook.py", line 72, in apport_excepthook
+[stderr]     from apport.fileutils import likely_packaged, get_recent_crashes
+[stderr]   File "/usr/lib/python3/dist-packages/apport/__init__.py", line 5, in <module>
+[stderr]     from apport.report import Report
+[stderr]   File "/usr/lib/python3/dist-packages/apport/report.py", line 32, in <module>
+[stderr]     import apport.fileutils
+[stderr]   File "/usr/lib/python3/dist-packages/apport/fileutils.py", line 12, in <module>
+[stderr]     import os, glob, subprocess, os.path, time, pwd, sys, requests_unixsocket
+[stderr]   File "/usr/lib/python3/dist-packages/requests_unixsocket/__init__.py", line 1, in <module>
+[stderr]     import requests
+[stderr]   File "/usr/lib/python3/dist-packages/requests/__init__.py", line 95, in <module>
+[stderr]     from urllib3.contrib import pyopenssl
+[stderr]   File "/usr/lib/python3/dist-packages/urllib3/contrib/pyopenssl.py", line 46, in <module>
+[stderr]     import OpenSSL.SSL
+[stderr]   File "/usr/lib/python3/dist-packages/OpenSSL/__init__.py", line 8, in <module>
+[stderr]     from OpenSSL import crypto, SSL
+[stderr]   File "/usr/lib/python3/dist-packages/OpenSSL/crypto.py", line 1553, in <module>
+[stderr]     class X509StoreFlags(object):
+[stderr]   File "/usr/lib/python3/dist-packages/OpenSSL/crypto.py", line 1571, in X509StoreFlags
+[stderr]     NOTIFY_POLICY = _lib.X509_V_FLAG_NOTIFY_POLICY
+[stderr] AttributeError: module 'lib' has no attribute 'X509_V_FLAG_NOTIFY_POLICY'
+[stderr] 
+[stderr] Original exception was:
+[stderr] Traceback (most recent call last):
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py", line 501, in <module>
+[stderr]     main()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py", line 385, in main
+[stderr]     legacy.main()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6.py", line 2595, in main
+[stderr]     arm.move_target_with_holds(
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6.py", line 1075, in move_target_with_holds
+[stderr]     check_safety()
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6.py", line 1009, in check_safety
+[stderr]     trip_safety(
+[stderr]   File "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_6.py", line 983, in trip_safety
+[stderr]     raise RuntimeError(message)
+[stderr] RuntimeError: nudge watchdog tripped for arm_roll: position displacement 2.05deg

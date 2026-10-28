@@ -1,0 +1,82 @@
+Serial port is open
+Serial port is open
+enable shoulder_side
+enable shoulder_front
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+v2.6 nudge-hold adaptive hold target bias= {"elbow": -0.7500000000000001, "wrist": -0.7500000000000001} hold_targets= {"elbow": -1.3022865798407022, "wrist": -2.072485759490055}
+v2.6 nudge-hold active shoulder_side delta_deg= 10.0 kp= 70.0 kd= 3.0 seconds= 3.2 hold joints: shoulder_front,shoulder_rotate,elbow,arm_roll,wrist_side,wrist
+v2.6 nudge-hold hold_tau= {"shoulder_front": 1.2, "elbow": 2.187760082441284, "wrist": 0.48058232859705924} control_dt= 0.01
+v2.6 nudge-hold adjusted shoulder_front hold_tau= 1.2 shoulder_front_pos= 0.7715343236923218
+v2.6 nudge-hold low shoulder adaptive hold gains= {"shoulder_rotate": {"kp": 12.0, "kd": 5.0}, "arm_roll": {"kp": 12.0, "kd": 2.0}, "wrist_side": {"kp": 8.0, "kd": 1.6}}
+v2.6 nudge-hold compliant hold gains= {"shoulder_rotate": {"kp": 12.0, "kd": 5.0}, "arm_roll": {"kp": 12.0, "kd": 2.0}, "wrist_side": {"kp": 8.0, "kd": 1.6}, "wrist": {"kp": 6.0, "kd": 2.0}}
+{
+  "start": {
+    "shoulder_side": -2.8376059532165527,
+    "shoulder_front": 0.7715343236923218,
+    "shoulder_rotate": 2.3462653160095215,
+    "elbow": -1.2891966104507446,
+    "arm_roll": -2.6728084087371826,
+    "wrist_side": 0.12836651504039764,
+    "wrist": -2.0593957901000977
+  },
+  "requested_target": {
+    "shoulder_side": -2.66307302801712
+  },
+  "target": {
+    "shoulder_side": -2.66307302801712
+  },
+  "hold_targets": {
+    "shoulder_front": 0.7715343236923218,
+    "shoulder_rotate": 2.3462653160095215,
+    "elbow": -1.3022865798407022,
+    "arm_roll": -2.6728084087371826,
+    "wrist_side": 0.12836651504039764,
+    "wrist": -2.072485759490055
+  }
+}
+v2 continuous step shoulder_side 1/1 target= -2.66307302801712
+{
+  "shoulder_side": {
+    "pos": -2.7044708728790283,
+    "vel": -0.0019536020699888468,
+    "tau": 2.8512821197509766
+  },
+  "shoulder_front": {
+    "pos": 0.777256429195404,
+    "vel": -0.0019536020699888468,
+    "tau": 0.458119660615921
+  },
+  "shoulder_rotate": {
+    "pos": 2.3462653160095215,
+    "vel": -0.021978022530674934,
+    "tau": -0.05128205195069313
+  },
+  "elbow": {
+    "pos": -1.2773709297180176,
+    "vel": -0.0019536020699888468,
+    "tau": -0.15726496279239655
+  },
+  "arm_roll": {
+    "pos": -2.6728084087371826,
+    "vel": -0.007326007355004549,
+    "tau": -0.021978022530674934
+  },
+  "wrist_side": {
+    "pos": 0.1203555315732956,
+    "vel": -0.021978022530674934,
+    "tau": 0.04639804735779762
+  },
+  "wrist": {
+    "pos": -2.024681568145752,
+    "vel": 0.007326007355004549,
+    "tau": 0.17338217794895172
+  }
+}
+v2.6 nudge-hold hold error diagnostics {"elbow": {"nominal_error_deg": -0.6775615958544349, "applied_target_error_deg": -1.4275615958544392, "hold_target_bias_deg": -0.7500000000000042}, "wrist": {"nominal_error_deg": -1.9889784070643932, "applied_target_error_deg": -2.738978407064397, "hold_target_bias_deg": -0.7500000000000042}}
+v2.6 nudge-hold adaptive hold tau observation active-induced errors {"wrist": {"before_active": 0.0, "final": -1.9889784070643932}}
+v2.6 nudge-hold adaptive hold tau updates {"wrist": {"tau": 0.48422106889779415, "previous_tau": 0.48058232859705924, "base_tau": 0.49422106889779416, "applied_tau": 0.48058232859705924, "delta_tau": 0.0036387403007349106, "search_direction": -1.0, "successful_direction": -1.0, "last_error_deg": -1.9889784070643932, "best_error_deg": 1.7048425375918628, "best_tau": 0.49422106889779416, "step_scale": 0.4, "learning_state": "backoff", "refined_best": false, "samples": 4, "updated_at": "2026-10-21 14:40:49", "label": "nudge-hold-induced"}}
+v2.6 nudge-hold adaptive hold target bias updates {"wrist": {"bias_deg": -1.5, "previous_bias_deg": -0.75, "base_bias_deg": -0.75, "delta_bias_deg": -0.75, "last_error_deg": -1.9889784070643932, "best_error_deg": 1.9889784070643932, "best_bias_deg": -0.75, "step_scale": 1.0, "learning_state": "improved", "refined_best": true, "samples": 2, "updated_at": "2026-10-21 14:40:49", "label": "nudge-hold-induced"}}

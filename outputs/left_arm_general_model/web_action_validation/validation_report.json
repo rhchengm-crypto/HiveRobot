@@ -1,0 +1,280 @@
+{
+  "recorded_at": "2026-10-27T21:07:41.295Z",
+  "physical_placement_phase": "completed",
+  "code_files_modified": false,
+  "model_parameters_modified": false,
+  "learning_disabled": false,
+  "tests": [
+    {
+      "test": "home",
+      "action": "home",
+      "motion_ok": true,
+      "post_move_hold_expected": true,
+      "hold_ok": true,
+      "hold_duration_s": 5.007051706314087,
+      "model_segments_captured": 6,
+      "begin_records_in_full_snapshot": 6,
+      "complete_records_in_full_snapshot": 5,
+      "all_captured_segments_apply": true,
+      "all_captured_segments_correct_action": true,
+      "model_sha256": [
+        "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+      ],
+      "nonzero_model_correction_observed": true,
+      "worker_errors_in_captured_segments": 0,
+      "all_captured_terminal_corrections_zero": true,
+      "learning_update_lines": 0,
+      "command": [
+        "python3",
+        "-u",
+        "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py",
+        "home",
+        "--deadband-deg",
+        "0.5",
+        "--max-delta-deg",
+        "120",
+        "--prehome-clearance",
+        "--execute"
+      ],
+      "jetson_motion_full_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1793134162523_14170.txt",
+      "precision_tuning_performed": false
+    },
+    {
+      "test": "clearance",
+      "action": "table-clearance",
+      "motion_ok": true,
+      "post_move_hold_expected": true,
+      "hold_ok": true,
+      "hold_duration_s": 5.015285491943359,
+      "model_segments_captured": 2,
+      "begin_records_in_full_snapshot": 2,
+      "complete_records_in_full_snapshot": 1,
+      "all_captured_segments_apply": true,
+      "all_captured_segments_correct_action": true,
+      "model_sha256": [
+        "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+      ],
+      "nonzero_model_correction_observed": true,
+      "worker_errors_in_captured_segments": 0,
+      "all_captured_terminal_corrections_zero": true,
+      "learning_update_lines": 0,
+      "command": [
+        "python3",
+        "-u",
+        "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py",
+        "clearance",
+        "--deadband-deg",
+        "0.5",
+        "--max-delta-deg",
+        "120",
+        "--step-deg",
+        "5",
+        "--execute"
+      ],
+      "jetson_motion_full_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1793134246593_14572.txt",
+      "precision_tuning_performed": false
+    },
+    {
+      "test": "nudge_plus",
+      "action": "nudge:arm_roll:+2deg",
+      "motion_ok": true,
+      "post_move_hold_expected": false,
+      "hold_ok": null,
+      "model_segments_captured": 1,
+      "begin_records_in_full_snapshot": 1,
+      "complete_records_in_full_snapshot": 1,
+      "all_captured_segments_apply": true,
+      "all_captured_segments_correct_action": true,
+      "model_sha256": [
+        "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+      ],
+      "nonzero_model_correction_observed": true,
+      "worker_errors_in_captured_segments": 0,
+      "all_captured_terminal_corrections_zero": true,
+      "learning_update_lines": 0,
+      "command": [
+        "python3",
+        "-u",
+        "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py",
+        "nudge-hold",
+        "--joint",
+        "arm_roll",
+        "--deg",
+        "2.000",
+        "--seconds",
+        "1.60",
+        "--max-deg",
+        "10",
+        "--hold-joints",
+        "shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side,wrist",
+        "--auto-gains"
+      ],
+      "jetson_motion_full_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1793134294862_14802.txt",
+      "precision_tuning_performed": false
+    },
+    {
+      "test": "nudge_minus",
+      "action": "nudge:arm_roll:-2deg",
+      "motion_ok": true,
+      "post_move_hold_expected": false,
+      "hold_ok": null,
+      "model_segments_captured": 1,
+      "begin_records_in_full_snapshot": 1,
+      "complete_records_in_full_snapshot": 1,
+      "all_captured_segments_apply": true,
+      "all_captured_segments_correct_action": true,
+      "model_sha256": [
+        "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+      ],
+      "nonzero_model_correction_observed": true,
+      "worker_errors_in_captured_segments": 0,
+      "all_captured_terminal_corrections_zero": true,
+      "learning_update_lines": 0,
+      "command": [
+        "python3",
+        "-u",
+        "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v2_8.py",
+        "nudge-hold",
+        "--joint",
+        "arm_roll",
+        "--deg",
+        "-2.000",
+        "--seconds",
+        "1.60",
+        "--max-deg",
+        "10",
+        "--hold-joints",
+        "shoulder_front,shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side,wrist",
+        "--auto-gains"
+      ],
+      "jetson_motion_full_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1793134332116_14936.txt",
+      "precision_tuning_performed": false
+    },
+    {
+      "test": "bishop",
+      "action": "white-bishop-placement",
+      "motion_ok": true,
+      "post_move_hold_expected": true,
+      "hold_ok": true,
+      "hold_duration_s": 5.024526596069336,
+      "model_segments_captured": 11,
+      "begin_records_in_full_snapshot": 12,
+      "complete_records_in_full_snapshot": 11,
+      "all_captured_segments_apply": true,
+      "all_captured_segments_correct_action": true,
+      "model_sha256": [
+        "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+      ],
+      "nonzero_model_correction_observed": true,
+      "worker_errors_in_captured_segments": 0,
+      "all_captured_terminal_corrections_zero": true,
+      "learning_update_lines": 1,
+      "command": [
+        "python3",
+        "-u",
+        "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v3_0_move_library.py",
+        "replay-move",
+        "--name",
+        "bishop01",
+        "--moves-file",
+        "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_6_saved_moves.json",
+        "--python-bin",
+        "python3",
+        "--white-bishop-placement"
+      ],
+      "jetson_motion_full_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1793134404691_15363.txt",
+      "precision_tuning_performed": false
+    },
+    {
+      "test": "knight",
+      "action": "white-knight-place-b1",
+      "motion_ok": true,
+      "post_move_hold_expected": true,
+      "hold_ok": true,
+      "hold_duration_s": 5.033262491226196,
+      "model_segments_captured": 12,
+      "begin_records_in_full_snapshot": 12,
+      "complete_records_in_full_snapshot": 12,
+      "all_captured_segments_apply": true,
+      "all_captured_segments_correct_action": true,
+      "model_sha256": [
+        "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+      ],
+      "nonzero_model_correction_observed": true,
+      "worker_errors_in_captured_segments": 0,
+      "all_captured_terminal_corrections_zero": true,
+      "learning_update_lines": 1,
+      "command": [
+        "python3",
+        "-u",
+        "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v3_0_move_library.py",
+        "replay-move",
+        "--name",
+        "white_knight_c4",
+        "--moves-file",
+        "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_6_saved_moves.json",
+        "--python-bin",
+        "python3",
+        "--white-knight-place-b1"
+      ],
+      "jetson_motion_full_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1793134657041_16540.txt",
+      "precision_tuning_performed": false
+    },
+    {
+      "test": "rook",
+      "action": "v3-c4-white-rook-place-a1",
+      "motion_ok": true,
+      "post_move_hold_expected": true,
+      "hold_ok": true,
+      "hold_duration_s": 5.020891427993774,
+      "model_segments_captured": 11,
+      "all_captured_segments_apply": true,
+      "all_captured_segments_correct_action": true,
+      "workflow_run_ids": [
+        "474964a4f800d096"
+      ],
+      "model_sha256": [
+        "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+      ],
+      "nonzero_model_correction_observed": true,
+      "worker_errors_in_captured_segments": 0,
+      "all_captured_terminal_corrections_zero": true,
+      "learning_update_lines": 1,
+      "command": [
+        "python3",
+        "-u",
+        "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v3_0_move_library.py",
+        "replay-move",
+        "--name",
+        "white_knight_c4",
+        "--moves-file",
+        "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_6_saved_moves.json",
+        "--python-bin",
+        "python3",
+        "--white-rook-place-a1"
+      ],
+      "jetson_motion_full_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1793135056975_18710.txt",
+      "jetson_hold_full_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1793135231524_19871.txt",
+      "payload_mode": "actual-white-rook-user-prepared-and-vision-confirmed",
+      "takeover_mode": "immediate-current-state-bridge",
+      "precision_tuning_performed": false
+    }
+  ],
+  "ordinary_clearance_rotate_skip_evidence": [
+    "v2 clearance skip shoulder_rotate delta_deg= -23.496212744869872 deadband_deg= 180.0",
+    "v2.6 clearance coupled shoulder/roll/wrist active shoulder_front,shoulder_side,elbow,arm_roll,wrist_side,wrist hold joints: shoulder_rotate"
+  ],
+  "limitations": [
+    "Bishop and Rook each have 11 captured completion summaries; full final segment summaries may be omitted by Web stdout truncation. Complete process exit and post-move hold are saved.",
+    "Bishop and Knight were empty-board trajectory tests; Rook used a real vision-confirmed white rook."
+  ],
+  "all_tested_web_entries_apply": true,
+  "all_expected_holds_complete": true,
+  "camera_observation": "Saved before/after RGB images. Camera alone does not establish that the intended rook was successfully transferred to A1; require onsite confirmation separately from model/hold execution.",
+  "onsite_confirmation": {
+    "response": "全程正常，白车已放到 A1",
+    "confirmed_at": "2026-10-27T21:08:15.356Z",
+    "abnormal_vibration_noise_or_red_light": false,
+    "rook_placed_at_a1": true
+  }
+}

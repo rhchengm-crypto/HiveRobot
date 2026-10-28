@@ -1,0 +1,359 @@
+{
+  "source_gravity_sample_count": 73,
+  "source_inertia_sample_count": 29,
+  "pose_cluster_radius_rms_deg": 2.0,
+  "connected_pose_clusters": 12,
+  "cluster_sizes": {
+    "0": 10,
+    "1": 9,
+    "2": 36,
+    "3": 1,
+    "4": 1,
+    "5": 1,
+    "6": 7,
+    "7": 1,
+    "8": 2,
+    "9": 3,
+    "10": 1,
+    "11": 1
+  },
+  "method": "geometry-based gravity regressor plus per-joint constant and approach-direction nuisance terms; normalized ridge for diagnostic predictions only",
+  "assumptions": [
+    "gravity direction is not measured in the CAD frame",
+    "approach labels on static data are history proxies, not measured velocities",
+    "contact/payload/temperature and pure-gravity status are not certified",
+    "unconstrained diagnostic coefficients are not physical inertial parameters"
+  ],
+  "cases": {
+    "unverified_CAD_minus_Z": {
+      "gravity_m_s2": [
+        0.0,
+        0.0,
+        -9.81
+      ],
+      "physical_gravity_verified": false,
+      "rigid_gravity_columns": 28,
+      "rigid_gravity_rank": 14,
+      "generic_pose_structural_gravity_rank": 14,
+      "observed_rank_reaches_structural_rank": true,
+      "rigid_gravity_observable_condition_number": 40.62164710057079,
+      "generic_pose_observable_condition_number": 5.253893944405292,
+      "columns_with_nuisance": 42,
+      "rank_with_nuisance": 28,
+      "singular_values_normalized": [
+        26.059284258385414,
+        22.601554777835908,
+        18.94702075570941,
+        17.68416787642887,
+        12.185977012571119,
+        10.589287053055603,
+        9.415531704997287,
+        8.827299930189172,
+        8.70310348199639,
+        8.54434808527324,
+        8.544098229932269,
+        8.544050903555434,
+        8.544008063457856,
+        8.543998439152285,
+        8.40562031674125,
+        6.753607749810042,
+        4.672788813033145,
+        4.570613244243934,
+        3.3394874807418233,
+        2.9826107918186984,
+        2.1096175460156474,
+        1.6572913398263909,
+        1.3760639680157092,
+        1.0888198632824129,
+        0.8428331485489658,
+        0.5106282294082993,
+        0.2954610927785783,
+        0.18269789830204333,
+        5.047151779961721e-15,
+        3.743544154049723e-15,
+        2.8439261965113647e-15,
+        2.0467817604062667e-15,
+        1.634289524432543e-15,
+        1.581626291767661e-15,
+        1.2883035268756186e-15,
+        1.1637496359139757e-15,
+        1.00437985002622e-15,
+        8.855057881709545e-16,
+        7.647488088712598e-16,
+        7.053277763611948e-16,
+        5.242721404220616e-16,
+        0.0
+      ],
+      "training_rmse_Nm": 0.26756478611622325,
+      "held_out_entire_pose_cluster_rmse_Nm": 1.8402698017539736,
+      "held_out_per_joint_rmse_Nm": {
+        "shoulder_front": 0.9267236123728774,
+        "shoulder_side": 3.1866822210125187,
+        "shoulder_rotate": 1.4736057484636036,
+        "elbow": 0.6372811952389381,
+        "arm_roll": 3.089321175887265,
+        "wrist_side": 0.17928400061133928,
+        "wrist": 2.2741058628863167
+      },
+      "folds": [
+        {
+          "held_out_pose_cluster": 0,
+          "test_rows": 10,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.9511971315381861
+        },
+        {
+          "held_out_pose_cluster": 1,
+          "test_rows": 9,
+          "train_design_rank": 28,
+          "rmse_Nm": 1.357117666289502
+        },
+        {
+          "held_out_pose_cluster": 2,
+          "test_rows": 36,
+          "train_design_rank": 23,
+          "rmse_Nm": 2.4127038379444024
+        },
+        {
+          "held_out_pose_cluster": 3,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.029158509594421567
+        },
+        {
+          "held_out_pose_cluster": 4,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.3894107889208227
+        },
+        {
+          "held_out_pose_cluster": 5,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.3699633822979884
+        },
+        {
+          "held_out_pose_cluster": 6,
+          "test_rows": 7,
+          "train_design_rank": 28,
+          "rmse_Nm": 1.186309618161677
+        },
+        {
+          "held_out_pose_cluster": 7,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.33745720892853126
+        },
+        {
+          "held_out_pose_cluster": 8,
+          "test_rows": 2,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.14491016079152957
+        },
+        {
+          "held_out_pose_cluster": 9,
+          "test_rows": 3,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.4680603948204508
+        },
+        {
+          "held_out_pose_cluster": 10,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.6716893237315746
+        },
+        {
+          "held_out_pose_cluster": 11,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.7947425731341429
+        }
+      ]
+    },
+    "unverified_both_shoulder_axes_horizontal": {
+      "gravity_m_s2": [
+        -0.19063455920552586,
+        -1.7031669524399138,
+        -9.65913975449952
+      ],
+      "physical_gravity_verified": false,
+      "rigid_gravity_columns": 28,
+      "rigid_gravity_rank": 14,
+      "generic_pose_structural_gravity_rank": 14,
+      "observed_rank_reaches_structural_rank": true,
+      "rigid_gravity_observable_condition_number": 121.96492227301717,
+      "generic_pose_observable_condition_number": 5.2955568644260165,
+      "columns_with_nuisance": 42,
+      "rank_with_nuisance": 28,
+      "singular_values_normalized": [
+        26.068691379902287,
+        21.267325205074194,
+        19.643029562547277,
+        18.605248147250865,
+        12.14867242016291,
+        10.61130212483131,
+        9.476334444271593,
+        8.828396890513435,
+        8.65871945361756,
+        8.5442952133907,
+        8.544118961905337,
+        8.544008166230208,
+        8.544005377244378,
+        8.543995867165648,
+        8.418444599601546,
+        6.771286357861352,
+        4.745248901130304,
+        4.435548148963276,
+        3.271162212698285,
+        2.821977120946848,
+        2.0246212908582066,
+        1.4473981572634416,
+        1.3374149456090856,
+        1.2456223292182764,
+        0.7966030983319639,
+        0.5926866455654435,
+        0.28655954933285077,
+        0.17372691340973595,
+        4.872797989303785e-15,
+        2.9161261652074292e-15,
+        2.369949627049315e-15,
+        1.877804008800842e-15,
+        1.6841894107232558e-15,
+        1.521167718750872e-15,
+        1.398111301047008e-15,
+        1.0951068452230269e-15,
+        1.0391756702923057e-15,
+        9.703923711309668e-16,
+        8.984228203429671e-16,
+        7.780770449629996e-16,
+        7.06340983337601e-16,
+        0.0
+      ],
+      "training_rmse_Nm": 0.2504944814462865,
+      "held_out_entire_pose_cluster_rmse_Nm": 0.8612501506700151,
+      "held_out_per_joint_rmse_Nm": {
+        "shoulder_front": 0.4235308203928528,
+        "shoulder_side": 1.811653089352145,
+        "shoulder_rotate": 0.6477360290813019,
+        "elbow": 0.4385519640432588,
+        "arm_roll": 0.9114980604446163,
+        "wrist_side": 0.37953579164028134,
+        "wrist": 1.048506619909399
+      },
+      "folds": [
+        {
+          "held_out_pose_cluster": 0,
+          "test_rows": 10,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.37194083418917706
+        },
+        {
+          "held_out_pose_cluster": 1,
+          "test_rows": 9,
+          "train_design_rank": 28,
+          "rmse_Nm": 1.1255973060775861
+        },
+        {
+          "held_out_pose_cluster": 2,
+          "test_rows": 36,
+          "train_design_rank": 23,
+          "rmse_Nm": 0.8913421708900243
+        },
+        {
+          "held_out_pose_cluster": 3,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.05706266591177345
+        },
+        {
+          "held_out_pose_cluster": 4,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.20182716071710693
+        },
+        {
+          "held_out_pose_cluster": 5,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.4017334900341776
+        },
+        {
+          "held_out_pose_cluster": 6,
+          "test_rows": 7,
+          "train_design_rank": 28,
+          "rmse_Nm": 1.2330066553960035
+        },
+        {
+          "held_out_pose_cluster": 7,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.34866111381599985
+        },
+        {
+          "held_out_pose_cluster": 8,
+          "test_rows": 2,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.14287402305880104
+        },
+        {
+          "held_out_pose_cluster": 9,
+          "test_rows": 3,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.4688895916536272
+        },
+        {
+          "held_out_pose_cluster": 10,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.6435625198250001
+        },
+        {
+          "held_out_pose_cluster": 11,
+          "test_rows": 1,
+          "train_design_rank": 28,
+          "rmse_Nm": 0.8224565051243876
+        }
+      ]
+    }
+  },
+  "fitted_physical_model_exported": false,
+  "near_pose_holding_torque_conflicts": [
+    {
+      "joint": "shoulder_front",
+      "pose_rms_distance_deg": 0.47377816379711707,
+      "holding_torque_difference_Nm": 1.3264957703649998,
+      "left_time": "2026-10-14 14:17:05",
+      "right_time": "2026-10-15 20:35:41",
+      "left_direction": "negative",
+      "right_direction": "stationary"
+    },
+    {
+      "joint": "shoulder_front",
+      "pose_rms_distance_deg": 0.47377816379711707,
+      "holding_torque_difference_Nm": 1.3264957703649998,
+      "left_time": "2026-10-14 14:17:05",
+      "right_time": "2026-10-15 20:38:15",
+      "left_direction": "negative",
+      "right_direction": "stationary"
+    },
+    {
+      "joint": "shoulder_front",
+      "pose_rms_distance_deg": 0.3652716202239784,
+      "holding_torque_difference_Nm": 1.3128205500543118,
+      "left_time": "2026-10-14 14:14:13",
+      "right_time": "2026-10-14 14:18:27",
+      "left_direction": "positive",
+      "right_direction": "negative"
+    },
+    {
+      "joint": "shoulder_front",
+      "pose_rms_distance_deg": 0.36517819223539677,
+      "holding_torque_difference_Nm": 1.3128205500543118,
+      "left_time": "2026-10-14 14:14:21",
+      "right_time": "2026-10-14 14:18:27",
+      "left_direction": "positive",
+      "right_direction": "negative"
+    }
+  ],
+  "interpretation": "Compare observed rank with generic-pose structural rank: mass/first-moment columns have intrinsic serial-chain null spaces, so 14/28 alone is NOT evidence of insufficient pose coverage. Gravity cannot identify the full physical inertias. Inspect conditioning and grouped holdout; establish gravity/frame, contact/payload and synchronized dynamics separately."
+}

@@ -1,0 +1,181 @@
+{
+  "ok": true,
+  "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json",
+  "data": {
+    "schema": 1,
+    "type": "left_arm_v3_1_identified_dynamics",
+    "created_at": "2026-10-12 15:36:34",
+    "updated_at": null,
+    "gain_units_verified": false,
+    "notes": [
+      "Verify that DM MIT kp/kd/tau use the expected joint-side physical units before execution.",
+      "Gravity samples include friction and sensor bias unless captured in both travel directions."
+    ],
+    "settings": {
+      "gravity_neighbors": 6,
+      "max_gravity_distance_deg": 25.0,
+      "inertia_neighbors": 3,
+      "max_inertia_distance_deg": 45.0,
+      "gain_filter_hz": 2.0,
+      "kp_slew_per_second": 20.0,
+      "kd_slew_per_second": 5.0,
+      "tau_slew_per_second": 1.5
+    },
+    "joints": {
+      "shoulder_front": {
+        "gravity_samples": [],
+        "gravity_validation": null,
+        "inertia_samples": [],
+        "friction": {
+          "coulomb": 0.0,
+          "viscous": 0.0,
+          "identified": false
+        },
+        "scheduler": {
+          "omega_n": 2.5,
+          "zeta": 0.9,
+          "kp_min": 2.0,
+          "kp_max": 75.0,
+          "kd_min": 0.3,
+          "kd_max": 7.0
+        },
+        "tau_limits": [
+          -3.8,
+          3.8
+        ]
+      },
+      "shoulder_side": {
+        "gravity_samples": [],
+        "gravity_validation": null,
+        "inertia_samples": [],
+        "friction": {
+          "coulomb": 0.0,
+          "viscous": 0.0,
+          "identified": false
+        },
+        "scheduler": {
+          "omega_n": 2.5,
+          "zeta": 0.9,
+          "kp_min": 2.0,
+          "kp_max": 65.0,
+          "kd_min": 0.3,
+          "kd_max": 5.0
+        },
+        "tau_limits": [
+          -1.0,
+          1.0
+        ]
+      },
+      "shoulder_rotate": {
+        "gravity_samples": [],
+        "gravity_validation": null,
+        "inertia_samples": [],
+        "friction": {
+          "coulomb": 0.0,
+          "viscous": 0.0,
+          "identified": false
+        },
+        "scheduler": {
+          "omega_n": 2.0,
+          "zeta": 0.9,
+          "kp_min": 1.0,
+          "kp_max": 24.0,
+          "kd_min": 0.3,
+          "kd_max": 4.5
+        },
+        "tau_limits": [
+          -1.0,
+          1.0
+        ]
+      },
+      "elbow": {
+        "gravity_samples": [],
+        "gravity_validation": null,
+        "inertia_samples": [],
+        "friction": {
+          "coulomb": 0.0,
+          "viscous": 0.0,
+          "identified": false
+        },
+        "scheduler": {
+          "omega_n": 2.5,
+          "zeta": 0.9,
+          "kp_min": 2.0,
+          "kp_max": 65.0,
+          "kd_min": 0.3,
+          "kd_max": 7.0
+        },
+        "tau_limits": [
+          -5.4,
+          5.4
+        ]
+      },
+      "arm_roll": {
+        "gravity_samples": [],
+        "gravity_validation": null,
+        "inertia_samples": [],
+        "friction": {
+          "coulomb": 0.0,
+          "viscous": 0.0,
+          "identified": false
+        },
+        "scheduler": {
+          "omega_n": 2.0,
+          "zeta": 0.9,
+          "kp_min": 1.0,
+          "kp_max": 18.0,
+          "kd_min": 0.3,
+          "kd_max": 6.0
+        },
+        "tau_limits": [
+          -0.8,
+          0.8
+        ]
+      },
+      "wrist_side": {
+        "gravity_samples": [],
+        "gravity_validation": null,
+        "inertia_samples": [],
+        "friction": {
+          "coulomb": 0.0,
+          "viscous": 0.0,
+          "identified": false
+        },
+        "scheduler": {
+          "omega_n": 2.0,
+          "zeta": 0.9,
+          "kp_min": 1.0,
+          "kp_max": 16.0,
+          "kd_min": 0.3,
+          "kd_max": 3.0
+        },
+        "tau_limits": [
+          -0.45,
+          0.45
+        ]
+      },
+      "wrist": {
+        "gravity_samples": [],
+        "gravity_validation": null,
+        "inertia_samples": [],
+        "friction": {
+          "coulomb": 0.0,
+          "viscous": 0.0,
+          "identified": false
+        },
+        "scheduler": {
+          "omega_n": 2.0,
+          "zeta": 0.9,
+          "kp_min": 1.0,
+          "kp_max": 22.0,
+          "kd_min": 0.3,
+          "kd_max": 4.7
+        },
+        "tau_limits": [
+          -0.7,
+          0.7
+        ]
+      }
+    }
+  }
+}

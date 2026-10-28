@@ -1,0 +1,316 @@
+{
+  "source_step_path": "C:\\Users\\rhche\\Documents\\WeChat Files\\wxid_6245222452021\\FileStorage\\File\\2026-10\\RB000152_02_手臂完整(2).step",
+  "source_step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
+  "source_pose_user_confirmed": true,
+  "paired_encoder_baseline": "../encoder_registration_baseline.json",
+  "paired_photo_evidence": "../physical_assembly_photo_evidence.json",
+  "reference_basis": "user-confirmed matching CAD pose and photograph; photograph explicitly paired with supplied encoder readings",
+  "model_angle_at_reference_rad": 0.0,
+  "motor_hardware_zero_modified": false,
+  "angle_mapping": "q_model = sign * (q_encoder - encoder_at_reference_rad); b = -sign * encoder_at_reference_rad",
+  "model_positive_axis_convention": "right-hand about stored normalized revised CAD axis; normalization is a chosen model convention, not a verified encoder sign",
+  "status": "all seven encoder direction signs confirmed; user-approved CAD reference angle mapping recorded; runtime controller unchanged",
+  "joints": {
+    "wrist": {
+      "cad_label": "M1",
+      "encoder_at_reference_rad": -2.0780880451202393,
+      "encoder_at_reference_deg": -119.0656744419815,
+      "model_axis_unit_direction_in_cad_frame": [
+        0.08682408896562273,
+        0.9810313566115689,
+        -0.17331778593137628
+      ],
+      "axis_point_in_cad_frame_mm": [
+        -61.16138176032706,
+        33.31748029587928,
+        -297.19339824634613
+      ],
+      "encoder_to_model_sign": -1,
+      "zero_offset_b_rad": -2.0780880451202393,
+      "sign_verified": true,
+      "sign_evidence": {
+        "view": "face black cable/electronics rear cover of M1, looking through motor toward silver output bracket",
+        "positive_encoder_observed_rotation": "clockwise",
+        "web_direction_user_label": "forward",
+        "commanded_encoder_increment_deg": 5.0,
+        "settled_start_inferred_from_target_rad": -2.0780880451202393,
+        "final_encoder_rad": -2.0063705444335938,
+        "actual_encoder_change_from_settled_start_deg": 4.1091101065713715,
+        "actual_encoder_change_from_cad_reference_deg": 4.1091101065713715,
+        "target_rad": -1.9908215825205229,
+        "target_minus_final_deg": 0.8908898934286232,
+        "motion_ok": true
+      },
+      "reverse_check": {
+        "motion_ok": true,
+        "commanded_encoder_increment_deg": -5.0,
+        "settled_start_inferred_from_target_rad": -2.0067520141601562,
+        "target_rad": -2.0940184767598726,
+        "final_encoder_rad": -2.0601587295532227,
+        "actual_encoder_change_from_settled_start_deg": -3.0599793896790723,
+        "final_minus_cad_reference_deg": 1.0272741115482578,
+        "physical_rotation_observation": null,
+        "physical_rotation_status": "user has not reported reverse rotation direction"
+      }
+    },
+    "wrist_side": {
+      "cad_label": "M2",
+      "encoder_at_reference_rad": 0.1661325991153717,
+      "encoder_at_reference_deg": 9.518696768849633,
+      "model_axis_unit_direction_in_cad_frame": [
+        0.9944318975347151,
+        -0.09577585105149954,
+        -0.04395665502363589
+      ],
+      "axis_point_in_cad_frame_mm": [
+        -34.66934664815297,
+        63.399538395288815,
+        -210.09733111873217
+      ],
+      "encoder_to_model_sign": 1,
+      "zero_offset_b_rad": -0.1661325991153717,
+      "sign_verified": true,
+      "sign_evidence": {
+        "view": "face silver circular boss/output mounting side of M2, looking toward motor body",
+        "positive_encoder_observed_rotation": "counterclockwise",
+        "web_direction_user_label": "outward",
+        "commanded_encoder_increment_deg": 5.0,
+        "settled_start_inferred_from_target_rad": 0.1657511293888092,
+        "final_encoder_rad": 0.20084688067436218,
+        "actual_encoder_change_from_settled_start_deg": 2.010838427503019,
+        "actual_encoder_change_from_cad_reference_deg": 1.9889818221589781,
+        "target_rad": 0.2530175919885257,
+        "target_minus_final_deg": 2.9891615724969816,
+        "motion_ok": true
+      },
+      "reverse_check": {
+        "motion_ok": true,
+        "commanded_encoder_increment_deg": -5.0,
+        "settled_start_inferred_from_target_rad": 0.19512474536895752,
+        "target_rad": 0.10785828276924105,
+        "final_encoder_rad": 0.12798504531383514,
+        "actual_encoder_change_from_settled_start_deg": -3.8468214509327727,
+        "final_minus_cad_reference_deg": -2.185693831576284,
+        "physical_rotation_observation": null,
+        "physical_rotation_status": "user has not reported reverse rotation direction"
+      }
+    },
+    "arm_roll": {
+      "cad_label": "M3",
+      "encoder_at_reference_rad": -2.6689937114715576,
+      "encoder_at_reference_deg": -152.9220752142776,
+      "model_axis_unit_direction_in_cad_frame": [
+        0.059722514974570345,
+        0.16853623792823783,
+        0.9838845245810652
+      ],
+      "axis_point_in_cad_frame_mm": [
+        -49.494535326786355,
+        85.22461719739738,
+        -111.29671992784904
+      ],
+      "encoder_to_model_sign": -1,
+      "zero_offset_b_rad": -2.6689937114715576,
+      "sign_verified": true,
+      "sign_evidence": {
+        "view": "from elbow along forearm toward gripper",
+        "positive_encoder_observed_rotation": "clockwise",
+        "web_direction_user_label": "inward",
+        "commanded_encoder_increment_deg": 5.0,
+        "final_encoder_rad": -2.6007094383239746,
+        "actual_encoder_change_from_reference_deg": 3.9124006584750037,
+        "target_rad": -2.5817272488718412,
+        "target_minus_final_deg": 1.0875993415249905,
+        "motion_ok": true
+      },
+      "reverse_check": {
+        "motion_ok": true,
+        "commanded_encoder_increment_deg": -5.0,
+        "settled_start_inferred_from_target_rad": -2.598039150238037,
+        "target_rad": -2.6853056128377535,
+        "final_encoder_rad": -2.662508487701416,
+        "actual_encoder_change_from_settled_start_deg": -3.693820944656256,
+        "final_minus_cad_reference_deg": 0.3715759512270337,
+        "physical_rotation_observation": null,
+        "physical_rotation_status": "user has not reported reverse rotation direction"
+      }
+    },
+    "shoulder_rotate": {
+      "cad_label": "M4",
+      "encoder_at_reference_rad": 2.365720510482788,
+      "encoder_at_reference_deg": 135.5458007581984,
+      "model_axis_unit_direction_in_cad_frame": [
+        0.0,
+        0.17364817799204443,
+        0.9848077529548818
+      ],
+      "axis_point_in_cad_frame_mm": [
+        -30.0,
+        134.10167670747234,
+        176.09740545509305
+      ],
+      "encoder_to_model_sign": -1,
+      "zero_offset_b_rad": 2.365720510482788,
+      "sign_verified": true,
+      "sign_evidence": {
+        "view": "from shoulder along upper arm toward elbow",
+        "positive_encoder_observed_rotation": "clockwise",
+        "web_direction_user_label": "inward",
+        "commanded_encoder_increment_deg": 5.0,
+        "settled_start_inferred_from_target_rad": 2.365720510482788,
+        "final_encoder_rad": 2.395857095718384,
+        "actual_encoder_change_from_settled_start_deg": 1.7266991429359035,
+        "actual_encoder_change_from_cad_reference_deg": 1.7266991429359035,
+        "target_rad": 2.4529869730825045,
+        "target_minus_final_deg": 3.2733008570640907,
+        "motion_ok": true
+      },
+      "reverse_check": {
+        "motion_ok": true,
+        "commanded_encoder_increment_deg": -5.0,
+        "settled_start_inferred_from_target_rad": 2.3722057342529297,
+        "target_rad": 2.2849392716532133,
+        "final_encoder_rad": 2.3462653160095215,
+        "actual_encoder_change_from_settled_start_deg": -1.4862764841514546,
+        "final_minus_cad_reference_deg": -1.114700532924421,
+        "physical_rotation_observation": null,
+        "physical_rotation_status": "user has not reported reverse rotation direction"
+      }
+    },
+    "shoulder_side": {
+      "cad_label": "M5",
+      "encoder_at_reference_rad": -2.8379874229431152,
+      "encoder_at_reference_deg": -162.60470164584945,
+      "model_axis_unit_direction_in_cad_frame": [
+        0.9991495746988093,
+        -0.039192667988185485,
+        -0.012808674996138863
+      ],
+      "axis_point_in_cad_frame_mm": [
+        -14.45314689999723,
+        142.2984193399901,
+        225.22473518424675
+      ],
+      "encoder_to_model_sign": 1,
+      "zero_offset_b_rad": 2.8379874229431152,
+      "sign_verified": true,
+      "direction_trials": [
+        {
+          "commanded_encoder_increment_deg": 5.0,
+          "test_kp": 6.0,
+          "test_kd": 0.8,
+          "seconds": 6.0,
+          "target_rad": -2.750720960343399,
+          "settled_start_inferred_from_target_rad": -2.8379874229431152,
+          "final_encoder_rad": -2.8379874229431152,
+          "actual_net_encoder_change_deg": 0.0,
+          "final_reported_tau": 0.4991452991962433,
+          "program_ok": true,
+          "physical_observation": "user saw no obvious movement",
+          "outcome": "direction unresolved; no measurable net encoder displacement",
+          "encoder_to_model_sign_assigned": false
+        },
+        {
+          "commanded_encoder_increment_deg": 5.0,
+          "test_kp": 10.0,
+          "test_kd": 1.2,
+          "seconds": 6.0,
+          "target_rad": -2.750720960343399,
+          "settled_start_inferred_from_target_rad": -2.8379874229431152,
+          "final_encoder_rad": -2.8379874229431152,
+          "actual_net_encoder_change_deg": 0.0,
+          "final_reported_tau": 0.8410256505012512,
+          "program_ok": true,
+          "physical_observation": "user again saw no obvious movement",
+          "outcome": "direction unresolved; second trial gave zero net encoder displacement",
+          "encoder_to_model_sign_assigned": false
+        },
+        {
+          "source_attachment": "C:\\Users\\rhche\\.codex\\attachments\\f2a62770-6de2-4b6a-adb5-f31f29013145\\Pasted text.txt",
+          "jetson_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1792618843960_9694.txt",
+          "command": "web nudge-hold --auto-gains",
+          "commanded_encoder_increment_deg": 10.0,
+          "test_kp": 70.0,
+          "test_kd": 3.0,
+          "seconds": 3.2,
+          "start_encoder_rad": -2.8376059532165527,
+          "final_encoder_rad": -2.7044708728790283,
+          "actual_net_encoder_change_deg": 7.6280782084753005,
+          "motion_ok": true,
+          "physical_observation": "user confirms visible motion with Web controller",
+          "physical_rotation_observation": "counterclockwise",
+          "outcome": "positive encoder movement and visual direction confirmed",
+          "web_direction_user_label": "outward"
+        }
+      ],
+      "sign_evidence": {
+        "view": "face silver circular mounting side of M5 toward motor body",
+        "positive_encoder_observed_rotation": "counterclockwise",
+        "web_direction_user_label": "outward",
+        "source": "latest successful Web +10 degree trial and subsequent user observation",
+        "actual_encoder_change_deg": 7.6280782084753005
+      }
+    },
+    "shoulder_front": {
+      "cad_label": "M6",
+      "encoder_at_reference_rad": 0.7688639760017395,
+      "encoder_at_reference_deg": 44.05266084454748,
+      "model_axis_unit_direction_in_cad_frame": [
+        0.0,
+        0.9848077529548818,
+        -0.17364817799204443
+      ],
+      "axis_point_in_cad_frame_mm": [
+        -38.0,
+        96.16110175009304,
+        231.45289805952766
+      ],
+      "encoder_to_model_sign": 1,
+      "zero_offset_b_rad": -0.7688639760017395,
+      "sign_verified": true,
+      "sign_evidence": {
+        "source_attachment": "C:\\Users\\rhche\\.codex\\attachments\\2bcb47da-10d3-457b-bcb8-e3d58c638540\\Pasted text.txt",
+        "jetson_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1792619253035_11511.txt",
+        "view": "robot left-arm outer side toward torso center, along hidden shoulder_front axis",
+        "positive_encoder_observed_rotation": "counterclockwise",
+        "web_direction_user_label": "Backward",
+        "commanded_encoder_increment_deg": 5.0,
+        "start_encoder_rad": 0.7845044732093811,
+        "final_encoder_rad": 0.8779659867286682,
+        "actual_net_encoder_change_deg": 5.354950271560037,
+        "motion_ok": true
+      }
+    },
+    "elbow": {
+      "cad_label": "M7",
+      "encoder_at_reference_rad": -1.27927827835083,
+      "encoder_at_reference_deg": -73.29724617226472,
+      "model_axis_unit_direction_in_cad_frame": [
+        0.08682408896562273,
+        0.9810313566115689,
+        -0.17331778593137628
+      ],
+      "axis_point_in_cad_frame_mm": [
+        -34.31216009568799,
+        139.5958217489507,
+        -12.29907592062379
+      ],
+      "encoder_to_model_sign": -1,
+      "zero_offset_b_rad": -1.27927827835083,
+      "sign_verified": true,
+      "sign_evidence": {
+        "source_attachment": "C:\\Users\\rhche\\.codex\\attachments\\5c8cb1ec-3a5b-48d2-b164-27b8b840cde7\\Pasted text.txt",
+        "jetson_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1792619099113_10861.txt",
+        "view": "face black cable/electronics end cover of M7, elbow-labelled side of supplied photograph",
+        "positive_encoder_observed_rotation": "clockwise",
+        "web_direction_user_label": "Forward",
+        "commanded_encoder_increment_deg": 5.0,
+        "start_encoder_rad": -1.2514305114746094,
+        "final_encoder_rad": -1.1743724346160889,
+        "actual_net_encoder_change_deg": 4.415102581387942,
+        "motion_ok": true
+      }
+    }
+  },
+  "next_direction_test": null
+}

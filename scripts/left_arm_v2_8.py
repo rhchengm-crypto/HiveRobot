@@ -226,6 +226,13 @@ def home_clearance_entry_errors_deg(current, clearance, joints: Iterable[str]):
     }
 
 
+def errors_over_limit_deg(errors, limit_deg: float):
+    return {
+        name: float(error) for name, error in errors.items()
+        if abs(float(error)) > float(limit_deg)
+    }
+
+
 def run_trained_clearance(original: List[str], legacy) -> None:
     from left_arm_v2_8_move_library import (
         LocalTargetBias,
@@ -448,14 +455,12 @@ def main() -> None:
             return current
         entry_checked = True
         entry_errors = home_clearance_entry_errors_deg(current, clearance, selected)
-        entry_unsafe = {
-            name: error for name, error in entry_errors.items()
-            if abs(error) > parsed.max_delta_deg
-        }
+        entry_unsafe = errors_over_limit_deg(entry_errors, effective_max_delta)
         print("v2.8 Home staged path entry check=", json.dumps({
             "build": V28_HOME_BUILD,
             "path": "current-to-clearance",
-            "max_delta_deg": parsed.max_delta_deg,
+            "requested_max_delta_deg": parsed.max_delta_deg,
+            "effective_max_delta_deg": effective_max_delta,
             "errors_deg": entry_errors,
             "blocking_errors_deg": entry_unsafe,
             "legacy_direct_precheck_bypass_deg": legacy_precheck_limit,
@@ -466,7 +471,7 @@ def main() -> None:
             )
             raise RuntimeError(
                 "v2.8 Home refused: current-to-clearance delta exceeds "
-                f"--max-delta-deg: {report}"
+                f"effective --max-delta-deg {effective_max_delta:.2f}: {report}"
             )
         return current
 

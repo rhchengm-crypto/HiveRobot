@@ -10,3 +10,16 @@ __pycache__/
 *.py[cod]
 .DS_Store
 Thumbs.db
+
+# Local analysis dependencies and disposable rendering files.
+outputs/**/python_deps/
+outputs/**/*.whl
+tmp/
+# Superseded generated CAD pose; the approved revised STEP is external input.
+outputs/left_arm_step_analysis/left_arm_photo_pose_candidate.step
+# Generated camera/CAD arrays and media stay in the indexed local/Jetson archive.
+outputs/**/*.npy
+outputs/**/*.npz
+outputs/**/*.jpg
+outputs/**/*.png
+outputs/**/*.mp4

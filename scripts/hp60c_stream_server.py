@@ -51,7 +51,7 @@ from hp60c_auto_target import (
 # Kept only as a reference for the first debug UI. The server serves
 # CLEAN_HTML_PAGE below.
 LEGACY_HTML_PAGE = """<!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -81,14 +81,14 @@ LEGACY_HTML_PAGE = """<!doctype html>
     <aside>
       <div>
         <label><input id="skipClaw" type="checkbox"> skip claw</label>
-        <button onclick="copyCommand()">复制命令</button>
-        <button onclick="executeTarget()">执行当前目标</button>
+        <button onclick="copyCommand()">Copy Command</button>
+        <button onclick="executeTarget()">Execute Current Target</button>
         <button onclick="goHome()">Home</button>
       </div>
       <div>
-        <button onclick="annotate('perfect')">记录完美</button>
-        <button onclick="annotate('success')">记录成功</button>
-        <button onclick="annotate('fail')">记录失败</button>
+        <button onclick="annotate('perfect')">Record Perfect</button>
+        <button onclick="annotate('success')">Record Success</button>
+        <button onclick="annotate('fail')">Record Failure</button>
       </div>
       <pre id="command">waiting command...</pre>
       <pre id="state">waiting...</pre>
@@ -120,18 +120,18 @@ LEGACY_HTML_PAGE = """<!doctype html>
       await navigator.clipboard.writeText(latestCommand);
     }
     async function executeTarget() {
-      if (!confirm('执行当前识别目标？机械臂会运动。')) return;
+      if (!confirm('Execute the current recognized target? The robot arm will move.')) return;
       const skip = document.getElementById('skipClaw').checked ? '1' : '0';
       const res = await fetch('/execute-target?skip_claw=' + skip, { method: 'POST' });
       document.getElementById('command').textContent = JSON.stringify(await res.json(), null, 2);
     }
     async function goHome() {
-      if (!confirm('机械臂回 Home？')) return;
+      if (!confirm('Move the robot arm Home?')) return;
       const res = await fetch('/home', { method: 'POST' });
       document.getElementById('command').textContent = JSON.stringify(await res.json(), null, 2);
     }
     async function annotate(result) {
-      const note = prompt('备注，可留空：', '');
+      const note = prompt('Notes (optional):', '');
       const res = await fetch('/annotate-last?result=' + encodeURIComponent(result) + '&note=' + encodeURIComponent(note || ''), { method: 'POST' });
       document.getElementById('command').textContent = JSON.stringify(await res.json(), null, 2);
     }

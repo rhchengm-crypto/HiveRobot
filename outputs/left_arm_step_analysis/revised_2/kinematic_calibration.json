@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "type": "left_arm_encoder_to_cad_reference_registration",
+  "source_step_path": "C:\\Users\\rhche\\Documents\\WeChat Files\\wxid_6245222452021\\FileStorage\\File\\2026-10\\RB000152_02_手臂完整(2).step",
+  "source_step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
+  "cad_pose_user_confirmed": true,
+  "units": {
+    "angles": "rad",
+    "axes": "unitless",
+    "axis_points": "mm"
+  },
+  "joint_order": [
+    "shoulder_front",
+    "shoulder_side",
+    "shoulder_rotate",
+    "elbow",
+    "arm_roll",
+    "wrist_side",
+    "wrist"
+  ],
+  "angle_mapping": "q_model = sign * (q_encoder - reference_encoder_rad) = sign * q_encoder + offset_rad",
+  "inverse_mapping": "q_encoder = reference_encoder_rad + sign * q_model",
+  "velocity_and_acceleration_mapping": "dq_model = sign * dq_encoder; ddq_model = sign * ddq_encoder",
+  "torque_coordinate_mapping": "tau_model = sign * tau_encoder for virtual-work consistency; not torque-scale verification",
+  "reference_evidence": "encoder_registration.json",
+  "runtime_control_enabled": false,
+  "limitations": [
+    "CAD reference pose alignment was visually confirmed by user, not measured with metrology.",
+    "Motor hardware encoder zero is unchanged.",
+    "Coordinate registration only; mass properties, rigid-link topology and dynamic-model validation are separate."
+  ],
+  "joints": {
+    "wrist": {
+      "cad_label": "M1",
+      "sign": -1,
+      "reference_encoder_rad": -2.0780880451202393,
+      "offset_rad": -2.0780880451202393,
+      "axis_unit_direction_in_cad_reference": [
+        0.08682408896562273,
+        0.9810313566115689,
+        -0.17331778593137628
+      ],
+      "axis_point_in_cad_reference_mm": [
+        -61.16138176032706,
+        33.31748029587928,
+        -297.19339824634613
+      ],
+      "direction_user_confirmed": true
+    },
+    "wrist_side": {
+      "cad_label": "M2",
+      "sign": 1,
+      "reference_encoder_rad": 0.1661325991153717,
+      "offset_rad": -0.1661325991153717,
+      "axis_unit_direction_in_cad_reference": [
+        0.9944318975347151,
+        -0.09577585105149954,
+        -0.04395665502363589
+      ],
+      "axis_point_in_cad_reference_mm": [
+        -34.66934664815297,
+        63.399538395288815,
+        -210.09733111873217
+      ],
+      "direction_user_confirmed": true
+    },
+    "arm_roll": {
+      "cad_label": "M3",
+      "sign": -1,
+      "reference_encoder_rad": -2.6689937114715576,
+      "offset_rad": -2.6689937114715576,
+      "axis_unit_direction_in_cad_reference": [
+        0.059722514974570345,
+        0.16853623792823783,
+        0.9838845245810652
+      ],
+      "axis_point_in_cad_reference_mm": [
+        -49.494535326786355,
+        85.22461719739738,
+        -111.29671992784904
+      ],
+      "direction_user_confirmed": true
+    },
+    "shoulder_rotate": {
+      "cad_label": "M4",
+      "sign": -1,
+      "reference_encoder_rad": 2.365720510482788,
+      "offset_rad": 2.365720510482788,
+      "axis_unit_direction_in_cad_reference": [
+        0.0,
+        0.17364817799204443,
+        0.9848077529548818
+      ],
+      "axis_point_in_cad_reference_mm": [
+        -30.0,
+        134.10167670747234,
+        176.09740545509305
+      ],
+      "direction_user_confirmed": true
+    },
+    "shoulder_side": {
+      "cad_label": "M5",
+      "sign": 1,
+      "reference_encoder_rad": -2.8379874229431152,
+      "offset_rad": 2.8379874229431152,
+      "axis_unit_direction_in_cad_reference": [
+        0.9991495746988093,
+        -0.039192667988185485,
+        -0.012808674996138863
+      ],
+      "axis_point_in_cad_reference_mm": [
+        -14.45314689999723,
+        142.2984193399901,
+        225.22473518424675
+      ],
+      "direction_user_confirmed": true
+    },
+    "shoulder_front": {
+      "cad_label": "M6",
+      "sign": 1,
+      "reference_encoder_rad": 0.7688639760017395,
+      "offset_rad": -0.7688639760017395,
+      "axis_unit_direction_in_cad_reference": [
+        0.0,
+        0.9848077529548818,
+        -0.17364817799204443
+      ],
+      "axis_point_in_cad_reference_mm": [
+        -38.0,
+        96.16110175009304,
+        231.45289805952766
+      ],
+      "direction_user_confirmed": true
+    },
+    "elbow": {
+      "cad_label": "M7",
+      "sign": -1,
+      "reference_encoder_rad": -1.27927827835083,
+      "offset_rad": -1.27927827835083,
+      "axis_unit_direction_in_cad_reference": [
+        0.08682408896562273,
+        0.9810313566115689,
+        -0.17331778593137628
+      ],
+      "axis_point_in_cad_reference_mm": [
+        -34.31216009568799,
+        139.5958217489507,
+        -12.29907592062379
+      ],
+      "direction_user_confirmed": true
+    }
+  }
+}

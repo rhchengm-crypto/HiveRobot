@@ -1,0 +1,50 @@
+{
+  "build": "seven-axis-rigid-body-motion-v3-prepared",
+  "mode": "apply",
+  "validated_route": "Home to ordinary Table Clearance and existing automatic five-second Model Hold",
+  "source_attachment": "C:\\Users\\rhche\\.codex\\attachments\\50ea1132-7336-4aac-a746-51a265722c2d\\Pasted text.txt",
+  "motion_ok": true,
+  "model_hold_ok": true,
+  "model_hold_state": "complete",
+  "motion_finished_at_as_logged": "2026-10-21 16:26:36",
+  "segments": [
+    {
+      "frames": 861,
+      "peak_dynamics_compute_ms": 4.396225000164122,
+      "peak_prepare_frame_ms": 4.013428999314783,
+      "stale_worker_frames": 2,
+      "worker_error_frames": 0,
+      "terminal_correction_zero": true,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.5,
+        "shoulder_side": 0.40950468184363953,
+        "elbow": 0.5,
+        "arm_roll": 0.013269745872518817,
+        "wrist_side": 0.11861969381475151,
+        "wrist": 0.38595628773287444,
+        "shoulder_rotate": 0.08728756617766013
+      }
+    },
+    {
+      "frames": 618,
+      "peak_dynamics_compute_ms": 5.983344000924262,
+      "peak_prepare_frame_ms": 3.487527001198032,
+      "stale_worker_frames": 3,
+      "worker_error_frames": 0,
+      "terminal_correction_zero": true,
+      "peak_applied_delta_tau_Nm": {
+        "wrist": 0.028896255719242758,
+        "shoulder_rotate": 0.058139992462954385,
+        "shoulder_front": 0.1392145203323003,
+        "shoulder_side": 0.03274332885852167,
+        "elbow": 0.11689876725777282,
+        "arm_roll": 0.001996150767158732,
+        "wrist_side": 0.014729767851019569
+      }
+    }
+  ],
+  "vibration_observation_explicitly_provided": false,
+  "claims_limited_to": "logged execution/compensation/release/handoff checks for this route; not global stability or improved tracking accuracy",
+  "next_route": "Clearance to Home with same apply configuration, conditional on no observed abnormal motion",
+  "parameter_or_limit_change_required": false
+}

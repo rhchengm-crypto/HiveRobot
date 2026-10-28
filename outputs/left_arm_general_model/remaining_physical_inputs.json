@@ -1,0 +1,60 @@
+{
+  "kinematics_complete": [
+    "seven-axis parent-child chain",
+    "reference transforms",
+    "encoder signs and offsets",
+    "CAD-exact and nominal-90 variants",
+    "independent POE/local-chain/URDF arithmetic checks"
+  ],
+  "physical_inputs_still_needed": [
+    {
+      "item": "moving-body inertial parameters or sufficiently exciting synchronized joint data",
+      "why": "STEP geometry has no densities; motor proxy volumes are not real masses. Existing closed-loop scalar inertias cannot determine the 7x7 coupled mass matrix."
+    },
+    {
+      "item": "claw state and payload inertial contribution",
+      "why": "For fixed fingers, combine claw/payload mass properties into the final wrist body. Opening/closing finger dynamics are outside the seven-axis model."
+    },
+    {
+      "item": "motor torque scale/bias and any reflected drive inertia",
+      "why": "MIT packet range validation alone is not a physical torque calibration"
+    }
+  ],
+  "existing_data_result": {
+    "gravity_rows": 73,
+    "effective_inertia_rows": 29,
+    "pose_clusters": 12,
+    "fit_promoted_to_controller": false
+  },
+  "cartesian_endpoint_extension": {
+    "status": "TCP not yet defined; FK currently ends at M1 wrist frame",
+    "blocks_joint_space_dynamics": false,
+    "reason": "joint-space dynamics can include tool inertia in wrist_link without defining a grasp TCP"
+  },
+  "exact_jetson_sources_for_next_data_review": [
+    "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_inertia_runs.jsonl",
+    "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_model_runs.jsonl"
+  ],
+  "gravity_configuration": {
+    "source": "nominal-horizontal-shoulder-axes",
+    "status": "assumed_for_on_robot_validation",
+    "physically_measured": false,
+    "magnitude_m_s2": 9.80665,
+    "assumptions": [
+      "approved nominal 90-degree shoulder geometry",
+      "nominal shoulder_front and shoulder_side axes horizontal",
+      "down points toward negative CAD Z in approved reference pose"
+    ],
+    "user_instruction": "Use the CAD-based nominal direction directly; no additional physical angle or distance measurements."
+  },
+  "next_stage": "use user-authorized nominal gravity; establish tool conventions and physical priors, then validate on robot rather than request physical angle/distance measurements",
+  "preserved": [
+    "existing Model Hold takeover",
+    "adaptive learning and saved data",
+    "ordinary Clearance shoulder_rotate active-target skip"
+  ],
+  "algorithm_references": [
+    "https://modernrobotics.northwestern.edu/",
+    "https://github.com/ros/urdfdom"
+  ]
+}

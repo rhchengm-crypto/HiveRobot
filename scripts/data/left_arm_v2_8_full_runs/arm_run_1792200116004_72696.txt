@@ -1,0 +1,87 @@
+Serial port is open
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+{
+  "ok": true,
+  "reason": "duration_complete",
+  "duration_s": 5.039523124694824,
+  "final": {
+    "shoulder_front": {
+      "pos": 1.942282795906067,
+      "vel": -0.0019536020699888468,
+      "tau": 2.126495838165283
+    },
+    "shoulder_side": {
+      "pos": -2.72163724899292,
+      "vel": -0.0019536020699888468,
+      "tau": 0.6632478833198547
+    },
+    "shoulder_rotate": {
+      "pos": 2.3508429527282715,
+      "vel": -0.007326007355004549,
+      "tau": -0.12942613661289215
+    },
+    "elbow": {
+      "pos": 0.8176928162574768,
+      "vel": -0.0019536020699888468,
+      "tau": 4.041025638580322
+    },
+    "arm_roll": {
+      "pos": -2.6537346839904785,
+      "vel": -0.03663003817200661,
+      "tau": 0.061050061136484146
+    },
+    "wrist_side": {
+      "pos": 0.3065156042575836,
+      "vel": -0.007326007355004549,
+      "tau": 0.21245421469211578
+    },
+    "wrist": {
+      "pos": -1.0263599157333374,
+      "vel": -0.007326007355004549,
+      "tau": 0.6813187003135681
+    }
+  },
+  "final_error_deg": {
+    "shoulder_front": 0.0,
+    "shoulder_side": 0.0,
+    "shoulder_rotate": 0.0,
+    "elbow": 0.0,
+    "arm_roll": 0.0,
+    "wrist_side": 0.0,
+    "wrist": 0.0
+  },
+  "max_velocity_rad_s": {
+    "shoulder_front": 0.005860805977135897,
+    "shoulder_side": 0.005860805977135897,
+    "shoulder_rotate": 0.03663003817200661,
+    "elbow": 0.005860805977135897,
+    "arm_roll": 0.03663003817200661,
+    "wrist_side": 0.021978022530674934,
+    "wrist": 0.03663003817200661
+  },
+  "max_abs_error_deg": {
+    "shoulder_front": 0.0,
+    "shoulder_side": 0.0,
+    "shoulder_rotate": 0.021856605344040804,
+    "elbow": 0.0,
+    "arm_roll": 0.0,
+    "wrist_side": 0.021856605344040804,
+    "wrist": 0.0
+  },
+  "static_hold_bias_tau": {
+    "shoulder_front": 0.0,
+    "shoulder_side": 0.0,
+    "shoulder_rotate": 0.004884004592895508,
+    "elbow": 0.7111110687255859,
+    "arm_roll": 0.0,
+    "wrist_side": 0.002442002296447754,
+    "wrist": 0.004884004592895508
+  },
+  "log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_model_runs.jsonl"
+}

@@ -30,25 +30,25 @@ def height_dataset_dir(yolo_dataset_dir):
 def validate_pair(capture, now=None):
     now = time.time() if now is None else now
     if capture['rgb'] is None or capture['depth'] is None:
-        raise ValueError('RGB/depth 尚未就绪，请检查相机')
+        raise ValueError('RGB/depth is not ready. Check the camera.')
     for kind in ('rgb', 'depth'):
         age = now - capture[kind+'_received_at']
         if not math.isfinite(age) or age < -.1 or age > 2:
-            raise ValueError('画面超过 2 秒未更新，请重试')
+            raise ValueError('The frame has not updated for more than 2 seconds. Try again.')
     rgb_stamp = capture['rgb_metadata'].get('source_stamp_s')
     depth_stamp = capture['depth_metadata'].get('source_stamp_s')
     if not all(isinstance(s, (int,float)) and math.isfinite(s) and s > 0 for s in (rgb_stamp, depth_stamp)):
-        raise ValueError('缺少 ROS 图像时间戳，无法验证 RGB/depth 配对')
+        raise ValueError('ROS image timestamps are missing, so RGB/depth synchronization cannot be verified.')
     delta = abs(rgb_stamp-depth_stamp)
     if delta > .1:
-        raise ValueError(f'RGB/depth 时间差 {delta:.3f} 秒，超过 0.1 秒，请保持棋子静止并重试')
+        raise ValueError(f'RGB/depth time difference: {delta:.3f} seconds, exceeding 0.1 seconds. Keep the piece still and try again.')
     depth = capture['depth']
     encoding = capture['depth_metadata'].get('encoding','').lower()
     if depth.ndim != 2 or not ((encoding=='16uc1' and depth.dtype==np.uint16) or (encoding=='32fc1' and depth.dtype==np.float32)):
-        raise ValueError('高度采样仅接受已知单位的 ROS 16UC1(mm) / 32FC1(m) 深度图')
+        raise ValueError('Height sampling only accepts ROS 16UC1 (mm) or 32FC1 (m) depth images with known units.')
     valid = np.isfinite(depth) & (depth > 0)
     if not valid.any():
-        raise ValueError('深度图没有有效深度，未保存')
+        raise ValueError('The depth image contains no valid depth. Nothing was saved.')
     return {'source_timestamp_delta_s':delta,'pairing':'latest_frames_with_source_timestamp_check',
             'max_allowed_delta_s':.1,'depth_valid_fraction':float(valid.mean()),
             'depth_unit':'mm' if encoding=='16uc1' else 'm',
@@ -58,24 +58,24 @@ def validate_pair(capture, now=None):
 def save_height_sample(root, capture, payload, calibration):
     piece_class = payload.get('piece_class')
     if piece_class not in CHESS_PIECE_YOLO_CLASSES:
-        raise ValueError('请选择正确的黑/白棋类别')
+        raise ValueError('Select a valid white or black piece class.')
     square = normalize_square(str(payload.get('square','')))
     raw_height = payload.get('measured_height_mm')
     height = None if raw_height in (None,'') else float(raw_height)
     if height is not None and (not math.isfinite(height) or not 1 <= height <= 250):
-        raise ValueError('请输入尺量的真实高度（1–250 mm，从底座底部到最高点）')
+        raise ValueError('Enter the measured physical height (1-250 mm, from the base bottom to the highest point).')
     split = payload.get('split','train')
     if split not in ('train','val','test'):
-        raise ValueError('split 必须是 train、val 或 test')
+        raise ValueError('Split must be train, val, or test.')
     orientation = str(payload.get('orientation',''))
     if orientation not in ('front','back','left','right','other'):
-        raise ValueError('请选择棋子朝向')
+        raise ValueError('Select the piece orientation.')
     piece_id = str(payload.get('piece_id','')).strip()
     notes = str(payload.get('notes','')).strip()
     if len(piece_id)>80 or len(notes)>1000:
-        raise ValueError('棋子编号或备注过长')
+        raise ValueError('The piece ID or notes are too long.')
     if np.asarray(calibration.get('homography_board_to_image')).shape != (3,3):
-        raise ValueError('缺少棋盘标定，请先在主页面 Inspect Square 校准网格')
+        raise ValueError('Board calibration is missing. Calibrate the grid with Inspect Square on the main page first.')
     quality = validate_pair(capture)
     from chess_piece_height_model import calibration_path, estimate_heights
     observation={'ok':False,'reason':'height_calibration_missing'}
@@ -95,13 +95,13 @@ def save_height_sample(root, capture, payload, calibration):
     target = root/'samples'/sample_id
     with LOCK:
         if target.exists():
-            raise ValueError('这一对画面已经保存，请改变位置或朝向后重新采样')
+            raise ValueError('This frame pair has already been saved. Change the position or orientation before capturing again.')
         target.parent.mkdir(parents=True,exist_ok=True)
         draft = target.parent/('.pending_'+uuid.uuid4().hex)
         draft.mkdir()
         try:
             if not cv2.imwrite(str(draft/'rgb.png'),capture['rgb']):
-                raise ValueError('RGB 图片保存失败')
+                raise ValueError('Failed to save the RGB image.')
             np.save(str(draft/'depth.npy'),capture['depth'],allow_pickle=False)
             metadata = {'schema_version':1,'sample_id':sample_id,'created_at_unix_s':time.time(),
                         'piece_class':piece_class,'class_id':CHESS_PIECE_YOLO_CLASSES.index(piece_class),

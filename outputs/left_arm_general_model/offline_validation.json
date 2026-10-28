@@ -1,0 +1,44 @@
+{
+  "source_step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
+  "joint_order": [
+    "shoulder_front",
+    "shoulder_side",
+    "shoulder_rotate",
+    "elbow",
+    "arm_roll",
+    "wrist_side",
+    "wrist"
+  ],
+  "moving_links": 7,
+  "cad_reference_max_joint_origin_error_m": 3.5135752366389115e-16,
+  "configurations_checked": 173,
+  "test_domain_note": "random mathematical angles plus historical poses, NOT hardware-approved motion or collision validation",
+  "poe_vs_local_chain_max_matrix_element_error": 1.7763568394002505e-15,
+  "urdf_vs_chain_max_matrix_element_error": 1.942890293094024e-15,
+  "nominal90_vs_exact_at_reference_joint_origin_error_m": 1.1102230246251565e-16,
+  "nominal90_vs_exact_max_wrist_frame_origin_difference_m": 0.012402978078918488,
+  "nominal90_vs_exact_max_wrist_orientation_difference_deg": 1.3941724305635923,
+  "end_frame_is_gripper_tcp": false,
+  "physical_inertias_filled": false,
+  "gravity_registration_verified": false,
+  "gravity_in_cad_frame_m_s2": [
+    -0.0,
+    -1.7029069047056824,
+    -9.65766495051499
+  ],
+  "gravity_configuration": {
+    "source": "nominal-horizontal-shoulder-axes",
+    "status": "assumed_for_on_robot_validation",
+    "physically_measured": false,
+    "magnitude_m_s2": 9.80665,
+    "assumptions": [
+      "approved nominal 90-degree shoulder geometry",
+      "nominal shoulder_front and shoulder_side axes horizontal",
+      "down points toward negative CAD Z in approved reference pose"
+    ],
+    "user_instruction": "Use the CAD-based nominal direction directly; no additional physical angle or distance measurements."
+  },
+  "hardware_execution_enabled": false,
+  "source_CAD_and_existing_controller_files_modified": false,
+  "validation_scope": "CAD consistency and numerical algorithms; not physical endpoint accuracy or full dynamics identification"
+}

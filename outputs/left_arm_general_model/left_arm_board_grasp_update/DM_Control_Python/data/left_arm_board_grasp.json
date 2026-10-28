@@ -1,0 +1,444 @@
+{
+  "schema": 1,
+  "build": "seven-axis-board-grasp-v1",
+  "registration_status": "nominal-step-and-historical-teaching; needs on-robot validation",
+  "independently_validated": false,
+  "source_step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
+  "rigid_model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+  "tcp_datum": {
+    "definition": "gripper mount centreline intersecting distal finger-tip plane",
+    "semantic_contact_centre_verified": false,
+    "mount_cylinder_step_entity": 193498,
+    "gripper_representation": 63844,
+    "axis_in_cad": [
+      0.056543292976859325,
+      0.15077291993829528,
+      0.9869500405960847
+    ],
+    "axis_origin_mm": [
+      -60.964158001,
+      43.516659986,
+      -349.982648019
+    ],
+    "distal_axial_station_mm": -149.83729130979887,
+    "cad_point_m": [
+      -0.06943645186238898,
+      0.02092525405957667,
+      -0.4978645687600134
+    ],
+    "wrist_axis_distance_mm": 201.22366344844
+  },
+  "tcp_in_wrist_frame_m": [
+    -0.010215463300623721,
+    0.1997668918780468,
+    0.021904245034910876
+  ],
+  "board_to_cad_rotation": [
+    [
+      0.02302481630029465,
+      0.9930755230024824,
+      -0.11519923371136136
+    ],
+    [
+      -0.985805329033361,
+      0.04172126570019549,
+      0.16262591809979515
+    ],
+    [
+      0.16630607650884346,
+      0.10981958660330511,
+      0.9799397671870019
+    ]
+  ],
+  "board_to_cad_translation_m": [
+    0.23007844984011125,
+    0.08030933143658178,
+    -0.15445011278148413
+  ],
+  "fit_errors_mm": {
+    "white_knight:c4": 17.8779040080602,
+    "white_bishop:d4": 19.152617665727483,
+    "white_bishop:c1": 7.669277638648843,
+    "white_knight:b1": 10.238036482125887
+  },
+  "joint_order": [
+    "shoulder_front",
+    "shoulder_side",
+    "shoulder_rotate",
+    "elbow",
+    "arm_roll",
+    "wrist_side",
+    "wrist"
+  ],
+  "joint_limits_encoder_rad": [
+    [
+      0.10718675940139713,
+      2.1103306165446476
+    ],
+    [
+      -3.122766768049164,
+      -2.1797434934864803
+    ],
+    [
+      1.6994657167683405,
+      2.9232550016154484
+    ],
+    [
+      -1.4702146402110297,
+      1.0170216909159857
+    ],
+    [
+      -3.421080624174042,
+      -2.3483554968128963
+    ],
+    [
+      -0.718707775186463,
+      0.5848098746051031
+    ],
+    [
+      -3.4836426130046085,
+      -0.8567862161885065
+    ]
+  ],
+  "joint_bound_source": "observed saved-pose/reference envelope plus 10deg; NOT mechanical limits",
+  "orientation_hints": [
+    {
+      "board_xy_mm": [
+        137.5,
+        192.5
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.13493053730689042,
+          0.25687972323044056,
+          -0.9569778251846431
+        ],
+        [
+          0.6700159625221515,
+          0.6878759678733585,
+          0.2791151425268922
+        ],
+        [
+          0.7299810682939604,
+          -0.678851574805086,
+          -0.0792980410670181
+        ]
+      ],
+      "seed_encoder_rad": {
+        "shoulder_front": 0.5960555672645569,
+        "shoulder_side": -2.856679677963257,
+        "shoulder_rotate": 2.560654640197754,
+        "elbow": 0.3915846347808838,
+        "arm_roll": -2.733844518661499,
+        "wrist_side": 0.19321735203266144,
+        "wrist": -2.9879071712493896
+      }
+    },
+    {
+      "board_xy_mm": [
+        192.5,
+        192.5
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.14441231220369719,
+          0.4127090398782922,
+          -0.8993421665232451
+        ],
+        [
+          0.49402007042008833,
+          0.7574244014808781,
+          0.4269103489767688
+        ],
+        [
+          0.8573734624456926,
+          -0.5059441910369898,
+          -0.09450513980632588
+        ]
+      ],
+      "seed_encoder_rad": {
+        "shoulder_front": 0.7444495558738708,
+        "shoulder_side": -2.776188373565674,
+        "shoulder_rotate": 2.7029449939727783,
+        "elbow": 0.3927290737628937,
+        "arm_roll": -2.773899555206299,
+        "wrist_side": 0.1676585078239441,
+        "wrist": -2.6098649501800537
+      }
+    },
+    {
+      "board_xy_mm": [
+        137.5,
+        27.5
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.19188378815699178,
+          0.5828046698658018,
+          -0.7896324009468835
+        ],
+        [
+          0.3867686355160746,
+          0.6945633390637879,
+          0.6066232690967254
+        ],
+        [
+          0.9019925911134521,
+          -0.42180621713196537,
+          -0.09213512232186363
+        ]
+      ],
+      "seed_encoder_rad": {
+        "shoulder_front": 1.413939118385315,
+        "shoulder_side": -2.4713892936706543,
+        "shoulder_rotate": 2.399672031402588,
+        "elbow": 0.8321889042854309,
+        "arm_roll": -2.826543092727661,
+        "wrist_side": -0.1836804747581482,
+        "wrist": -2.2772183418273926
+      }
+    },
+    {
+      "board_xy_mm": [
+        82.5,
+        27.5
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.3428474555637433,
+          0.5130043969247059,
+          -0.7869447953633018
+        ],
+        [
+          0.5726410570640817,
+          0.5499416765076508,
+          0.6079855032848134
+        ],
+        [
+          0.744672976532653,
+          -0.6590831822887577,
+          -0.10522127563437762
+        ]
+      ],
+      "seed_encoder_rad": {
+        "shoulder_front": 1.3204776048660278,
+        "shoulder_side": -2.4069199562072754,
+        "shoulder_rotate": 2.2299153804779053,
+        "elbow": 0.8424887657165527,
+        "arm_roll": -3.0546653270721436,
+        "wrist_side": -0.3068970739841461,
+        "wrist": -2.714770793914795
+      }
+    }
+  ],
+  "seeds": {
+    "pawn01": {
+      "shoulder_front": 1.5310521125793457,
+      "shoulder_side": -2.354276418685913,
+      "shoulder_rotate": 2.655642032623291,
+      "elbow": 0.6475547552108765,
+      "arm_roll": -3.2465476989746094,
+      "wrist_side": 0.41027694940567017,
+      "wrist": -1.4646753072738647
+    },
+    "bishop01": {
+      "shoulder_front": 0.7444495558738708,
+      "shoulder_side": -2.776188373565674,
+      "shoulder_rotate": 2.7029449939727783,
+      "elbow": 0.3927290737628937,
+      "arm_roll": -2.773899555206299,
+      "wrist_side": 0.1676585078239441,
+      "wrist": -2.6098649501800537
+    },
+    "white_bishop_place": {
+      "shoulder_front": 1.419661283493042,
+      "shoulder_side": -2.4713892936706543,
+      "shoulder_rotate": 2.392042398452759,
+      "elbow": 0.8367666006088257,
+      "arm_roll": -2.8414206504821777,
+      "wrist_side": -0.20847637951374054,
+      "wrist": -2.2848477363586426
+    },
+    "white_knight_c4": {
+      "shoulder_front": 0.5960555672645569,
+      "shoulder_side": -2.856679677963257,
+      "shoulder_rotate": 2.560654640197754,
+      "elbow": 0.3915846347808838,
+      "arm_roll": -2.733844518661499,
+      "wrist_side": 0.19283588230609894,
+      "wrist": -2.9879071712493896
+    },
+    "white_knight_place_b1": {
+      "shoulder_front": 1.3204776048660278,
+      "shoulder_side": -2.4069199562072754,
+      "shoulder_rotate": 2.2299153804779053,
+      "elbow": 0.8424887657165527,
+      "arm_roll": -3.0546653270721436,
+      "wrist_side": -0.3068970739841461,
+      "wrist": -2.714770793914795
+    },
+    "white_pawn_D5": {
+      "shoulder_front": 0.2817196846008301,
+      "shoulder_side": -2.865072011947632,
+      "shoulder_rotate": 2.7487220764160156,
+      "elbow": -0.06580453366041183,
+      "arm_roll": -2.834172487258911,
+      "wrist_side": 0.15583276748657227,
+      "wrist": -2.9497597217559814
+    },
+    "white_rook_A5": {
+      "shoulder_front": 0.30003052949905396,
+      "shoulder_side": -2.9482338428497314,
+      "shoulder_rotate": 2.1639199256896973,
+      "elbow": 0.06694895774126053,
+      "arm_roll": -2.522888422012329,
+      "wrist_side": 0.0707637146115303,
+      "wrist": -3.309109687805176
+    },
+    "white_rook_place_A1": {
+      "shoulder_front": 1.4589532613754272,
+      "shoulder_side": -2.6743342876434326,
+      "shoulder_rotate": 1.8739986419677734,
+      "elbow": 0.8318074345588684,
+      "arm_roll": -3.022239923477173,
+      "wrist_side": -0.54417484998703,
+      "wrist": -2.593461513519287
+    },
+    "white_pawn_place_D2": {
+      "shoulder_front": 0.8428702354431152,
+      "shoulder_side": -2.5377659797668457,
+      "shoulder_rotate": 2.7075226306915283,
+      "elbow": 0.5849927663803101,
+      "arm_roll": -2.9173343181610107,
+      "wrist_side": -0.12188144028186798,
+      "wrist": -2.8444724082946777
+    },
+    "white_queen_D1": {
+      "shoulder_front": 1.051918864250183,
+      "shoulder_side": -2.465667247772217,
+      "shoulder_rotate": 2.6499199867248535,
+      "elbow": 0.8310444951057434,
+      "arm_roll": -2.964637279510498,
+      "wrist_side": -0.22564278542995453,
+      "wrist": -2.871938705444336
+    },
+    "A1_take": {
+      "shoulder_front": 1.4448386430740356,
+      "shoulder_side": -2.5461585521698,
+      "shoulder_rotate": 2.0502402782440186,
+      "elbow": 0.8363851308822632,
+      "arm_roll": -2.9955368041992188,
+      "wrist_side": -0.34962233901023865,
+      "wrist": -2.6361868381500244
+    },
+    "A4_take": {
+      "shoulder_front": 0.6746395230293274,
+      "shoulder_side": -2.6613640785217285,
+      "shoulder_rotate": 2.189478874206543,
+      "elbow": 0.3999771177768707,
+      "arm_roll": -2.859731435775757,
+      "wrist_side": -0.3763256371021271,
+      "wrist": -3.027580738067627
+    }
+  },
+  "profiles": {
+    "white_bishop": {
+      "grip_height_mm": 55.0,
+      "wrist_rotation_in_board": [
+        [
+          0.14441231220369719,
+          0.4127090398782922,
+          -0.8993421665232451
+        ],
+        [
+          0.49402007042008833,
+          0.7574244014808781,
+          0.4269103489767688
+        ],
+        [
+          0.8573734624456926,
+          -0.5059441910369898,
+          -0.09450513980632588
+        ]
+      ],
+      "seed_encoder_rad": {
+        "shoulder_front": 0.7444495558738708,
+        "shoulder_side": -2.776188373565674,
+        "shoulder_rotate": 2.7029449939727783,
+        "elbow": 0.3927290737628937,
+        "arm_roll": -2.773899555206299,
+        "wrist_side": 0.1676585078239441,
+        "wrist": -2.6098649501800537
+      },
+      "source": "white_bishop:d4",
+      "height_independently_measured": true
+    },
+    "white_knight": {
+      "grip_height_mm": 55.0,
+      "wrist_rotation_in_board": [
+        [
+          0.13493053730689042,
+          0.25687972323044056,
+          -0.9569778251846431
+        ],
+        [
+          0.6700159625221515,
+          0.6878759678733585,
+          0.2791151425268922
+        ],
+        [
+          0.7299810682939604,
+          -0.678851574805086,
+          -0.0792980410670181
+        ]
+      ],
+      "seed_encoder_rad": {
+        "shoulder_front": 0.5960555672645569,
+        "shoulder_side": -2.856679677963257,
+        "shoulder_rotate": 2.560654640197754,
+        "elbow": 0.3915846347808838,
+        "arm_roll": -2.733844518661499,
+        "wrist_side": 0.19321735203266144,
+        "wrist": -2.9879071712493896
+      },
+      "source": "white_knight:c4",
+      "height_independently_measured": false
+    },
+    "white_rook": {
+      "grip_height_mm": 55.0,
+      "wrist_rotation_in_board": [
+        [
+          0.13493053730689042,
+          0.25687972323044056,
+          -0.9569778251846431
+        ],
+        [
+          0.6700159625221515,
+          0.6878759678733585,
+          0.2791151425268922
+        ],
+        [
+          0.7299810682939604,
+          -0.678851574805086,
+          -0.0792980410670181
+        ]
+      ],
+      "seed_encoder_rad": {
+        "shoulder_front": 0.5960555672645569,
+        "shoulder_side": -2.856679677963257,
+        "shoulder_rotate": 2.560654640197754,
+        "elbow": 0.3915846347808838,
+        "arm_roll": -2.733844518661499,
+        "wrist_side": 0.19321735203266144,
+        "wrist": -2.9879071712493896
+      },
+      "source": "existing C4 rook workflow uses knight grasp",
+      "height_independently_measured": false
+    }
+  },
+  "board_size_mm": 440,
+  "square_size_mm": 55,
+  "default_clearance_mm": 140,
+  "default_test_height_mm": 160,
+  "scope": "nominal geometry testing on a cleared board; no occupied-board collision planner"
+}

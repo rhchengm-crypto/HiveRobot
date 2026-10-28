@@ -1,0 +1,21 @@
+{
+  "build": "seven-axis-rigid-body-motion-v3-prepared",
+  "jetson_root": "/home/nvidia/hive_robot/DM_Control_Python",
+  "files": [
+    {
+      "source": "scripts/left_arm_general_motion.py",
+      "destination": "left_arm_general_motion.py",
+      "sha256": "1de25a167e38d74374b52826447225fb841c713f9e6bbba83ad89cbb2e3b10f0"
+    },
+    {
+      "source": "scripts/left_arm_dynamics_worker.py",
+      "destination": "left_arm_dynamics_worker.py",
+      "sha256": "507e42158e734c24cb51ba3a482d92385fb4435ad5c4a06ffe14e6d4645234ad"
+    }
+  ],
+  "model_json_changed": false,
+  "hold_learning_clearance_sources_changed": false,
+  "summary_command": "python3 left_arm_general_motion.py --summary --last 2",
+  "test_mode": "shadow",
+  "freshness_limit_ms": 100
+}

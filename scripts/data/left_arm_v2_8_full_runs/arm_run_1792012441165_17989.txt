@@ -1,0 +1,84 @@
+Serial port is open
+Serial port is open
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+v2.6 nudge-hold adaptive hold target bias= {"arm_roll": 1.5000000000000002, "elbow": -0.7500000000000001, "shoulder_rotate": 1.5000000000000002, "wrist": -1.5000000000000002, "wrist_side": 0.7500000000000001} hold_targets= {"arm_roll": -2.643195242418205, "elbow": -1.281305387251896, "shoulder_rotate": 2.3472680144177325, "wrist": -2.0520059161053545, "wrist_side": 0.16014879905514148}
+v2.6 nudge-hold active shoulder_front delta_deg= 2.0 kp= 140.0 kd= 5.2 seconds= 2.2 hold joints: shoulder_side,shoulder_rotate,elbow,arm_roll,wrist_side,wrist
+v2.6 nudge-hold hold_tau= {"shoulder_side": 0.7, "shoulder_rotate": -0.8192341405518361, "elbow": 2.1758367011710087, "arm_roll": -0.5795838462373408, "wrist_side": -0.3622398902379596, "wrist": 0.4676429723465769} control_dt= 0.01
+v2.6 nudge-hold active_tau= {'shoulder_front': 2.4}
+v2.6 nudge-hold low shoulder adaptive hold gains= {"arm_roll": {"kp": 12.0, "kd": 7.0}, "shoulder_rotate": {"kp": 12.0, "kd": 5.0}, "wrist_side": {"kp": 8.0, "kd": 1.6}, "wrist": {"kp": 6.0, "kd": 2.0}}
+v2.6 nudge-hold preload_seconds= 0.8
+v2.6 nudge-hold trajectory= blend_smootherstep linear_blend= 0.35
+v2.6 nudge-hold compliant hold gains= {"arm_roll": {"kp": 12.0, "kd": 7.0}, "shoulder_rotate": {"kp": 12.0, "kd": 5.0}, "wrist_side": {"kp": 8.0, "kd": 1.6}, "wrist": {"kp": 6.0, "kd": 2.0}}
+{
+  "start": {
+    "shoulder_front": 0.7963302135467529,
+    "shoulder_side": -2.852864980697632,
+    "shoulder_rotate": 2.3210880756378174,
+    "elbow": -1.2682154178619385,
+    "arm_roll": -2.66937518119812,
+    "wrist_side": 0.14705882966518402,
+    "wrist": -2.0258259773254395
+  },
+  "requested_target": {
+    "shoulder_front": 0.8312367985866396
+  },
+  "target": {
+    "shoulder_front": 0.8312367985866396
+  },
+  "hold_targets": {
+    "shoulder_side": -2.852864980697632,
+    "shoulder_rotate": 2.3472680144177325,
+    "elbow": -1.281305387251896,
+    "arm_roll": -2.643195242418205,
+    "wrist_side": 0.16014879905514148,
+    "wrist": -2.0520059161053545
+  }
+}
+v2 continuous step shoulder_front 1/1 target= 0.8312367985866396
+{
+  "shoulder_front": {
+    "pos": 0.8382925391197205,
+    "vel": -0.0019536020699888468,
+    "tau": 1.360683798789978
+  },
+  "shoulder_side": {
+    "pos": -2.8509573936462402,
+    "vel": -0.0019536020699888468,
+    "tau": 0.4991452991962433
+  },
+  "shoulder_rotate": {
+    "pos": 2.296673536300659,
+    "vel": -0.007326007355004549,
+    "tau": -0.24664224684238434
+  },
+  "elbow": {
+    "pos": -1.2541009187698364,
+    "vel": -0.0019536020699888468,
+    "tau": -0.3897435963153839
+  },
+  "arm_roll": {
+    "pos": -2.6812009811401367,
+    "vel": -0.007326007355004549,
+    "tau": -0.14896215498447418
+  },
+  "wrist_side": {
+    "pos": 0.135233074426651,
+    "vel": -0.007326007355004549,
+    "tau": -0.18315018713474274
+  },
+  "wrist": {
+    "pos": -1.9880597591400146,
+    "vel": -0.007326007355004549,
+    "tau": 0.061050061136484146
+  }
+}
+v2.6 nudge-hold hold error diagnostics {"shoulder_rotate": {"nominal_error_deg": 1.4207066681193323, "applied_target_error_deg": 2.9207066681193408, "hold_target_bias_deg": 1.5000000000000084}, "elbow": {"nominal_error_deg": -0.8087012279186797, "applied_target_error_deg": -1.558701227918684, "hold_target_bias_deg": -0.7500000000000042}, "arm_roll": {"nominal_error_deg": 0.6775684260436049, "applied_target_error_deg": 2.1775684260436132, "hold_target_bias_deg": 1.5000000000000084}, "wrist_side": {"nominal_error_deg": 0.6775658647226661, "applied_target_error_deg": 1.4275658647226657, "hold_target_bias_deg": 0.7499999999999994}, "wrist": {"nominal_error_deg": -2.1638449101950594, "applied_target_error_deg": -3.663844910195068, "hold_target_bias_deg": -1.5000000000000084}}
+v2.6 nudge-hold adaptive hold tau observation active-induced errors {"shoulder_rotate": {"before_active": 0.0, "final": 1.4207066681193323}, "wrist": {"before_active": 0.0, "final": -2.1638449101950594}}
+v2.6 nudge-hold adaptive hold tau updates {"shoulder_rotate": {"tau": -0.8092341405518361, "previous_tau": -0.8192341405518361, "base_tau": -0.8192341405518361, "applied_tau": -0.8192341405518361, "delta_tau": 0.010000000000000009, "search_direction": 1.0, "successful_direction": 1.0, "last_error_deg": 1.4207066681193323, "best_error_deg": 1.4207066681193323, "best_tau": -0.8192341405518361, "step_scale": 0.4, "learning_state": "improved", "refined_best": true, "samples": 5, "updated_at": "2026-10-14 14:14:06", "label": "nudge-hold-induced"}, "wrist": {"tau": 0.4576429723465769, "previous_tau": 0.4676429723465769, "base_tau": 0.4676429723465769, "applied_tau": 0.4676429723465769, "delta_tau": -0.010000000000000009, "search_direction": -1.0, "successful_direction": -1.0, "last_error_deg": -2.1638449101950594, "best_error_deg": 1.5081262593063254, "best_tau": 0.4797080097417842, "step_scale": 0.4, "learning_state": "recent_improved", "refined_best": false, "samples": 5, "updated_at": "2026-10-14 14:14:06", "label": "nudge-hold-induced"}}
+v2.6 nudge-hold adaptive hold target bias waiting for hold-tau learning {"shoulder_rotate": 1.4207066681193323, "wrist": -2.1638449101950594}

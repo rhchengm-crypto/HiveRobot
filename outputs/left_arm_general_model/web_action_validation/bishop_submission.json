@@ -1,0 +1,42 @@
+{
+  "status": 200,
+  "data": {
+    "ok": true,
+    "running": true,
+    "action": "white-bishop-placement",
+    "command": [
+      "python3",
+      "-u",
+      "/home/nvidia/hive_robot/DM_Control_Python/left_arm_v3_0_move_library.py",
+      "replay-move",
+      "--name",
+      "bishop01",
+      "--moves-file",
+      "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_6_saved_moves.json",
+      "--python-bin",
+      "python3",
+      "--white-bishop-placement"
+    ],
+    "command_text": "python3 -u /home/nvidia/hive_robot/DM_Control_Python/left_arm_v3_0_move_library.py replay-move --name bishop01 --moves-file /home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_6_saved_moves.json --python-bin python3 --white-bishop-placement",
+    "started_at": "2026-10-27 13:53:24",
+    "started_epoch": 1793134404.6914527,
+    "stdout": "",
+    "stderr": "",
+    "returncode": null,
+    "duration_s": null,
+    "post_move_model_hold": {
+      "enabled": true,
+      "state": "waiting-for-motion",
+      "seconds": 5,
+      "joints": [
+        "shoulder_front",
+        "shoulder_side",
+        "shoulder_rotate",
+        "elbow",
+        "arm_roll",
+        "wrist_side",
+        "wrist"
+      ]
+    }
+  }
+}

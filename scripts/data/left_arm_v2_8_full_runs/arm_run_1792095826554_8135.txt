@@ -1,0 +1,10 @@
+Serial port is open
+v3.1 inertia passive hold= {"arm_roll": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "elbow": {"nearest_distance_deg": 0.13295347267279126, "source": "identified_gravity", "tau": 3.8630940736099193}, "shoulder_front": {"nearest_distance_deg": 0.011682846976476154, "source": "identified_gravity", "tau": -3.8}, "shoulder_rotate": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}, "wrist": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.55}, "wrist_side": {"nearest_distance_deg": null, "source": "legacy_fallback", "tau": 0.0}}
+enable shoulder_front
+enable shoulder_side
+enable shoulder_rotate
+enable elbow
+enable arm_roll
+enable wrist_side
+enable wrist
+[stderr] error: inertia preflight refused: loaded position offset is 1.25deg; ordinary step limit is 1.00deg. Use a supported free-space pose or a dedicated high-load identification method

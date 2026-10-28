@@ -1,0 +1,327 @@
+{
+  "source_sha256": "87d58d2c3a42ccb16f41573221622d821e20c5221bd2cd800b157cc5960fc52a",
+  "units": "mm, degree",
+  "reference": "original CAD assembly frame",
+  "datum_definition": "axis intersection with shared radius-19/radius-28.5 circle-edge plane; housing/boss end datum, NOT verified output flange",
+  "motor_datums": [
+    {
+      "label": "M1",
+      "point_mm": [
+        -11.283708427,
+        46.5,
+        -301.569240482
+      ],
+      "axis_direction_arbitrary_sign": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "axis_point_nearest_cad_origin_mm": [
+        0.0,
+        46.5,
+        -301.569240482
+      ],
+      "circle_evidence_entities": [
+        2165,
+        2172,
+        2185,
+        2192
+      ],
+      "planar_face_evidence_entity": 2229,
+      "controller_joint_name": "wrist",
+      "physical_check": null,
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "label": "M2",
+      "point_mm": [
+        -28.0,
+        81.87210405409306,
+        -214.03717262147234
+      ],
+      "axis_direction_arbitrary_sign": [
+        0.0,
+        0.9848077529548818,
+        -0.17364817799204443
+      ],
+      "axis_point_nearest_cad_origin_mm": [
+        -28.0,
+        -34.13376627253997,
+        -193.58220772283175
+      ],
+      "circle_evidence_entities": [
+        11286,
+        11293,
+        11306,
+        11313
+      ],
+      "planar_face_evidence_entity": 11350,
+      "controller_joint_name": "wrist_side",
+      "physical_check": null,
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "label": "M3",
+      "point_mm": [
+        -31.0,
+        78.38295867352767,
+        -111.87794924909304
+      ],
+      "axis_direction_arbitrary_sign": [
+        -0.0,
+        0.17364817799204443,
+        0.9848077529548818
+      ],
+      "axis_point_nearest_cad_origin_mm": [
+        -31.0,
+        95.15167941163908,
+        -16.777808372383134
+      ],
+      "circle_evidence_entities": [
+        20396,
+        20403,
+        20416,
+        20423
+      ],
+      "planar_face_evidence_entity": 20460,
+      "controller_joint_name": "arm_roll",
+      "physical_check": null,
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "label": "M4",
+      "point_mm": [
+        -30.0,
+        134.10167670747234,
+        176.09740545509305
+      ],
+      "axis_direction_arbitrary_sign": [
+        0.0,
+        0.17364817799204443,
+        0.9848077529548818
+      ],
+      "axis_point_nearest_cad_origin_mm": [
+        -30.0,
+        99.94358637596561,
+        -17.62275086086987
+      ],
+      "circle_evidence_entities": [
+        29506,
+        29513,
+        29526,
+        29533
+      ],
+      "planar_face_evidence_entity": 29570,
+      "controller_joint_name": "shoulder_rotate",
+      "physical_check": null,
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "label": "M5",
+      "point_mm": [
+        -14.45314689999723,
+        142.2984193399901,
+        225.22473518424675
+      ],
+      "axis_direction_arbitrary_sign": [
+        0.9991495746988093,
+        -0.039192667988185485,
+        -0.012808674996138863
+      ],
+      "axis_point_nearest_cad_origin_mm": [
+        8.430116746524606,
+        141.4007998270612,
+        224.9313814218858
+      ],
+      "circle_evidence_entities": [
+        38616,
+        38623,
+        38636,
+        38643
+      ],
+      "planar_face_evidence_entity": 38680,
+      "controller_joint_name": "shoulder_side",
+      "physical_check": null,
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "label": "M6",
+      "point_mm": [
+        -38.0,
+        96.16110175009304,
+        231.45289805952766
+      ],
+      "axis_direction_arbitrary_sign": [
+        0.0,
+        0.9848077529548818,
+        -0.17364817799204443
+      ],
+      "axis_point_nearest_cad_origin_mm": [
+        -38.0,
+        42.48038878083338,
+        240.91825611794752
+      ],
+      "circle_evidence_entities": [
+        47726,
+        47733,
+        47746,
+        47753
+      ],
+      "planar_face_evidence_entity": 47790,
+      "controller_joint_name": "shoulder_front",
+      "physical_check": null,
+      "joint_name_mapping_source": "user-confirmed"
+    },
+    {
+      "label": "M7",
+      "point_mm": [
+        -68.5,
+        102.5,
+        -7.0
+      ],
+      "axis_direction_arbitrary_sign": [
+        1.0,
+        -0.0,
+        -0.0
+      ],
+      "axis_point_nearest_cad_origin_mm": [
+        0.0,
+        102.5,
+        -7.0
+      ],
+      "circle_evidence_entities": [
+        56836,
+        56843,
+        56856,
+        56863
+      ],
+      "planar_face_evidence_entity": 56900,
+      "controller_joint_name": "elbow",
+      "physical_check": null,
+      "joint_name_mapping_source": "user-confirmed"
+    }
+  ],
+  "check_pairs": [
+    {
+      "pair": "M6-M5",
+      "datum_center_distance_mm": 52.1717967689935,
+      "delta_in_cad_frame_mm": [
+        23.54685310000277,
+        46.13731758989705,
+        -6.228162875280901
+      ],
+      "unoriented_axis_angle_deg": 87.91551850753706,
+      "infinite_axis_shortest_distance_mm": 2.335341786810386,
+      "physical_distance_mm": null,
+      "physical_joint_names": null,
+      "model_axis_angle_deg": 90.0,
+      "model_axis_angle_source": "user-approved nominal orthogonality",
+      "physical_check_status": "user confirmed approximately correct"
+    },
+    {
+      "pair": "M5-M4",
+      "datum_center_distance_mm": 52.176486633480685,
+      "delta_in_cad_frame_mm": [
+        -15.54685310000277,
+        -8.196742632517754,
+        -49.1273297291537
+      ],
+      "unoriented_axis_angle_deg": 88.88725645069312,
+      "infinite_axis_shortest_distance_mm": 0.10724098556687037,
+      "physical_distance_mm": null,
+      "physical_joint_names": null,
+      "model_axis_angle_deg": 90.0,
+      "model_axis_angle_source": "user-approved nominal orthogonality",
+      "physical_check_status": "user confirmed approximately correct"
+    },
+    {
+      "pair": "M4-M7",
+      "datum_center_distance_mm": 189.75135270956656,
+      "delta_in_cad_frame_mm": [
+        -38.5,
+        -31.601676707472336,
+        -183.09740545509305
+      ],
+      "unoriented_axis_angle_deg": 90.0,
+      "infinite_axis_shortest_distance_mm": 0.672954624455068,
+      "physical_distance_mm": null,
+      "physical_joint_names": null,
+      "physical_check_status": "user confirmed approximately correct"
+    },
+    {
+      "pair": "M7-M3",
+      "datum_center_distance_mm": 113.96168619776608,
+      "delta_in_cad_frame_mm": [
+        37.5,
+        -24.117041326472332,
+        -104.87794924909304
+      ],
+      "unoriented_axis_angle_deg": 90.0,
+      "infinite_axis_shortest_distance_mm": 5.538784477996127,
+      "physical_distance_mm": null,
+      "physical_joint_names": null,
+      "physical_check_status": "user confirmed approximately correct"
+    },
+    {
+      "pair": "M3-M2",
+      "datum_center_distance_mm": 102.26280387088167,
+      "delta_in_cad_frame_mm": [
+        3.0,
+        3.4891453805653896,
+        -102.1592233723793
+      ],
+      "unoriented_axis_angle_deg": 90.0,
+      "infinite_axis_shortest_distance_mm": 3.0,
+      "physical_distance_mm": null,
+      "physical_joint_names": null,
+      "physical_check_status": "user confirmed approximately correct"
+    },
+    {
+      "pair": "M2-M1",
+      "datum_center_distance_mm": 95.87743766448473,
+      "delta_in_cad_frame_mm": [
+        16.716291573,
+        -35.37210405409306,
+        -87.53206786052766
+      ],
+      "unoriented_axis_angle_deg": 90.0,
+      "infinite_axis_shortest_distance_mm": 92.34456048195874,
+      "physical_distance_mm": null,
+      "physical_joint_names": null,
+      "physical_check_status": "user confirmed approximately correct"
+    }
+  ],
+  "limitations": [
+    "Check combinations do not establish joint order or controller names.",
+    "Center distances are for the CAD assembly pose; registration or same-rigid-body checks are required for physical comparison.",
+    "Identical motor CAD proxies may omit real motor housing differences.",
+    "No mass, physical COM, encoder direction or encoder offset inferred."
+  ],
+  "deployment_ready": false,
+  "distance_verification": {
+    "scope": "six listed CAD datum-center distances",
+    "pairs": [
+      "M6-M5",
+      "M5-M4",
+      "M4-M7",
+      "M7-M3",
+      "M3-M2",
+      "M2-M1"
+    ],
+    "source": "user physical review",
+    "user_statement": "其他距离基本正确",
+    "status": "approximately confirmed; use CAD distances for modeling",
+    "measured_values_mm": null,
+    "measurement_tolerance_mm": null
+  },
+  "physical_motor_orientation_review": {
+    "source": "user correction",
+    "statement": "CAD motor orientation differs from physical assembly; align CAD to physical assembly before encoder registration",
+    "affected_motors": null,
+    "physical_motor_mounting_orientation_verified": false,
+    "orientation_corrections": null,
+    "status": "photo and encoder baseline paired; CAD orientation comparison pending",
+    "original_step_preserved": true,
+    "photo_evidence": "physical_assembly_photo_evidence.json"
+  }
+}

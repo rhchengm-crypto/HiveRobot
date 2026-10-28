@@ -22,6 +22,9 @@ from left_arm_v2_8_move_library import (
     final_blocking_joint_errors,
     learn_placement_final_errors,
     pose_distance_deg,
+    placement_terminal_torque_handoff,
+    rook_group_continuous_holds,
+    remember_placement_group_controller,
     recover_placement1_shared_clearance_contamination,
     replay_move_tau_with_wrist_side_support,
     verify_pre_wrist_or_learn,
@@ -37,6 +40,90 @@ def pose(offset_deg=0.0):
 
 
 class LocalBiasTests(unittest.TestCase):
+    def test_rook_first_group_keeps_pending_joints_and_active_support(self):
+        positions = {joint: index * 0.1 for index, joint in enumerate(JOINTS)}
+        torque = {joint: 0.1 for joint in JOINTS}
+        torque.update({"shoulder_rotate": -2.25, "elbow": 4.94})
+        velocity = 0.007
+        arm = types.SimpleNamespace(read_status=lambda names: {
+            joint: {"pos": positions[joint], "vel": velocity, "tau": torque[joint]}
+            for joint in names
+        })
+        controller = {
+            "hold_targets": dict(positions),
+            "hold_gains": {joint: {"kp": 24.0, "kd": 4.5} for joint in JOINTS},
+            "hold_tau": dict(torque),
+        }
+        active = {joint: positions[joint] + 0.1
+                  for joint in ("shoulder_front", "shoulder_side", "elbow")}
+        kwargs = {"hold_targets": {"wrist": positions["wrist"], "claw": 1.8},
+                  "hold_gains": {"wrist": {"kp": 26.0, "kd": 4.7}},
+                  "hold_tau": {"wrist": 0.42, "claw": 0.0},
+                  "move_gains": {name: {"kp": 65.0, "kd": 3.0} for name in active},
+                  "move_tau_ff": {"shoulder_front": {"start_tau": 3.0, "end_tau": 1.0,
+                                                       "ramp_fraction": 0.25}}}
+        original = json.loads(json.dumps(kwargs))
+        first = rook_group_continuous_holds(arm, active, kwargs, controller,
+                                            types.SimpleNamespace(DEFAULT_JOINTS=JOINTS))
+        self.assertEqual(kwargs, original)
+        self.assertTrue(set(JOINTS) <= set(active) | set(first["hold_targets"]))
+        for joint in ("shoulder_rotate", "arm_roll", "wrist_side"):
+            self.assertEqual(first["hold_targets"][joint], positions[joint])
+            self.assertEqual(first["hold_tau"][joint], torque[joint])
+            self.assertEqual(first["hold_gains"][joint], controller["hold_gains"][joint])
+        for joint in active:
+            ramp = first["move_tau_ff"][joint]
+            self.assertAlmostEqual(ramp["start_tau"] - 3.0 * velocity, torque[joint])
+            self.assertEqual(ramp["end_tau"], 1.0 if joint == "shoulder_front" else 0.0)
+            self.assertEqual(ramp["ramp"], "smoothstep")
+        remember_placement_group_controller(controller, active, first)
+        self.assertEqual(controller["hold_targets"]["elbow"], active["elbow"])
+        self.assertEqual(controller["hold_tau"]["elbow"], 0.0)
+        self.assertEqual(controller["hold_tau"]["shoulder_rotate"], -2.25)
+        second_active = {joint: positions[joint] - 0.2
+                         for joint in ("shoulder_rotate", "arm_roll", "wrist_side")}
+        second = rook_group_continuous_holds(arm, second_active,
+                 {"hold_targets": {name: controller["hold_targets"][name]
+                                   for name in JOINTS if name not in second_active},
+                  "move_gains": {name: {"kp": 24.0, "kd": 4.5} for name in second_active}},
+                 controller, types.SimpleNamespace(DEFAULT_JOINTS=JOINTS))
+        self.assertAlmostEqual(second["move_tau_ff"]["shoulder_rotate"]["start_tau"] - 4.5 * velocity, -2.25)
+
+    def test_placement_terminal_handoff_converts_pd_residual_to_measured_torque(self):
+        class Arm:
+            def __init__(self):
+                self.call = None
+
+            def read_status(self, names):
+                return {
+                    name: {
+                        "pos": 1.94 if name == "shoulder_rotate" else 0.25,
+                        "vel": 0.0,
+                        "tau": -2.2 if name == "shoulder_rotate" else 0.1,
+                    }
+                    for name in names
+                }
+
+            def hold_positions_with_gains(self, targets, **kwargs):
+                self.call = (dict(targets), kwargs)
+
+        arm = Arm()
+        targets = {joint: 0.25 for joint in JOINTS}
+        targets["shoulder_rotate"] = 1.846
+        targets["claw"] = 6.67
+        gains = {joint: {"kp": 2.0, "kd": 0.4} for joint in (*JOINTS, "claw")}
+        tau = {joint: 0.0 for joint in (*JOINTS, "claw")}
+        handoff_targets, handoff_tau, diagnostic = placement_terminal_torque_handoff(
+            arm, targets, gains, tau, JOINTS, 3.0, 0.3, seconds=0.5
+        )
+        self.assertAlmostEqual(handoff_targets["shoulder_rotate"], 1.94)
+        self.assertAlmostEqual(handoff_tau["shoulder_rotate"], -2.2)
+        self.assertAlmostEqual(handoff_targets["claw"], 6.67)
+        self.assertAlmostEqual(handoff_tau["claw"], 0.0)
+        self.assertLess(diagnostic["shoulder_rotate"]["command_residual_deg"], -5.0)
+        self.assertEqual(arm.call[0], handoff_targets)
+        self.assertEqual(arm.call[1]["hold_tau"], handoff_tau)
+
     def test_source_validation_preserves_destination_learning_in_shared_file(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'bias.json'
@@ -194,8 +281,10 @@ class LocalBiasTests(unittest.TestCase):
 
     def test_white_bishop_place_follows_clearance_and_holds_claw(self):
         class Ctrl:
+            def __init__(self):
+                self.commands = []
             def controlMIT(self, *args):
-                pass
+                self.commands.append(args)
 
         class Arm:
             def __init__(self):
@@ -210,6 +299,10 @@ class LocalBiasTests(unittest.TestCase):
 
             def positions(self, names):
                 return {name: self.current[name] for name in names}
+
+            def read_status(self, names):
+                return {name: {"pos": self.current[name], "vel": 0.0, "tau": 0.2}
+                        for name in names}
 
             def move_target_with_holds(self, name, target, **kwargs):
                 self.calls.append(("single", name, dict(kwargs)))
@@ -253,6 +346,7 @@ class LocalBiasTests(unittest.TestCase):
             load_moves=lambda path: {"moves": {
                 WHITE_BISHOP_PLACE_MOVE_NAME: {"pose": target},
                 WHITE_KNIGHT_PLACE_B1_MOVE_NAME: {"pose": target},
+                "white_rook_place_A1": {"pose": target},
             }},
             normalize_move_name=lambda name: name,
             REPLAY_REQUIRED_JOINTS=list(JOINTS),
@@ -271,6 +365,7 @@ class LocalBiasTests(unittest.TestCase):
             for move_name, label, clearance_stage in (
                 (WHITE_BISHOP_PLACE_MOVE_NAME, "White Bishop Placement", "placement1-clearance"),
                 (WHITE_KNIGHT_PLACE_B1_MOVE_NAME, "White Knight Place_B1", "placement-c4-clearance"),
+                ("white_rook_place_A1", "White Rook Place_A1", "placement1-clearance"),
             ):
                 for residual_deg in (0.0, 0.65):
                     with self.subTest(move_name=move_name, residual_deg=residual_deg):
@@ -279,13 +374,36 @@ class LocalBiasTests(unittest.TestCase):
                         local = LocalTargetBias(
                             Path(directory) / (move_name + str(residual_deg) + "_bias.json"), target, move_name
                         )
-                        result = run_white_bishop_place_on_arm(
-                            arm, "moves.json", 3.0, 0.3, 0.5,
-                            api, legacy, local, {"claw_hold_pos": -0.2},
-                            destination_move_name=move_name,
-                            workflow_label=label,
-                            clearance_stage=clearance_stage,
-                        )
+                        handoff = {"claw_hold_pos": -0.2}
+                        is_rook = move_name == "white_rook_place_A1"
+                        if is_rook:
+                            handoff.update({
+                                "hold_targets": {name: 0.15 for name in JOINTS},
+                                "hold_gains": {name: {"kp": 24.0, "kd": 4.5} for name in JOINTS},
+                                "hold_tau": {name: -2.25 if name == "shoulder_rotate" else 0.3
+                                             for name in JOINTS},
+                            })
+                        # One entry tick proves inherited targets/gains/torque
+                        # reach the motor API before the first replay group.
+                        clock = iter([0.0, 0.0, 1.0])
+                        with patch('left_arm_v2_8_move_library.time.time', side_effect=lambda: next(clock)), \
+                             patch('left_arm_v2_8_move_library.time.sleep'), \
+                             patch.object(legacy, 'REPLAY_ENTRY_TAKEOVER_SECONDS', 0.1):
+                            result = run_white_bishop_place_on_arm(
+                                arm, "moves.json", 3.0, 0.3, 0.5,
+                                api, legacy, local, handoff,
+                                destination_move_name=move_name,
+                                workflow_label=label,
+                                clearance_stage=clearance_stage,
+                            )
+                        rotate_command = next(command for command in arm.ctrl.commands
+                                              if command[0] is arm.motors["shoulder_rotate"])
+                        if is_rook:
+                            self.assertEqual(rotate_command[1:4], (24.0, 4.5, 0.15))
+                            self.assertEqual(rotate_command[-1], -2.25)
+                            self.assertEqual(arm.calls[0][2]["move_tau_ff"]["shoulder_rotate"]["start_tau"], 0.2)
+                        else:
+                            self.assertEqual(rotate_command[-1], 0.0)
                         self.assertEqual(result["status"], "validated" if residual_deg==0 else "training")
                         self.assertEqual(bool(result["blocking_errors_deg"]), residual_deg!=0)
                         self.assertEqual(len(arm.calls), 2)
@@ -301,6 +419,7 @@ class LocalBiasTests(unittest.TestCase):
                 self.hold_targets = None
                 self.group_kwargs = None
                 self.settle_kwargs = None
+                self.settle_calls = []
                 self.events = []
 
             def positions(self, names):
@@ -327,6 +446,7 @@ class LocalBiasTests(unittest.TestCase):
 
             def hold_positions_with_gains(self, *args, **kwargs):
                 self.settle_kwargs = kwargs
+                self.settle_calls.append((dict(args[0]), dict(kwargs["hold_tau"])))
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -390,12 +510,15 @@ class LocalBiasTests(unittest.TestCase):
             self.assertNotIn("shoulder_rotate", arm.hold_targets)
             self.assertIn("shoulder_rotate", arm.events[1][1])
             self.assertIn("claw", arm.enabled)
+            self.assertEqual(len(arm.settle_calls), 2)
             self.assertEqual(
                 arm.settle_kwargs["gains"]["shoulder_front"],
                 api.COUPLED_CLEARANCE_MOVE_GAINS["shoulder_front"],
             )
-            self.assertEqual(arm.settle_kwargs["hold_tau"]["shoulder_front"], 1.0)
-            self.assertNotEqual(arm.settle_kwargs["hold_tau"]["shoulder_front"], 3.0)
+            self.assertEqual(arm.settle_calls[0][1]["shoulder_front"], 1.0)
+            self.assertNotEqual(arm.settle_calls[0][1]["shoulder_front"], 3.0)
+            self.assertEqual(arm.settle_calls[1][1]["shoulder_front"], 0.1)
+            self.assertEqual(arm.settle_calls[1][0]["shoulder_rotate"], 0.1)
             self.assertTrue(bias_path.exists())
             shared = LocalTargetBias(shared_bias_path, clearance, "clearance:" + clearance_path.name)
             self.assertEqual(shared.anchor.get("hold_bias", {}).get("clearance", {}), {})

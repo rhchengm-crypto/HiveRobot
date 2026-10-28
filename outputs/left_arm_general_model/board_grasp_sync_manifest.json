@@ -1,0 +1,36 @@
+{
+  "build": "seven-axis-board-grasp-v9-stiffness-handoff",
+  "date": "2026-10-27",
+  "status": "retained-motion-gains-for-fixed-pose-hold; hardware-retest-pending",
+  "released_execution_stages": [
+    "above",
+    "touch"
+  ],
+  "automatic_endpoint_correction": false,
+  "physical_joint_limit_parameters_available": false,
+  "offline_workspace_successes": 33,
+  "offline_workspace_tested": 64,
+  "focused_regression_tests_passed": 130,
+  "home_180_regression_tests_passed": 68,
+  "fault_support_tests_passed": 16,
+  "fault_support_hardware_validated": false,
+  "files": {
+    "left_arm_board_grasp.py": "7c071da53383d362bf85e31c2cf6dd2476d7ff96e7f0adebc2c269ecf33682d6",
+    "left_arm_board_kinematics.py": "1784df490b4b7a1db68ccd369350932ef9621cac03944f93974af32653cefebf",
+    "left_arm_fault_support.py": "8e67d4c8d128045ed5e9f7baa3fee2fe5035a46cc1b66856825b73edd42fb98e",
+    "left_arm_board_home_handoff.py": "12c36d56ef39593ba636cbd760aa5eb752bc9ba88de57896b269c738dedf5f1d",
+    "left_arm_v3_1_model_control.py": "84b5054e4e0c4710af3cec7edc31ab1662c0d9e9a25c136a7e6ff1e3f1d76dd6",
+    "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+    "left_arm_dynamics_worker.py": "d6da81fa7475a3235b48079a155a80e9ca7e3ba78831e78bd67310072ff044b0",
+    "left_arm_v3_1_motion_dynamics.py": "a04ec7a5bb3726d57034ac78aea04ae3073b851704235b90f85581fe37403598",
+    "chessboard_vision_v3_0_web_control.py": "bcb0d5433e3421ad102e5647df1c364bca90ba885e1c040b818c0ad35dee6266",
+    "data/left_arm_board_grasp.json": "71c418c435f969101c8581d53a7fd6073487aa12a51c4bbf41f016134966f148",
+    "LEFT_ARM_BOARD_GRASP_DEPLOY.md": "0f0f013ead0706e88b68a20d361952834895b4200fd8338af357690007b0195a"
+  },
+  "preserved": [
+    "existing Model Hold bridge",
+    "existing adaptive learning and files",
+    "ordinary Clearance shoulder_rotate active-target skip"
+  ],
+  "old_learning_files_in_package": false
+}
