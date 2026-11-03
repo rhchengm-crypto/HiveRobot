@@ -1,0 +1,65 @@
+{
+  "build": "seven-axis-board-grasp-v24-optical-normal-touch-height",
+  "target_mm": [
+    113.8,
+    190.3,
+    50.2
+  ],
+  "source_log": "C:\\Users\\rhche\\OneDrive\\\u6587\u6863\\HiveRobot\\outputs\\board_drift_20261102\\jetson_snapshot\\arm_run_1793681494917_16715.txt",
+  "source_sha256": "1a1d83d9eaa985d2dbad915668955648ab5a043eb05029de6c8c19cd0e3ae2b2",
+  "model_sha256": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57",
+  "change": "retain optical XY/normal and set absolute board height using user-confirmed light fingertip touch",
+  "datum": {
+    "source": "user-confirmed light fingertip contact, no gripper close or new motion used for calibration",
+    "source_log": "arm_run_1793680858524_14500.txt",
+    "contact_pose_source": "same-serial model hold final feedback",
+    "CAD_envelope": "part7 OmniPicker vertex envelope in approved revised STEP",
+    "minimum_vertex_before_calibration_board_mm": [
+      108.56050584397863,
+      160.98134342257353,
+      41.34974077754125
+    ],
+    "plane_origin_normal_change_mm": 41.34974077754125,
+    "optical_plane_translation_before_touch_m": [
+      0.22865720002950568,
+      0.0724107509527527,
+      -0.17568465049476553
+    ],
+    "optical_board_rotation_unchanged": true,
+    "board_XY_coordinates_unchanged": true,
+    "target_grip_height_unchanged_mm": 50.2,
+    "runtime_height_offset_mm": 0.0,
+    "calibration_scope": "same gripper opening and local board surface; not yet validated for other openings or grasp contact centers",
+    "assumptions": [
+      "user-reported light contact is on the board surface",
+      "lowest CAD gripper vertex represents the first touching fingertip at this unchanged opening",
+      "no board/camera/base movement since contact"
+    ],
+    "physical_trial_complete": false
+  },
+  "contact_audit_count": 66,
+  "model_predicted_minimum_gripper_height_during_contact_mm": 32.74717525781494,
+  "post_move_model_hold": {
+    "enabled": true,
+    "state": "complete",
+    "same_serial_session": true,
+    "seconds": 5
+  },
+  "endpoint_settle_attempts": 3,
+  "maximum_terminal_joint_error_deg": 0.5405221400089851,
+  "nominal_joint_target_reached": false,
+  "physical_validation": {
+    "result": "operator-accepted for tested empty-load target and unchanged gripper opening",
+    "fingertip_clearance": "clearly separated from board; visible gap",
+    "B_drift_mm": 2,
+    "B_drift_operator_assessment": "acceptable working range",
+    "oscillation": false,
+    "extra_post_move_displacement": "not separately specified in operator reply",
+    "scope": "same target113.8/190.3/50.2mm, fixed camera/board, empty-load approach; does not certify whole-board accuracy or loaded grasp"
+  },
+  "claw_closed": false,
+  "further_motion_issued": false,
+  "next_action": "Retain accepted model and gains. No additional parameter change, descent, claw closure, or Home was requested after acceptance.",
+  "canonical_LF_log_sha256": "8df2ff3918c205728eafc2d019ba9ba24909a070931b5fb7bd9cc755149572a8",
+  "remote_acceptance_record": "/home/nvidia/hive_robot/DM_Control_Python/data/board_validation/v24_1793681494917_operator_acceptance.json"
+}

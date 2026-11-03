@@ -13,6 +13,7 @@ Thumbs.db
 
 # Local analysis dependencies and disposable rendering files.
 outputs/**/python_deps/
+outputs/**/qa_deps/
 outputs/**/*.whl
 tmp/
 # Superseded generated CAD pose; the approved revised STEP is external input.
@@ -23,3 +24,12 @@ outputs/**/*.npz
 outputs/**/*.jpg
 outputs/**/*.png
 outputs/**/*.mp4
+
+# Nov2 experiment evidence is intentionally versioned for research reproducibility.
+!outputs/board_drift_20261102/**/*.jpg
+!outputs/board_drift_20261102/**/*.png
+!outputs/board_drift_20261102/**/*.npy
+!outputs/board_drift_20261102/**/*.npz
+!outputs/board_drift_20261102/raw_evidence/chunks/*.bin
+!outputs/board_drift_20261102/figures/*.mp4
+outputs/board_drift_20261102/restored_dataset/

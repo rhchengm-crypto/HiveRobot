@@ -1,0 +1,56 @@
+{
+  "build": "seven-axis-board-grasp-v22-fixed-swivel-descent",
+  "change": "Fix shoulder_rotate reference at measured descent entry; solve six remaining joints for unchanged Cartesian pose.",
+  "rationale": "Controlled test removes approximately 1.5deg of previously planned swivel cancellation; does not claim geometry is calibrated.",
+  "target_mm": [
+    113.8,
+    190.3,
+    50.2
+  ],
+  "stage": "approach; no claw closure",
+  "start": "User confirmed Home before execution",
+  "production_files": [
+    "scripts/left_arm_board_grasp.py",
+    "scripts/left_arm_board_kinematics.py"
+  ],
+  "unchanged": [
+    "model hold serial handoff",
+    "adaptive learning",
+    "ordinary Clearance skips shoulder_rotate",
+    "shoulder_rotate cap36/kd4.5",
+    "board transform",
+    "TCP",
+    "no fixed Cartesian compensation",
+    "no replay"
+  ],
+  "full_log": "C:\\Users\\rhche\\OneDrive\\\u6587\u6863\\HiveRobot\\outputs\\board_drift_20261102\\jetson_snapshot\\arm_run_1793679218917_10319.txt",
+  "sha256": "207ce6e42f3c30898d155e09171cf73249ca0662acd525ff5f92820b29446d43",
+  "contact_audit_count": 66,
+  "constraint": {
+    "source": "measured feedback after XY alignment",
+    "fixed_encoder_rad": {
+      "shoulder_rotate": 2.524414539337158
+    },
+    "cartesian_offset_mm": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reference_peak_deviation_rad": 0.0015261173248291016,
+  "feedback_peak_deviation_deg": 0.08744008175450324,
+  "post_move_model_hold": {
+    "enabled": true,
+    "state": "complete",
+    "same_serial_session": true,
+    "seconds": 5
+  },
+  "physical_observation": {
+    "B_drift_mm": 10,
+    "stage": "during descent",
+    "oscillation": false,
+    "operator_conclusion": "no improvement"
+  },
+  "next_action": "Restore pretrial code and return Home; do not deploy rejected distal-axis fits.",
+  "validation": "failed; swivel constraint is not a fix"
+}

@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "build": "seven-axis-board-grasp-v1",
-  "registration_status": "nominal-step-and-historical-teaching; needs on-robot validation",
+  "build": "seven-axis-board-grasp-v24-optical-normal-touch-height",
+  "registration_status": "optical lateral/normal registration plus user-confirmed fingertip touch plane datum; pending empty-load validation",
   "independently_validated": false,
   "source_step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
   "rigid_model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
@@ -35,32 +35,27 @@
   ],
   "board_to_cad_rotation": [
     [
-      0.02302481630029465,
-      0.9930755230024824,
-      -0.11519923371136136
+      -0.046302754020737025,
+      0.9987824858637735,
+      -0.017017664407195186
     ],
     [
-      -0.985805329033361,
-      0.04172126570019549,
-      0.16262591809979515
+      -0.9722586014676807,
+      -0.04114985535744376,
+      0.230260507417508
     ],
     [
-      0.16630607650884346,
-      0.10981958660330511,
-      0.9799397671870019
+      0.2292798875658347,
+      0.02720726623242941,
+      0.9729802145069314
     ]
   ],
   "board_to_cad_translation_m": [
-    0.23007844984011125,
-    0.08030933143658178,
-    -0.15445011278148413
+    0.22795352401762897,
+    0.08193196324577177,
+    -0.13545217084322744
   ],
-  "fit_errors_mm": {
-    "white_knight:c4": 17.8779040080602,
-    "white_bishop:d4": 19.152617665727483,
-    "white_bishop:c1": 7.669277638648843,
-    "white_knight:b1": 10.238036482125887
-  },
+  "fit_errors_mm": {},
   "joint_order": [
     "shoulder_front",
     "shoulder_side",
@@ -127,19 +122,19 @@
       ],
       "wrist_rotation_in_board": [
         [
-          0.13493053730689042,
-          0.25687972323044056,
-          -0.9569778251846431
+          0.1456954623703478,
+          0.16470741054185328,
+          -0.975522578496925
         ],
         [
-          0.6700159625221515,
-          0.6878759678733585,
-          0.2791151425268922
+          0.6051914780510906,
+          0.7651973365032978,
+          0.21958212837705593
         ],
         [
-          0.7299810682939604,
-          -0.678851574805086,
-          -0.0792980410670181
+          0.7826340825309299,
+          -0.6223700708749249,
+          0.011806258514614438
         ]
       ],
       "seed_encoder_rad": {
@@ -159,19 +154,19 @@
       ],
       "wrist_rotation_in_board": [
         [
-          0.14441231220369719,
-          0.4127090398782922,
-          -0.8993421665232451
+          0.17509456664773448,
+          0.3280030653024341,
+          -0.9283080748774359
         ],
         [
-          0.49402007042008833,
-          0.7574244014808781,
-          0.4269103489767688
+          0.4189352621593563,
+          0.8284368046944202,
+          0.37173338126562333
         ],
         [
-          0.8573734624456926,
-          -0.5059441910369898,
-          -0.09450513980632588
+          0.8909742638538537,
+          -0.4539894820146266,
+          0.007642733161455725
         ]
       ],
       "seed_encoder_rad": {
@@ -191,19 +186,19 @@
       ],
       "wrist_rotation_in_board": [
         [
-          0.19188378815699178,
-          0.5828046698658018,
-          -0.7896324009468835
+          0.23214324774802514,
+          0.5072441415395561,
+          -0.8299475244850115
         ],
         [
-          0.3867686355160746,
-          0.6945633390637879,
-          0.6066232690967254
+          0.311409230582745,
+          0.7695878317193328,
+          0.5574574964761011
         ],
         [
-          0.9019925911134521,
-          -0.42180621713196537,
-          -0.09213512232186363
+          0.9214845650540571,
+          -0.38786331373737626,
+          0.020694110848248487
         ]
       ],
       "seed_encoder_rad": {
@@ -223,19 +218,19 @@
       ],
       "wrist_rotation_in_board": [
         [
-          0.3428474555637433,
-          0.5130043969247059,
-          -0.7869447953633018
+          0.3597132909743766,
+          0.42957112159554606,
+          -0.8282964443890417
         ],
         [
-          0.5726410570640817,
-          0.5499416765076508,
-          0.6079855032848134
+          0.5212442546931378,
+          0.6437686794338732,
+          0.560237730190823
         ],
         [
-          0.744672976532653,
-          -0.6590831822887577,
-          -0.10522127563437762
+          0.7738932583023205,
+          -0.6332697204754972,
+          0.00766067119162169
         ]
       ],
       "seed_encoder_rad": {
@@ -364,19 +359,19 @@
       "grip_height_mm": 55.0,
       "wrist_rotation_in_board": [
         [
-          0.14441231220369719,
-          0.4127090398782922,
-          -0.8993421665232451
+          0.17509456664773448,
+          0.3280030653024341,
+          -0.9283080748774359
         ],
         [
-          0.49402007042008833,
-          0.7574244014808781,
-          0.4269103489767688
+          0.4189352621593563,
+          0.8284368046944202,
+          0.37173338126562333
         ],
         [
-          0.8573734624456926,
-          -0.5059441910369898,
-          -0.09450513980632588
+          0.8909742638538537,
+          -0.4539894820146266,
+          0.007642733161455725
         ]
       ],
       "seed_encoder_rad": {
@@ -395,19 +390,19 @@
       "grip_height_mm": 55.0,
       "wrist_rotation_in_board": [
         [
-          0.13493053730689042,
-          0.25687972323044056,
-          -0.9569778251846431
+          0.1456954623703478,
+          0.16470741054185328,
+          -0.975522578496925
         ],
         [
-          0.6700159625221515,
-          0.6878759678733585,
-          0.2791151425268922
+          0.6051914780510906,
+          0.7651973365032978,
+          0.21958212837705593
         ],
         [
-          0.7299810682939604,
-          -0.678851574805086,
-          -0.0792980410670181
+          0.7826340825309299,
+          -0.6223700708749249,
+          0.011806258514614438
         ]
       ],
       "seed_encoder_rad": {
@@ -426,19 +421,19 @@
       "grip_height_mm": 55.0,
       "wrist_rotation_in_board": [
         [
-          0.13493053730689042,
-          0.25687972323044056,
-          -0.9569778251846431
+          0.1456954623703478,
+          0.16470741054185328,
+          -0.975522578496925
         ],
         [
-          0.6700159625221515,
-          0.6878759678733585,
-          0.2791151425268922
+          0.6051914780510906,
+          0.7651973365032978,
+          0.21958212837705593
         ],
         [
-          0.7299810682939604,
-          -0.678851574805086,
-          -0.0792980410670181
+          0.7826340825309299,
+          -0.6223700708749249,
+          0.011806258514614438
         ]
       ],
       "seed_encoder_rad": {
@@ -458,5 +453,79 @@
   "square_size_mm": 55,
   "default_clearance_mm": 140,
   "default_test_height_mm": 160,
-  "scope": "nominal geometry testing on a cleared board; no occupied-board collision planner"
+  "scope": "nominal geometry testing on a cleared board; no occupied-board collision planner",
+  "historical_teaching_fit_errors_mm": {
+    "white_knight:c4": 17.8779040080602,
+    "white_bishop:d4": 19.152617665727483,
+    "white_bishop:c1": 7.669277638648843,
+    "white_knight:b1": 10.238036482125887
+  },
+  "optical_registration": {
+    "source": "six CAD holes on existing wrist plate + board intersections",
+    "source_step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
+    "robot_joint_zero_changes": false,
+    "camera_fit_training_run": "arm_run_1793671770732_5069.txt",
+    "independent_validation_run": "arm_run_1793679218917_10319.txt",
+    "camera_fit_validation": {
+      "median_px": 0.7432126690038967,
+      "p95_px": 1.8073263980191658,
+      "motion_median_px": 1.1331744963896693,
+      "motion_p95_px": 2.9163115651849187
+    },
+    "live_board_reprojection_max_px": 0.8202226828553149,
+    "calibration_scope": "board-to-CAD transform; no fixed Cartesian error offset",
+    "old_transform": {
+      "rotation": [
+        [
+          0.02302481630029465,
+          0.9930755230024824,
+          -0.11519923371136136
+        ],
+        [
+          -0.985805329033361,
+          0.04172126570019549,
+          0.16262591809979515
+        ],
+        [
+          0.16630607650884346,
+          0.10981958660330511,
+          0.9799397671870019
+        ]
+      ],
+      "translation_m": [
+        0.23007844984011125,
+        0.08030933143658178,
+        -0.15445011278148413
+      ]
+    },
+    "physical_grasp_validation_complete": false
+  },
+  "touch_plane_datum": {
+    "source": "user-confirmed light fingertip contact, no gripper close or new motion used for calibration",
+    "source_log": "arm_run_1793680858524_14500.txt",
+    "contact_pose_source": "same-serial model hold final feedback",
+    "CAD_envelope": "part7 OmniPicker vertex envelope in approved revised STEP",
+    "minimum_vertex_before_calibration_board_mm": [
+      108.56050584397863,
+      160.98134342257353,
+      41.34974077754125
+    ],
+    "plane_origin_normal_change_mm": 41.34974077754125,
+    "optical_plane_translation_before_touch_m": [
+      0.22865720002950568,
+      0.0724107509527527,
+      -0.17568465049476553
+    ],
+    "optical_board_rotation_unchanged": true,
+    "board_XY_coordinates_unchanged": true,
+    "target_grip_height_unchanged_mm": 50.2,
+    "runtime_height_offset_mm": 0.0,
+    "calibration_scope": "same gripper opening and local board surface; not yet validated for other openings or grasp contact centers",
+    "assumptions": [
+      "user-reported light contact is on the board surface",
+      "lowest CAD gripper vertex represents the first touching fingertip at this unchanged opening",
+      "no board/camera/base movement since contact"
+    ],
+    "physical_trial_complete": false
+  }
 }

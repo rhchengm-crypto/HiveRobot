@@ -1,0 +1,73 @@
+{
+  "passed": true,
+  "motion_issued": false,
+  "start_rad": {
+    "shoulder_front": 0.8291370868682861,
+    "shoulder_side": -2.852102041244507,
+    "shoulder_rotate": 2.364957571029663,
+    "elbow": -1.28233003616333,
+    "arm_roll": -2.6651790142059326,
+    "wrist_side": 0.16918440163135529,
+    "wrist": -2.0708401203155518
+  },
+  "full_waypoints": 63,
+  "feedback_descent_waypoints": 23,
+  "max_feedback_step_deg": 0.7696085963096073,
+  "maximum_IK_position_error_mm": 0.026416332055400133,
+  "maximum_IK_rotation_error_deg": 0.0009147111954563943,
+  "new_endpoint_board_mm": [
+    113.8,
+    190.3,
+    50.2
+  ],
+  "nominal_entry": {
+    "start_measured_rad": {
+      "shoulder_front": 0.580616874523955,
+      "shoulder_side": -2.868104841175438,
+      "shoulder_rotate": 2.507484957087684,
+      "elbow": 0.6686817363874865,
+      "arm_roll": -2.733242960189931,
+      "wrist_side": 0.15842032968657696,
+      "wrist": -3.2852203027376286
+    },
+    "start_tcp_board_mm": [
+      113.7996825145197,
+      190.299612897497,
+      140.0000554969933
+    ],
+    "requested_target_board_mm": [
+      113.8,
+      190.3,
+      50.2
+    ],
+    "orientation_policy": "measured wrist orientation at descent entry",
+    "wrist_rotation_in_cad": [
+      [
+        0.5843901743542339,
+        0.7672306478541678,
+        0.26428253274006447
+      ],
+      [
+        0.013652793963397974,
+        -0.3349325842037948,
+        0.9421431766220904
+      ],
+      [
+        0.8113579514217027,
+        -0.5469710202852094,
+        -0.20620615323732724
+      ]
+    ],
+    "xy_alignment_at_measured_height": true,
+    "board_offset_applied_mm": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "source_step_unchanged": true,
+  "robot_joint_zeros_unchanged": true,
+  "not_yet_physically_validated": true,
+  "CAD_gripper_mesh_minimum_height_over_board_mm": 39.24820804813596,
+  "CAD_gripper_mesh_sampled_poses": 342
+}

@@ -479,21 +479,21 @@
       "move_validation": {
         "white_bishop_place": {
           "blocking_errors_deg": {},
-          "checked_at": "2026-10-21 16:45:55",
+          "checked_at": "2026-10-27 13:56:16",
           "effective_tolerance_deg": 0.511,
           "encoder_half_count_margin_deg": 0.011,
           "errors_deg": {
             "arm_roll": -0.2622792641284896,
             "elbow": -0.30599930500574124,
             "shoulder_front": -0.34970568550465286,
-            "shoulder_rotate": 0.1311396320642448,
-            "shoulder_side": -0.4589887122248569,
+            "shoulder_rotate": 0.15299623740828563,
+            "shoulder_side": -0.43713210688081605,
             "wrist": 0.21856605344040803,
-            "wrist_side": 0.19671286319095224
+            "wrist_side": 0.21856946853499304
           },
           "status": "validated",
           "tolerance_deg": 0.5,
-          "validated_at": "2026-10-21 16:45:55"
+          "validated_at": "2026-10-27 13:56:16"
         }
       },
       "target_pose_rad": {
@@ -505,7 +505,7 @@
         "wrist": -2.2772183418273926,
         "wrist_side": -0.1836804747581482
       },
-      "updated_at": "2026-10-21 16:45:55"
+      "updated_at": "2026-10-27 13:56:16"
     },
     "40f1eed00c731347": {
       "created_at": "2026-09-10 19:23:07",
@@ -687,21 +687,21 @@
       "move_validation": {
         "bishop01": {
           "blocking_errors_deg": {},
-          "checked_at": "2026-10-21 16:46:00",
+          "checked_at": "2026-10-27 13:56:21",
           "effective_tolerance_deg": 0.511,
           "encoder_half_count_margin_deg": 0.011,
           "errors_deg": {
             "arm_roll": 0.0,
-            "elbow": 0.30599759745844873,
+            "elbow": 0.19671286319095224,
             "shoulder_front": -0.0655698160321224,
-            "shoulder_rotate": 0.28413586947253044,
+            "shoulder_rotate": 0.30599247481657127,
             "shoulder_side": -0.21857971381874805,
-            "wrist": 0.21856605344040803,
-            "wrist_side": 0.2622835329967209
+            "wrist": 0.24042265878444882,
+            "wrist_side": 0.2841401383407617
           },
           "status": "validated",
           "tolerance_deg": 0.5,
-          "validated_at": "2026-10-21 16:46:00"
+          "validated_at": "2026-10-27 13:56:21"
         }
       },
       "target_pose_rad": {
@@ -713,7 +713,7 @@
         "wrist": -2.6098649501800537,
         "wrist_side": 0.1676585078239441
       },
-      "updated_at": "2026-10-21 16:46:00"
+      "updated_at": "2026-10-27 13:56:21"
     },
     "49f3d54e8f2d8bad": {
       "created_at": "2026-09-16 15:28:20",
@@ -892,9 +892,9 @@
           "last_error_deg": -2.098261433784597,
           "learning_state": "backoff",
           "previous_bias_deg": -3.2222304366498253,
-          "samples": 25,
+          "samples": 27,
           "step_scale": 0.2,
-          "updated_at": "2026-10-21 16:54:13"
+          "updated_at": "2026-10-27 14:00:29"
         },
         "elbow": {
           "best_bias_deg": 0.75,
@@ -944,22 +944,22 @@
           "last_error_deg": 0.6119986100114825,
           "learning_state": "plateau",
           "previous_bias_deg": 0.38249742370988404,
-          "samples": 7,
+          "samples": 9,
           "step_scale": 0.2,
-          "updated_at": "2026-10-21 16:54:13"
+          "updated_at": "2026-10-27 14:00:29"
         },
         "wrist": {
           "best_bias_deg": 0.0,
           "best_error_deg": 0.6557118206995641,
-          "bias_deg": 0.17704123536239852,
-          "delta_bias_deg": 0.0896134479484013,
+          "bias_deg": 0.24261105139452094,
+          "delta_bias_deg": 0.06556981603212242,
           "label": "white-knight-place_b1-final",
-          "last_error_deg": 0.8961344794840129,
+          "last_error_deg": 0.6556981603212241,
           "learning_state": "plateau",
-          "previous_bias_deg": 0.08742778741399722,
-          "samples": 9,
+          "previous_bias_deg": 0.17704123536239852,
+          "samples": 10,
           "step_scale": 0.2,
-          "updated_at": "2026-10-21 16:54:13"
+          "updated_at": "2026-10-27 14:00:29"
         },
         "wrist_side": {
           "best_bias_deg": 0.0,
@@ -990,9 +990,9 @@
           "blocking_errors_deg": {
             "arm_roll": -2.098261433784597,
             "shoulder_side": 0.6119986100114825,
-            "wrist": 0.8961344794840129
+            "wrist": 0.6556981603212241
           },
-          "checked_at": "2026-10-21 16:54:13",
+          "checked_at": "2026-10-27 14:00:29",
           "effective_tolerance_deg": 0.511,
           "encoder_half_count_margin_deg": 0.011,
           "errors_deg": {
@@ -1001,8 +1001,8 @@
             "shoulder_front": -0.15299623740828563,
             "shoulder_rotate": -0.17485284275232643,
             "shoulder_side": 0.6119986100114825,
-            "wrist": 0.8961344794840129,
-            "wrist_side": 0.06557152357941491
+            "wrist": 0.6556981603212241,
+            "wrist_side": 0.08742812892345572
           },
           "status": "training",
           "tolerance_deg": 0.5
@@ -1017,7 +1017,7 @@
         "wrist": -2.688448905944824,
         "wrist_side": -0.2599755823612213
       },
-      "updated_at": "2026-10-21 16:54:13"
+      "updated_at": "2026-10-27 14:00:29"
     },
     "a139b042111d7feb": {
       "created_at": "2026-09-17 14:11:20",
@@ -1042,15 +1042,15 @@
         "arm_roll": {
           "best_bias_deg": -0.75,
           "best_error_deg": 0.5245585282569792,
-          "bias_deg": -0.75,
-          "delta_bias_deg": 0.4500000000000002,
+          "bias_deg": -1.05,
+          "delta_bias_deg": -0.15000000000000002,
           "label": "white-rook-place_a1-final",
-          "last_error_deg": -4.524385608108147,
-          "learning_state": "backoff",
-          "previous_bias_deg": -1.2000000000000002,
-          "samples": 27,
+          "last_error_deg": -4.4369591867319835,
+          "learning_state": "plateau",
+          "previous_bias_deg": -0.9,
+          "samples": 29,
           "step_scale": 0.2,
-          "updated_at": "2026-10-21 17:09:21"
+          "updated_at": "2026-10-27 14:07:06"
         },
         "elbow": {
           "best_bias_deg": 0.0,
@@ -1107,15 +1107,15 @@
         "wrist": {
           "best_bias_deg": -0.6557049905103941,
           "best_error_deg": 0.5682853993234009,
-          "bias_deg": -0.027038503286730436,
-          "delta_bias_deg": 0.09835609008601762,
+          "bias_deg": 0.0691319262648831,
+          "delta_bias_deg": 0.09617042955161353,
           "label": "white-rook-place_a1-final",
-          "last_error_deg": 0.9835609008601761,
+          "last_error_deg": 0.9617042955161353,
           "learning_state": "plateau",
-          "previous_bias_deg": -0.12539459337274805,
-          "samples": 11,
+          "previous_bias_deg": -0.027038503286730436,
+          "samples": 12,
           "step_scale": 0.2,
-          "updated_at": "2026-10-21 17:09:21"
+          "updated_at": "2026-10-27 14:07:06"
         },
         "wrist_side": {
           "best_bias_deg": 0.0,
@@ -1144,20 +1144,20 @@
       "move_validation": {
         "white_rook_place_A1": {
           "blocking_errors_deg": {
-            "arm_roll": -4.524385608108147,
-            "wrist": 0.9835609008601761
+            "arm_roll": -4.4369591867319835,
+            "wrist": 0.9617042955161353
           },
-          "checked_at": "2026-10-21 17:09:21",
+          "checked_at": "2026-10-27 14:07:06",
           "effective_tolerance_deg": 0.511,
           "encoder_half_count_margin_deg": 0.011,
           "errors_deg": {
-            "arm_roll": -4.524385608108147,
-            "elbow": -0.37156912103786366,
+            "arm_roll": -4.4369591867319835,
+            "elbow": -0.28413928456711546,
             "shoulder_front": 0.021856605344040804,
             "shoulder_rotate": -0.2622792641284896,
             "shoulder_side": 0.19670944809636723,
-            "wrist": 0.9835609008601761,
-            "wrist_side": 0.4371389370699861
+            "wrist": 0.9617042955161353,
+            "wrist_side": 0.4589955424140269
           },
           "status": "training",
           "tolerance_deg": 0.5
@@ -1172,7 +1172,7 @@
         "wrist": -2.5541694164276123,
         "wrist_side": -0.41409170627593994
       },
-      "updated_at": "2026-10-21 17:09:21"
+      "updated_at": "2026-10-27 14:07:06"
     },
     "c68e4acca4e7579d": {
       "created_at": "2026-09-12 20:00:14",
@@ -1327,21 +1327,21 @@
       "move_validation": {
         "white_knight_c4": {
           "blocking_errors_deg": {},
-          "checked_at": "2026-10-21 17:09:26",
+          "checked_at": "2026-10-27 14:07:11",
           "effective_tolerance_deg": 0.511,
           "encoder_half_count_margin_deg": 0.011,
           "errors_deg": {
-            "arm_roll": -0.30599247481657127,
+            "arm_roll": -0.04371321068808161,
             "elbow": 0.24042607387903384,
             "shoulder_front": 0.0,
-            "shoulder_rotate": 0.21856605344040803,
-            "shoulder_side": 0.0,
-            "wrist": 0.4590023726031969,
+            "shoulder_rotate": 0.19670944809636723,
+            "shoulder_side": -0.021856605344040804,
+            "wrist": 0.4808589779472377,
             "wrist_side": 0.24042607387903384
           },
           "status": "validated",
           "tolerance_deg": 0.5,
-          "validated_at": "2026-10-21 17:09:26"
+          "validated_at": "2026-10-27 14:07:11"
         }
       },
       "target_pose_rad": {
@@ -1353,7 +1353,7 @@
         "wrist": -2.976081371307373,
         "wrist_side": 0.20084688067436218
       },
-      "updated_at": "2026-10-21 17:09:26"
+      "updated_at": "2026-10-27 14:07:11"
     },
     "f69a021e12a137cc": {
       "created_at": "2026-09-15 15:24:20",
@@ -1527,5 +1527,5 @@
   },
   "schema": 1,
   "type": "left_arm_v2_8_local_target_bias",
-  "updated_at": "2026-10-21 17:09:26"
+  "updated_at": "2026-10-27 14:07:11"
 }

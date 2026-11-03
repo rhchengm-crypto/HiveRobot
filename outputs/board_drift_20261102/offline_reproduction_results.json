@@ -1,0 +1,110 @@
+[
+  {
+    "trial": "original",
+    "frozen_board_model": "board_model_before_optical.json",
+    "contact_audits": 66,
+    "encoder_FK_delta_board_mm": [
+      0.11989343289498322,
+      3.0190014000194765,
+      -83.43452763528225
+    ],
+    "reference_FK_delta_board_mm": [
+      -0.15006429765702478,
+      1.8929867718732964,
+      -84.1941183630875
+    ],
+    "maximum_tracking_error_deg_by_joint": {
+      "shoulder_front": 0.8657293077148531,
+      "shoulder_side": 0.36120715039587875,
+      "shoulder_rotate": 0.24653498153041556,
+      "elbow": 0.7083862845068044,
+      "arm_roll": 0.14306220093150346,
+      "wrist_side": 0.28727670427163976,
+      "wrist": 0.4027979455689496
+    },
+    "operator_B_drift_mm": null,
+    "height_result": "Not quantified",
+    "warning": "FK values are model-dependent internal metrics, not independent physical TCP measurements. Operator drift is an estimate."
+  },
+  {
+    "trial": "V22",
+    "frozen_board_model": "board_model_before_optical.json",
+    "contact_audits": 66,
+    "encoder_FK_delta_board_mm": [
+      1.0727483864974374,
+      1.1531288440693288,
+      -84.72190743326922
+    ],
+    "reference_FK_delta_board_mm": [
+      0.5890676597950915,
+      2.0521977713167416,
+      -83.04387601514182
+    ],
+    "maximum_tracking_error_deg_by_joint": {
+      "shoulder_front": 0.772468191399105,
+      "shoulder_side": 0.5194071774770779,
+      "shoulder_rotate": 0.08744008175450324,
+      "elbow": 0.5365557598654306,
+      "arm_roll": 0.23736227426382225,
+      "wrist_side": 0.19205539834827695,
+      "wrist": 0.36516510915164313
+    },
+    "operator_B_drift_mm": 10,
+    "height_result": "Not separately quantified",
+    "warning": "FK values are model-dependent internal metrics, not independent physical TCP measurements. Operator drift is an estimate."
+  },
+  {
+    "trial": "V23",
+    "frozen_board_model": "board_model_failed_optical.json",
+    "contact_audits": 66,
+    "encoder_FK_delta_board_mm": [
+      -1.3844361965097676,
+      2.551500066621344,
+      -80.85609057504621
+    ],
+    "reference_FK_delta_board_mm": [
+      0.5117162051806048,
+      1.3499849540195612,
+      -83.63932354940053
+    ],
+    "maximum_tracking_error_deg_by_joint": {
+      "shoulder_front": 0.8064022927604061,
+      "shoulder_side": 0.2911807298280069,
+      "shoulder_rotate": 0.22957574774676173,
+      "elbow": 0.5558807776647575,
+      "arm_roll": 0.15810370930094003,
+      "wrist_side": 0.18691565318269737,
+      "wrist": 0.4541460370655527
+    },
+    "operator_B_drift_mm": 5,
+    "height_result": "FAILED: light fingertip-board contact",
+    "warning": "FK values are model-dependent internal metrics, not independent physical TCP measurements. Operator drift is an estimate."
+  },
+  {
+    "trial": "V24",
+    "frozen_board_model": "jetson_snapshot_v24_accepted/left_arm_board_grasp.json",
+    "contact_audits": 66,
+    "encoder_FK_delta_board_mm": [
+      -0.6911082443899375,
+      -4.2732187959713315,
+      -96.72405019407339
+    ],
+    "reference_FK_delta_board_mm": [
+      0.015928598467340294,
+      -1.803040390808377,
+      -89.9734372725128
+    ],
+    "maximum_tracking_error_deg_by_joint": {
+      "shoulder_front": 0.9076259017610845,
+      "shoulder_side": 0.29584020513159964,
+      "shoulder_rotate": 0.2127848485080246,
+      "elbow": 0.5739606038452582,
+      "arm_roll": 0.13852223808706118,
+      "wrist_side": 0.35844222339643766,
+      "wrist": 0.47488703116506653
+    },
+    "operator_B_drift_mm": 2,
+    "height_result": "PASS: clearly visible fingertip clearance",
+    "warning": "FK values are model-dependent internal metrics, not independent physical TCP measurements. Operator drift is an estimate."
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "analysis_host": {
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.22000-SP0",
+    "numpy": "2.3.4",
+    "opencv": "4.11.0"
+  },
+  "jetson": {
+    "python": "3.8.10 (default, Mar 18 2025, 20:04:55) \n[GCC 9.4.0]",
+    "platform": "Linux-5.10.216-tegra-aarch64-with-glibc2.29",
+    "numpy": "1.17.4",
+    "opencv": "4.2.0",
+    "device_tree_model": "NVIDIA Orin Nano Developer Kit",
+    "L4T_release": "# R35 (release), REVISION: 6.1, GCID: 39721438, BOARD: t186ref, EABI: aarch64, DATE: Tue Mar  4 10:13:09 UTC 2025",
+    "OS_release": "NAME=\"Ubuntu\"\nVERSION=\"20.04.6 LTS (Focal Fossa)\"\nID=ubuntu\nID_LIKE=debian\nPRETTY_NAME=\"Ubuntu 20.04.6 LTS\"\nVERSION_ID=\"20.04\"\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nVERSION_CODENAME=focal\nUBUNTU_CODENAME=focal",
+    "scope": "read only; does not verify motor torque units, camera metrology, fanless hardware configuration, or physical safety"
+  },
+  "camera": {
+    "width": 640,
+    "height": 480,
+    "K": [
+      590.613037109375,
+      0.0,
+      336.7207336425781,
+      0.0,
+      590.7864990234375,
+      234.2217559814453,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "D": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "frame": "ascamera_hp60c_color_0",
+    "depth_encoding": "16UC1",
+    "depth_frame": "ascamera_hp60c_color_0",
+    "motion_commands_sent": false,
+    "depth_scale_independently_verified": false
+  }
+}

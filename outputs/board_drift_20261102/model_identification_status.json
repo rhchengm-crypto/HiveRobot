@@ -1,0 +1,25 @@
+{
+  "active_build": "seven-axis-board-grasp-v24-optical-normal-touch-height",
+  "active_model_sha256": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57",
+  "local_test_result": {
+    "result": "operator-accepted for tested empty-load target and unchanged gripper opening",
+    "fingertip_clearance": "clearly separated from board; visible gap",
+    "B_drift_mm": 2,
+    "B_drift_operator_assessment": "acceptable working range",
+    "oscillation": false,
+    "extra_post_move_displacement": "not separately specified in operator reply",
+    "scope": "same target113.8/190.3/50.2mm, fixed camera/board, empty-load approach; does not certify whole-board accuracy or loaded grasp"
+  },
+  "global_accuracy_validated": false,
+  "stopped_after_trial": true,
+  "further_motion_issued": false,
+  "do_not_retune_accepted_2mm_drift": true,
+  "unchanged": [
+    "model hold serial takeover",
+    "adaptive learning",
+    "ordinary Clearance skips shoulder_rotate",
+    "shoulder_rotate cap36/kd4.5"
+  ],
+  "accepted_log": "arm_run_1793681494917_16715.txt",
+  "remote_acceptance_record": "/home/nvidia/hive_robot/DM_Control_Python/data/board_validation/v24_1793681494917_operator_acceptance.json"
+}

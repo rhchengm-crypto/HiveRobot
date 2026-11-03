@@ -1,0 +1,161 @@
+{
+  "change": "Board-to-CAD optical registration, derived from known STEP six-hole plate, fixed RGB camera, and current board intersections.",
+  "camera_moved": false,
+  "joint_zero_changes": false,
+  "CAD_dimension_changes": false,
+  "evidence": {
+    "board_corner_method": "prior-indexed corners reacquired with subpixel refinement and checker contrast checks",
+    "board_reprojection_median_px": 0.22973323305883286,
+    "board_reprojection_max_px": 0.8202226828553149,
+    "old_board_up_in_optical_board": [
+      0.07190007372973617,
+      -0.09508952788541172,
+      0.9928687532016445
+    ],
+    "old_trajectories_recomputed": [
+      {
+        "log": "arm_run_1793671770732_5069.txt",
+        "old_board_model_delta_mm": [
+          0.1198934328950095,
+          3.019001400019502,
+          -83.43452763528225
+        ],
+        "optically_registered_board_delta_mm": [
+          -6.064857866739922,
+          10.94019657957639,
+          -82.54682757966955
+        ]
+      },
+      {
+        "log": "arm_run_1793679218917_10319.txt",
+        "old_board_model_delta_mm": [
+          1.0727483864974565,
+          1.153128844069353,
+          -84.72190743326921
+        ],
+        "optically_registered_board_delta_mm": [
+          -5.0943300782523,
+          9.274422186136398,
+          -84.07327154649262
+        ]
+      }
+    ],
+    "candidate": "left_arm_board_grasp_optical_candidate.json",
+    "deployed": false,
+    "motion_issued": false
+  },
+  "held_out_validation": {
+    "median_px": 0.7432126690038967,
+    "p95_px": 1.8073263980191658,
+    "motion_median_px": 1.1331744963896693,
+    "motion_p95_px": 2.9163115651849187
+  },
+  "deployment": {
+    "motion_issued": false,
+    "backup": "/home/nvidia/hive_robot/DM_Control_Python/data/code_backups/v23_optical_20261103T043832Z/left_arm_board_grasp.json",
+    "old_sha256": "71c418c435f969101c8581d53a7fd6073487aa12a51c4bbf41f016134966f148",
+    "new_sha256": "03b698839bc3d2b4e041586df3821e9e3b817aed078741bb392a3d4a9cf9cc24",
+    "scope": "board registration only; no motor-controller or learning-file change"
+  },
+  "offline_plan": {
+    "passed": true,
+    "motion_issued": false,
+    "start_rad": {
+      "shoulder_front": 0.8291370868682861,
+      "shoulder_side": -2.852102041244507,
+      "shoulder_rotate": 2.364957571029663,
+      "elbow": -1.2796597480773926,
+      "arm_roll": -2.665560483932495,
+      "wrist_side": 0.16918440163135529,
+      "wrist": -2.0708401203155518
+    },
+    "full_waypoints": 62,
+    "feedback_descent_waypoints": 23,
+    "max_feedback_step_deg": 0.7619108924735148,
+    "maximum_IK_position_error_mm": 0.02630494627775609,
+    "maximum_IK_rotation_error_deg": 0.0007203520090497161,
+    "new_endpoint_board_mm": [
+      113.8,
+      190.3,
+      50.2
+    ],
+    "nominal_entry": {
+      "start_measured_rad": {
+        "shoulder_front": 0.6533992700032218,
+        "shoulder_side": -2.869683569654172,
+        "shoulder_rotate": 2.5014362017617495,
+        "elbow": 0.5972632635537257,
+        "arm_roll": -2.7158761728651615,
+        "wrist_side": 0.13754971970257196,
+        "wrist": -3.144111265778022
+      },
+      "start_tcp_board_mm": [
+        113.79955823892132,
+        190.29950462515274,
+        140.00013978903658
+      ],
+      "requested_target_board_mm": [
+        113.8,
+        190.3,
+        50.2
+      ],
+      "orientation_policy": "measured wrist orientation at descent entry",
+      "wrist_rotation_in_cad": [
+        [
+          0.5843903810718789,
+          0.7672303590954577,
+          0.26428291392543785
+        ],
+        [
+          0.013652581492051303,
+          -0.3349329735700508,
+          0.942143041280956
+        ],
+        [
+          0.8113578061060782,
+          -0.546971186899072,
+          -0.2062062830588661
+        ]
+      ],
+      "xy_alignment_at_measured_height": true,
+      "board_offset_applied_mm": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "source_step_unchanged": true,
+    "robot_joint_zeros_unchanged": true,
+    "not_yet_physically_validated": true
+  },
+  "target_mm": [
+    113.8,
+    190.3,
+    50.2
+  ],
+  "piece": "white_knight",
+  "stage": "approach, empty board, no claw closure",
+  "model_board_sha256": "03b698839bc3d2b4e041586df3821e9e3b817aed078741bb392a3d4a9cf9cc24",
+  "physical_validation": {
+    "result": "FAILED absolute height; do not reuse candidate as a validated registration",
+    "B_drift_mm": 5,
+    "contact": "operator reports fingertip lightly touched board",
+    "operator_authorized_home": true,
+    "causal_limit": "Known-plate image agreement did not independently validate absolute fingertip height."
+  },
+  "correction_to_prior_diagnosis": "Plate was visible near descent entry; LK points drifted off hole centers. Independent contour/ring detection replaced LK for this calibration.",
+  "rejected_alternatives": [
+    "V22 fixed shoulder_rotate (operator reports10mm B, no improvement); rolled back",
+    "Distal axis tilt: independent motion error worsened; never deployed",
+    "Five-joint zero fit: independent motion prediction not improved; never deployed"
+  ],
+  "preserved": [
+    "same-process same-serial model hold",
+    "adaptive learning",
+    "ordinary Clearance skips shoulder_rotate",
+    "shoulder_rotate cap36/kd4.5",
+    "no fixed Cartesian offset",
+    "no angle replay"
+  ],
+  "next_motion": "None after Home; model/TCP height must be resolved before further descent."
+}
