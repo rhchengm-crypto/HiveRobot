@@ -1,0 +1,121 @@
+HIVEROBOT CHAT CONTINUATION SUMMARY
+Prepared 28 October 2026
+
+This is a context summary, not a complete transcript or a live synchronization of the Codex chat. The original conversation is very long. The robot's current physical state has not been reverified. No robot action is authorized by this document.
+
+CURRENT REQUEST AND DOCUMENTS
+The user is preparing an English research materials list and experiment procedure for HiveRobot. Continue helping edit those documents on a Mac.
+
+Latest requested format:
+- Word documents, not Excel as the main deliverable.
+- A clean materials table using the full usable area of one US Letter page.
+- Columns named Material and Quantity. Two adjacent Material/Quantity pairs are acceptable.
+- List names and quantities only; no descriptions of what each item does.
+- Include programs in a separate section. Leave program quantities blank.
+- Physical materials should be real tangible items; programs are listed separately.
+- A separate concise numbered procedure, with one action per step and measurable checks where applicable.
+- Include relevant safety equipment and steps. Do not include biology examples or Petri-dish sterilization.
+- Avoid invented hardware specifications or quantities. TBC means unconfirmed.
+
+Latest Word deliverables in this package:
+1. HiveRobot_Materials.docx: 49 physical-material entries and 18 programs; one page.
+2. HiveRobot_Procedure.docx: 47 numbered steps; one page.
+
+Both were created as editable Word files. Page layout was checked with an alternative document renderer because the standard renderer was unavailable. Evaluation marks in internal renderer previews are NOT present in the actual Word files.
+
+LATEST HARDWARE DETAILS CONFIRMED BY THE USER
+- Computer: NVIDIA Jetson Orin; exact Orin variant and RAM still unknown.
+- The computer is fanless, according to the user. Do not insist it has a fan or invent a different computer model.
+- USB-to-CAN adapter: Damiao; exact adapter model still unknown.
+- Arm structural parts: metal 3D-printed, according to the user. This supersedes earlier reliance on the reference CNC BOM as the actual manufacturing process.
+- Main body: 3D-printed. An older record says PA6-CF, but the latest user statement did not reconfirm the exact polymer grade.
+- Battery: 24 V. Chemistry, capacity, maximum discharge rating and pack count still unconfirmed.
+- Aluminum extrusion: 4040 European profile, nominal 40 x 40 mm. Cut lengths and counts remain unconfirmed.
+- Four wheel-hub motors.
+- User supplied ZLAC8015D as the wheel-system model. Manufacturer documentation identifies ZLAC8015D as a hub-motor driver, not the motor model. Therefore the materials table lists four wheel-hub motors and a separate ZLAC8015D driver row with quantity TBC. Do not invent the driver count or exact hub-motor model.
+- Camera identified in the project: Nuwa HP60C RGB-D camera.
+
+CURRENT TESTED LEFT-ARM MOTOR MAP
+Seven positioning axes plus one gripper motor:
+shoulder_front: Damiao DM4340, slave ID 0x1E
+shoulder_side: Damiao DM4340, slave ID 0x1F
+shoulder_rotate: Damiao DM4310, slave ID 0x20
+elbow: Damiao DM4340, slave ID 0x21
+arm_roll: Damiao DM4310, slave ID 0x22
+wrist_side: Damiao DM4310, slave ID 0x2A
+wrist: Damiao DM4310, slave ID 0x29
+claw: Damiao DM4310, slave ID 0x28
+Total for the tested left arm and gripper: three DM4340 and five DM4310 motors. These are not full-robot motor counts.
+Configured serial transport: /dev/ttyACM0 at 921600 baud.
+
+PROGRAMS IN THE CURRENT MATERIALS DOCUMENT
+Ubuntu / NVIDIA JetPack; Python 3; NumPy; PySerial; DM_CAN library; OpenCV; HP60C camera driver; ROS Noetic; PyTorch; Ultralytics YOLO; SciPy; Visual Studio Code; Git; SSH / SCP client; Robot Web-control application; General dynamics controller; Board-grasp controller; Model Hold controller.
+Record exact installed software versions when preparing a reproducible experimental methods section. Do not invent pinned versions. ML training/inference is distinct from the arm's model-based kinematic and dynamic control; do not describe all control as machine learning.
+
+ROBOT RESEARCH CONTEXT
+The overall objective is geometric, model-based movement and grasping at arbitrary locations within the chessboard workspace. The user does not want a separate tuned replay of joint angles for each new target.
+
+The system includes:
+- A seven-axis kinematic model derived from the approved revised STEP assembly.
+- General rigid-body dynamics corrections during motion.
+- Model Hold after motion.
+- Existing adaptive learning.
+- Ordinary Clearance intentionally skips shoulder_rotate.
+
+Preserve the existing Model Hold takeover, adaptive learning and ordinary Clearance shoulder_rotate exclusion when discussing or editing future robot code.
+
+CAD AND CALIBRATION
+- Approved CAD baseline: RB000152_02_手臂完整(2).step.
+- The user adjusted that STEP so joint orientations match the actual robot and approved the resulting view.
+- CAD dimensions are accepted as accurate; the user does not want repeated physical distance measurements replacing them.
+- M5 is shoulder_side. M6 is shoulder_front, hidden inside the shoulder.
+- Two nominal shoulder angles measured in CAD near 87.92 and 88.89 degrees were approved for modeling as 90 degrees.
+- Positive encoder motion was observed as follows from the agreed viewing perspective: arm_roll clockwise / Web inward; wrist_side counterclockwise / Web outward; wrist clockwise / Web forward; shoulder_rotate clockwise / Web inward; shoulder_side counterclockwise / Web outward; elbow clockwise; shoulder_front counterclockwise.
+- Clockwise/counterclockwise statements depend on the agreed viewpoint; do not treat them as global axis vectors without the coordinate convention.
+- The user rejected a model-predicted gripper tilt around 40 degrees as inconsistent with observation, estimated it at at most about 10 degrees, and had no precise measured angle.
+- Raw effective inertia and gravity tests already exist. Initial general-model fitting used 73 gravity records and 29 unique effective-inertia records. These are not independently measured link masses, centers of mass or inertia tensors.
+- Nominal gravity direction was approved for on-robot validation without extra physical angle/distance measurement.
+
+LATEST CONTROL AND TEST STATUS
+- Historical tested Home, Clearance, small multi-axis movements and several chess-piece placement workflows were smooth and used the general model in apply mode.
+- Smooth operation does not establish arbitrary-point positioning accuracy or successful grasping.
+- Current arbitrary-point descent has unresolved physical lateral drift toward the B side of the board.
+- The user explicitly wants physical observation considered; encoder/FK self-consistency is not evidence that the real gripper did not drift.
+- Lateral error was observed mainly during descent, not only after hold takeover.
+- An earlier same-process, same-serial motion-to-Model-Hold fix reduced takeover-related shifts.
+- shoulder_rotate Kp upper limit is 36; Kd is 4.5. The user requested keeping those values for comparisons. Larger Kp can cause oscillation; do not automatically raise it again.
+- Recent full-path runs were reported smooth with no oscillation, but residual B-side drift varied around 8 to 15 mm.
+- Last summarized full trial had about 10 mm B-side drift by the user's observation. This is historical, not a fresh measurement.
+- Last robot instruction was to analyze, return Home, pause, and write a handoff. Do not resume physical movement merely because a new chat starts.
+
+REFERENCE TARGET AND ENDPOINT SETTLE
+The repeated comparison target used board coordinates X 113.8 mm, Y 190.3 mm, Grip Height 50.2 mm, White Knight, Touch Position / complete model-generated approach and descent, followed by Model Hold. These are nominal model inputs, not verified physical clearance or blanket execution permission.
+
+The user asked to restore the old endpoint_settle and defer any new 8 mm D-side offset compensation. Endpoint settle follows the geometric target joint angles after the main motion; it is not a pure lateral offset and previously caused D-side and upward motion.
+
+Latest known board-grasp build: seven-axis-board-grasp-v21-restored-endpoint-settle.
+Settle is configured for up to three attempts when maximum joint error exceeds 0.35 degrees. In the last summarized trial the endpoint error was about 0.287 degrees, so settle was enabled but skipped with zero executed attempts.
+
+SAFETY AND RELEASE LIMITATIONS
+- A previous automatic motor disable caused red lights and a load-bearing arm drop. No injury was reported; mechanical support was subsequently applied.
+- Never intentionally remove torque from an unsupported loaded arm for a demonstration or stop test.
+- The user explicitly requested velocity/error watchdogs be record-only rather than repeatedly entering protective hold. Do not claim these watchdogs are active automatic stopping safeguards.
+- Physical emergency stop behavior and safe recovery need review; a Web button is not proof of a safety-rated system.
+- Keep the base immobilized during stationary arm experiments.
+- Wear safety glasses and closed-toe shoes. Use cut-resistant gloves only for handling sharp unpowered parts; remove gloves before exposure to moving joints or gripper mechanisms.
+- Current autonomous board-grasp closure and lift are not released. Above/touch/approach validation is not permission to close the claw or lift a piece.
+- Full mechanical joint limits and comprehensive collision coverage remain unverified.
+- Research accuracy thresholds and repetition counts are not established safety limits. Three repeats in the current procedure are proposed, not claimed historical trial counts.
+
+PROJECT FILES AND SYNCHRONIZATION
+Windows project root was C:\Users\rhche\OneDrive\文档\HiveRobot.
+Jetson project root was /home/nvidia/hive_robot/DM_Control_Python.
+Important source files include left_arm_v2_6.py, left_arm_v2_8.py, DM_CAN.py, left_arm_general_motion.py, left_arm_board_grasp.py and left_arm_v3_1_model_control.py.
+Important data files: data/left_arm_general_dynamics.json, data/left_arm_v3_1_dynamics.json, data/left_arm_board_grasp.json; adaptive-learning state and full run logs must also be retained.
+Main project handoff: HANDOFF_20261027.md. Git synchronization record: GITHUB_SYNC_20261028.md.
+Repository: https://github.com/rhchengm-crypto/HiveRobot
+Last verified source sync at the time of that record: main commit d4b97134bf98e26b7a1b60cc0f614096f48ea8fe; 270 offline tests passed. The newer document outputs are not claimed to have been pushed.
+The user previously authorized controlled Jetson file synchronization. This summary does not carry private SSH keys, credentials, or a working connection to the Mac. Do not assume a new ChatGPT chat can access the Windows project, robot, Git repository contents or Jetson.
+
+HOW TO CONTINUE
+Upload this file and the two Word documents into the new ChatGPT chat. Continue document editing with the confirmed hardware details above. Ask only for genuinely missing details; avoid repeating already-answered questions. Do not fabricate remaining quantities, alloys, battery capacity or motor models.

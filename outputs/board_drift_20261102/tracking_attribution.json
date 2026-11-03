@@ -1,0 +1,492 @@
+{
+  "motion_issued": false,
+  "production_files_modified": false,
+  "physical_fix_verified": false,
+  "board_X_direction": "positive D, negative B",
+  "trials": [
+    {
+      "source_log": "arm_run_1793160008611_79906.txt",
+      "source_sha256": "779c4491f657205f1a5d3c088adfbe68f95cd078f1e8695235e9353297fc52aa",
+      "contact_sample_count": 66,
+      "physical_observation_B_drift_mm": 8.0,
+      "physical_observation_source": "operator report; estimate, not independent metrology",
+      "reference_contact_model_delta_mm": [
+        -1.7605060598660316,
+        0.7703924796918784,
+        -84.9358576122893
+      ],
+      "measured_contact_model_delta_mm": [
+        -0.8017490152347619,
+        1.1783466232360524,
+        -85.10007240578935
+      ],
+      "tracking_model_X_error_range_mm": [
+        -1.899019827858794,
+        2.507293785576934
+      ],
+      "end_tracking_model_xyz_error_mm": [
+        0.9587570446312697,
+        0.40795414354417403,
+        -0.16421479350005086
+      ],
+      "max_command_minus_reference_deg": 0.0,
+      "joint_attribution_sum_error_mm": 7.105427357601002e-14,
+      "joints": [
+        {
+          "joint": "shoulder_front",
+          "reference_descent_deg": 4.1512202433448735,
+          "measured_descent_deg": 3.9561070389739155,
+          "reference_model_X_mm": -0.19184161574963587,
+          "measured_model_X_mm": -0.17985465612182153,
+          "tracking_model_X_difference_mm": 0.011986959627814348,
+          "max_tracking_error_deg": 0.8163463953359795,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            90.0,
+            90.0
+          ],
+          "kd_range": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "joint": "shoulder_side",
+          "reference_descent_deg": 0.7661528491467572,
+          "measured_descent_deg": 0.6775684260436049,
+          "reference_model_X_mm": -3.884774977574797,
+          "measured_model_X_mm": -3.440875698466027,
+          "tracking_model_X_difference_mm": 0.4438992791087699,
+          "max_tracking_error_deg": 0.38808033485041726,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            70.0,
+            70.0
+          ],
+          "kd_range": [
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "joint": "shoulder_rotate",
+          "reference_descent_deg": -1.6360309499212307,
+          "measured_descent_deg": -1.661129326903781,
+          "reference_model_X_mm": -11.835943840547328,
+          "measured_model_X_mm": -12.003583817806517,
+          "tracking_model_X_difference_mm": -0.16763997725918856,
+          "max_tracking_error_deg": 0.20667247179036036,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            36.0,
+            36.0
+          ],
+          "kd_range": [
+            4.5,
+            4.5
+          ]
+        },
+        {
+          "joint": "elbow",
+          "reference_descent_deg": -12.500912335072854,
+          "measured_descent_deg": -12.69888065773176,
+          "reference_model_X_mm": 0.7750109791496859,
+          "measured_model_X_mm": 0.8644930258710424,
+          "tracking_model_X_difference_mm": 0.08948204672135651,
+          "max_tracking_error_deg": 0.5305555334162567,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            70.0,
+            70.0
+          ],
+          "kd_range": [
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "joint": "arm_roll",
+          "reference_descent_deg": -0.23509940693301054,
+          "measured_descent_deg": -0.24042265878444882,
+          "reference_model_X_mm": 0.6609043881666216,
+          "measured_model_X_mm": 0.6829307501230439,
+          "tracking_model_X_difference_mm": 0.02202636195642238,
+          "max_tracking_error_deg": 0.14754801625600833,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            18.0,
+            18.0
+          ],
+          "kd_range": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "joint": "wrist_side",
+          "reference_descent_deg": -1.6180338359918505,
+          "measured_descent_deg": -1.7922689589680258,
+          "reference_model_X_mm": 5.603115992016628,
+          "measured_model_X_mm": 6.246993807524764,
+          "tracking_model_X_difference_mm": 0.6438778155081364,
+          "max_tracking_error_deg": 0.3493768068717347,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            16.0,
+            16.0
+          ],
+          "kd_range": [
+            2.2,
+            2.2
+          ]
+        },
+        {
+          "joint": "wrist",
+          "reference_descent_deg": 16.9082590227471,
+          "measured_descent_deg": 16.807989056755837,
+          "reference_model_X_mm": 7.113023014672777,
+          "measured_model_X_mm": 7.028147573640729,
+          "tracking_model_X_difference_mm": -0.08487544103204758,
+          "max_tracking_error_deg": 0.3957868719990433,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            22.0,
+            22.0
+          ],
+          "kd_range": [
+            1.4,
+            1.4
+          ]
+        }
+      ],
+      "endpoint_settle_attempts": null,
+      "physical_cause_identified": false,
+      "warning": "All model-mm quantities use the same unverified CAD-to-board/TCP mapping; they cannot validate physical accuracy."
+    },
+    {
+      "source_log": "arm_run_1793161074626_82286.txt",
+      "source_sha256": "0c8d305224ae06b4b65cd14004dffd32d01994d103f93d6217a606427347468e",
+      "contact_sample_count": 66,
+      "physical_observation_B_drift_mm": 15.0,
+      "physical_observation_source": "operator report; estimate, not independent metrology",
+      "reference_contact_model_delta_mm": [
+        -1.2735638647435934,
+        0.45377670520562674,
+        -86.50959352630753
+      ],
+      "measured_contact_model_delta_mm": [
+        -0.7593855618625156,
+        1.3772922987900813,
+        -86.23627077122978
+      ],
+      "tracking_model_X_error_range_mm": [
+        -2.1441374356287213,
+        2.381802324701823
+      ],
+      "end_tracking_model_xyz_error_mm": [
+        0.5141783028810778,
+        0.9235155935844546,
+        0.27332275507774284
+      ],
+      "max_command_minus_reference_deg": 0.0,
+      "joint_attribution_sum_error_mm": 2.3447910280083306e-13,
+      "joints": [
+        {
+          "joint": "shoulder_front",
+          "reference_descent_deg": 4.132621818733398,
+          "measured_descent_deg": 3.890537222941793,
+          "reference_model_X_mm": -0.19094585522792423,
+          "measured_model_X_mm": -0.1755689776785529,
+          "tracking_model_X_difference_mm": 0.015376877549371337,
+          "max_tracking_error_deg": 0.8083276690053788,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            90.0,
+            90.0
+          ],
+          "kd_range": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "joint": "shoulder_side",
+          "reference_descent_deg": 0.7505137757987577,
+          "measured_descent_deg": 0.6775684260436049,
+          "reference_model_X_mm": -3.8267266341258686,
+          "measured_model_X_mm": -3.442051562088407,
+          "tracking_model_X_difference_mm": 0.38467507203746143,
+          "max_tracking_error_deg": 0.3754178221325439,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            70.0,
+            70.0
+          ],
+          "kd_range": [
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "joint": "shoulder_rotate",
+          "reference_descent_deg": -1.5605544195235408,
+          "measured_descent_deg": -1.5518463001835772,
+          "reference_model_X_mm": -11.290348551874212,
+          "measured_model_X_mm": -11.208690526765468,
+          "tracking_model_X_difference_mm": 0.08165802510874443,
+          "max_tracking_error_deg": 0.2642977615625242,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            36.0,
+            36.0
+          ],
+          "kd_range": [
+            4.5,
+            4.5
+          ]
+        },
+        {
+          "joint": "elbow",
+          "reference_descent_deg": -12.722087975497512,
+          "measured_descent_deg": -12.917450126266752,
+          "reference_model_X_mm": 0.7997568653995748,
+          "measured_model_X_mm": 0.853539031729268,
+          "tracking_model_X_difference_mm": 0.05378216632969324,
+          "max_tracking_error_deg": 0.6470284219545288,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            70.0,
+            70.0
+          ],
+          "kd_range": [
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "joint": "arm_roll",
+          "reference_descent_deg": -0.2672723216656627,
+          "measured_descent_deg": -0.2622792641284896,
+          "reference_model_X_mm": 0.7451083902632294,
+          "measured_model_X_mm": 0.7395163634405977,
+          "tracking_model_X_difference_mm": -0.005592026822631713,
+          "max_tracking_error_deg": 0.14659838118507595,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            18.0,
+            18.0
+          ],
+          "kd_range": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "joint": "wrist_side",
+          "reference_descent_deg": -1.5582415993292151,
+          "measured_descent_deg": -1.5736994904330328,
+          "reference_model_X_mm": 5.3917620199610665,
+          "measured_model_X_mm": 5.434791236014034,
+          "tracking_model_X_difference_mm": 0.04302921605296728,
+          "max_tracking_error_deg": 0.35440560825212186,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            16.0,
+            16.0
+          ],
+          "kd_range": [
+            2.2,
+            2.2
+          ]
+        },
+        {
+          "joint": "wrist",
+          "reference_descent_deg": 16.854829780225334,
+          "measured_descent_deg": 16.807989056755837,
+          "reference_model_X_mm": 7.097829900860633,
+          "measured_model_X_mm": 7.039078873486072,
+          "tracking_model_X_difference_mm": -0.05875102737456128,
+          "max_tracking_error_deg": 0.3724301366987062,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            22.0,
+            22.0
+          ],
+          "kd_range": [
+            1.4,
+            1.4
+          ]
+        }
+      ],
+      "endpoint_settle_attempts": null,
+      "physical_cause_identified": false,
+      "warning": "All model-mm quantities use the same unverified CAD-to-board/TCP mapping; they cannot validate physical accuracy."
+    },
+    {
+      "source_log": "arm_run_1793164847303_93849.txt",
+      "source_sha256": "02c81de2784821f353fdc8a5a7e832b1bccd05265d3c6e0a8d4fc304f4a696a8",
+      "contact_sample_count": 66,
+      "physical_observation_B_drift_mm": 10.0,
+      "physical_observation_source": "operator report; estimate, not independent metrology",
+      "reference_contact_model_delta_mm": [
+        -1.2909981793004022,
+        0.5368496029753942,
+        -86.40371957979134
+      ],
+      "measured_contact_model_delta_mm": [
+        -0.7403321649896668,
+        0.4341520852157714,
+        -87.73511397292037
+      ],
+      "tracking_model_X_error_range_mm": [
+        -2.0037172876269693,
+        2.2466680268668853
+      ],
+      "end_tracking_model_xyz_error_mm": [
+        0.5506660143107354,
+        -0.10269751775962277,
+        -1.331394393129031
+      ],
+      "max_command_minus_reference_deg": 0.0,
+      "joint_attribution_sum_error_mm": 1.5631940186722204e-13,
+      "joints": [
+        {
+          "joint": "shoulder_front",
+          "reference_descent_deg": 4.119924614013616,
+          "measured_descent_deg": 3.9779602292233713,
+          "reference_model_X_mm": -0.19066764966924,
+          "measured_model_X_mm": -0.18213408072465362,
+          "tracking_model_X_difference_mm": 0.008533568944586373,
+          "max_tracking_error_deg": 0.8069660564081816,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            90.0,
+            90.0
+          ],
+          "kd_range": [
+            4.0,
+            4.0
+          ]
+        },
+        {
+          "joint": "shoulder_side",
+          "reference_descent_deg": 0.8421550202635893,
+          "measured_descent_deg": 0.8305646634518905,
+          "reference_model_X_mm": -4.261894355549488,
+          "measured_model_X_mm": -4.230215063409166,
+          "tracking_model_X_difference_mm": 0.03167929214032217,
+          "max_tracking_error_deg": 0.4021042496436702,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            70.0,
+            70.0
+          ],
+          "kd_range": [
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "joint": "shoulder_rotate",
+          "reference_descent_deg": -1.5420684705320635,
+          "measured_descent_deg": -1.573702905527618,
+          "reference_model_X_mm": -11.162440812869432,
+          "measured_model_X_mm": -11.382435063470464,
+          "tracking_model_X_difference_mm": -0.21999425060103128,
+          "max_tracking_error_deg": 0.2228646083546305,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            36.0,
+            36.0
+          ],
+          "kd_range": [
+            4.5,
+            4.5
+          ]
+        },
+        {
+          "joint": "elbow",
+          "reference_descent_deg": -12.717595640706486,
+          "measured_descent_deg": -13.004878255190208,
+          "reference_model_X_mm": 0.6928391278049006,
+          "measured_model_X_mm": 0.7239135180387812,
+          "tracking_model_X_difference_mm": 0.03107439023388059,
+          "max_tracking_error_deg": 0.7434219707897975,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            70.0,
+            70.0
+          ],
+          "kd_range": [
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "joint": "arm_roll",
+          "reference_descent_deg": -0.31810709204868876,
+          "measured_descent_deg": -0.4589887122248569,
+          "reference_model_X_mm": 0.8997433666391041,
+          "measured_model_X_mm": 1.2704587831993224,
+          "tracking_model_X_difference_mm": 0.3707154165602182,
+          "max_tracking_error_deg": 0.18810298069407752,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            18.0,
+            18.0
+          ],
+          "kd_range": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "joint": "wrist_side",
+          "reference_descent_deg": -1.640010940234396,
+          "measured_descent_deg": -1.748554894506298,
+          "reference_model_X_mm": 5.636553706653371,
+          "measured_model_X_mm": 6.0273322925548305,
+          "tracking_model_X_difference_mm": 0.39077858590145986,
+          "max_tracking_error_deg": 0.2960022904544457,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            16.0,
+            16.0
+          ],
+          "kd_range": [
+            2.2,
+            2.2
+          ]
+        },
+        {
+          "joint": "wrist",
+          "reference_descent_deg": 16.89526084387019,
+          "measured_descent_deg": 16.807989056755837,
+          "reference_model_X_mm": 7.09486843769041,
+          "measured_model_X_mm": 7.032747448821667,
+          "tracking_model_X_difference_mm": -0.06212098886874351,
+          "max_tracking_error_deg": 0.39931505196038025,
+          "max_command_minus_reference_deg": 0.0,
+          "kp_range": [
+            22.0,
+            22.0
+          ],
+          "kd_range": [
+            1.4,
+            1.4
+          ]
+        }
+      ],
+      "endpoint_settle_attempts": 0,
+      "physical_cause_identified": false,
+      "warning": "All model-mm quantities use the same unverified CAD-to-board/TCP mapping; they cannot validate physical accuracy."
+    }
+  ],
+  "nominal_gravity_board_up_components": [
+    -0.007403785732074243,
+    0.11539600208559586,
+    0.9932919745268741
+  ],
+  "board_normal_vs_nominal_gravity_degrees": 6.640152481984656,
+  "gravity_direction_independently_measured": false
+}

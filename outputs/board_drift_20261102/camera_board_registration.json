@@ -1,0 +1,55 @@
+{
+  "status": "independent camera/board diagnostic only; not deployed",
+  "camera_matrix": [
+    [
+      590.613037109375,
+      0.0,
+      336.7207336425781
+    ],
+    [
+      0.0,
+      590.7864990234375,
+      234.2217559814453
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "board_to_camera_rotation": [
+    [
+      0.9998082844973138,
+      -0.018493666165745614,
+      0.00643261706363762
+    ],
+    [
+      -0.012838394574738444,
+      -0.8672116890586338,
+      -0.4977741073868897
+    ],
+    [
+      0.014784108876789714,
+      0.4975960918976569,
+      -0.8672828601171003
+    ]
+  ],
+  "board_to_camera_translation_mm": [
+    -199.64982029123627,
+    126.64713562384836,
+    547.6472608281732
+  ],
+  "vertical_vanishing_point_px": [
+    332.3401703047951,
+    573.301698329102
+  ],
+  "reprojection_error_px": {
+    "median": 0.27407299182705447,
+    "max": 0.9465883621753796
+  },
+  "normal_change_from_oct27_deg": 0.5268441008316791,
+  "assumptions": [
+    "55 mm square size from existing board config",
+    "unchanged camera intrinsics; zero distortion as previous registration"
+  ]
+}

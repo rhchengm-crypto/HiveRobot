@@ -1,0 +1,1400 @@
+{
+  "materials": [
+    [
+      "M01",
+      "Compute",
+      "• NVIDIA Jetson Orin computer",
+      1,
+      "Installed Orin family; exact module, RAM and carrier SKU unknown.",
+      "Current code / records",
+      "Record module and carrier labels; verify rated input voltage.",
+      "Project logs; scripts/left_arm_v2_6.py"
+    ],
+    [
+      "M02",
+      "Compute",
+      "• Fanless ML computer / cooling solution",
+      null,
+      "Fan-free operation requested; no installed fanless computer verified.",
+      "Confirm before use",
+      "Use a manufacturer-rated fanless system if required; do not remove a required cooling fan.",
+      "User requirement; hardware label needed"
+    ],
+    [
+      "M03",
+      "Compute",
+      "• Jetson storage",
+      null,
+      "Boot medium, capacity and free space not yet inventoried.",
+      "Confirm before use",
+      "Record medium and available GB; retain sufficient space for planned logs/video.",
+      "Jetson inventory needed"
+    ],
+    [
+      "M04",
+      "Compute",
+      "• Development computer",
+      1,
+      "Windows PC with VS Code and SSH; processor/RAM unspecified.",
+      "Current code / records",
+      "Record OS, RAM and disk space for reproducibility.",
+      "Project workspace / SSH workflow"
+    ],
+    [
+      "M05",
+      "Compute",
+      "• Network router / Ethernet or Wi-Fi link",
+      1,
+      "Local connection between PC, Web interface and Jetson.",
+      "Current code / records",
+      "Record connection type; loss of network must not be treated as an emergency stop.",
+      "Project Web / SSH records"
+    ],
+    [
+      "M06",
+      "Control",
+      "• Damiao USB-to-CAN adapter",
+      1,
+      "Exact commercial model and revision unconfirmed.",
+      "Current code / records",
+      "Record adapter label and CAN bitrate; prevent concurrent serial ownership.",
+      "Left-arm installation records; DM_CAN.py"
+    ],
+    [
+      "M07",
+      "Control",
+      "• USB data cable",
+      1,
+      "Jetson-to-CAN adapter; connector types require confirmation.",
+      "Protocol requirement",
+      "Use a data-rated cable with strain relief; route outside joint travel.",
+      "Physical inventory needed"
+    ],
+    [
+      "M08",
+      "Control",
+      "• Motor controller electronics",
+      8,
+      "Controllers integrated with the eight Damiao motors.",
+      "Current code / records",
+      "No separate Arduino controller is evidenced in the current control chain.",
+      "scripts/left_arm_v2_6.py; DM_CAN.py"
+    ],
+    [
+      "M09",
+      "Control",
+      "• Separate power-distribution / controller board",
+      null,
+      "Installed board manufacturer and revision unknown.",
+      "Confirm before use",
+      "Record board input/output ratings and wiring before powering.",
+      "Physical inventory needed"
+    ],
+    [
+      "M10",
+      "Reference",
+      "• RBE_Board V2.0",
+      null,
+      "Reference: 48 V XT60 input; 5 V USB-C output up to 8 A; four 48 V XT30 outputs.",
+      "Reference design only",
+      "Not confirmed installed; its 5 V output is not proof of compatibility with this Jetson carrier.",
+      "V2.0/roboto_origin_pcb/README.md"
+    ],
+    [
+      "M11",
+      "Reference",
+      "• Roboto_Usb2Can V1.0",
+      null,
+      "Reference: USB-C 5 V input; four CAN channels on GH1.25.",
+      "Reference design only",
+      "Do not substitute this reference board for the confirmed Damiao adapter without verification.",
+      "V1.0/atom01_pcb/Roboto_Usb2Can/README.md"
+    ],
+    [
+      "M12",
+      "Actuation",
+      "• shoulder_front motor",
+      1,
+      "DM4340; configured slave ID 0x1E.",
+      "Current code / records",
+      "Verify label/ID before replacement; seven arm axes plus one claw actuator.",
+      "scripts/left_arm_v2_6.py — JOINTS"
+    ],
+    [
+      "M13",
+      "Actuation",
+      "• shoulder_side motor",
+      1,
+      "DM4340; configured slave ID 0x1F.",
+      "Current code / records",
+      "Verify label/ID before replacement; seven arm axes plus one claw actuator.",
+      "scripts/left_arm_v2_6.py — JOINTS"
+    ],
+    [
+      "M14",
+      "Actuation",
+      "• shoulder_rotate motor",
+      1,
+      "DM4310; configured slave ID 0x20.",
+      "Current code / records",
+      "Verify label/ID before replacement; seven arm axes plus one claw actuator.",
+      "scripts/left_arm_v2_6.py — JOINTS"
+    ],
+    [
+      "M15",
+      "Actuation",
+      "• elbow motor",
+      1,
+      "DM4340; configured slave ID 0x21.",
+      "Current code / records",
+      "Verify label/ID before replacement; seven arm axes plus one claw actuator.",
+      "scripts/left_arm_v2_6.py — JOINTS"
+    ],
+    [
+      "M16",
+      "Actuation",
+      "• arm_roll motor",
+      1,
+      "DM4310; configured slave ID 0x22.",
+      "Current code / records",
+      "Verify label/ID before replacement; seven arm axes plus one claw actuator.",
+      "scripts/left_arm_v2_6.py — JOINTS"
+    ],
+    [
+      "M17",
+      "Actuation",
+      "• wrist_side motor",
+      1,
+      "DM4310; configured slave ID 0x2A.",
+      "Current code / records",
+      "Verify label/ID before replacement; seven arm axes plus one claw actuator.",
+      "scripts/left_arm_v2_6.py — JOINTS"
+    ],
+    [
+      "M18",
+      "Actuation",
+      "• wrist motor",
+      1,
+      "DM4310; configured slave ID 0x29.",
+      "Current code / records",
+      "Verify label/ID before replacement; seven arm axes plus one claw actuator.",
+      "scripts/left_arm_v2_6.py — JOINTS"
+    ],
+    [
+      "M19",
+      "Actuation",
+      "• claw motor",
+      1,
+      "DM4310; configured slave ID 0x28.",
+      "Current code / records",
+      "Verify label/ID before replacement; seven arm axes plus one claw actuator.",
+      "scripts/left_arm_v2_6.py — JOINTS"
+    ],
+    [
+      "M20",
+      "Wiring",
+      "• CAN twisted-pair harness",
+      null,
+      "Length, gauge, connector count and topology require an as-built inventory.",
+      "Protocol requirement",
+      "Check pinout, continuity and routing with power isolated.",
+      "DM_CAN.py; physical inventory"
+    ],
+    [
+      "M21",
+      "Wiring",
+      "• CAN termination components",
+      null,
+      "Count and resistance per adapter/motor wiring documentation.",
+      "Confirm before use",
+      "Confirm documented termination; do not assume every motor needs a terminator.",
+      "Adapter and motor manuals needed"
+    ],
+    [
+      "M22",
+      "Wiring",
+      "• Motor-power harness",
+      null,
+      "Gauge, current rating, polarity and connector types unverified.",
+      "Confirm before use",
+      "Match to confirmed supply and branch current ratings.",
+      "As-built wiring / labels needed"
+    ],
+    [
+      "M23",
+      "Wiring",
+      "• Cable sleeves, clamps and strain relief",
+      null,
+      "Sizes and quantities from actual harness routing.",
+      "Protocol requirement",
+      "No taut cable or pinch point throughout approved travel.",
+      "Physical inspection"
+    ],
+    [
+      "M24",
+      "Wiring",
+      "• Insulated connector covers and terminal labels",
+      null,
+      "Match installed connectors; uniquely label motor branches.",
+      "Protocol requirement",
+      "No exposed energized conductor accessible during operation.",
+      "Proposed electrical checklist"
+    ],
+    [
+      "M25",
+      "Power",
+      "• Battery pack, if battery powered",
+      null,
+      "Chemistry, nominal/max voltage, Ah, discharge limit and BMS unknown.",
+      "Confirm before use",
+      "Do not infer arm ratings from the older 3S/4S shopping proposal.",
+      "Battery nameplate required"
+    ],
+    [
+      "M26",
+      "Power",
+      "• Bench supply, if externally powered",
+      null,
+      "Installed supply model, voltage and current limit unverified.",
+      "Confirm before use",
+      "Use only ratings approved for the actual motors, board and wiring.",
+      "Supply nameplate required"
+    ],
+    [
+      "M27",
+      "Power",
+      "• Battery charger, if applicable",
+      null,
+      "Must match confirmed chemistry, series count and charge rating.",
+      "Confirm before use",
+      "Use the specified charger in a designated charging area.",
+      "Battery / charger manuals needed"
+    ],
+    [
+      "M28",
+      "Power",
+      "• Jetson power supply / DC converter",
+      1,
+      "Input and output ratings depend on the installed carrier.",
+      "Confirm before use",
+      "Record polarity, voltage and current ratings; verify compatibility before power-on.",
+      "Carrier and converter labels needed"
+    ],
+    [
+      "M29",
+      "Power",
+      "• Branch fuses / overcurrent protection",
+      null,
+      "Type, DC voltage rating and current rating require wiring review.",
+      "Protocol requirement",
+      "Qualified reviewer selects ratings for conductors and loads.",
+      "Electrical review required"
+    ],
+    [
+      "M30",
+      "Power",
+      "• Accessible DC isolation switch",
+      1,
+      "Rated for the actual DC system; exact hardware unverified.",
+      "Protocol requirement",
+      "Isolation can remove torque; support the arm before intentional isolation.",
+      "Proposed safety equipment"
+    ],
+    [
+      "M31",
+      "Structure",
+      "• Approved revised arm STEP assembly",
+      1,
+      "RB000152_02_手臂完整(2).step; orientation approved against the real arm.",
+      "Current code / records",
+      "Use the approved revision; retain the original file.",
+      "User-approved CAD revision"
+    ],
+    [
+      "M32",
+      "Structure",
+      "• Arm link 1 — RB000152_02",
+      null,
+      "Reference CNC-machined 6061 aluminum; as-built process unconfirmed.",
+      "Reference design only",
+      "Derive actual left-arm count from revised STEP; no metal printing confirmed.",
+      "A2_CNCBOM.xlsx"
+    ],
+    [
+      "M33",
+      "Structure",
+      "• Arm link 2 — RB000153_02",
+      null,
+      "Reference CNC-machined 6061 aluminum.",
+      "Reference design only",
+      "Confirm actual part material and quantity.",
+      "A2_CNCBOM.xlsx"
+    ],
+    [
+      "M34",
+      "Structure",
+      "• Arm link 3 — RB000154_02",
+      null,
+      "Reference CNC-machined 6061 aluminum.",
+      "Reference design only",
+      "Confirm actual part material and quantity.",
+      "A2_CNCBOM.xlsx"
+    ],
+    [
+      "M35",
+      "Structure",
+      "• Arm link 4 — RB000155_01",
+      null,
+      "Reference CNC-machined 6061 aluminum.",
+      "Reference design only",
+      "Confirm actual part material and quantity.",
+      "A2_CNCBOM.xlsx"
+    ],
+    [
+      "M36",
+      "Structure",
+      "• Arm link 5 — RB000179_01",
+      null,
+      "Reference CNC-machined 6061 aluminum.",
+      "Reference design only",
+      "Confirm actual part material and quantity.",
+      "A2_CNCBOM.xlsx"
+    ],
+    [
+      "M37",
+      "Structure",
+      "• Shoulder bracket — RB000160_02",
+      null,
+      "Reference CNC-machined 6061 aluminum.",
+      "Reference design only",
+      "Confirm current assembly and mounting orientation.",
+      "A2_CNCBOM.xlsx; revised STEP"
+    ],
+    [
+      "M38",
+      "Structure",
+      "• Universal / flange connectors",
+      null,
+      "Reference RB000167_03 and RB000168_02: 6061; RB000166_02: steel.",
+      "Reference design only",
+      "List only connectors actually used in the revised assembly.",
+      "A2_CNCBOM.xlsx"
+    ],
+    [
+      "M39",
+      "Structure",
+      "• Printed torso / support parts",
+      null,
+      "PA6-CF body recorded; grades and individual part assignments unknown.",
+      "Current code / records",
+      "Inspect for cracks, loose joints and load-dependent deformation.",
+      "左臂装机测试记录_20260703.md"
+    ],
+    [
+      "M40",
+      "Structure",
+      "• Custom wrist-side / wrist brackets",
+      null,
+      "Revised seven-axis assembly; actual material and fabrication process unknown.",
+      "Confirm before use",
+      "Record drawing ID, material and fastener specification for each bracket.",
+      "Revised STEP; physical inventory"
+    ],
+    [
+      "M41",
+      "Structure",
+      "• Gripper palm and finger components",
+      1,
+      "Two-finger gripper; material/process not verified.",
+      "Current code / records",
+      "Inspect pinch points and finger attachment; do not assume PLA or metal printing.",
+      "Approved photos / revised STEP"
+    ],
+    [
+      "M42",
+      "Structure",
+      "• Aluminum-extrusion support stand",
+      1,
+      "Cross-section, alloy, cut lengths and joint hardware unverified.",
+      "Current code / records",
+      "Record actual profile and cut list; 4040 was a proposal, not an as-built confirmation.",
+      "Photos; 桌面抓取与底盘设计记录_20260707.md"
+    ],
+    [
+      "M43",
+      "Structure",
+      "• Stand corner brackets / base anchors",
+      null,
+      "Match actual extrusion slots and mounting surface.",
+      "Protocol requirement",
+      "Verify stand fixation against the approved experiment load.",
+      "As-built stand inspection"
+    ],
+    [
+      "M44",
+      "Structure",
+      "• Fasteners, washers and locking hardware",
+      null,
+      "Thread sizes, grades, quantities and tightening torques not inventoried.",
+      "Confirm before use",
+      "Use drawing/manufacturer torques; do not invent tightening values.",
+      "Revised STEP / assembly drawings needed"
+    ],
+    [
+      "M45",
+      "Structure",
+      "• Mechanical arm support / cradle",
+      1,
+      "Independent support suitable for the arm and payload.",
+      "Protocol requirement",
+      "Must support the load before isolation, reset or maintenance.",
+      "Prior loss-of-torque incident; HANDOFF_20261027.md"
+    ],
+    [
+      "M46",
+      "Manufacture",
+      "• External CNC / printing service",
+      null,
+      "Use only for replacement or reproduction; process selected per approved drawing.",
+      "Protocol requirement",
+      "Metal printing is not established as the current process; specialist shop handles machining/powders.",
+      "A2_CNCBOM.xlsx; user fabrication question"
+    ],
+    [
+      "M47",
+      "Vision",
+      "• Nuwa HP60C RGB-D camera",
+      1,
+      "HP60C model confirmed; serial and calibration revision to record.",
+      "Current code / records",
+      "Rigidly mount outside collision envelope.",
+      "Nuwa-HP60C-Depth-Camera-main; project records"
+    ],
+    [
+      "M48",
+      "Vision",
+      "• Camera cable and rigid mount",
+      1,
+      "Connector type, mounting fasteners and cable length unverified.",
+      "Protocol requirement",
+      "No camera movement between calibration and trials.",
+      "Camera / bench inspection"
+    ],
+    [
+      "M49",
+      "Vision",
+      "• Stable room / task lighting",
+      1,
+      "Record lighting setting; avoid glare on gripper and chessboard.",
+      "Protocol requirement",
+      "Keep conditions fixed during repeated visual measurements.",
+      "Proposed measurement method"
+    ],
+    [
+      "M50",
+      "Task",
+      "• Chessboard and fixed table",
+      1,
+      "Record board dimensions and coordinate origin from current board model.",
+      "Current code / records",
+      "Secure board against movement; clear the tested path.",
+      "data/left_arm_board_grasp.json"
+    ],
+    [
+      "M51",
+      "Task",
+      "• White knight test piece",
+      1,
+      "Current target piece; record piece height and identification.",
+      "Current code / records",
+      "Keep absent for initial empty approach; do not close claw while grasp release is blocked.",
+      "Board-grasp trial records"
+    ],
+    [
+      "M52",
+      "Metrology",
+      "• Millimeter ruler / scale",
+      1,
+      "Readable scale positioned on the board plane.",
+      "Protocol requirement",
+      "Record resolution; remove any loose scale from the collision path.",
+      "User observed drift; proposed measurement"
+    ],
+    [
+      "M53",
+      "Metrology",
+      "• Digital caliper",
+      1,
+      "For accessible unpowered parts only; resolution to record.",
+      "Protocol requirement",
+      "Do not remeasure approved CAD geometry merely to replace it with an estimate.",
+      "Proposed inventory / fixture checks"
+    ],
+    [
+      "M54",
+      "Metrology",
+      "• Camera calibration target / visible fiducial",
+      1,
+      "Printed or rigid target, if available; dimensions verified before use.",
+      "Protocol requirement",
+      "If unavailable, label video estimates qualitative; do not equate pixels to mm.",
+      "HANDOFF_20261027.md; visual calibration pending"
+    ],
+    [
+      "M55",
+      "Tools",
+      "• Correct-size insulated hand tools",
+      1,
+      "Hex keys, drivers and connector tools matched to fasteners.",
+      "Protocol requirement",
+      "Use only after power isolation and load support.",
+      "Proposed assembly checklist"
+    ],
+    [
+      "M56",
+      "Tools",
+      "• Calibrated torque driver",
+      1,
+      "Range suitable for drawing-specified tightening torques.",
+      "Protocol requirement",
+      "Record torque settings and calibration status.",
+      "Fastener / motor documentation needed"
+    ],
+    [
+      "M57",
+      "Tools",
+      "• Rated digital multimeter",
+      1,
+      "Suitable for confirmed DC voltage; intact insulated probes.",
+      "Protocol requirement",
+      "Electrical checks by a competent person; no exposed live probing during robot motion.",
+      "Proposed electrical checklist"
+    ],
+    [
+      "M58",
+      "Safety",
+      "• Physical emergency-stop system",
+      1,
+      "Installed hardware, behavior and restart method require verification.",
+      "Protocol requirement",
+      "Do not treat a Web button as a safety-rated physical stop; support before stop verification.",
+      "Prior stop behavior; safety review required"
+    ],
+    [
+      "M59",
+      "Safety",
+      "• Barrier / marked exclusion zone",
+      1,
+      "Covers full approved swept volume and reviewer-approved clearance.",
+      "Protocol requirement",
+      "Zero hands, people or loose objects inside during motion.",
+      "Proposed bench protocol"
+    ],
+    [
+      "M60",
+      "Safety",
+      "• Safety glasses / goggles",
+      1,
+      "Impact-rated eye protection suitable for the local work.",
+      "Protocol requirement",
+      "Wear during setup and testing; prescription glasses alone may be inadequate.",
+      "Proposed PPE; local lab rules"
+    ],
+    [
+      "M61",
+      "Safety",
+      "• Cut-resistant handling gloves",
+      1,
+      "For sharp metal or printed-part handling with power isolated.",
+      "Protocol requirement",
+      "Remove before work near moving joints, gripper or rotating components.",
+      "Proposed PPE; entanglement avoidance"
+    ],
+    [
+      "M62",
+      "Safety",
+      "• Closed-toe shoes and fitted clothing",
+      1,
+      "Tie back hair; remove dangling jewelry.",
+      "Protocol requirement",
+      "No loose items near motor shafts or gripper linkages.",
+      "Proposed PPE / bench rules"
+    ],
+    [
+      "M63",
+      "Safety",
+      "• Battery incident provisions",
+      1,
+      "Facility-approved response plan and equipment for actual battery chemistry.",
+      "Protocol requirement",
+      "Confirm charging location, exit route and response with the lab safety lead.",
+      "Battery chemistry not yet verified"
+    ],
+    [
+      "M64",
+      "Safety",
+      "• Warning sign and operator / observer checklist",
+      1,
+      "Named operator and observer; visible motion warning.",
+      "Protocol requirement",
+      "Observer remains outside swept volume with stop access.",
+      "Proposed bench protocol"
+    ],
+    [
+      "M65",
+      "Software",
+      "• Jetson OS and device drivers",
+      1,
+      "Record Ubuntu / JetPack / driver versions; versions not pinned here.",
+      "Current code / records",
+      "Archive versions with each experiment batch.",
+      "Jetson environment inventory"
+    ],
+    [
+      "M66",
+      "Software",
+      "• Python 3 environment",
+      1,
+      "NumPy, PySerial and project dependencies; record exact versions.",
+      "Current code / records",
+      "Use a reproducible environment; one process owns the CAN serial device.",
+      "scripts/*.py; DM_CAN.py"
+    ],
+    [
+      "M67",
+      "Software",
+      "• Motor transport library",
+      1,
+      "DM_CAN.py; MIT gain encoding Kp 0–500 and Kd 0–5 in inspected driver.",
+      "Current code / records",
+      "Use per-joint configured limits; encoding range is not an experimentally safe gain range.",
+      "Inspected DM_CAN.py; project logs"
+    ],
+    [
+      "M68",
+      "Software",
+      "• Legacy motion / Web application",
+      1,
+      "left_arm_v2_6.py; left_arm_v2_8.py; existing Web entry point.",
+      "Current code / records",
+      "Retain ordinary Clearance shoulder_rotate exclusion.",
+      "scripts; HANDOFF_20261027.md"
+    ],
+    [
+      "M69",
+      "Software",
+      "• General dynamics and board-grasp control",
+      1,
+      "left_arm_general_motion.py; left_arm_board_grasp.py.",
+      "Current code / records",
+      "Use approved revision; no offset compensation or recorded-angle replay substituted for IK.",
+      "scripts; HANDOFF_20261027.md"
+    ],
+    [
+      "M70",
+      "Software",
+      "• Model Hold and adaptive learning",
+      1,
+      "left_arm_v3_1_model_control.py and current learning files.",
+      "Current code / records",
+      "Retain same-process / same-serial takeover and current adaptive state.",
+      "scripts; HANDOFF_20261027.md"
+    ],
+    [
+      "M71",
+      "Software",
+      "• Model and calibration JSON files",
+      3,
+      "left_arm_general_dynamics.json; left_arm_v3_1_dynamics.json; left_arm_board_grasp.json.",
+      "Current code / records",
+      "Back up actual revisions; record hashes before testing.",
+      "scripts/data"
+    ],
+    [
+      "M72",
+      "Software",
+      "• Vision software",
+      1,
+      "HP60C driver / ROS tools and OpenCV; record versions.",
+      "Current code / records",
+      "Recorded audit RGB is 640×480 at 2 fps; not a camera native-rate specification.",
+      "HP60C files; trial video logs"
+    ],
+    [
+      "M73",
+      "Software",
+      "• ML training / inference stack",
+      null,
+      "PyTorch / Ultralytics YOLO and dataset, if used for piece recognition.",
+      "Confirm before use",
+      "Record actual package versions, weights, dataset split and workload; not required for empty motion tests.",
+      "datasets; chessboard_yolo work logs"
+    ],
+    [
+      "M74",
+      "Software",
+      "• Offline parameter fitting tools",
+      1,
+      "SciPy / NumPy where used; versions to capture.",
+      "Current code / records",
+      "Existing effective inertia fits are not independently measured link mass properties.",
+      "General model identification records"
+    ],
+    [
+      "M75",
+      "Software",
+      "• VS Code, Git and SSH / SCP",
+      1,
+      "Development, revision tracking and controlled file transfer.",
+      "Current code / records",
+      "Verify synchronized file hashes before loading a new build.",
+      "GITHUB_SYNC_20261028.md"
+    ],
+    [
+      "M76",
+      "Software",
+      "• Excel-compatible workbook viewer",
+      1,
+      "Microsoft Excel or equivalent supporting formulas.",
+      "Protocol requirement",
+      "Retain blank unknown fields until confirmed; do not replace them with zeros.",
+      "This protocol workbook"
+    ],
+    [
+      "M77",
+      "Records",
+      "• Log / video storage and backups",
+      1,
+      "JSONL, full command logs, raw video, operator notes and configuration snapshots.",
+      "Protocol requirement",
+      "Use unique trial IDs and timestamps; retain failed trials.",
+      "scripts/data; HANDOFF_20261027.md"
+    ]
+  ],
+  "steps": [
+    [
+      1,
+      "Scope",
+      "Define the research question.",
+      "Evaluate model-based board positioning and motion-to-hold transition; no claim of successful universal grasping.",
+      "Written objective",
+      "Before / during approved testing"
+    ],
+    [
+      2,
+      "Scope",
+      "Set the lateral-error acceptance threshold.",
+      "Enter an approved value in Trial log B3; a blank means no pass/fail conclusion.",
+      "Threshold in mm",
+      "Research criterion; not a safety limit"
+    ],
+    [
+      3,
+      "Scope",
+      "Set the height-error acceptance threshold.",
+      "Enter an approved value in Trial log E3; a blank means no pass/fail conclusion.",
+      "Threshold in mm",
+      "Research criterion; not a safety limit"
+    ],
+    [
+      4,
+      "Scope",
+      "Choose the trial count.",
+      "Proposed design: 3 repeats per approved target and configuration.",
+      "Trial plan",
+      "Proposal; approve before testing"
+    ],
+    [
+      5,
+      "Safety setup",
+      "Assign the experiment operator.",
+      "Exactly one person issues motion commands.",
+      "Operator name",
+      "Before / during approved testing"
+    ],
+    [
+      6,
+      "Safety setup",
+      "Assign the stop observer.",
+      "Observer has a clear view and access to the approved stop control.",
+      "Observer name",
+      "Before / during approved testing"
+    ],
+    [
+      7,
+      "Safety setup",
+      "Obtain the bench safety review.",
+      "Reviewer resolves power ratings, swept-volume clearance and loaded-stop behavior.",
+      "Approval and date",
+      "Release gate: no power until resolved"
+    ],
+    [
+      8,
+      "Safety setup",
+      "Put on eye protection.",
+      "Suitable impact-rated glasses or goggles in place.",
+      "PPE check",
+      "Before / during approved testing"
+    ],
+    [
+      9,
+      "Safety setup",
+      "Secure loose clothing and hair.",
+      "Zero dangling items near joints or gripper.",
+      "PPE check",
+      "Before / during approved testing"
+    ],
+    [
+      10,
+      "Safety setup",
+      "Put on closed-toe shoes.",
+      "Both feet fully covered.",
+      "PPE check",
+      "Before / during approved testing"
+    ],
+    [
+      11,
+      "Unpowered inspection",
+      "Place the arm on its mechanical support.",
+      "Support bears the load without relying on motor torque.",
+      "Support check",
+      "Required before isolation / maintenance"
+    ],
+    [
+      12,
+      "Unpowered inspection",
+      "Isolate the motor power.",
+      "Follow approved isolation procedure; arm remains mechanically supported.",
+      "Isolation check",
+      "Before / during approved testing"
+    ],
+    [
+      13,
+      "Unpowered inspection",
+      "Put on handling gloves if sharp parts require them.",
+      "Gloves used only while power is isolated.",
+      "Handling condition",
+      "Before / during approved testing"
+    ],
+    [
+      14,
+      "Unpowered inspection",
+      "Inspect the stand fixation.",
+      "No visibly loose anchor, extrusion joint or cracked mount.",
+      "Inspection findings",
+      "Before / during approved testing"
+    ],
+    [
+      15,
+      "Unpowered inspection",
+      "Inspect the printed structural parts.",
+      "No crack, delamination or visibly damaged load-bearing feature.",
+      "Part IDs / findings",
+      "Before / during approved testing"
+    ],
+    [
+      16,
+      "Unpowered inspection",
+      "Inspect the gripper attachments.",
+      "No loose palm, finger pivot or mounting fastener.",
+      "Inspection findings",
+      "Before / during approved testing"
+    ],
+    [
+      17,
+      "Unpowered inspection",
+      "Verify the assembly fastener torques.",
+      "Use drawing/manufacturer values with a suitable torque driver.",
+      "Specified / measured torque",
+      "Gate: missing torque data requires review"
+    ],
+    [
+      18,
+      "Unpowered inspection",
+      "Inspect the cable routing.",
+      "No exposed conductor, taut cable or predicted pinch point.",
+      "Harness findings",
+      "Before / during approved testing"
+    ],
+    [
+      19,
+      "Unpowered inspection",
+      "Remove handling gloves.",
+      "No gloves near moving mechanisms.",
+      "PPE check",
+      "Before / during approved testing"
+    ],
+    [
+      20,
+      "Electrical inventory",
+      "Record the Jetson module and carrier labels.",
+      "Exact SKU, input rating and cooling configuration recorded.",
+      "Hardware inventory",
+      "Before / during approved testing"
+    ],
+    [
+      21,
+      "Electrical inventory",
+      "Record the USB-to-CAN adapter label.",
+      "Manufacturer, model and revision recorded.",
+      "Hardware inventory",
+      "Before / during approved testing"
+    ],
+    [
+      22,
+      "Electrical inventory",
+      "Record the power-source nameplate.",
+      "Voltage, polarity and current rating; battery chemistry/Ah/BMS if applicable.",
+      "Power inventory",
+      "Before / during approved testing"
+    ],
+    [
+      23,
+      "Electrical inventory",
+      "Verify power compatibility.",
+      "All supply, converter, motor, board, fuse and cable ratings reviewed as compatible.",
+      "Electrical sign-off",
+      "Release gate: do not infer voltage from reference BOM"
+    ],
+    [
+      24,
+      "Electrical inventory",
+      "Verify the isolated CAN wiring.",
+      "Pinout and termination meet the actual device documentation.",
+      "Continuity / termination record",
+      "Before / during approved testing"
+    ],
+    [
+      25,
+      "Safety validation",
+      "Verify the approved stop behavior on the supported arm.",
+      "Approved procedure confirms response and restart; no unsupported load-drop test.",
+      "Stop-test record",
+      "Competent supervisor; before loaded motion"
+    ],
+    [
+      26,
+      "Workspace",
+      "Mark the exclusion zone.",
+      "Boundary encloses the approved swept volume and reviewed clearance.",
+      "Zone sketch",
+      "Before / during approved testing"
+    ],
+    [
+      27,
+      "Workspace",
+      "Clear the exclusion zone.",
+      "Zero people, hands and loose objects inside during motion.",
+      "Clearance check",
+      "Before / during approved testing"
+    ],
+    [
+      28,
+      "Workspace",
+      "Fix the chessboard to the table.",
+      "No board movement relative to its registration fixture.",
+      "Fixture record",
+      "Before / during approved testing"
+    ],
+    [
+      29,
+      "Workspace",
+      "Fix the camera mount.",
+      "Camera remains stationary throughout calibration and trials.",
+      "Mount record",
+      "Before / during approved testing"
+    ],
+    [
+      30,
+      "Workspace",
+      "Set the lighting.",
+      "Same lighting setting used for all repeats.",
+      "Lighting setting",
+      "Before / during approved testing"
+    ],
+    [
+      31,
+      "Software preparation",
+      "Archive the synchronized code revision.",
+      "Record Git revision and synchronization verification.",
+      "Revision / hash",
+      "Before / during approved testing"
+    ],
+    [
+      32,
+      "Software preparation",
+      "Back up the model and adaptive-learning files.",
+      "Timestamped copy exists before trials.",
+      "Backup location",
+      "Before / during approved testing"
+    ],
+    [
+      33,
+      "Software preparation",
+      "Record the software environment.",
+      "Python, JetPack/OS, driver, NumPy, PySerial and vision versions captured.",
+      "Version inventory",
+      "Before / during approved testing"
+    ],
+    [
+      34,
+      "Software preparation",
+      "Verify exclusive serial ownership.",
+      "Exactly one authorized control process owns the configured adapter.",
+      "Process / device record",
+      "Before / during approved testing"
+    ],
+    [
+      35,
+      "Software preparation",
+      "Verify the preserved control settings.",
+      "Model Hold, adaptive learning and normal Clearance exclusion retained; shoulder_rotate Kp cap 36 / Kd 4.5.",
+      "Configuration snapshot",
+      "Before / during approved testing"
+    ],
+    [
+      36,
+      "Software preparation",
+      "Record the protection configuration.",
+      "Velocity/error watchdogs currently record-only; do not count them as automatic stopping safeguards.",
+      "Protection-mode snapshot",
+      "Before / during approved testing"
+    ],
+    [
+      37,
+      "Software preparation",
+      "Verify the permitted experiment stages.",
+      "Only approved above/touch/approach checks; grasp/closure remains blocked pending release.",
+      "Stage-release record",
+      "Before / during approved testing"
+    ],
+    [
+      38,
+      "Software preparation",
+      "Load the approved CAD and calibration revision.",
+      "Revised STEP and seven-axis calibration correspond to the current hardware.",
+      "CAD/model hash",
+      "Before / during approved testing"
+    ],
+    [
+      39,
+      "Thermal check",
+      "Verify cooling suitability for the intended workload.",
+      "Manufacturer limits available; fanless operation only if the hardware is designed for it.",
+      "Cooling review",
+      "Gate: no fan removal to meet fan-free request"
+    ],
+    [
+      40,
+      "Thermal check",
+      "Run the approved ML workload without robot motion.",
+      "Use intended workload duration; arm stays supported and no motion command is issued.",
+      "Workload / duration",
+      "Only if ML is part of the experiment"
+    ],
+    [
+      41,
+      "Thermal check",
+      "Record the compute thermal results.",
+      "Temperatures below manufacturer limits; record thermal-throttling events and inference rate.",
+      "Temperature / events / fps",
+      "Investigate any thermal throttling before trials"
+    ],
+    [
+      42,
+      "Measurement setup",
+      "Record the board coordinate convention.",
+      "Document origin, X/Y directions, units and board normal from registration.",
+      "Coordinate diagram",
+      "Before / during approved testing"
+    ],
+    [
+      43,
+      "Measurement setup",
+      "Verify the visual measurement scale.",
+      "Use a verified target or board-plane scale; state resolution and uncertainty.",
+      "Scale calibration",
+      "Uncalibrated pixels are qualitative only"
+    ],
+    [
+      44,
+      "Measurement setup",
+      "Choose an approved empty approach target.",
+      "Begin with an established target; arbitrary points require preview and workspace review.",
+      "Target X/Y/height",
+      "Before / during approved testing"
+    ],
+    [
+      45,
+      "Measurement setup",
+      "Remove the chess piece from the initial test path.",
+      "Zero pieces or obstacles in the planned empty trajectory.",
+      "Empty-path check",
+      "Before / during approved testing"
+    ],
+    [
+      46,
+      "Power and baseline",
+      "Restore power under the approved startup procedure.",
+      "Mechanical support remains available; observer ready.",
+      "Startup result",
+      "Only after all release gates pass"
+    ],
+    [
+      47,
+      "Power and baseline",
+      "Read the stationary seven-axis status.",
+      "Log all seven measured positions, velocities and torques.",
+      "Baseline status",
+      "Before / during approved testing"
+    ],
+    [
+      48,
+      "Power and baseline",
+      "Run the approved Home workflow.",
+      "Observer confirms no contact, abnormal sound or visible oscillation.",
+      "Home log",
+      "Do not bypass a failed Home check"
+    ],
+    [
+      49,
+      "Power and baseline",
+      "Verify the Home hold result.",
+      "Record completion and measured drift; do not infer accuracy from green LEDs.",
+      "Hold log / observation",
+      "Before / during approved testing"
+    ],
+    [
+      50,
+      "Planning",
+      "Enter the Cartesian target.",
+      "Use registered board mm coordinates; historical comparison: X113.8 / Y190.3 / height50.2, White Knight.",
+      "Target inputs",
+      "Historical target is not approval for a new run"
+    ],
+    [
+      51,
+      "Planning",
+      "Preview the model-based trajectory.",
+      "Planner reports a valid path inside the approved operating envelope.",
+      "Preview / path ID",
+      "Known operating envelope is not a complete collision model"
+    ],
+    [
+      52,
+      "Planning",
+      "Review the full path clearance.",
+      "No predicted contact with board, stand, camera, cables or pieces.",
+      "Operator / reviewer check",
+      "Before / during approved testing"
+    ],
+    [
+      53,
+      "Planning",
+      "Create a unique trial identifier.",
+      "One ID links target, configuration, video and logs.",
+      "Trial log ID",
+      "Before / during approved testing"
+    ],
+    [
+      54,
+      "Trial execution",
+      "Start the fixed-camera recording.",
+      "Recording includes the full approach, descent and hold.",
+      "Video file / timestamp",
+      "Before / during approved testing"
+    ],
+    [
+      55,
+      "Trial execution",
+      "Execute the approved Above Only stage.",
+      "One command; observer remains outside the swept volume.",
+      "Command / motion log",
+      "Before / during approved testing"
+    ],
+    [
+      56,
+      "Trial execution",
+      "Assess the above-target position.",
+      "Independent visual check distinguishes lateral, height and orientation errors.",
+      "Observed position",
+      "No further descent after unexpected contact or instability"
+    ],
+    [
+      57,
+      "Trial execution",
+      "Preview the approved Touch Position descent.",
+      "Use current measured start pose; record requested descent and path.",
+      "Descent preview",
+      "No recorded-angle replay or hidden offset substitution"
+    ],
+    [
+      58,
+      "Trial execution",
+      "Execute the approved Touch Position descent.",
+      "One descent command; claw remains open.",
+      "Command / trajectory log",
+      "Before / during approved testing"
+    ],
+    [
+      59,
+      "Trial execution",
+      "Record the physical descent behavior.",
+      "Separate movement during descent from movement after takeover; report B/D direction and mm.",
+      "Physical observation",
+      "Before / during approved testing"
+    ],
+    [
+      60,
+      "Trial execution",
+      "Verify the automatic Model Hold transition.",
+      "Same-process / same-serial takeover completes; record the configured 5 s hold result.",
+      "Takeover and hold log",
+      "Before / during approved testing"
+    ],
+    [
+      61,
+      "Trial execution",
+      "Record the final gripper location.",
+      "Measure X/Y/height independently; include scale uncertainty.",
+      "Trial log measurements",
+      "Before / during approved testing"
+    ],
+    [
+      62,
+      "Trial execution",
+      "Record the motion diagnostics.",
+      "Requested 0.01 s control interval and actual frame timing reported separately.",
+      "Timing / torque / joint-error summaries",
+      "Before / during approved testing"
+    ],
+    [
+      63,
+      "Trial execution",
+      "Record any endpoint-settle action.",
+      "Distinguish enabled, skipped and executed; note any final XYZ movement.",
+      "Settle count / observed movement",
+      "Before / during approved testing"
+    ],
+    [
+      64,
+      "Trial execution",
+      "Stop the recording.",
+      "Video includes the completed hold period.",
+      "Video end time",
+      "Before / during approved testing"
+    ],
+    [
+      65,
+      "Review",
+      "Compare the three lateral-axis plans with feedback.",
+      "Examine shoulder_side, shoulder_rotate and wrist_side during the descent window.",
+      "Planned / actual joint traces",
+      "Before / during approved testing"
+    ],
+    [
+      66,
+      "Review",
+      "Compare the encoder prediction with physical displacement.",
+      "Report both; encoder agreement alone does not prove a vertical path.",
+      "Model vs independent measurement",
+      "Before / during approved testing"
+    ],
+    [
+      67,
+      "Review",
+      "Evaluate the trial against the approved research thresholds.",
+      "Trial log remains Not evaluated when tolerances or measurements are absent.",
+      "Calculated result",
+      "Before / during approved testing"
+    ],
+    [
+      68,
+      "Review",
+      "Review any anomaly before another trial.",
+      "Unexpected contact, instability or fault requires the approved stop/recovery procedure.",
+      "Anomaly / recovery record",
+      "Do not disable a load-bearing arm without support"
+    ],
+    [
+      69,
+      "Repeat trials",
+      "Return through the approved Home workflow.",
+      "Return completed before the next full-path repeat.",
+      "Home return log",
+      "Before / during approved testing"
+    ],
+    [
+      70,
+      "Repeat trials",
+      "Repeat the approved trial sequence.",
+      "Use the chosen repeat count; preserve all failed and successful records.",
+      "Repeat number",
+      "Only after previous trial review"
+    ],
+    [
+      71,
+      "Grasp release",
+      "Obtain a separate grasp-stage release.",
+      "Closure and lifting stay blocked until physical positioning and load/stop conditions are approved.",
+      "Signed release",
+      "Current release does not permit grasp execution"
+    ],
+    [
+      72,
+      "Grasp validation",
+      "Place the test piece at the approved target.",
+      "Robot stationary; access only under approved safe setup state.",
+      "Piece ID / position",
+      "Only after grasp-stage release"
+    ],
+    [
+      73,
+      "Grasp validation",
+      "Execute the separately approved grasp routine.",
+      "Use released closure and lift parameters; never improvise grip force or lift height.",
+      "Released routine / result",
+      "Conditional future phase; not currently executable"
+    ],
+    [
+      74,
+      "Shutdown",
+      "Return the arm to the approved parking pose.",
+      "Complete only through the reviewed motion workflow.",
+      "Parking log",
+      "Before / during approved testing"
+    ],
+    [
+      75,
+      "Shutdown",
+      "Place the arm on its mechanical support.",
+      "Support carries the load before torque removal.",
+      "Support check",
+      "Before / during approved testing"
+    ],
+    [
+      76,
+      "Shutdown",
+      "Isolate motor power.",
+      "Follow approved shutdown sequence; no unsupported drop.",
+      "Shutdown check",
+      "Before / during approved testing"
+    ],
+    [
+      77,
+      "Shutdown",
+      "Archive the complete trial records.",
+      "Code/model hashes, adaptive state, raw video, logs and observations retained together.",
+      "Archive / backup",
+      "Before / during approved testing"
+    ],
+    [
+      78,
+      "Shutdown",
+      "Inspect the fixture for post-test damage.",
+      "Record any loose fastener, crack or cable wear with power isolated.",
+      "Post-test inspection",
+      "Before / during approved testing"
+    ]
+  ]
+}

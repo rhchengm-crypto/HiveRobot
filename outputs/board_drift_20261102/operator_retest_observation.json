@@ -1,0 +1,15 @@
+{
+  "date_local": "2026-11-02",
+  "operator_report": "Board had moved before the run. Operator restored board position and observed approximately 8 mm endpoint error toward B WITHOUT a new robot movement.",
+  "restored_board_endpoint_error_toward_B_mm": 8,
+  "new_robot_trial_performed": false,
+  "prior_reported_B_displacement_mm": 25,
+  "prior_board_pose_changed_before_motion": true,
+  "new_retest_log_verified": false,
+  "new_retest_log_path": null,
+  "existing_trial_log_path": "arm_run_1793671770732_5069.txt",
+  "new_motion_commands_sent_after_report": false,
+  "production_parameters_changed": false,
+  "connection_observation": "Connection restored at 192.168.201.199. Previous 192.168.0.199 no longer applies. No robot motion or remote restart was issued during reconnection.",
+  "interpretation": "Do not attribute 25 mm versus 8 mm difference to algorithm changes. Static board placement affects endpoint alignment; separately verify actual lateral motion during descent from synchronized logs and images. Physical cause remains unresolved."
+}
