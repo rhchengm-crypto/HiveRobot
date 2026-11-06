@@ -118,4 +118,4 @@ GitHub 仓库沿用 `rhchengm-crypto/HiveRobot`。`SOURCE_SYNC_20261105.json` �
 
 实板串口正常、天气 valid=1 verified=1，第 4 页却无法操作；GPT state=3 Failed、active=1 sending=0。根因为退出超时后管理任务遗弃保留实例，stopping() 永久为真并全局锁定导航。已修正为可取消的连接等待、保留所有权重试安全清理、退出意图保持至完成、收尾时允许非 GPT 页面切换；没有强删任务或提前释放资源。
 
-最终版已编译并 app-only 刷入、哈希校验通过。立即退出、连接 3 秒后退出、连接成功后退出、同批指令离开并马上重新进入，共四项真实生命周期测试通过；每次天气→新闻→转文字均可切换，最终 VPN state=0 active=0。GPT 网关 16KB 上传通过；随后轻睡眠 2999ms、恢复 302ms，麦克风实读 32000 帧、SD、Wi-Fi 均正常。实体 KEY 整圈切换待用户确认；整夜休眠仍待验证。详见 rlcd-gpt-tailscale/VPN_EXIT_FIX.md 和 VPN_EXIT_VALIDATION.json。
+最终版已编译并 app-only 刷入、哈希校验通过。立即退出、连接 3 秒后退出、连接成功后退出、同批指令离开并马上重新进入，共四项真实生命周期测试通过；每次天气→新闻→转文字均可切换，最终 VPN state=0 active=0。GPT 网关 16KB 上传通过；随后轻睡眠 2999ms、恢复 302ms，麦克风实读 32000 帧、SD、Wi-Fi 均正常。实体 KEY 整圈切换用户确认“天气和切换都正常，不再卡住”；整夜休眠仍待验证。详见 rlcd-gpt-tailscale/VPN_EXIT_FIX.md 和 VPN_EXIT_VALIDATION.json。
