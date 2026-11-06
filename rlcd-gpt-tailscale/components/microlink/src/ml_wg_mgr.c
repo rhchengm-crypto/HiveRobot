@@ -1659,9 +1659,13 @@ void ml_wg_mgr_task(void *arg) {
     /* Shutdown WireGuard interface */
     if (ml->wg_netif) {
         struct ml_wg_cleanup cleanup = {.ml=ml,.done=xSemaphoreCreateBinary()};
-        if (!cleanup.done || tcpip_callback(ml_wg_cleanup_on_tcpip, &cleanup) != ERR_OK) {
-            ESP_LOGE(TAG, "Cannot schedule safe WireGuard cleanup; retaining task/context");
-            for (;;) vTaskDelay(pdMS_TO_TICKS(1000));
+        while (!cleanup.done) {
+            ESP_LOGW(TAG, "Waiting for safe WireGuard cleanup semaphore");
+            vTaskDelay(pdMS_TO_TICKS(100));cleanup.done=xSemaphoreCreateBinary();
+        }
+        while(tcpip_callback(ml_wg_cleanup_on_tcpip, &cleanup) != ERR_OK) {
+            ESP_LOGW(TAG, "Retrying safe WireGuard cleanup scheduling");
+            vTaskDelay(pdMS_TO_TICKS(100));
         }
         xSemaphoreTake(cleanup.done, portMAX_DELAY);
         vSemaphoreDelete(cleanup.done);

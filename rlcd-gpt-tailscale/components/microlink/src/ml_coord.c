@@ -233,6 +233,7 @@ static int do_tcp_connect(microlink_t *ml) {
     }
 
     int64_t t_dns = esp_timer_get_time();
+    if(xEventGroupGetBits(ml->events)&ML_EVT_SHUTDOWN_REQUEST){ml_freeaddrinfo(res);return -1;}
     ESP_LOGI(TAG, "[TIMING] DNS resolve: %lld ms", (t_dns - t_start) / 1000);
 
     int sock = ml_socket(res->ai_family, SOCK_STREAM, IPPROTO_TCP);
@@ -2286,8 +2287,10 @@ void ml_coord_task(void *arg) {
                 xEventGroupSetBits(ml->events, ML_EVT_DERP_CONNECT_REQ);
                 /* Wait for DERP to connect (up to 15s) before continuing */
                 ESP_LOGI(TAG, "Waiting for DERP I/O task to connect...");
-                xEventGroupWaitBits(ml->events, ML_EVT_DERP_CONNECTED,
-                                    pdFALSE, pdTRUE, pdMS_TO_TICKS(15000));
+                EventBits_t derp_bits=xEventGroupWaitBits(ml->events,
+                                    ML_EVT_DERP_CONNECTED | ML_EVT_SHUTDOWN_REQUEST,
+                                    pdFALSE, pdFALSE, pdMS_TO_TICKS(15000));
+                if(derp_bits & ML_EVT_SHUTDOWN_REQUEST)break;
             }
 
             /* Start streaming long-poll for incremental updates */

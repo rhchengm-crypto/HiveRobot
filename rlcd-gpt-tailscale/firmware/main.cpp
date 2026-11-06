@@ -179,7 +179,7 @@ void newsTick() {
 }
 bool navigationIdle(){
  portENTER_CRITICAL(&stateLock);bool idle=shared.mode==Mode::Ready||shared.mode==Mode::Result||shared.mode==Mode::Failure;portEXIT_CRITICAL(&stateLock);
- return idle&&!RealtimeText::active()&&!GptGateway::stopping();
+ return idle&&!RealtimeText::active();
 }
 void showWeather(){
  page=0;followLive=false;status(Mode::Ready,weatherCache.valid?"本地三天天气":"等待按IP获取当地天气","");
@@ -262,9 +262,9 @@ void keyPress() {
   if(mode==Mode::Streaming){RealtimeText::stop();status(Mode::StreamEnding,"正在收尾，请稍候");return;}
   if(mode==Mode::StreamEnding)return;
   if(mode==Mode::Recording || mode==Mode::Recognizing || mode==Mode::Setup)return;
-  if(GptGateway::stopping()){status(Mode::Ready,"正在退出家庭VPN，请稍候");return;}
   if(newsPage){startNews(true);return;}
   if(weatherPage){startWeather(true);return;}
+  if(GptGateway::stopping()){status(Mode::Ready,"正在退出家庭VPN，请稍候");return;}
   if(!micReady){status(Mode::Failure,"麦克风未就绪，请查看串口");return;}
   if(!NetworkConfig::hasCredentials() || (!gptPage&&!DASHSCOPE_API_KEY[0])){status(Mode::Failure,"请先在电脑配置 Wi-Fi 和 API Key");return;}
   if(WiFi.status()!=WL_CONNECTED){WiFi.reconnect();status(Mode::Failure,"Wi-Fi 未连接，稍后按 BOOT 重试");return;}
@@ -577,7 +577,7 @@ void setup() {
   else if(!NetworkConfig::hasCredentials() || !DASHSCOPE_API_KEY[0])status(Mode::Failure,"请先配置 Wi-Fi 和 API Key");
   else status(Mode::Ready,"转文字：按 BOOT 开始听写");
   Serial.println("[BUTTON_MAP] BOOT_GPIO0=enter_record KEY_GPIO18=page_hold_next_tab RX_GPIO44=sleep_setup");
- Serial.printf("[READY] build=gpt-tailnet-gateway-20261106-sleep-recovery ESP32-S3-RLCD-4.2 psram=%u mic=%u config=%u\n",ESP.getPsramSize(),micReady,NetworkConfig::hasCredentials() && DASHSCOPE_API_KEY[0]);
+ Serial.printf("[READY] build=gpt-tailnet-gateway-20261106-vpn-exit ESP32-S3-RLCD-4.2 psram=%u mic=%u config=%u\n",ESP.getPsramSize(),micReady,NetworkConfig::hasCredentials() && DASHSCOPE_API_KEY[0]);
 }
 void loop() {
   Battery::tick();

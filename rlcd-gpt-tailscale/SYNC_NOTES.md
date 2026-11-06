@@ -13,3 +13,5 @@ build/、private-backup/、日志、用户历史、真实配置与固件二进�
 新闻播报使用 ESP-IDF HTTP SSE，TCP 接收窗口 32768 字节，接收邮箱 24。首次未缓存出声约 2.44 秒，SD 缓存读取约 0.62 秒。NEWS_SPEECH.md 与 NEWS_SPEECH_VALIDATION.json 记录最终验证和用户验收；其他页面、麦克风、休眠与 GPT VPN 回归通过。
 
 2026-11-06：RX 轻睡眠恢复修正版已刷入，短时测试通过，整夜待验证。源码工作目录迁移至 Desktop/esp32/rlcd-gpt-tailscale，build.ps1 默认使用 build-sleep-recovery；完整配置见 sdkconfig.verified，实测及 9 键对比见 SLEEP_RECOVERY.md。
+
+天气页假死已修正 VPN 退出与页面锁定逻辑；四项生命周期、网关上传、休眠/麦克风回归通过，实体 KEY 待确认，整夜仍待验证。详见 VPN_EXIT_FIX.md。

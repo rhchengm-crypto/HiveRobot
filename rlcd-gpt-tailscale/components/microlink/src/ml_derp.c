@@ -132,6 +132,7 @@ static int derp_tls_read_all(microlink_t *ml, uint8_t *data, size_t len, int tim
     uint64_t start_ms = ml_get_time_ms();
 
     while (received < len) {
+        if(xEventGroupGetBits(ml->events)&ML_EVT_SHUTDOWN_REQUEST)return -1;
         if (timeout_ms > 0 && (ml_get_time_ms() - start_ms) > (uint64_t)timeout_ms) {
             ESP_LOGW(TAG, "derp_tls_read_all timeout (%d/%d bytes in %dms)",
                      (int)received, (int)len, timeout_ms);
@@ -525,10 +526,10 @@ void ml_derp_tx_task(void *arg) {
             if ((bits & ML_EVT_DERP_CONNECT_REQ) && !ml->derp.connected) {
                 xEventGroupClearBits(ml->events, ML_EVT_DERP_CONNECT_REQ);
                 /* Retry up to 3 times with 2s backoff */
-                for (int attempt = 0; attempt < 3 && !ml->derp.connected; attempt++) {
+                for (int attempt = 0; attempt < 3 && !ml->derp.connected && !(xEventGroupGetBits(ml->events)&ML_EVT_SHUTDOWN_REQUEST); attempt++) {
                     if (attempt > 0) {
                         ESP_LOGW(TAG, "DERP connect retry %d/3 in 2s...", attempt + 1);
-                        vTaskDelay(pdMS_TO_TICKS(2000));
+                        if(xEventGroupWaitBits(ml->events,ML_EVT_SHUTDOWN_REQUEST,pdFALSE,pdFALSE,pdMS_TO_TICKS(2000))&ML_EVT_SHUTDOWN_REQUEST)break;
                     } else {
                         ESP_LOGI(TAG, "DERP connect requested, connecting from I/O task");
                     }
@@ -540,18 +541,18 @@ void ml_derp_tx_task(void *arg) {
                     ESP_LOGW(TAG, "DERP connect attempt %d failed", attempt + 1);
                 }
             }
-            if (bits & ML_EVT_DERP_RECONNECT) {
+            if ((bits & ML_EVT_DERP_RECONNECT) && !(xEventGroupGetBits(ml->events)&ML_EVT_SHUTDOWN_REQUEST)) {
                 xEventGroupClearBits(ml->events, ML_EVT_DERP_RECONNECT);
                 ESP_LOGW(TAG, "DERP reconnect requested (was %s)",
                          ml->derp.connected ? "connected" : "disconnected");
                 ml_derp_disconnect(ml);
                 verbose_phase = false;
                 /* Auto-reconnect after disconnect */
-                vTaskDelay(pdMS_TO_TICKS(1000));
-                for (int attempt = 0; attempt < 3 && !ml->derp.connected; attempt++) {
+                xEventGroupWaitBits(ml->events,ML_EVT_SHUTDOWN_REQUEST,pdFALSE,pdFALSE,pdMS_TO_TICKS(1000));
+                for (int attempt = 0; attempt < 3 && !ml->derp.connected && !(xEventGroupGetBits(ml->events)&ML_EVT_SHUTDOWN_REQUEST); attempt++) {
                     if (attempt > 0) {
                         ESP_LOGW(TAG, "DERP reconnect retry %d/3 in 2s...", attempt + 1);
-                        vTaskDelay(pdMS_TO_TICKS(2000));
+                        if(xEventGroupWaitBits(ml->events,ML_EVT_SHUTDOWN_REQUEST,pdFALSE,pdFALSE,pdMS_TO_TICKS(2000))&ML_EVT_SHUTDOWN_REQUEST)break;
                     }
                     if (ml_derp_connect(ml) == ESP_OK) {
                         connected_since_ms = ml_get_time_ms();
@@ -641,6 +642,7 @@ void ml_derp_tx_task(void *arg) {
  * ========================================================================== */
 
 esp_err_t ml_derp_connect(microlink_t *ml) {
+    if(xEventGroupGetBits(ml->events)&ML_EVT_SHUTDOWN_REQUEST)return ESP_ERR_INVALID_STATE;
     /* Determine DERP host/port from DERPMap with node failover.
      * Always start from node 0 (the first/preferred node in the DERPMap).
      * Only rotate to a different node after a SUCCESSFUL connection drops,
@@ -685,6 +687,7 @@ esp_err_t ml_derp_connect(microlink_t *ml) {
     }
 
     int64_t t_derp_dns = esp_timer_get_time();
+    if(xEventGroupGetBits(ml->events)&ML_EVT_SHUTDOWN_REQUEST){ml_freeaddrinfo(res);return ESP_ERR_INVALID_STATE;}
     ESP_LOGI(TAG, "[TIMING] DERP DNS: %lld ms", (t_derp_dns - t_derp_start) / 1000);
 
     /* TCP connect — use address family from DNS result */
@@ -708,6 +711,7 @@ esp_err_t ml_derp_connect(microlink_t *ml) {
     ml_freeaddrinfo(res);
 
     int64_t t_derp_tcp = esp_timer_get_time();
+    if(xEventGroupGetBits(ml->events)&ML_EVT_SHUTDOWN_REQUEST){ml_close_sock(sock);return ESP_ERR_INVALID_STATE;}
     ESP_LOGI(TAG, "[TIMING] DERP TCP connect: %lld ms", (t_derp_tcp - t_derp_dns) / 1000);
 
     /* TLS setup */
@@ -741,6 +745,7 @@ esp_err_t ml_derp_connect(microlink_t *ml) {
     /* TLS handshake - socket has 10s SO_RCVTIMEO from connect phase. */
     int ret;
     while ((ret = mbedtls_ssl_handshake(&ml->derp.ssl)) != 0) {
+        if(xEventGroupGetBits(ml->events)&ML_EVT_SHUTDOWN_REQUEST){ml_close_sock(sock);ml->derp.sockfd=-1;return ESP_ERR_INVALID_STATE;}
         if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE) {
             continue;
         }

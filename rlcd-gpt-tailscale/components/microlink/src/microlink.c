@@ -528,7 +528,7 @@ esp_err_t microlink_stop(microlink_t *ml) {
     if (expected) {
         EventBits_t exited = xEventGroupWaitBits(ml->events, expected, pdFALSE, pdTRUE, pdMS_TO_TICKS(15000));
         if ((exited & expected) != expected) {
-            ESP_LOGE(TAG, "Shutdown not acknowledged; retaining live resources");
+            ESP_LOGE(TAG, "Shutdown not acknowledged expected=0x%lx exited=0x%lx; retaining live resources", (unsigned long)expected, (unsigned long)exited);
             return ESP_ERR_TIMEOUT;
         }
     }
