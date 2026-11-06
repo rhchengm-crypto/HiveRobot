@@ -103,3 +103,12 @@ GitHub 仓库沿用 `rhchengm-crypto/HiveRobot`。`SOURCE_SYNC_20261105.json` �
 - 用户已确认提示音与新闻有声；最终提速版用户已确认“较快出声，中文连续，顺序正确”；实体K1第1/2条通过。测试时已经验证并恢复过第1条起始游标，后续继续依当前按键次数循环。
 
 源文件：`firmware/NewsSpeech.cpp/.h`、`PcmWave.h`、`Microphone.cpp/.h`、`ExternalKeys.h`、`main.cpp`、CMake与sdkconfig。详情 `NEWS_SPEECH.md`；日志摘要 `NEWS_SPEECH_VALIDATION.json`。诊断 `speech-info / speech-next / speech-stop / speaker-test`。本轮没有刷COM4灯控板。
+
+
+## 2026-11-06：RX 轻睡眠恢复与 9 键对比
+
+工作目录现为 C:/Users/rhche/Desktop/esp32/rlcd-gpt-tailscale；新 CAD 存 Desktop/3D print，ESP32 工程存 Desktop/esp32。用户澄清短时休眠可唤醒，整夜后失败；未认定根因。稳定性修正版已刷入：关闭轻睡眠中的 CPU 域断电，检查 GPIO44 唤醒配置，先完整初始化并重画 ST7305，再恢复 USB/麦克风/Wi-Fi。其他功能保留。
+
+实际两分钟定时休眠 119999ms、恢复 310ms；三次 RX 唤醒用户确认均正常，计数 4、GPIO 原因 7、恢复 311ms。唤醒后实际麦克风读取 32000 帧、SD、Wi-Fi 通过。整夜休眠尚未验证，不能宣称整夜问题已解决。休眠电流可能略增，增量未实测。详细记录：rlcd-gpt-tailscale/SLEEP_RECOVERY.md 与 SLEEP_RECOVERY_VALIDATION.json。
+
+9 键灯控只关背光并暂停动画，主控、按键扫描和网络继续运行；RLCD 使用 esp_light_sleep_start，二者恢复路径不同。没有更改或刷写 9 键板，也没有把 RLCD 改为息屏待机。build.ps1 默认构建目录改为 build-sleep-recovery，原 build 保留；私有配置、固件二进制、用户录音不发布。

@@ -99,3 +99,5 @@ Battery display: GPIO4 / ADC1 channel 3 uses the onboard 3:1 divider and calibra
 Battery UI: the estimate is now centered inside the battery icon. XOR text remains visible across the filled and empty portions; LOW remains alongside the icon.
 
 News speech: the physically leftmost K1 (GPIO3) cycles current news entries from 1 through the actual count, then wraps. Cached audio is stored on SD; uncached audio uses Qwen TTS SSE with separate network/player tasks. See NEWS_SPEECH.md for controls, codec sharing, and validation.
+
+2026-11-06：RX 轻睡眠恢复稳定性修正、实测及与 9 键息屏方式的区别见 [SLEEP_RECOVERY.md](SLEEP_RECOVERY.md)。当前默认构建目录为 build-sleep-recovery。整夜休眠仍待验证。

@@ -5,6 +5,7 @@
 #include <esp_heap_caps.h>
 #include <freertos/idf_additions.h>
 #include <esp_sleep.h>
+#include <esp_timer.h>
 #include <driver/gpio.h>
 #include "NetworkConfig.h"
 #include "ST7305_U8g2.h"
@@ -36,7 +37,8 @@ bool micReady=false;size_t page=0;bool followLive=false;
 bool askQuestion=false,newsPage=false,weatherPage=false,gptPage=false;
 bool menuHome=false;uint8_t selectedCard=0;
 int deferredFunction=-1;
-bool deferredSleep=false,deferredSleepTest=false,deferredAction=false,deferredPortal=false;
+bool deferredSleep=false,deferredAction=false,deferredPortal=false;
+uint32_t deferredSleepTest=0;
 Shared savedApps[3];bool hasSavedApp[3]={false,false,false};size_t savedPages[3]={0,0,0};
 DailyNews::Bulletin newsCache;
 Shared beforeNews,beforeWeather;
@@ -497,37 +499,63 @@ void paint() {
 uint32_t networkTestStarted=0;
 bool suppressButtons=false;
 int lastSleepResult=-1;unsigned lastWakeReason=0,sleepCount=0;
-void sleepDevice(bool timerTest=false){
- if(NewsSpeech::active()){NewsSpeech::stop();deferredSleep=true;deferredSleepTest=timerTest;return;}
+uint32_t lastSleepMs=0,lastRestoreMs=0;
+#ifdef CONFIG_PM_POWER_DOWN_CPU_IN_LIGHT_SLEEP
+constexpr bool cpuSleepPowerDown=true;
+#else
+constexpr bool cpuSleepPowerDown=false;
+#endif
+void sleepDevice(uint32_t wakeAfterMs=0){
+ if(NewsSpeech::active()){NewsSpeech::stop();deferredSleep=true;deferredSleepTest=wakeAfterMs;return;}
  if(!systemIdle()||NetworkConfig::active()){Serial.println("[SLEEP] busy=1");return;}
  // GPIO44 is a digital light-sleep wake source, not an RTC deep-sleep pin.
- Serial.printf("[SLEEP] entering light gpio=44 timer_test=%u\n",timerTest);Serial.flush();
- if(!GptGateway::stopAndWait()){status(Mode::Failure,"家庭VPN退出超时，请重启");return;}
- if(!History::flush()){status(Mode::Failure,"SD卡保存未完成，请稍后休眠");return;}
+ // Re-establish the wake input each time, before blanking the display.
+ gpio_config_t wakePin{};wakePin.pin_bit_mask=1ULL<<44;wakePin.mode=GPIO_MODE_INPUT;
+ wakePin.pull_up_en=GPIO_PULLUP_ENABLE;wakePin.pull_down_en=GPIO_PULLDOWN_DISABLE;
+ esp_err_t configured=gpio_config(&wakePin);
+ if(configured==ESP_OK)configured=gpio_sleep_sel_dis(GPIO_NUM_44);
+ if(configured==ESP_OK)configured=gpio_wakeup_enable(GPIO_NUM_44,GPIO_INTR_LOW_LEVEL);
+ if(configured==ESP_OK)configured=esp_sleep_enable_gpio_wakeup();
+ if(configured==ESP_OK&&wakeAfterMs)configured=esp_sleep_enable_timer_wakeup(uint64_t(wakeAfterMs)*1000);
+ if(configured!=ESP_OK){
+  esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_ALL);gpio_wakeup_disable(GPIO_NUM_44);
+  Serial.printf("[SLEEP] wake_setup_failed=%d\n",int(configured));status(Mode::Failure,"休眠唤醒配置失败，请重试");return;
+ }
+ const auto cancelWake=[](){esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_ALL);gpio_wakeup_disable(GPIO_NUM_44);};
+ Serial.printf("[SLEEP] entering light gpio=44 timer_ms=%lu cpu_power_down=%u\n",(unsigned long)wakeAfterMs,unsigned(cpuSleepPowerDown));Serial.flush();
+ if(!GptGateway::stopAndWait()){cancelWake();status(Mode::Failure,"家庭VPN退出超时，请重启");return;}
+ if(!History::flush()){cancelWake();status(Mode::Failure,"SD卡保存未完成，请稍后休眠");return;}
  Microphone::suspend();NetworkConfig::suspend();
  screen->clearBuffer();screen->sendBuffer();lcd.setSleep(true);
- gpio_sleep_sel_dis(GPIO_NUM_44);gpio_wakeup_enable(GPIO_NUM_44,GPIO_INTR_LOW_LEVEL);
- esp_sleep_enable_gpio_wakeup();if(timerTest)esp_sleep_enable_timer_wakeup(3000000ULL);
  // Drop the USB D+ pull-up before sleep so the host sees a real disconnect.
  Serial.end();delay(30);
+ const int64_t sleepStarted=esp_timer_get_time();
  const esp_err_t result=esp_light_sleep_start();
+ const int64_t woke=esp_timer_get_time();lastSleepMs=uint32_t((woke-sleepStarted)/1000);
+ const auto reason=esp_sleep_get_wakeup_cause();lastSleepResult=int(result);lastWakeReason=unsigned(reason);++sleepCount;cancelWake();
+ // Restore visible content before USB, I2S or Wi-Fi recovery can delay it.
+ // Reset/reinitialize ST7305 instead of assuming its state survived a long sleep.
+ lcd.fullInit();++ExternalKeys::revision;
+ portENTER_CRITICAL(&stateLock);++shared.revision;portEXIT_CRITICAL(&stateLock);
+ paint();
  Serial.begin(115200);
- const auto reason=esp_sleep_get_wakeup_cause();lastSleepResult=int(result);lastWakeReason=unsigned(reason);++sleepCount;esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_ALL);gpio_wakeup_disable(GPIO_NUM_44);
- lcd.setSleep(false);micReady=Microphone::resume();NetworkConfig::resume();
+ Serial.printf("[SLEEP] display_restored=1 slept_ms=%lu reason=%u result=%d\n",(unsigned long)lastSleepMs,unsigned(reason),int(result));
+ micReady=Microphone::resume();Serial.printf("[SLEEP] microphone_restored=%u\n",micReady);
+ NetworkConfig::resume();lastRestoreMs=uint32_t((esp_timer_get_time()-woke)/1000);
  if(gptPage)status(Mode::Ready,"正在恢复家庭网关连接");
  // A wake press is consumed, including a held button.
  suppressButtons=true;
  portENTER_CRITICAL(&stateLock);++shared.revision;portEXIT_CRITICAL(&stateLock);
  if(!micReady)status(Mode::Failure,"唤醒后麦克风恢复失败");
  ++ExternalKeys::revision;
- Serial.printf("[SLEEP] resumed result=%d reason=%u mic=%u\n",int(result),unsigned(reason),micReady);
+ Serial.printf("[SLEEP] resumed result=%d reason=%u mic=%u restore_ms=%lu\n",int(result),unsigned(reason),micReady,(unsigned long)lastRestoreMs);
 }
 void rxPoll(){
  static bool raw=false,down=false,handled=false;static uint32_t changed=0,pressed=0;
  bool value=digitalRead(44)==LOW;
  if(suppressButtons){raw=down=value;changed=millis();pressed=0;handled=true;return;}
  if(value!=raw){raw=value;changed=millis();}
- if(down!=raw&&millis()-changed>=35){down=raw;if(down){pressed=millis();handled=false;}else{if(!handled&&pressed){if(NetworkConfig::active())NetworkConfig::close();else sleepDevice();}pressed=0;}}
+ if(down!=raw&&millis()-changed>=35){down=raw;Serial.printf("[RX_KEY] down=%u\n",down);if(down){pressed=millis();handled=false;}else{if(!handled&&pressed){if(NetworkConfig::active())NetworkConfig::close();else sleepDevice();}pressed=0;}}
  if(down&&pressed&&!handled&&millis()-pressed>=3000){handled=true;if(NewsSpeech::active()){NewsSpeech::stop();deferredPortal=true;}else if(systemIdle())NetworkConfig::open();else Serial.println("[WIFI_PORTAL] busy=1");}
 }
 
@@ -549,7 +577,7 @@ void setup() {
   else if(!NetworkConfig::hasCredentials() || !DASHSCOPE_API_KEY[0])status(Mode::Failure,"请先配置 Wi-Fi 和 API Key");
   else status(Mode::Ready,"转文字：按 BOOT 开始听写");
   Serial.println("[BUTTON_MAP] BOOT_GPIO0=enter_record KEY_GPIO18=page_hold_next_tab RX_GPIO44=sleep_setup");
- Serial.printf("[READY] build=gpt-tailnet-gateway-20261105 ESP32-S3-RLCD-4.2 psram=%u mic=%u config=%u\n",ESP.getPsramSize(),micReady,NetworkConfig::hasCredentials() && DASHSCOPE_API_KEY[0]);
+ Serial.printf("[READY] build=gpt-tailnet-gateway-20261106-sleep-recovery ESP32-S3-RLCD-4.2 psram=%u mic=%u config=%u\n",ESP.getPsramSize(),micReady,NetworkConfig::hasCredentials() && DASHSCOPE_API_KEY[0]);
 }
 void loop() {
   Battery::tick();
@@ -564,7 +592,7 @@ void loop() {
    if(deferredFunction>=0){const int index=deferredFunction;deferredFunction=-1;openFunction(index);}
    if(deferredAction){deferredAction=false;keyPress();}
    if(deferredPortal){deferredPortal=false;if(systemIdle())NetworkConfig::open();}
-   if(deferredSleep){const bool test=deferredSleepTest;deferredSleep=false;sleepDevice(test);}
+   if(deferredSleep){const uint32_t test=deferredSleepTest;deferredSleep=false;sleepDevice(test);}
   }
   static bool portalWas=false;
   NetworkConfig::tick(systemIdle());rxPoll();
@@ -611,9 +639,10 @@ void loop() {
       else if(!strcmp(command,"speech-next")){if(newsPage&&navigationIdle())NewsSpeech::next(newsCache.text,newsCache.count);}
       else if(!strcmp(command,"speech-stop"))NewsSpeech::stop();
       else if(!strcmp(command,"speaker-test")){if(systemIdle())NewsSpeech::tone();}
-      else if(!strcmp(command,"sleep-info"))Serial.printf("[SLEEP_INFO] count=%u result=%d reason=%u mic=%u\n",sleepCount,lastSleepResult,lastWakeReason,micReady);
+      else if(!strcmp(command,"sleep-info"))Serial.printf("[SLEEP_INFO] count=%u result=%d reason=%u mic=%u slept_ms=%lu restore_ms=%lu cpu_power_down=%u rx=%u\n",sleepCount,lastSleepResult,lastWakeReason,micReady,(unsigned long)lastSleepMs,(unsigned long)lastRestoreMs,unsigned(cpuSleepPowerDown),unsigned(digitalRead(44)));
       else if(!strcmp(command,"sleep"))sleepDevice();
-      else if(!strcmp(command,"sleep-test"))sleepDevice(true);
+      else if(!strcmp(command,"sleep-test"))sleepDevice(3000);
+      else if(!strcmp(command,"sleep-long"))sleepDevice(120000);
       else if(NetworkConfig::active()){Serial.println("[COMMAND] close_wifi_setup_first=1");}
       else if(!strcmp(command,"home"))returnToCards();
       else if(!strcmp(command,"enter")){if(menuHome)enterCard();}

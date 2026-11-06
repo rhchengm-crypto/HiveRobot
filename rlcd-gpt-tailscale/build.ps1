@@ -1,4 +1,4 @@
-param([switch]$ConfigureOnly,[switch]$CheckApp)
+param([switch]$ConfigureOnly,[switch]$CheckApp,[string]$BuildDir='build-sleep-recovery')
 $ErrorActionPreference='Stop'
 $env:PYTHONUTF8='1'
 $env:PYTHONIOENCODING='utf-8'
@@ -18,9 +18,9 @@ try {
  if($LASTEXITCODE -ne 0){throw 'Local configuration failed'}
  $operation=if($ConfigureOnly){'reconfigure'}else{'build'}
  if($CheckApp){
-  & ninja -C build 'esp-idf/firmware/CMakeFiles/__idf_firmware.dir/GptGateway.cpp.obj' 'esp-idf/firmware/CMakeFiles/__idf_firmware.dir/main.cpp.obj' 'esp-idf/microlink/libmicrolink.a' 'esp-idf/wireguard_lwip/libwireguard_lwip.a'
+  & ninja -C $BuildDir 'esp-idf/firmware/CMakeFiles/__idf_firmware.dir/GptGateway.cpp.obj' 'esp-idf/firmware/CMakeFiles/__idf_firmware.dir/main.cpp.obj' 'esp-idf/microlink/libmicrolink.a' 'esp-idf/wireguard_lwip/libwireguard_lwip.a'
  }else{
-  & $idfPython (Join-Path $env:IDF_PATH 'tools\idf.py') '-DIDF_TARGET=esp32s3' $operation
+  & $idfPython (Join-Path $env:IDF_PATH 'tools\idf.py') '-DIDF_TARGET=esp32s3' '-B' $BuildDir $operation
  }
  if($LASTEXITCODE -ne 0){throw 'ESP-IDF build failed'}
 }finally{Pop-Location}
