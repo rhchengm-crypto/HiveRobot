@@ -1,6 +1,5 @@
 #include "RealtimeText.h"
 #include "Microphone.h"
-#include "Transcribe.h"
 #include "LocalConfig.h"
 #include "Trust.h"
 #include "OggOpus.h"
@@ -9,10 +8,10 @@
 #include <WebSocketsClient.h>
 #include <RlcdOpus.h>
 #include <ArduinoJson.h>
-#include <mbedtls/base64.h>
 #include <esp_heap_caps.h>
 #include <atomic>
 #include <new>
+#include <math.h>
 #include <lwip/sockets.h>
 #include <mbedtls/error.h>
 namespace RealtimeText {
@@ -45,12 +44,13 @@ public:
 };
 struct Packet {uint16_t size;uint32_t created;uint8_t bytes[512];};
 constexpr unsigned audioDepth=250; // 10 seconds in PSRAM for short network stalls.
-QueueHandle_t audioQueue=nullptr,textQueue=nullptr;StaticQueue_t audioControl;
+QueueHandle_t audioQueue=nullptr;StaticQueue_t audioControl;
 uint8_t* audioStorage=nullptr;
-std::atomic<bool> running{false},stopping{false},fatal{false},audioDone{true},networkDone{false},textDone{true};
+std::atomic<bool> running{false},stopping{false},fatal{false},audioDone{true};
 StateCallback stateCb;TextCallback textCb;FinishCallback finishCb;
 portMUX_TYPE errorLock=portMUX_INITIALIZER_UNLOCKED;char failure[160]={};
 uint32_t startedAt=0,frames=0,sentBytes=0,completed=0,converted=0,maxLag=0;
+std::atomic<uint32_t> capturedMs{0};
 void fail(const char* message){
  portENTER_CRITICAL(&errorLock);if(!failure[0]){strncpy(failure,message,sizeof(failure)-1);failure[sizeof(failure)-1]=0;}portEXIT_CRITICAL(&errorLock);
  fatal=true;stopping=true;
@@ -62,28 +62,37 @@ bool push(const uint8_t* p,size_t n,uint32_t serial,uint32_t sequence,uint64_t g
 }
 void capture(void*){
  void* encoder=nullptr;uint8_t* output=nullptr;
- esp_opus_enc_config_t cfg{};cfg.sample_rate=16000;cfg.channel=1;cfg.bits_per_sample=16;cfg.bitrate=12000;cfg.frame_duration=ESP_OPUS_ENC_FRAME_DURATION_40_MS;cfg.application_mode=ESP_OPUS_ENC_APPLICATION_VOIP;cfg.complexity=3;cfg.enable_fec=false;cfg.enable_dtx=true;cfg.enable_vbr=true;
+ esp_opus_enc_config_t cfg{};cfg.sample_rate=16000;cfg.channel=1;cfg.bits_per_sample=16;cfg.bitrate=24000;cfg.frame_duration=ESP_OPUS_ENC_FRAME_DURATION_40_MS;cfg.application_mode=ESP_OPUS_ENC_APPLICATION_VOIP;cfg.complexity=3;cfg.enable_fec=false;cfg.enable_dtx=false;cfg.enable_vbr=true;
  int inSize=0,outSize=0;int16_t stereo[1280],mono[640];uint32_t seq=0;uint64_t granule=0;const uint32_t serial=esp_random();bool headerSent=false;
  do {
   const auto code=esp_opus_enc_open(&cfg,sizeof(cfg),&encoder);
   if(code!=ESP_AUDIO_ERR_OK){Serial.printf("[RT_CODEC] open_error=%d\n",int(code));fail("Opus编码器初始化失败");break;}
   if(esp_opus_enc_get_frame_size(encoder,&inSize,&outSize)!=ESP_AUDIO_ERR_OK || inSize!=1280 || outSize<1){fail("Opus编码帧配置错误");break;}
   output=static_cast<uint8_t*>(malloc(outSize));if(!output){fail("Opus编码内存不足");break;}
-  Serial.printf("[RT_CODEC] pcm_bytes=%d output_capacity=%d bitrate=12000 vbr=1 dtx=1 frame_ms=40\n",inSize,outSize);
+  Serial.printf("[RT_CODEC] pcm_bytes=%d output_capacity=%d bitrate=24000 vbr=1 dtx=0 frame_ms=40\n",inSize,outSize);
   uint8_t header[20];OggOpus::head(header);if(!push(header,19,serial,seq++,0,2))break;OggOpus::tags(header);if(!push(header,20,serial,seq++,0,0))break;headerSent=true;
   for(unsigned i=0;i<4;++i)if(Microphone::read(stereo,640)<0){fail("麦克风读取失败");break;}
-  if(!fatal && !stopping && stateCb)stateCb("正在听，停顿约1秒自动转写");
-  int32_t previousInput=0,previousOutput=0;
+  if(!fatal && !stopping && stateCb)stateCb("正在听，停顿后自动转成普通话");
+  int32_t previousInput=0,previousOutput=0;float gain=8.0f;
+  unsigned quietFrames=0,quietLog=0;uint32_t lastAudioLog=millis();
   while(!stopping && !fatal){
    if(Microphone::read(stereo,640)!=640){fail("麦克风读取失败");break;}
-   int peak=0;
-   for(unsigned i=0;i<640;++i){const int32_t x=stereo[2*i];int32_t y=x-previousInput+(previousOutput*32604)/32768;previousInput=x;previousOutput=y;mono[i]=int16_t(constrain(y,-32768,32767));peak=max(peak,abs(int(mono[i])));}
-   // The installed microphones have low output. Raise quiet speech for VAD,
-   // while limiting each frame's gain so louder speech does not clip.
-   const int gain=max(1,min(8,28000/max(1,peak)));for(auto& sample:mono)sample=int16_t(int(sample)*gain);
+   int peak=0;uint64_t energy=0;
+   for(unsigned i=0;i<640;++i){const int32_t x=stereo[2*i];int32_t y=x-previousInput+(previousOutput*32604)/32768;previousInput=x;previousOutput=y;mono[i]=int16_t(constrain(y,-32768,32767));peak=max(peak,abs(int(mono[i])));energy+=int64_t(mono[i])*mono[i];}
+   const unsigned rms=unsigned(sqrt(double(energy)/640));
+   // Do not boost a sustained low-level noise floor by 8x. Keep all samples
+   // (no hard gate), allow 200ms for soft consonants, and preserve speech gain
+   // separately so the next syllable is not faded in after a pause.
+   quietFrames=(rms<50 && peak<400)?min(quietFrames+1,5u):0;
+   const float target=min(8.0f,28000.0f/max(1,peak));
+   if(quietFrames<5)gain=target<gain?target:min(target,gain+0.10f);
+   const float appliedGain=quietFrames>=5?min(gain,2.0f):gain;
+   if(quietFrames>=5)++quietLog;
+   for(auto& sample:mono)sample=int16_t(constrain(int32_t(sample*appliedGain),-32768,32767));
+   if(millis()-lastAudioLog>=2000){lastAudioLog=millis();Serial.printf("[RT_AUDIO] rms=%u peak=%d gain_x10=%u quiet_frames=%u\n",rms,peak,unsigned(appliedGain*10),quietLog);quietLog=0;}
    esp_audio_enc_in_frame_t input{reinterpret_cast<uint8_t*>(mono),1280};esp_audio_enc_out_frame_t encoded{};encoded.buffer=output;encoded.len=outSize;
    if(esp_opus_enc_process(encoder,&input,&encoded)!=ESP_AUDIO_ERR_OK){fail("Opus编码失败");break;}
-   granule+=1920;if(!push(output,encoded.encoded_bytes,serial,seq++,granule,0))break;++frames;
+   granule+=1920;if(!push(output,encoded.encoded_bytes,serial,seq++,granule,0))break;++frames;capturedMs=frames*40;
   }
   // Flush codec lookahead with one silent frame and mark the final Ogg page.
   if(headerSent && !fatal){memset(mono,0,sizeof(mono));esp_audio_enc_in_frame_t input{reinterpret_cast<uint8_t*>(mono),1280};esp_audio_enc_out_frame_t encoded{};encoded.buffer=output;encoded.len=outSize;
@@ -92,104 +101,112 @@ void capture(void*){
  if(encoder)esp_opus_enc_close(encoder);free(output);audioDone=true;
  Serial.printf("[RT_CAPTURE] frames=%lu audio_ms=%lu stack_free=%u\n",(unsigned long)frames,(unsigned long)(frames*40),unsigned(uxTaskGetStackHighWaterMark(nullptr)));vTaskDelete(nullptr);
 }
-void convert(void*){
- while(!networkDone || uxQueueMessagesWaiting(textQueue)){
-  String* raw=nullptr;if(xQueueReceive(textQueue,&raw,pdMS_TO_TICKS(100))!=pdTRUE)continue;
-  if(raw && !fatal){String output,error;const uint32_t at=millis();
-   if(standardMandarin(*raw,output,error)){if(output.length()>3800){fail("单句转换结果过长，请分句停顿");}else{++converted;if(textCb)textCb(output.c_str());Serial.printf("[RT_MANDARIN] seq=%lu bytes=%u elapsed_ms=%lu\n",(unsigned long)converted,unsigned(output.length()),(unsigned long)(millis()-at));}}
-   else {Serial.printf("[RT_CONVERT_ERROR] %s\n",error.c_str());fail("普通话转换失败；已完成文字保留，未完成部分请重录");}
-  }
-  delete raw;
- }
- textDone=true;Serial.printf("[RT_CONVERT_TASK] stack_free=%u\n",unsigned(uxTaskGetStackHighWaterMark(nullptr)));vTaskDelete(nullptr);
-}
+// Message API emits final standard-Mandarin text directly. No second LLM task.
 void networkBody(){
  const auto oldSleep=WiFi.getSleep();WiFi.setSleep(false);
- RealtimeSocket ws;bool ready=false,configured=false,captureStarted=false,finishing=false,finished=false,everConnected=false;uint32_t finishAt=0;String lastItem;
- uint32_t uploads=0,maxSendMs=0,lastNetLog=0;
+ RealtimeSocket ws;bool ready=false,configured=false,captureStarted=false,finishing=false,finished=false,everConnected=false;
+ uint32_t finishAt=0,uploads=0,maxSendMs=0,lastNetLog=0;int lastSentence=-1;
+ char uuid[37];uint32_t a=esp_random(),b=esp_random(),c=esp_random(),e=esp_random();
+ snprintf(uuid,sizeof(uuid),"%08lx-%04lx-4%03lx-8%03lx-%04lx%08lx",(unsigned long)a,(unsigned long)(b>>16),(unsigned long)(b&0xfff),(unsigned long)(c&0xfff),(unsigned long)(c>>16),(unsigned long)e);
+ String taskId=uuid;
  String endpoint=ASR_ENDPOINT;const int begin=endpoint.indexOf("://"),slash=endpoint.indexOf('/',begin+3);String host=endpoint.substring(begin+3,slash);
- String path="/api-ws/v1/realtime?model=qwen3-asr-flash-realtime";String headers=String("Authorization: Bearer ")+DASHSCOPE_API_KEY;
+ String headers=String("Authorization: Bearer ")+DASHSCOPE_API_KEY;
+ String recent[3];unsigned recentCount=0;bool contextDirty=false;
+ auto taskHeader=[&](JsonDocument& d,const char* action){d["header"]["action"]=action;d["header"]["task_id"]=taskId;d["header"]["streaming"]="duplex";};
  ws.onEvent([&](WStype_t type,uint8_t* payload,size_t length){
-  if(type==WStype_CONNECTED){everConnected=true;JsonDocument d;d["type"]="session.update";auto s=d["session"];s["input_audio_format"]="opus";s["sample_rate"]=16000;s["input_audio_transcription"]["language"]="zh";s["turn_detection"]["type"]="server_vad";s["turn_detection"]["threshold"]=0.2;s["turn_detection"]["silence_duration_ms"]=1000;String msg;serializeJson(d,msg);if(!ws.sendTXT(msg))fail("实时配置发送失败");configured=true;}
-  else if(type==WStype_DISCONNECTED && everConnected && !finished)fail("实时连接中断；未完成部分请重录");
+  if(type==WStype_CONNECTED){
+   everConnected=true;JsonDocument d;taskHeader(d,"run-task");auto p=d["payload"];
+   p["task_group"]="audio";p["task"]="asr";p["function"]="recognition";p["model"]="qwen-audio-3.1-asr-flash-message";
+   auto params=p["parameters"];params["format"]="opus";params["sample_rate"]=16000;params["keep_dialect"]=false;
+   params["language_hints"][0]="zh";params["vad_model"]="near_meeting_16k";params["max_sentence_silence"]=800;params["intermediate_result_enabled"]=false;
+   params["disfluency_removal_enabled"]=false;params["heartbeat"]=true;
+   p["input"].to<JsonObject>();String msg;serializeJson(d,msg);if(!ws.sendTXT(msg))fail("新模型任务发送失败");configured=true;
+  }else if(type==WStype_DISCONNECTED && everConnected && !finished){fail("实时连接中断；未完成部分请重录");}
   else if(type==WStype_TEXT){
-   JsonDocument d;if(deserializeJson(d,payload,length)){fail("实时响应解析失败");return;}const char* event=d["type"]|"";
-   if(!strcmp(event,"session.updated")){ready=true;ws.tune();Serial.println("[RT] session_ready opus=ogg bitrate=12000 vbr=1 dtx=1 vad_ms=1000");}
-   else if(!strcmp(event,"conversation.item.input_audio_transcription.completed")){
-    String id=d["item_id"].as<String>();if(!id.isEmpty() && id==lastItem)return;lastItem=id;String transcript=d["transcript"].as<String>();transcript.trim();if(transcript.isEmpty())return;
-    if(transcript.length()>3072){fail("单句过长，请分句停顿；未完成部分请重录");return;}
-    String* raw=new(std::nothrow) String(transcript);if(!raw || xQueueSend(textQueue,&raw,0)!=pdTRUE){delete raw;fail("普通话转换积压，已停止；未完成部分请重录");return;}
-    ++completed;Serial.printf("[RT_FINAL] seq=%lu bytes=%u session_ms=%lu pending=%u\n",(unsigned long)completed,unsigned(transcript.length()),(unsigned long)(millis()-startedAt),unsigned(uxQueueMessagesWaiting(textQueue)));
-   }else if(!strcmp(event,"session.finished")){finished=true;}
-   else if(!strcmp(event,"error") || !strcmp(event,"conversation.item.input_audio_transcription.failed")){Serial.printf("[RT_API_ERROR] code=%s\n",d["error"]["code"]|"unknown");fail("实时识别接口失败；已完成文字保留");}
+   JsonDocument d;if(deserializeJson(d,payload,length)){fail("实时响应解析失败");return;}
+   const char* responseTask=d["header"]["task_id"]|"";if(taskId!=responseTask)return;
+   const char* event=d["header"]["event"]|"";
+   if(!strcmp(event,"task-started")){ready=true;ws.tune();Serial.println("[RT] model=qwen-audio-3.1-asr-flash-message task_ready opus=ogg bitrate=24000 vbr=1 dtx=0 vad=near_meeting_16k vad_ms=800 quiet_gain_max=2 keep_dialect=0");}
+   else if(!strcmp(event,"result-generated")){
+    auto sentence=d["payload"]["output"]["sentence"];
+    if((sentence["heartbeat"]|false)||!(sentence["sentence_end"]|false))return;
+    const int id=sentence["sentence_id"]|-1;if(id<0||id<=lastSentence)return;
+    String text=sentence["text"]|"";text.trim();lastSentence=id;if(text.isEmpty())return;
+    if(text.length()>3800){fail("单句过长，请分句停顿；未完成部分请重录");return;}
+    ++completed;++converted;if(textCb)textCb(text.c_str());
+    // Keep up to three short, real preceding sentences. Never inject example
+    // phrases as if they were spoken, or carry context into a new recording.
+    String context=text;if(context.length()>900){size_t cut=900;while(cut&&(uint8_t(context[cut])&0xc0)==0x80)--cut;context.remove(cut);}
+    if(recentCount<3)recent[recentCount++]=context;else{recent[0]=recent[1];recent[1]=recent[2];recent[2]=context;}
+    contextDirty=true;
+    Serial.printf("[RT_FINAL] seq=%lu sentence=%d bytes=%u session_ms=%lu direct_mandarin=1\n",(unsigned long)completed,id,unsigned(text.length()),(unsigned long)(millis()-startedAt));
+    const int64_t endMs=sentence["end_time"]|int64_t(-1);
+    const int64_t ahead=endMs>=0?int64_t(capturedMs.load())-endMs:-1;
+    Serial.printf("[RT_TIMING] sentence=%d end_ms=%lld captured_ms=%lu audio_ahead_ms=%lld\n",id,(long long)endMs,(unsigned long)capturedMs.load(),(long long)ahead);
+   }else if(!strcmp(event,"task-finished")){finished=true;}
+   else if(!strcmp(event,"task-failed")){
+    // Log the server code only: never echo requests, headers or credentials.
+    String code=d["header"]["error_code"]|"unknown";Serial.printf("[RT_API_ERROR] code=%s\n",code.c_str());
+    String error=String("新模型识别失败：")+code;fail(error.c_str());
+   }
   }
  });
- // This library leaves client-certificate pointers uninitialized for local
- // instances. Explicitly clear them; authenticate with the bearer token.
- // The library also applies this interval before its first connection after
- // boot. Once a live connection drops we fail explicitly, so this interval
- // only controls initial connection attempts, before any audio is captured.
- ws.setReconnectInterval(1000);ws.beginSslWithClientKey(host.c_str(),443,path.c_str(),asrRootCA,nullptr,nullptr,"");ws.setExtraHeaders(headers.c_str());
+ // Clear client-certificate pointers in this vendored WebSocket library.
+ ws.setReconnectInterval(1000);ws.beginSslWithClientKey(host.c_str(),443,"/api-ws/v1/inference",asrRootCA,nullptr,nullptr,"");ws.setExtraHeaders(headers.c_str());
  while(!fatal && !finished){
-  ws.loop();if(fatal || finished)break;
-  if(ready && !captureStarted){
-   captureStarted=true;
-   if(!stopping){textDone=false;if(xTaskCreatePinnedToCore(convert,"rt-mandarin",14*1024,nullptr,2,nullptr,0)!=pdPASS){textDone=true;fail("转换任务创建失败");break;}
-    audioDone=false;if(xTaskCreatePinnedToCore(capture,"rt-opus",32*1024,nullptr,3,nullptr,1)!=pdPASS){audioDone=true;fail("录音任务创建失败");break;}}
-  }
+  ws.loop();if(fatal||finished)break;
+  if(ready&&!captureStarted){captureStarted=true;if(!stopping){audioDone=false;if(xTaskCreatePinnedToCore(capture,"rt-opus",32*1024,nullptr,3,nullptr,1)!=pdPASS){audioDone=true;fail("录音任务创建失败");break;}}}
   if(ready){
-   // Six Opus/Ogg pages represent 240 ms. Combine them in one WebSocket
-   // message (hard cap <1400 bytes including base64/JSON), hence one TLS write in
-   // the vendored library, instead of 25 small writes per second.
-   Packet packet;
-   const unsigned queued=uxQueueMessagesWaiting(audioQueue);
-   const bool have=queued && xQueuePeek(audioQueue,&packet,0)==pdTRUE;
-   if(have && (queued>=6 || millis()-packet.created>=240 || (stopping && audioDone))){
+   if(contextDirty&&!finishing&&!stopping){
+    JsonDocument d;taskHeader(d,"continue-task");for(unsigned i=0;i<recentCount;++i){auto item=d["payload"]["input"]["context"][i];item["role"]="user";item["content"][0]["type"]="input_text";item["content"][0]["text"]=recent[i];}
+    String msg;serializeJson(d,msg);if(!ws.sendTXT(msg)){fail("识别上下文发送失败");break;}contextDirty=false;
+   }
+   // Batch up to 240ms of Ogg pages. Binary frames avoid base64 overhead;
+   // keep each TLS write small and the existing 10-second audio queue bounded.
+   Packet packet;const unsigned queued=uxQueueMessagesWaiting(audioQueue);
+   const bool have=queued&&xQueuePeek(audioQueue,&packet,0)==pdTRUE;
+   if(have&&(queued>=6||millis()-packet.created>=240||(stopping&&audioDone))){
     uint8_t grouped[960];size_t bytes=0;
     for(unsigned batch=0;batch<6;++batch){
-     if(xQueuePeek(audioQueue,&packet,0)!=pdTRUE || bytes+packet.size>sizeof(grouped))break;
+     if(xQueuePeek(audioQueue,&packet,0)!=pdTRUE||bytes+packet.size>sizeof(grouped))break;
      if(xQueueReceive(audioQueue,&packet,0)!=pdTRUE)break;
-    const uint32_t lag=millis()-packet.created;if(lag>maxLag)maxLag=lag;
-    if(lag>12000){fail("实时上传延迟过大，已停止；未完成部分请重录");break;}
+     const uint32_t lag=millis()-packet.created;maxLag=max(maxLag,lag);
+     if(lag>12000){fail("实时上传延迟过大，已停止；未完成部分请重录");break;}
      memcpy(grouped+bytes,packet.bytes,packet.size);bytes+=packet.size;
     }
     if(fatal)break;
-    char base64[1281];size_t n=0;if(mbedtls_base64_encode(reinterpret_cast<uint8_t*>(base64),sizeof(base64)-1,&n,grouped,bytes)){fail("Opus上传编码失败");break;}base64[n]=0;
-    String msg=String("{\"type\":\"input_audio_buffer.append\",\"audio\":\"")+base64+"\"}";
-    const uint32_t at=millis();
-    if(!ws.sendTXT(msg)){ws.diagnose();fail("实时音频发送失败；未完成部分请重录");break;}sentBytes+=bytes;++uploads;maxSendMs=max(maxSendMs,millis()-at);
+    const uint32_t at=millis();if(!ws.sendBIN(grouped,bytes)){ws.diagnose();fail("实时音频发送失败；未完成部分请重录");break;}
+    sentBytes+=bytes;++uploads;maxSendMs=max(maxSendMs,millis()-at);
     if(millis()-lastNetLog>=2000){lastNetLog=millis();Serial.printf("[RT_NET] messages=%lu queued=%u max_send_ms=%lu max_lag_ms=%lu\n",(unsigned long)uploads,unsigned(uxQueueMessagesWaiting(audioQueue)),(unsigned long)maxSendMs,(unsigned long)maxLag);}
    }
-   if(stopping && audioDone && !uxQueueMessagesWaiting(audioQueue) && !finishing && !fatal){String msg="{\"type\":\"session.finish\"}";if(!ws.sendTXT(msg))fail("实时识别收尾失败");finishing=true;finishAt=millis();}
+   if(stopping&&audioDone&&!uxQueueMessagesWaiting(audioQueue)&&!finishing&&!fatal){
+    JsonDocument d;taskHeader(d,"finish-task");d["payload"]["input"].to<JsonObject>();String msg;serializeJson(d,msg);
+    if(!ws.sendTXT(msg))fail("实时识别收尾失败");finishing=true;finishAt=millis();
+   }
   }
-  if(!ready && millis()-startedAt>25000)fail(configured?"实时识别配置超时":"实时连接超时，请检查网络");
-  if(finishing && millis()-finishAt>30000)fail("等待最后一句超时；已完成文字保留");
-  if(stopping && !everConnected)break;
+  if(!ready&&millis()-startedAt>25000)fail(configured?"新模型启动超时":"实时连接超时，请检查网络");
+  if(finishing&&millis()-finishAt>30000)fail("等待最后一句超时；已完成文字保留");
+  if(stopping&&!everConnected)break;
   vTaskDelay(pdMS_TO_TICKS(1));
  }
- stopping=true;while(!audioDone)vTaskDelay(pdMS_TO_TICKS(10));ws.disconnect();ws.onEvent(nullptr);networkDone=true;
- if(!fatal && stateCb)stateCb("正在整理最后的普通话文字");
- while(!textDone)vTaskDelay(pdMS_TO_TICKS(20));
+ stopping=true;while(!audioDone)vTaskDelay(pdMS_TO_TICKS(10));ws.disconnect();ws.onEvent(nullptr);
  char error[160];portENTER_CRITICAL(&errorLock);strncpy(error,failure,sizeof(error));portEXIT_CRITICAL(&errorLock);
  const uint32_t seconds=max(uint32_t(1),frames*40/1000);
  if(error[0])Serial.printf("[RT_ERROR] %s\n",error);
- Serial.printf("[RT_DONE] ok=%u frames=%lu ogg_bytes=%lu avg_Bps=%lu max_lag_ms=%lu recognized=%lu converted=%lu stack_free=%u heap=%u\n",!error[0],(unsigned long)frames,(unsigned long)sentBytes,(unsigned long)(sentBytes/seconds),(unsigned long)maxLag,(unsigned long)completed,(unsigned long)converted,unsigned(uxTaskGetStackHighWaterMark(nullptr)),ESP.getFreeHeap());
- vQueueDelete(audioQueue);vQueueDelete(textQueue);audioQueue=nullptr;textQueue=nullptr;free(audioStorage);audioStorage=nullptr;
- WiFi.setSleep(oldSleep);
+ Serial.printf("[RT_DONE] ok=%u model=asr31 frames=%lu ogg_bytes=%lu avg_Bps=%lu max_lag_ms=%lu recognized=%lu direct_mandarin=%lu stack_free=%u heap=%u\n",!error[0],(unsigned long)frames,(unsigned long)sentBytes,(unsigned long)(sentBytes/seconds),(unsigned long)maxLag,(unsigned long)completed,(unsigned long)converted,unsigned(uxTaskGetStackHighWaterMark(nullptr)),ESP.getFreeHeap());
+ vQueueDelete(audioQueue);audioQueue=nullptr;free(audioStorage);audioStorage=nullptr;WiFi.setSleep(oldSleep);
 }
 void network(void*){
- // Return normally from the body to release C++ strings and WebSocket/TLS
- // members before deleting the FreeRTOS task (which does not unwind C++).
  networkBody();char error[160];portENTER_CRITICAL(&errorLock);strncpy(error,failure,sizeof(error));portEXIT_CRITICAL(&errorLock);
  const auto done=finishCb;running=false;if(done)done(error);vTaskDelete(nullptr);
 }
 }
 bool start(StateCallback state,TextCallback text,FinishCallback finish){
  if(running.exchange(true))return false;
- stateCb=state;textCb=text;finishCb=finish;stopping=false;fatal=false;audioDone=true;textDone=true;networkDone=false;failure[0]=0;frames=sentBytes=completed=converted=maxLag=0;startedAt=millis();
+ stateCb=state;textCb=text;finishCb=finish;stopping=false;fatal=false;audioDone=true;failure[0]=0;frames=sentBytes=completed=converted=maxLag=0;capturedMs=0;startedAt=millis();
  audioStorage=static_cast<uint8_t*>(heap_caps_malloc(audioDepth*sizeof(Packet),MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT));
- if(audioStorage)audioQueue=xQueueCreateStatic(audioDepth,sizeof(Packet),audioStorage,&audioControl);textQueue=xQueueCreate(8,sizeof(String*));
- if(!audioQueue || !textQueue || xTaskCreatePinnedToCore(network,"rt-network",16*1024,nullptr,2,nullptr,0)!=pdPASS){if(audioQueue)vQueueDelete(audioQueue);if(textQueue)vQueueDelete(textQueue);free(audioStorage);audioStorage=nullptr;audioQueue=textQueue=nullptr;running=false;return false;}
+ if(audioStorage)audioQueue=xQueueCreateStatic(audioDepth,sizeof(Packet),audioStorage,&audioControl);
+ if(!audioQueue||xTaskCreatePinnedToCore(network,"rt-network",20*1024,nullptr,2,nullptr,0)!=pdPASS){if(audioQueue)vQueueDelete(audioQueue);free(audioStorage);audioStorage=nullptr;audioQueue=nullptr;running=false;return false;}
  return true;
 }
 void stop(){stopping=true;}

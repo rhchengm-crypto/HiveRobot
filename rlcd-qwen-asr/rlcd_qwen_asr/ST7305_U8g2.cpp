@@ -273,3 +273,5 @@ void ST7305_U8g2::fullInit()
   _cmd(0x38);
   _cmd(0x29);
 }
+
+void ST7305_U8g2::setSleep(bool asleep){_cmd(asleep?0x10:0x11);delay(120);}

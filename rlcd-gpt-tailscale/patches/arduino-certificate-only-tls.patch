@@ -1,0 +1,40 @@
+diff --git a/libraries/NetworkClientSecure/src/ssl_client.cpp b/libraries/NetworkClientSecure/src/ssl_client.cpp
+index 71cfa93..7d1b9c7 100644
+--- a/libraries/NetworkClientSecure/src/ssl_client.cpp
++++ b/libraries/NetworkClientSecure/src/ssl_client.cpp
+@@ -19,10 +19,7 @@
+ #include "ssl_client.h"
+ #include "esp_crt_bundle.h"
+ 
+-#if !defined(MBEDTLS_KEY_EXCHANGE__SOME__PSK_ENABLED) && !defined(MBEDTLS_KEY_EXCHANGE_SOME_PSK_ENABLED)
+-#warning \
+-  "Please call `idf.py menuconfig` then go to Component config -> mbedTLS -> TLS Key Exchange Methods -> Enable pre-shared-key ciphersuites and then check `Enable PSK based ciphersuite modes`. Save and Quit."
+-#else
++// Keep certificate-verified TLS available even when optional PSK suites are off.
+ 
+ const char *pers = "esp32-tls";
+ 
+@@ -217,6 +214,7 @@ int start_ssl_client(
+       log_e("useRootCABundle is set, but attach_ssl_certificate_bundle(ssl, true); was not called!");
+     }
+   } else if (pskIdent != NULL && psKey != NULL) {
++#if defined(MBEDTLS_KEY_EXCHANGE__SOME__PSK_ENABLED) || defined(MBEDTLS_KEY_EXCHANGE_SOME_PSK_ENABLED)
+     log_v("Setting up PSK");
+     // convert PSK from hex to binary
+     if ((strlen(psKey) & 1) != 0 || strlen(psKey) > 2 * MBEDTLS_PSK_MAX_LEN) {
+@@ -256,6 +254,10 @@ int start_ssl_client(
+       log_e("mbedtls_ssl_conf_psk returned %d", ret);
+       return handle_error(ret);
+     }
++#else
++    log_e("PSK TLS is not enabled in this certificate-only build");
++    return -1;
++#endif
+   } else {
+     return -1;
+   }
+@@ -651,4 +653,3 @@ bool verify_ssl_dn(sslclient_context *ssl_client, const char *domain_name) {
+ 
+   return false;
+ }
+-#endif

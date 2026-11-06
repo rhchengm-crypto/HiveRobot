@@ -39,6 +39,8 @@ bool begin() {
   pinMode(46,OUTPUT);digitalWrite(46,LOW);
   Serial.println("[MIC] ES7210 stereo 16kHz/16bit; MCLK16 BCLK9 WS45 DIN10");return true;
 }
+void suspend(){if(device)esp_codec_dev_close(device);}
+bool resume(){if(!device)return false;esp_codec_dev_sample_info_t format{};format.sample_rate=16000;format.channel=2;format.bits_per_sample=16;return esp_codec_dev_open(device,&format)==ESP_CODEC_DEV_OK && esp_codec_dev_set_in_gain(device,24)==ESP_CODEC_DEV_OK;}
 int read(int16_t* stereo,size_t frames) {
   if(!device || esp_codec_dev_read(device,stereo,frames*4)!=ESP_CODEC_DEV_OK)return -1;
   return int(frames);

@@ -1,0 +1,20 @@
+[Unit]
+Description=RLCD private GPT gateway over Tailscale
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/rlcd-gpt-gateway
+ExecStart=/usr/bin/python3 /home/pi/rlcd-gpt-gateway/gateway.py --config /home/pi/rlcd-gpt-gateway/gateway-config.json
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
