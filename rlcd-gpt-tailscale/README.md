@@ -97,3 +97,5 @@ and refreshes it from each actual answer response. No OpenAI credentials reach t
 
 Battery display: GPIO4 / ADC1 channel 3 uses the onboard 3:1 divider and calibrated ADC readings. The top-right icon and ~percentage refresh from filtered voltage every 5 seconds. Percentage is an approximate single-cell 18650 voltage estimate, affected by load and charging; no charging-status signal is inferred. LOW appears at 3.50 V or lower. Invalid readings show --%. Serial command: battery-info.
 Battery UI: the estimate is now centered inside the battery icon. XOR text remains visible across the filled and empty portions; LOW remains alongside the icon.
+
+News speech: the physically leftmost K1 (GPIO3) cycles current news entries from 1 through the actual count, then wraps. Cached audio is stored on SD; uncached audio uses Qwen TTS SSE with separate network/player tasks. See NEWS_SPEECH.md for controls, codec sharing, and validation.

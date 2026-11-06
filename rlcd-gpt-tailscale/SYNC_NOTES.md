@@ -1,6 +1,6 @@
 # 2026-11-05 同步说明
 
-当前实板运行本目录对应的五页完整版，最后为电池图标内百分比叠加版。README 开头的 experimental/production-baseline 描述是集成前的历史说明；实际验证与最新功能以仓库根 HANDOFF_20261105_RLCD_9KEY.md 为准。
+当前实板运行本目录对应的五页完整版，最新加入新闻页 K1 顺序播报、流式播放与 SD 语音缓存；实测已确认出声较快、中文连续、顺序正确。README 开头的 experimental/production-baseline 描述是集成前的历史说明；实际验证与最新功能以仓库根 HANDOFF_20261105_RLCD_9KEY.md 为准。
 
 保留桌面已验证代码字节，包括原生 VPN、SD、模型与 UI。Arduino3.3.3、修改后的 MicroLink/WireGuard 源码已随组件同步（排除上游 .git 和 Windows EXE 工具）。组件许可证保留。
 
@@ -9,3 +9,5 @@
 配置模板为 firmware/LocalConfig.example.h、firmware/GatewayConfig.example.h、LOCAL_CONFIG.example.json。后者按 configure.py 的约定在本机桌面保存为 RLCD-GPT-本地配置.json，不能将填入真值的文件提交。网关部署脚本还需本地安装 Paramiko；Linux/Pi 服务配置参考 gateway/。
 
 build/、private-backup/、日志、用户历史、真实配置与固件二进制不发布。GitHub 同步没有再次刷板或调用语音 API。
+
+新闻播报使用 ESP-IDF HTTP SSE，TCP 接收窗口 32768 字节，接收邮箱 24。首次未缓存出声约 2.44 秒，SD 缓存读取约 0.62 秒。NEWS_SPEECH.md 与 NEWS_SPEECH_VALIDATION.json 记录最终验证和用户验收；其他页面、麦克风、休眠与 GPT VPN 回归通过。

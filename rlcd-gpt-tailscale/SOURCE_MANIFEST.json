@@ -19,7 +19,7 @@
     },
     "firmware/CMakeLists.txt": {
       "source": "rlcd-gpt-tailscale/firmware/CMakeLists.txt",
-      "sha256": "aeabbe487dd5ad13a237e725b946a6874673b21a574bca2fbcb1333806ecaa55"
+      "sha256": "c5e3274855c79ebb2818790e99e62bc9237312961cdee7663445dd44571dbee1"
     },
     "firmware/DailyNews.cpp": {
       "source": "rlcd-gpt-tailscale/firmware/DailyNews.cpp",
@@ -31,7 +31,7 @@
     },
     "firmware/ExternalKeys.h": {
       "source": "rlcd-gpt-tailscale/firmware/ExternalKeys.h",
-      "sha256": "9538e9714cff2a6eee0efad0cfeee82672f662760ed2123021cb4641abaf1b44"
+      "sha256": "c3f04e217f063092c771bbe1901063078fc7ccc6a72fec9cc1e9fdc4f0aa0c56"
     },
     "firmware/GptGateway.cpp": {
       "source": "rlcd-gpt-tailscale/firmware/GptGateway.cpp",
@@ -67,7 +67,7 @@
     },
     "firmware/main.cpp": {
       "source": "rlcd-gpt-tailscale/firmware/main.cpp",
-      "sha256": "cef41d99216f147948a67de2560cba7f23df0ee2bf7b52bfdf99ed4152e77331"
+      "sha256": "70deb5e2ba26144f0da5cb48bc2abba5c3b9c7c288a0aa2886a61d04dc512226"
     },
     "firmware/MandarinPolicy.h": {
       "source": "rlcd-gpt-tailscale/firmware/MandarinPolicy.h",
@@ -75,11 +75,11 @@
     },
     "firmware/Microphone.cpp": {
       "source": "rlcd-gpt-tailscale/firmware/Microphone.cpp",
-      "sha256": "432d44eb6989a08ba20e8987ba434c64c6e05a9aed8855f6a0b7433d260844b3"
+      "sha256": "246e131899119a27a72e22d850596fb152ecf0a1899cb921a4a35ab51c00befe"
     },
     "firmware/Microphone.h": {
       "source": "rlcd-gpt-tailscale/firmware/Microphone.h",
-      "sha256": "6e8a85dce42dc52f85631217fa0a7a0b92818fa9c76dc8ddd65cb1d78d26f4b3"
+      "sha256": "929efc09aeba5d62ee7bdc5622de1533491eef9edc92c9ea57e1daea556ff389"
     },
     "firmware/NetworkConfig.cpp": {
       "source": "rlcd-gpt-tailscale/firmware/NetworkConfig.cpp",
@@ -93,9 +93,21 @@
       "source": "rlcd-gpt-tailscale/firmware/NewsPolicy.h",
       "sha256": "c97ef50538bc232ab754015275914c50fcc9af308428e41fb76ca7263d8f653a"
     },
+    "firmware/NewsSpeech.cpp": {
+      "source": "rlcd-gpt-tailscale/firmware/NewsSpeech.cpp",
+      "sha256": "f59677b9c7361ca0477bca39500c565c01dd5982a0876e97647c4ef7f4676d27"
+    },
+    "firmware/NewsSpeech.h": {
+      "source": "rlcd-gpt-tailscale/firmware/NewsSpeech.h",
+      "sha256": "f0a295761a707cdb9afe224c10cf55c1cd4d0a8a4693b53dddde51f7aa8c2bed"
+    },
     "firmware/OggOpus.h": {
       "source": "rlcd-gpt-tailscale/firmware/OggOpus.h",
       "sha256": "75eef2c73dd6f539d0d4896b5f98519dd22ac0ffcbbec9eb7cc71ddaee948c3d"
+    },
+    "firmware/PcmWave.h": {
+      "source": "rlcd-gpt-tailscale/firmware/PcmWave.h",
+      "sha256": "efb8a2ff16bf4a21d64d4251e718e784421ea50c7457ede743e29fe8889be4e1"
     },
     "firmware/RealtimeText.cpp": {
       "source": "rlcd-gpt-tailscale/firmware/RealtimeText.cpp",
@@ -9133,6 +9145,10 @@
       "source": "rlcd-gpt-tailscale/gateway_probe.py",
       "sha256": "7ce493cd4a6a4fe51c626484299bc32a87fb287093205f2acc47f88fee2767b2"
     },
+    "HANDOFF_20261105_RLCD_9KEY.md": {
+      "source": "rlcd-gpt-tailscale/HANDOFF_20261105_RLCD_9KEY.md",
+      "sha256": "3469063565d15ebcca0c1b08ee2c268da6095bb31326a682260bb16e649c14e7"
+    },
     "inspect_gateway.py": {
       "source": "rlcd-gpt-tailscale/inspect_gateway.py",
       "sha256": "cd4344576ad34bfca9b7007cf8f8091d3524c4a59eecdb1d7a04fab9fa993340"
@@ -9140,6 +9156,10 @@
     "LICENSE": {
       "source": "rlcd-gpt-tailscale/LICENSE",
       "sha256": "1cb921481906a095820e28e8492ec50bfbc772750f226a2d2ce8bf0ef331ab44"
+    },
+    "NEWS_SPEECH.md": {
+      "source": "rlcd-gpt-tailscale/NEWS_SPEECH.md",
+      "sha256": "fe97e760b06fdb8ce53de8b4260b63c597f18f062d90de08ada32c8da45c8857"
     },
     "partitions.csv": {
       "source": "rlcd-gpt-tailscale/partitions.csv",
@@ -9149,6 +9169,14 @@
       "source": "rlcd-gpt-tailscale/preflight_gpt61.py",
       "sha256": "c29881fd2666cfc703d72befa0770a573918e38f65a2315b8de77f1fb17f7621"
     },
+    "preflight_news_speech.py": {
+      "source": "rlcd-gpt-tailscale/preflight_news_speech.py",
+      "sha256": "802143cbba15b510313fd54c68718d88fd126a572a99754ca9bf72cb03a1b9da"
+    },
+    "preflight_news_stream.py": {
+      "source": "rlcd-gpt-tailscale/preflight_news_stream.py",
+      "sha256": "e6082942b0799bcacd285e5b6f2dc9f39cda819a2f3c2982c13195ba6e354cb8"
+    },
     "preflight_qwen38.py": {
       "source": "rlcd-gpt-tailscale/preflight_qwen38.py",
       "sha256": "5adddac4fd8bb3133a3169793ab078eece317f38bd6dcf014d6ccbe282e14b83"
@@ -9156,6 +9184,10 @@
     "probe_battery.py": {
       "source": "rlcd-gpt-tailscale/probe_battery.py",
       "sha256": "bc824207850fdede0879cbd11d29b6c6e1dfb7908358b41130b283269f8e7e51"
+    },
+    "probe_news_speech.py": {
+      "source": "rlcd-gpt-tailscale/probe_news_speech.py",
+      "sha256": "d342cdbbc12a32a265f994e2c7b1a8b8a4f28610593fe0c5068d1adf2cf4aae9"
     },
     "probe_ogg.py": {
       "source": "rlcd-gpt-tailscale/probe_ogg.py",
@@ -9167,11 +9199,11 @@
     },
     "README.md": {
       "source": "rlcd-gpt-tailscale/README.md",
-      "sha256": "588e026c1ceb7e6b208352ded56c0df87bc689c65d139fa9eed8665ed6024762"
+      "sha256": "05f7c22b04384e8c9cde94772fecdea75a6667ab060e39cc109a846efb1d447f"
     },
     "sdkconfig.defaults": {
       "source": "rlcd-gpt-tailscale/sdkconfig.defaults",
-      "sha256": "2458177fe7c2c64cadce2c4c2e0cf89639f44f6312c183c29d20ac5b8661d996"
+      "sha256": "1c2af998dcee0e7eca57ef8b22087b0ff44e08a68fbbd357b0ff3a122d3912d6"
     },
     "x25519-license.txt": {
       "source": "rlcd-gpt-tailscale/x25519-license.txt",
@@ -9179,8 +9211,11 @@
     },
     "sdkconfig.verified": {
       "source": "rlcd-gpt-tailscale/sdkconfig",
-      "sha256": "0534e2bca3cb08490fdf82290cceedcfecf5ff979deed586ae8ec6dda2ebbcd6"
+      "sha256": "1a136b731b1b8d7a7eb348be62f183cdc58ffdd2a22e2dce9f372061eaf17c81"
+    },
+    "NEWS_SPEECH_VALIDATION.json": {
+      "source": "rlcd-gpt-tailscale/NEWS_SPEECH_VALIDATION.json",
+      "sha256": "2aa39ad162729aa94f4527c95ae4decfcc7b45ccb0fc16cf689a0c28d0956f92"
     }
-  },
-  "publication": "Private identifiers in two lamp documents are redacted; all firmware source bytes match local originals."
+  }
 }

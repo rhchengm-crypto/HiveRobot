@@ -20,6 +20,7 @@
 #include "GptGateway.h"
 #include "History.h"
 #include "Battery.h"
+#include "NewsSpeech.h"
 
 constexpr uint8_t recordButtonPin=0,pageButtonPin=18;
 constexpr unsigned sampleRate=16000,maxSeconds=20;
@@ -34,6 +35,8 @@ bool micReady=false;size_t page=0;bool followLive=false;
 // Changed only while idle. The worker captures the selected mode at start.
 bool askQuestion=false,newsPage=false,weatherPage=false,gptPage=false;
 bool menuHome=false;uint8_t selectedCard=0;
+int deferredFunction=-1;
+bool deferredSleep=false,deferredSleepTest=false,deferredAction=false,deferredPortal=false;
 Shared savedApps[3];bool hasSavedApp[3]={false,false,false};size_t savedPages[3]={0,0,0};
 DailyNews::Bulletin newsCache;
 Shared beforeNews,beforeWeather;
@@ -155,6 +158,7 @@ void newsTask(void*) {
   Serial.printf("[NEWS_TASK] ok=%u stack_free=%u heap=%u\n",ok,unsigned(uxTaskGetStackHighWaterMark(nullptr)),ESP.getFreeHeap());vTaskDelete(nullptr);
 }
 void startNews(bool manual=false) {
+  if(NewsSpeech::active())return;
   portENTER_CRITICAL(&stateLock);const bool idle=shared.mode==Mode::Ready || shared.mode==Mode::Result || shared.mode==Mode::Failure;portEXIT_CRITICAL(&stateLock);
   if(!idle || WiFi.status()!=WL_CONNECTED || time(nullptr)<1700000000 || !DASHSCOPE_API_KEY[0])return;
   if(manual && newsAttempted && millis()-newsAttempt<60000)return;
@@ -227,6 +231,7 @@ void enterCard(){
 }
 void openFunction(uint8_t index){
  if(!navigationIdle()||index>4||index==selectedCard)return;
+ if(NewsSpeech::active()){NewsSpeech::stop();deferredFunction=index;return;}
  if(!newsPage&&!weatherPage){const unsigned active=gptPage?2:askQuestion?0:1;portENTER_CRITICAL(&stateLock);savedApps[active]=shared;portEXIT_CRITICAL(&stateLock);hasSavedApp[active]=true;savedPages[active]=page;}
  const bool leavingGpt=gptPage;
  selectedCard=index;enterCard();
@@ -250,6 +255,7 @@ void streamFinished(const char* error) {
   status(error[0]?Mode::Failure:Mode::Result,error[0]?error:"持续转写已停止 · KEY重新开始");
 }
 void keyPress() {
+  if(NewsSpeech::active()){NewsSpeech::stop();deferredAction=true;return;}
   portENTER_CRITICAL(&stateLock);const auto mode=shared.mode;if(mode==Mode::Recording)shared.stop=true;portEXIT_CRITICAL(&stateLock);
   if(mode==Mode::Streaming){RealtimeText::stop();status(Mode::StreamEnding,"正在收尾，请稍候");return;}
   if(mode==Mode::StreamEnding)return;
@@ -377,7 +383,7 @@ void paintKeyTest() {
 }
 bool systemIdle(){
  portENTER_CRITICAL(&stateLock);const bool idle=shared.mode==Mode::Ready||shared.mode==Mode::Result||shared.mode==Mode::Failure;portEXIT_CRITICAL(&stateLock);
- return idle&&!RealtimeText::active()&&!GptGateway::stopping();
+ return idle&&!RealtimeText::active()&&!GptGateway::stopping()&&!NewsSpeech::active();
 }
 void paintPortal(){
  static String prior;static uint32_t last=0;
@@ -483,6 +489,7 @@ void paint() {
   while(modelLabel.length()&&screen->getStrWidth(modelLabel.c_str())>276)modelLabel.remove(modelLabel.length()-1);
   screen->drawStr(24,264,modelLabel.c_str());
  }
+ if(newsPage){screen->setFont(u8g2_font_6x10_tf);screen->drawStr(24,264,"K1: next news / loop");}
  screen->setFont(u8g2_font_wqy16_t_gb2312);drawBold(12,294,"KEY翻页 · 长按切换");
  screen->setFont(u8g2_font_6x10_tf);screen->drawStr(280,292,newsPage?"BOOT: refresh":"BOOT: record/stop");screen->sendBuffer();
 }
@@ -491,6 +498,7 @@ uint32_t networkTestStarted=0;
 bool suppressButtons=false;
 int lastSleepResult=-1;unsigned lastWakeReason=0,sleepCount=0;
 void sleepDevice(bool timerTest=false){
+ if(NewsSpeech::active()){NewsSpeech::stop();deferredSleep=true;deferredSleepTest=timerTest;return;}
  if(!systemIdle()||NetworkConfig::active()){Serial.println("[SLEEP] busy=1");return;}
  // GPIO44 is a digital light-sleep wake source, not an RTC deep-sleep pin.
  Serial.printf("[SLEEP] entering light gpio=44 timer_test=%u\n",timerTest);Serial.flush();
@@ -520,7 +528,7 @@ void rxPoll(){
  if(suppressButtons){raw=down=value;changed=millis();pressed=0;handled=true;return;}
  if(value!=raw){raw=value;changed=millis();}
  if(down!=raw&&millis()-changed>=35){down=raw;if(down){pressed=millis();handled=false;}else{if(!handled&&pressed){if(NetworkConfig::active())NetworkConfig::close();else sleepDevice();}pressed=0;}}
- if(down&&pressed&&!handled&&millis()-pressed>=3000){handled=true;if(systemIdle())NetworkConfig::open();else Serial.println("[WIFI_PORTAL] busy=1");}
+ if(down&&pressed&&!handled&&millis()-pressed>=3000){handled=true;if(NewsSpeech::active()){NewsSpeech::stop();deferredPortal=true;}else if(systemIdle())NetworkConfig::open();else Serial.println("[WIFI_PORTAL] busy=1");}
 }
 
 void setup() {
@@ -531,6 +539,7 @@ void setup() {
   History::begin();String previousGpt;
   if(History::lastGpt(previousGpt)){savedApps[2].mode=Mode::Result;copyText(savedApps[2].status,"上次GPT回答 · SD卡",sizeof(savedApps[2].status));copyText(savedApps[2].text,previousGpt.c_str(),sizeof(savedApps[2].text));hasSavedApp[2]=true;Serial.println("[SD_HISTORY] restored_gpt=1");}
   micReady=Microphone::begin();
+  NewsSpeech::begin();
   NetworkConfig::begin(WIFI_SSID,WIFI_PASSWORD);
   configTzTime("PST8PDT,M3.2.0,M11.1.0","pool.ntp.org","time.nist.gov");
   const bool cached=DailyNews::load(newsCache);
@@ -545,7 +554,18 @@ void setup() {
 void loop() {
   Battery::tick();
   if(networkTestStarted&&millis()-networkTestStarted>=8000){networkTestStarted=0;NetworkConfig::resume();Serial.println("[WEATHER_OFFLINE_TEST] reconnect=1");}
-  ExternalKeys::poll();
+  const uint8_t extPressed=ExternalKeys::poll();
+  if((extPressed&1)&&!suppressButtons&&!ExternalKeys::testing&&!NetworkConfig::active()&&newsPage&&navigationIdle())NewsSpeech::next(newsCache.text,newsCache.count);
+  static uint32_t speechRevision=0;
+  if(speechRevision!=NewsSpeech::revision()){
+   speechRevision=NewsSpeech::revision();if(newsPage&&navigationIdle())status(Mode::Result,NewsSpeech::label().c_str());
+  }
+  if(!NewsSpeech::active()){
+   if(deferredFunction>=0){const int index=deferredFunction;deferredFunction=-1;openFunction(index);}
+   if(deferredAction){deferredAction=false;keyPress();}
+   if(deferredPortal){deferredPortal=false;if(systemIdle())NetworkConfig::open();}
+   if(deferredSleep){const bool test=deferredSleepTest;deferredSleep=false;sleepDevice(test);}
+  }
   static bool portalWas=false;
   NetworkConfig::tick(systemIdle());rxPoll();
   const bool portalNow=NetworkConfig::active();
@@ -587,6 +607,10 @@ void loop() {
       else if(!strcmp(command,"wifi-cancel"))NetworkConfig::close();
       else if(!strcmp(command,"wifi-info"))NetworkConfig::report();
       else if(!strcmp(command,"battery-info"))Battery::report();
+      else if(!strcmp(command,"speech-info"))NewsSpeech::report();
+      else if(!strcmp(command,"speech-next")){if(newsPage&&navigationIdle())NewsSpeech::next(newsCache.text,newsCache.count);}
+      else if(!strcmp(command,"speech-stop"))NewsSpeech::stop();
+      else if(!strcmp(command,"speaker-test")){if(systemIdle())NewsSpeech::tone();}
       else if(!strcmp(command,"sleep-info"))Serial.printf("[SLEEP_INFO] count=%u result=%d reason=%u mic=%u\n",sleepCount,lastSleepResult,lastWakeReason,micReady);
       else if(!strcmp(command,"sleep"))sleepDevice();
       else if(!strcmp(command,"sleep-test"))sleepDevice(true);
@@ -671,7 +695,7 @@ void loop() {
     if(gptState==GptGateway::State::Ready)status(Mode::Ready,"GPT已就绪 · 家庭网络");
     else if(gptState==GptGateway::State::Failed)status(Mode::Failure,GptGateway::error().c_str());
    }}
-   if(!GptGateway::active()){weatherTick();newsTick();}
+   if(!GptGateway::active()&&!NewsSpeech::active()){weatherTick();newsTick();}
   }paint();delay(5);
 }
 
