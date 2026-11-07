@@ -105,3 +105,5 @@ News speech: the physically leftmost K1 (GPIO3) cycles current news entries from
 天气页无法操作的 VPN 退出修正、四项生命周期回归和验证范围见 [VPN_EXIT_FIX.md](VPN_EXIT_FIX.md)。
 
 2026-11-07：连续转文字录音栈改用 PSRAM，诊断和实板测试见 REALTIME_CAPTURE_FIX.md / REALTIME_CAPTURE_VALIDATION.json。
+
+2026-11-07：GPT 等待阶段/BOOT重试与长回答分页缓存优化，详见 GPT_CONNECTION_FIX.md / GPT_RETRY_VALIDATION.json。

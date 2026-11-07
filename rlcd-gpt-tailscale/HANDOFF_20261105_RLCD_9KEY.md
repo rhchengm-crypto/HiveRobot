@@ -131,3 +131,10 @@ GitHub 仓库沿用 `rhchengm-crypto/HiveRobot`。`SOURCE_SYNC_20261105.json` �
 实板复现 task_ready 后“录音任务创建失败”，frames=0。RealtimeText.cpp 的 rt-opus 从内部 32KB 栈改为显式 PSRAM 栈，并配对 vTaskDeleteWithCaps；保留连续 Opus、上海话转普通话模型、界面/按键及已通过的休眠策略。详见 REALTIME_CAPTURE_FIX.md 和 REALTIME_CAPTURE_VALIDATION.json。
 
 2026-11-07 真人验收：用户确认“正常出字，不再报录音任务失败”。
+
+
+## 2026-11-07：GPT 连接重试与界面响应修正
+
+用户报告 GPT 连接等待时 KEY/BOOT 无反应，后出现超时；串口可响应，实体 KEY 重测可切页。当前加入连接阶段/等待秒数与可保留的 BOOT 重试，连接收尾完成后启动新实例；离开页面取消重试。VPN coord/WG 工作移至 Core0，UI/连续采集保持 Core1。
+
+进一步实测主循环最长1741ms，定位长回答在每秒时钟刷新时反复全篇分页、逐字重复测量整行。现改为逐字累计精确字形宽度，PSRAM缓存正文和页起点。最终实板最长循环200ms；新旧算法5个页段边界一致，三页循环正常。六项连接/退出/断网恢复/失败后重试通过，最后重连约5.2秒ready；轻睡眠2999ms、恢复413ms，实读32000麦克风帧、SD和Wi-Fi通过。当前固件已app-only刷入及哈希校验。真人KEY/BOOT问答验收待回报。模型、Opus、睡眠策略未更改，上海话“电烙铁→第六天”的识别准确率问题未因此宣称修复。详见 GPT_CONNECTION_FIX.md 和 GPT_RETRY_VALIDATION.json。

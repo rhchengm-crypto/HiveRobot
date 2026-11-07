@@ -264,12 +264,12 @@ void keyPress() {
   if(mode==Mode::Recording || mode==Mode::Recognizing || mode==Mode::Setup)return;
   if(newsPage){startNews(true);return;}
   if(weatherPage){startWeather(true);return;}
-  if(GptGateway::stopping()){status(Mode::Ready,"正在退出家庭VPN，请稍候");return;}
+  if(!gptPage&&GptGateway::stopping()){status(Mode::Ready,"正在退出家庭VPN，请稍候");return;}
   if(!micReady){status(Mode::Failure,"麦克风未就绪，请查看串口");return;}
   if(!NetworkConfig::hasCredentials() || (!gptPage&&!DASHSCOPE_API_KEY[0])){status(Mode::Failure,"请先在电脑配置 Wi-Fi 和 API Key");return;}
   if(WiFi.status()!=WL_CONNECTED){WiFi.reconnect();status(Mode::Failure,"Wi-Fi 未连接，稍后按 BOOT 重试");return;}
   if(time(nullptr)<1700000000){status(Mode::Failure,"正在同步时间，稍后按 BOOT 重试");return;}
-  if(gptPage&&!GptGateway::ready()){GptGateway::enter();status(Mode::Ready,"正在连接家庭网关，请稍候");return;}
+  if(gptPage&&!GptGateway::ready()){GptGateway::retry();status(Mode::Ready,GptGateway::connectionStatus().c_str());return;}
   if(!askQuestion&&!gptPage){
     page=0;followLive=true;status(Mode::Streaming,"正在连接实时识别，请稍候","");
     if(!RealtimeText::start(streamState,streamText,streamFinished))status(Mode::Failure,"持续转写任务创建失败");return;
@@ -303,7 +303,7 @@ void drawLargeBold(int x,int y,const char* text) {
   drawBold(x,y,text);
 }
 size_t nextChar(const char* p,size_t i) {++i;while(p[i] && (uint8_t(p[i])&0xc0)==0x80)++i;return i;}
-size_t textPage(const char* text,size_t start,bool draw) {
+size_t referenceTextPage(const char* text,size_t start,bool draw) {
   // Pagination must use the same Chinese font as rendering, even after the
   // English footer changed U8g2's global font on the previous frame.
   screen->setFont(u8g2_font_wqy16_t_gb2312);
@@ -324,10 +324,60 @@ size_t textPage(const char* text,size_t start,bool draw) {
   }
   return i;
 }
-size_t pageCount(const char* text) {
-  size_t total=0,offset=0;
-  while(text[offset]){offset=textPage(text,offset,false);++total;}
-  return max(size_t(1),total);
+size_t textPage(const char* text,size_t start,bool draw) {
+ screen->setFont(u8g2_font_wqy16_t_gb2312);auto* font=screen->getU8g2();
+ size_t i=start;int line=0;char row[256];
+ while(text[i]&&line<8){
+  const size_t begin=i;size_t last=i;int advanceSum=0;
+  font->font_decode.glyph_width=0;
+#ifdef U8G2_BALANCED_STR_WIDTH_CALCULATION
+  int firstOffset=-64;
+#endif
+  while(text[i]&&text[i]!='\n'){
+   const size_t next=nextChar(text,i),bytes=next-i;
+   if(next-begin>=sizeof(row))break;
+   uint32_t cp=uint8_t(text[i]);
+   if(bytes>1){cp&=bytes==2?0x1f:bytes==3?0x0f:0x07;for(size_t k=i+1;k<next;++k)cp=(cp<<6)|(uint8_t(text[k])&0x3f);}
+   const int dx=u8g2_GetGlyphWidth(font,uint16_t(cp));
+#ifdef U8G2_BALANCED_STR_WIDTH_CALCULATION
+   if(firstOffset==-64)firstOffset=font->glyph_x_offset;
+#endif
+   int width=advanceSum+dx;
+   if(font->font_decode.glyph_width){width=advanceSum+font->font_decode.glyph_width+font->glyph_x_offset;
+#ifdef U8G2_BALANCED_STR_WIDTH_CALCULATION
+    if(firstOffset>0)width+=firstOffset;
+#endif
+   }
+   if(width+2>348&&i>begin)break;
+   advanceSum+=dx;last=i=next;
+  }
+  if(last==begin&&text[i]!='\n'&&text[i])last=i=nextChar(text,i);
+  const size_t n=min(last-begin,sizeof(row)-1);memcpy(row,text+begin,n);row[n]=0;
+  if(draw)drawLargeBold(24,122+line*18,row);
+  if(text[i]=='\n')++i;++line;
+ }
+ return i;
+}
+struct TextLayout {char text[4096];uint16_t offsets[513];uint16_t total;};
+TextLayout* textLayout(const char* text){
+ static TextLayout* cache=static_cast<TextLayout*>(heap_caps_calloc(1,sizeof(TextLayout),MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT));
+ if(!cache)return nullptr;
+ if(cache->total&&strcmp(cache->text,text)==0)return cache;
+ strlcpy(cache->text,text,sizeof(cache->text));cache->total=0;size_t offset=0;
+ do{cache->offsets[cache->total++]=offset;if(!text[offset])break;const size_t next=textPage(text,offset,false);if(next<=offset)break;offset=next;}while(text[offset]&&cache->total<513);
+ return cache;
+}
+size_t pageCount(const char* text){
+ if(auto* layout=textLayout(text))return layout->total;
+ size_t total=0,offset=0;while(text[offset]){offset=textPage(text,offset,false);++total;}return max(size_t(1),total);
+}
+void layoutTest(){
+ static char actual[4096];portENTER_CRITICAL(&stateLock);memcpy(actual,shared.text,sizeof(actual));portEXIT_CRITICAL(&stateLock);
+ const char* fixtures[]={"这是中文与 English 123 混排的分页检查。\n第二行：电烙铁，上海话转普通话。", "\n\n空行、标点，abc def WMW 0123456789！？\n", actual};
+ bool ok=true;unsigned pages=0;const uint32_t start=millis();
+ for(const char* text:fixtures){size_t offset=0;while(text[offset]){const size_t fast=textPage(text,offset,false),slow=referenceTextPage(text,offset,false);if(fast!=slow||fast<=offset){ok=false;break;}offset=fast;++pages;}}
+ const uint32_t checked=millis();pageCount(actual);const uint32_t build=millis();for(unsigned n=0;n<100;++n)pageCount(actual);
+ Serial.printf("[LAYOUT_TEST] pass=%u pages=%u reference_ms=%lu build_ms=%lu cached_100_ms=%lu\n",ok,pages,(unsigned long)(checked-start),(unsigned long)(build-checked),(unsigned long)(millis()-build));
 }
 void advancePage() {
   static char text[4096];
@@ -472,7 +522,7 @@ void paint() {
   screen->drawFrame(24,151,352,16);screen->drawBox(26,153,(uint32_t(view.peak)*348)/32768,12);
   drawLargeBold(24,200,"请对着板载麦克风说话");drawLargeBold(24,239,"再按 BOOT 结束并发送");
  }else if(view.text[0]){
-  size_t offset=0;for(size_t p=0;p<page&&view.text[offset];++p)offset=textPage(view.text,offset,false);textPage(view.text,offset,true);
+  size_t offset=0;if(auto* layout=textLayout(view.text))offset=layout->offsets[min(page,size_t(layout->total-1))];else for(size_t p=0;p<page&&view.text[offset];++p)offset=textPage(view.text,offset,false);textPage(view.text,offset,true);
   char counter[32];snprintf(counter,sizeof(counter),"%u / %u",unsigned(page+1),unsigned(pageCount(view.text)));screen->setFont(u8g2_font_6x10_tf);screen->drawStr(320,264,counter);
  }else if(view.mode==Mode::Streaming||view.mode==Mode::StreamEnding){
   drawLargeBold(24,147,"请对着板载麦克风说话");drawLargeBold(24,186,"停顿后自动转成普通话");drawLargeBold(24,225,"再按 BOOT 停止本次转写");
@@ -577,9 +627,12 @@ void setup() {
   else if(!NetworkConfig::hasCredentials() || !DASHSCOPE_API_KEY[0])status(Mode::Failure,"请先配置 Wi-Fi 和 API Key");
   else status(Mode::Ready,"转文字：按 BOOT 开始听写");
   Serial.println("[BUTTON_MAP] BOOT_GPIO0=enter_record KEY_GPIO18=page_hold_next_tab RX_GPIO44=sleep_setup");
- Serial.printf("[READY] build=gpt-tailnet-gateway-20261106-vpn-exit ESP32-S3-RLCD-4.2 psram=%u mic=%u config=%u\n",ESP.getPsramSize(),micReady,NetworkConfig::hasCredentials() && DASHSCOPE_API_KEY[0]);
+ Serial.printf("[READY] build=gpt-tailnet-gateway-20261107-connect-retry ESP32-S3-RLCD-4.2 psram=%u mic=%u config=%u\n",ESP.getPsramSize(),micReady,NetworkConfig::hasCredentials() && DASHSCOPE_API_KEY[0]);
 }
 void loop() {
+  static uint32_t lastLoopAt=0,maxLoopGap=0;const uint32_t loopNow=millis();
+  if(lastLoopAt){const uint32_t gap=loopNow-lastLoopAt;maxLoopGap=max(maxLoopGap,gap);if(gap>=500)Serial.printf("[UI_STALL] gap_ms=%lu\n",(unsigned long)gap);}
+  lastLoopAt=loopNow;
   Battery::tick();
   if(networkTestStarted&&millis()-networkTestStarted>=8000){networkTestStarted=0;NetworkConfig::resume();Serial.println("[WEATHER_OFFLINE_TEST] reconnect=1");}
   const uint8_t extPressed=ExternalKeys::poll();
@@ -648,6 +701,7 @@ void loop() {
       else if(!strcmp(command,"enter")){if(menuHome)enterCard();}
       else if(!strcmp(command,"gpt"))openFunction(2);
       else if(!strcmp(command,"gpt-info"))GptGateway::report();
+      else if(!strcmp(command,"gpt-retry")){if(gptPage&&navigationIdle()){GptGateway::retry();status(Mode::Ready,GptGateway::connectionStatus().c_str());}}
       else if(!strcmp(command,"gpt-net-test")){if(gptPage&&systemIdle()&&GptGateway::ready()){status(Mode::Recognizing,"正在测试VPN上传");if(xTaskCreatePinnedToCoreWithCaps([](void*){GptGateway::probeUpload();status(Mode::Ready,"VPN上传测试完成");vTaskDeleteWithCaps(nullptr);},"gpt-net-test",16*1024,nullptr,2,nullptr,0,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT)!=pdPASS)status(Mode::Failure,"测试任务创建失败");}}
       else if(!strcmp(command,"sd-info"))History::report();
       else if(!strcmp(command,"sd-test")){History::append("diagnostic","RLCD SD history write test");}
@@ -685,6 +739,7 @@ void loop() {
       else if(!strcmp(command,"rt-stop")) {if(RealtimeText::active()){RealtimeText::stop();status(Mode::StreamEnding,"正在收尾，请稍候");}}
       else if(!strcmp(command,"rt-start")) {if(!askQuestion && !newsPage && !RealtimeText::active())keyPress();}
       else if(!strcmp(command,"page-test"))paginationTest();
+      else if(!strcmp(command,"layout-test")){if(navigationIdle())layoutTest();}
       else if(!strcmp(command,"page"))advancePage();
       else if(!strcmp(command,"news")) {
         portENTER_CRITICAL(&stateLock);const bool idle=shared.mode==Mode::Ready || shared.mode==Mode::Result || shared.mode==Mode::Failure;portEXIT_CRITICAL(&stateLock);
@@ -703,7 +758,7 @@ void loop() {
       else if(!strcmp(command,"cycle")) {
         portENTER_CRITICAL(&stateLock);const bool idle=shared.mode==Mode::Ready || shared.mode==Mode::Result || shared.mode==Mode::Failure;portEXIT_CRITICAL(&stateLock);if(idle)cycleMode();
       }
-      else if(!strcmp(command,"keys"))ExternalKeys::report();
+      else if(!strcmp(command,"keys")){ExternalKeys::report();Serial.printf("[BUTTON_INFO] boot=%u key=%u rx=%u suppressed=%u max_loop_gap_ms=%lu\n",unsigned(digitalRead(0)),unsigned(digitalRead(18)),unsigned(digitalRead(44)),suppressButtons,(unsigned long)maxLoopGap);}
       else if(!strcmp(command,"keys-test")) {
         portENTER_CRITICAL(&stateLock);const bool idle=shared.mode==Mode::Ready || shared.mode==Mode::Result || shared.mode==Mode::Failure;portEXIT_CRITICAL(&stateLock);
         if(idle){ExternalKeys::testing=true;++ExternalKeys::revision;Serial.println("[EXT_KEYS_TEST] enabled=1");ExternalKeys::report();}
@@ -718,7 +773,11 @@ void loop() {
     } else if(length<sizeof(command)-1)command[length++]=c;
   }
   if(!ExternalKeys::testing&&!NetworkConfig::active()){
-   if(gptPage&&WiFi.status()==WL_CONNECTED&&!GptGateway::active()&&GptGateway::state()==GptGateway::State::Off)GptGateway::enter();
+   if(gptPage&&WiFi.status()==WL_CONNECTED&&!GptGateway::active()&&(GptGateway::state()==GptGateway::State::Off||GptGateway::needsRestart()))GptGateway::enter();
+   static uint32_t connectionPaint=0;
+   if(gptPage&&navigationIdle()&&(GptGateway::state()==GptGateway::State::Connecting||GptGateway::state()==GptGateway::State::Stopping)&&millis()-connectionPaint>=3000){
+    connectionPaint=millis();status(Mode::Ready,GptGateway::connectionStatus().c_str());
+   }
    static auto priorGpt=GptGateway::State::Off;const auto gptState=GptGateway::state();
    if(gptState!=priorGpt){priorGpt=gptState;if(gptPage&&navigationIdle()){
     if(gptState==GptGateway::State::Ready)status(Mode::Ready,"GPT已就绪 · 家庭网络");

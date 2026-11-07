@@ -1,0 +1,112 @@
+{
+  "date": "2026-11-07",
+  "cases": [
+    {
+      "case": "retry_while_connecting_or_cleaning",
+      "initial_attempt": 1,
+      "new_attempt": 2,
+      "passed": true
+    },
+    {
+      "case": "exit_and_non_vpn_navigation",
+      "passed": true
+    },
+    {
+      "case": "connection_outcome",
+      "state": 2,
+      "attempt": 3,
+      "ready": true
+    },
+    {
+      "case": "bounded_wifi_loss_failure",
+      "passed": true
+    },
+    {
+      "case": "retry_after_failure",
+      "passed": true,
+      "new_attempt": 4
+    },
+    {
+      "case": "ready_after_failure_retry",
+      "passed": true
+    }
+  ],
+  "telemetry": [
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=1 mode=1 width=400 height=300 ask=0 news=0",
+    "[GPT_INFO] state=0 active=0 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=0 phase=0 elapsed_ms=9244 retry_pending=0",
+    "[GPT_CONNECT] attempt=1 vpn_state=1 elapsed_ms=8",
+    "[GPT_CONNECT] attempt=1 vpn_state=2 elapsed_ms=110",
+    "[GPT_CONNECT] attempt=1 vpn_state=3 elapsed_ms=442",
+    "[GPT_INFO] state=1 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=1 phase=5 elapsed_ms=2070 retry_pending=0",
+    "[GPT_CONNECT] retry_queued=1",
+    "[GPT_CONNECT] retry_queued=1",
+    "[GPT_INFO] state=4 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=1 phase=5 elapsed_ms=3697 retry_pending=1",
+    "[GPT_VPN] stopped=1 was_ready=0 heap=124379",
+    "[GPT_CONNECT] attempt=2 vpn_state=1 elapsed_ms=6",
+    "[GPT_CONNECT] attempt=2 vpn_state=2 elapsed_ms=109",
+    "[GPT_CONNECT] attempt=2 vpn_state=3 elapsed_ms=392",
+    "[GPT_INFO] state=1 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=2 phase=5 elapsed_ms=529 retry_pending=0",
+    "[UI_INFO] home=0 selected=4 app=4 local=2026-11-07 10:53:39 PST synced=1",
+    "[GPT_VPN] stopped=1 was_ready=0 heap=123727",
+    "[UI_INFO] home=0 selected=5 app=5 local=2026-11-07 10:53:40 PST synced=1",
+    "[UI_INFO] home=0 selected=1 app=1 local=2026-11-07 10:53:42 PST synced=1",
+    "[GPT_INFO] state=0 active=0 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=2 phase=5 elapsed_ms=6600 retry_pending=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=1 mode=1 width=400 height=300 ask=0 news=0",
+    "[GPT_CONNECT] attempt=3 vpn_state=1 elapsed_ms=8",
+    "[GPT_CONNECT] attempt=3 vpn_state=2 elapsed_ms=111",
+    "[GPT_CONNECT] attempt=3 vpn_state=3 elapsed_ms=366",
+    "[GPT_INFO] state=1 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=3 phase=5 elapsed_ms=1083 retry_pending=0",
+    "[GPT_INFO] state=1 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=3 phase=5 elapsed_ms=2382 retry_pending=0",
+    "[GPT_INFO] state=1 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=3 phase=5 elapsed_ms=3658 retry_pending=0",
+    "[GPT_INFO] state=1 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=3 phase=100 elapsed_ms=4927 retry_pending=0",
+    "[GPT_VPN] ready=1 internal_free=59407 largest=31744 psram_free=8240448",
+    "[GPT_INFO] state=2 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=3 phase=100 elapsed_ms=6141 retry_pending=0",
+    "[GPT_CONNECT] failed attempt=3 phase=100 elapsed_ms=7487 detail=Wi-Fi断开，按BOOT重新连接",
+    "[GPT_VPN] stopped=1 was_ready=1 heap=151203",
+    "[GPT_INFO] state=3 active=0 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=3 phase=100 elapsed_ms=8466 retry_pending=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=0 mode=5 width=400 height=300 ask=0 news=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=0 mode=5 width=400 height=300 ask=0 news=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=0 mode=5 width=400 height=300 ask=0 news=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=0 mode=5 width=400 height=300 ask=0 news=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=0 mode=5 width=400 height=300 ask=0 news=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=0 mode=5 width=400 height=300 ask=0 news=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=0 mode=5 width=400 height=300 ask=0 news=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=1 mode=3 width=400 height=300 ask=0 news=0",
+    "[GPT_CONNECT] attempt=4 vpn_state=1 elapsed_ms=6",
+    "[GPT_CONNECT] attempt=4 vpn_state=2 elapsed_ms=110",
+    "[GPT_INFO] state=1 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=4 phase=4 elapsed_ms=204 retry_pending=0",
+    "[GPT_CONNECT] attempt=4 vpn_state=3 elapsed_ms=379",
+    "[GPT_INFO] state=1 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=4 phase=5 elapsed_ms=1397 retry_pending=0",
+    "[GPT_INFO] state=1 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=4 phase=5 elapsed_ms=2614 retry_pending=0",
+    "[GPT_VPN] ready=1 internal_free=55687 largest=31744 psram_free=8240444",
+    "[GPT_INFO] state=2 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=4 phase=100 elapsed_ms=5197 retry_pending=0",
+    "[BUTTON_INFO] boot=1 key=1 rx=1 suppressed=0 max_loop_gap_ms=200",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=1 mode=1 width=400 height=300 ask=0 news=0",
+    "[UI_INFO] home=0 selected=3 app=3 local=2026-11-07 10:54:11 PST synced=1"
+  ],
+  "layout_and_pagination": [
+    "[PAGE] current=3 total=3",
+    "[PAGE] current=1 total=3",
+    "[PAGE] current=2 total=3",
+    "[PAGE] current=3 total=3",
+    "[PAGE] current=1 total=3",
+    "[LAYOUT_TEST] pass=1 pages=5 reference_ms=548 build_ms=0 cached_100_ms=2",
+    "[GPT_INFO] state=2 active=1 sending=0 configured=1 cleaning=0 cleanup_retries=0 attempt=4 phase=100 elapsed_ms=108043 retry_pending=0"
+  ],
+  "firmware_sha256": "f30e54c68ef84b68242d50ac6975e94b8a0bd950712bc83c643ce64b5a7adbc1",
+  "ui_loop_before_ms": 1741,
+  "ui_loop_after_ms": 200,
+  "user_acceptance": "pending",
+  "sleep_regression": [
+    "[SLEEP] display_restored=1 slept_ms=2999 reason=4 result=0",
+    "[SLEEP] microphone_restored=1",
+    "[SLEEP] resumed result=0 reason=4 mic=1 restore_ms=413",
+    "[SLEEP_INFO] count=1 result=0 reason=4 mic=1 slept_ms=2999 restore_ms=413 cpu_power_down=0 rx=1",
+    "[BATTERY] valid=1 gpio=4 raw=1626 voltage=4.122 estimated_percent=96 low=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=1 mode=1 width=400 height=300 ask=0 news=0",
+    "[SD_INFO] ready=1 records=0 dropped=0 queued=0",
+    "[WIFI_INFO] configured=1 stored=1 portal=0 pending=0 connected=1 ip=[local]",
+    "[MIC_TEST] ok=1 frames=32000 L_rms=9 L_peak=48 R_rms=0 R_peak=2",
+    "[SLEEP_INFO] count=1 result=0 reason=4 mic=1 slept_ms=2999 restore_ms=413 cpu_power_down=0 rx=1"
+  ]
+}
