@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "motion_issued": false,
+  "operator_notification_required_before_motion": true,
+  "awaiting_operator_confirmation": true,
+  "requested_board_mm": [
+    110.0,
+    165.0,
+    20.2
+  ],
+  "piece": "white_knight",
+  "stage": "approach",
+  "claw_closed": false,
+  "workflow": [
+    "fixed Clearance",
+    "geometric approach",
+    "complete descent",
+    "same-serial Model Hold"
+  ],
+  "planner_samples": 43,
+  "orientation_acceptance": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 16,
+    "max_error_deg": 0.054935728616755365,
+    "tolerance_deg": 0.2864788975654116,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "model_body_gap_lower_bound_mm": 7.468930837396308,
+  "body_physically_validated": false,
+  "model_promoted": false,
+  "use_model": "existing robot-validated v25 controller and unchanged rigid model; not hold-proxy fit candidate",
+  "stale_plan_policy": "read current state and validate source hashes, age and actual Clearance entry before any future execution",
+  "preview": "outputs/common_calibration_20261106/heldout_110_165_preview.json"
+}

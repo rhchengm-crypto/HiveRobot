@@ -1,0 +1,57 @@
+{
+  "target_board_mm": [
+    137.5,
+    247.5,
+    50.2
+  ],
+  "trial": "C5 empty-load approach/descent",
+  "board_model_sha256": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57",
+  "running": false,
+  "motion_ok": true,
+  "claw_closed": false,
+  "post_move_model_hold": {
+    "enabled": true,
+    "state": "complete",
+    "same_serial_session": true,
+    "seconds": 5
+  },
+  "endpoint_settle_attempts": 2,
+  "max_nominal_error_deg": 0.30883858392928154,
+  "nominal_joint_target_reached": true,
+  "physical_board_target_verified": false,
+  "operator_observation": {
+    "descent_lateral_drift": "none observed",
+    "fingertip_remaining_descent_estimate_mm": 30,
+    "near_collision": "elbow near robot torso",
+    "avoid_further_D_motion_joints": [
+      "shoulder_side",
+      "shoulder_rotate"
+    ],
+    "suggested_joint": "wrist_side",
+    "next_test_requested": "modify first, Home, then retry"
+  },
+  "audit_records_with_violations": 2,
+  "hold": {
+    "ok": true,
+    "reason": "duration_complete",
+    "duration_s": 5.00464129447937,
+    "max_abs_error_deg": {
+      "shoulder_front": 0.30883858392928154,
+      "shoulder_side": 0.029815164261277723,
+      "shoulder_rotate": 0.2838237390944064,
+      "elbow": 0.0694198416033948,
+      "arm_roll": 0.0643874179505734,
+      "wrist_side": 0.07677502084637532,
+      "wrist": 0.023683031000822724
+    },
+    "max_velocity_rad_s": {
+      "shoulder_front": 0.005860805977135897,
+      "shoulder_side": 0.005860805977135897,
+      "shoulder_rotate": 0.03663003817200661,
+      "elbow": 0.005860805977135897,
+      "arm_roll": 0.021978022530674934,
+      "wrist_side": 0.021978022530674934,
+      "wrist": 0.021978022530674934
+    }
+  }
+}
