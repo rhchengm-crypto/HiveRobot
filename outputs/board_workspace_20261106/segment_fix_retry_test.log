@@ -1,0 +1,9 @@
+board watchdog policy= {"build": "seven-axis-board-grasp-v22-continuous-segment-handoff", "warning_velocity_rad_s": 0.2, "mode": "record-only", "velocity_error_automatic_stop": false, "tracking_error_automatic_stop": false, "warning_position_error_deg": 5.0, "reference_peak_velocity_limit_rad_s": 0.06999999999999999}
+board execution groups= {"planner_samples": 1, "execution_groups": 1, "groups": [{"stage": "source_above", "first_original_index": 0, "last_original_index": 0}]}
+board waypoint= {"index": 0, "stage": "source_above", "group_index": 0, "first_original_index": 0, "target_board_mm": [82.5, 137.5, 140.0], "timing": {"seconds": 2.678571428571429, "reference_peak_velocity_rad_s": 0.06999999999999999, "reference_peak_acceleration_rad_s2": 0.08046979751910399, "feedback_velocity_limit_rad_s": 0.2}, "entry_feedback": {"shoulder_front": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "shoulder_side": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "shoulder_rotate": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "elbow": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "arm_roll": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "wrist_side": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "wrist": {"pos": 0.0, "vel": 0.0, "tau": 0.0}}}
+board entry velocity audit= {"mode": "record-only", "protection_triggered": false, "velocity_rad_s": {"shoulder_front": 0.0, "shoulder_side": 0.0, "shoulder_rotate": 2.0439560413360596, "elbow": 0.0, "arm_roll": 0.0, "wrist_side": 0.0, "wrist": 0.0}}
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.014s
+
+OK
