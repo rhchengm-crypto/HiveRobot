@@ -48,6 +48,26 @@ class DeterministicWorker:
 
 
 class GeneralMotionTests(unittest.TestCase):
+    def test_stationary_continued_reference_has_no_feedback_lag_gravity_kick(self):
+        # Recorded v24 contact-37 entry: command and encoder disagree even
+        # before a new reference moves. That disagreement is not new motion.
+        reference=dict(zip(['shoulder_front','shoulder_side','shoulder_rotate','elbow',
+            'arm_roll','wrist_side','wrist'],[.7286353,-2.8130602,1.9853213,.5408866,-3.0274162,-.7187078,-3.1905583]))
+        actual=dict(zip(reference,[.7211795,-2.8238728,1.9728009,.5601968,-2.9909589,-.7001984,-3.1801710]))
+        with tempfile.TemporaryDirectory() as folder,redirect_stdout(io.StringIO()):
+            config=self.config('apply',Path(folder)/'log.jsonl')
+            config=dict(config,board_gravity_baseline=True)
+            zero=dict.fromkeys(reference,0.)
+            old=general.GeneralMotionSession(config,actual,list(reference))
+            old.prepare(reference,0.,0.,zero,zero)
+            self.assertGreater(max(abs(v) for v in old.gravity_goal.values()),.01)
+            fixed=general.GeneralMotionSession(config,reference,list(reference))
+            fixed.prepare(reference,0.,0.,zero,zero)
+            np.testing.assert_allclose(list(fixed.gravity_goal.values()),0.,atol=1e-12)
+            fixed.prepare(reference,0.,.05,zero,zero)
+            for name in reference:
+                self.assertEqual(fixed.transform(name,36.,4.5,-.29554),(36.,4.5,-.29554))
+
     def config(self, mode, path):
         with mock.patch.dict('os.environ', {general.LOG_ENV: str(path)}), redirect_stdout(io.StringIO()):
             config=general.load_configuration(MODEL, mode)

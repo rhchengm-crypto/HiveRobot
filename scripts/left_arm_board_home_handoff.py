@@ -64,8 +64,16 @@ def install_home_handoff(supervisor, arm, legacy, home_main=None):
         signal.signal(signal.SIGUSR1, lambda signum, frame: setattr(supervisor, 'home_requested', True))
         supervisor.home_handoff_available = True
     supervisor.home_callback = lambda: run_home_on_existing_arm(arm, legacy, home_main)
+    def passive_feedback(names):
+        # controlMIT already receives motor replies. Never inject refresh
+        # requests or a 20ms sleep into its synchronous command observer.
+        return {n:{'pos':float(arm.motors[n].getPosition()),
+                   'vel':float(arm.motors[n].getVelocity()),
+                   'tau':float(arm.motors[n].getTorque())} for n in names}
     supervisor.home_guard = BoardWatchdog(arm, supervisor, .3, 5.,
-        context={'stage': 'explicit_home_handoff'}, check_every_calls=1, record_only=True)
+        context={'stage': 'explicit_home_handoff','feedback_source':'passive-MIT-reply-cache',
+                 'feedback_freshness_verified':False}, check_every_calls=1, record_only=True,
+        feedback_reader=passive_feedback)
     supervisor.next_home_guard = 0.
 
 

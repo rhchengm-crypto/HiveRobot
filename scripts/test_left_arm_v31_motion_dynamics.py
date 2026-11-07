@@ -30,6 +30,17 @@ def fixture():
 
 
 class MotionDynamicsTests(unittest.TestCase):
+    def test_continued_rigid_origin_does_not_reanchor_to_lagging_feedback(self):
+        reference=dict.fromkeys(JOINTS,.4)
+        arm=types.SimpleNamespace(motion_dynamics_model={'rigid_body_configuration':
+            {'legacy':None}},board_gravity_feedforward=True,positions=mock.Mock(side_effect=AssertionError('extra CAN read')))
+        with mock.patch('left_arm_general_motion.GeneralMotionSession') as session:
+            motion.begin_motion(arm,JOINTS,entry_pose=reference)
+        self.assertEqual(session.call_args.args[1],reference)
+        arm.positions.assert_not_called()
+        for bad in ({'elbow':.4},dict(reference,elbow=float('nan'))):
+            with self.assertRaises(ValueError):motion.begin_motion(arm,JOINTS,entry_pose=bad)
+
     def test_offline_preview_is_read_only_and_only_commands_requested_joints(self):
         model, pose = fixture()
         plan = {'start_pose_rad': pose, 'targets_rad': {'elbow': 0.2},
@@ -147,6 +158,74 @@ class TrajectoryIntegrationTests(unittest.TestCase):
     def setUpClass(cls):
         cls.legacy = load_legacy_without_hardware()
 
+    def test_seven_axis_continuation_uses_reference_for_dynamics_but_reads_actual(self):
+        reference=dict.fromkeys(JOINTS,.4);actual=dict(reference,shoulder_rotate=.38)
+        arm=self.legacy.LeftArmV2.__new__(self.legacy.LeftArmV2)
+        arm.specs=dict.fromkeys(JOINTS);arm.motors=dict(zip(JOINTS,JOINTS))
+        arm.positions=mock.Mock(return_value=actual)
+        arm.ctrl=types.SimpleNamespace(controlMIT=lambda *args:None)
+        clock=types.SimpleNamespace(now=0.)
+        def sleep(dt):clock.now+=dt
+        with mock.patch.object(self.legacy,'begin_motion',return_value=None) as begin, \
+             mock.patch.object(self.legacy.time,'time',lambda:clock.now), \
+             mock.patch.object(self.legacy.time,'sleep',sleep),redirect_stdout(io.StringIO()):
+            arm.move_targets_with_holds(reference,.1,{}, {}, {},2.,.4,
+                move_reference_starts=reference,preload_seconds=0.)
+        arm.positions.assert_called_once()
+        self.assertEqual(begin.call_args.kwargs['entry_pose'],reference)
+
+    def test_actual_loop_continues_old_reference_without_measured_angle_reset(self):
+        from left_arm_board_grasp import bridge_segment_feedforward
+        name='shoulder_rotate';actual=1.9800487756729126
+        old={name:dict(kp=36.,kd=4.5,q=1.9910080775049408,dq=0.,tau_ff=-.370983796371311)}
+        reference={name:old[name]['q']};gains={name:dict(kp=36.,kd=4.5)}
+        arm=self.legacy.LeftArmV2.__new__(self.legacy.LeftArmV2)
+        arm.motion_dynamics_model=None;arm.specs={name:None};arm.motors={name:name}
+        arm.positions=lambda _: {name:actual}
+        sent=[];arm.ctrl=types.SimpleNamespace(controlMIT=lambda *args:sent.append(args))
+        clock=types.SimpleNamespace(now=0.)
+        def sleep(seconds):clock.now+=seconds
+        refresh=mock.Mock()
+        with mock.patch.object(self.legacy.time,'time',lambda:clock.now), \
+             mock.patch.object(self.legacy.time,'sleep',sleep), \
+             redirect_stdout(io.StringIO()):
+            arm.move_targets_with_holds({name:2.},1.,gains,{}, {},2.,.4,
+                move_reference_starts=reference,move_boundary_keepalive=refresh,
+                move_tau_ff_initializer=lambda starts:bridge_segment_feedforward(old,starts,
+                    {name:.007326007355004549},gains,{name:-.3},{name:10.},reference)[0],trajectory='smootherstep')
+        first=sent[0]
+        self.assertEqual(first[3],old[name]['q'])
+        self.assertEqual(first[5],old[name]['tau_ff'])
+        self.assertEqual(first[1:3],(36.,4.5))
+        self.assertEqual(sent[-1][3],2.)
+        self.assertEqual(sent[-1][5],-.3)
+        self.assertEqual(refresh.call_count,3)
+
+    def test_continuation_uses_primitive_start_before_first_preload_command(self):
+        from left_arm_board_grasp import bridge_segment_feedforward
+        arm=self.legacy.LeftArmV2.__new__(self.legacy.LeftArmV2)
+        arm.motion_dynamics_model=None
+        arm.specs={'elbow':None};arm.motors={'elbow':'elbow'}
+        arm.positions=lambda names:{'elbow':.35}  # differs from caller's earlier .3
+        commands=[];arm.ctrl=types.SimpleNamespace(controlMIT=lambda *v:commands.append(v))
+        gains={'elbow':dict(kp=20.,kd=2.)}
+        previous={'elbow':dict(kp=20.,kd=2.,q=.4,dq=0.,tau_ff=1.)}
+        initializer=mock.Mock(side_effect=lambda starts:bridge_segment_feedforward(
+            previous,starts,{'elbow':.02},gains,{'elbow':.5},{'elbow':18.})[0])
+        clock=types.SimpleNamespace(now=0.)
+        def sleep(seconds):clock.now+=seconds
+        with mock.patch.object(self.legacy.time,'time',lambda:clock.now), \
+             mock.patch.object(self.legacy.time,'sleep',sleep), \
+             redirect_stdout(io.StringIO()):
+            arm.move_targets_with_holds({'elbow':.45},1.,gains,{}, {},2.,.4,
+                move_tau_ff_initializer=initializer,trajectory='smootherstep')
+        initializer.assert_called_once_with({'elbow':.35})
+        first=commands[0];last=commands[-1]
+        self.assertEqual(first[3],.35)
+        self.assertAlmostEqual(first[5]-2.*.02,20.*(.4-.35)-2.*.02+1.)
+        self.assertEqual(last[3],.45)
+        self.assertEqual(last[5],.5)  # original model endpoint, not recycled PD
+
     def run_trajectory(self, kind, enabled):
         model, pose = fixture()
         arm = self.legacy.LeftArmV2.__new__(self.legacy.LeftArmV2)
@@ -160,10 +239,10 @@ class TrajectoryIntegrationTests(unittest.TestCase):
 
         def sleep(seconds):
             clock.now += seconds
-        with (mock.patch.object(self.legacy.time, 'time', lambda: clock.now),
-              mock.patch.object(self.legacy.time, 'monotonic', lambda: clock.now),
-              mock.patch.object(self.legacy.time, 'sleep', sleep),
-              redirect_stdout(io.StringIO())):
+        with mock.patch.object(self.legacy.time, 'time', lambda: clock.now), \
+              mock.patch.object(self.legacy.time, 'monotonic', lambda: clock.now), \
+              mock.patch.object(self.legacy.time, 'sleep', sleep), \
+              redirect_stdout(io.StringIO()):
             if kind == 'single':
                 arm.move_target_with_holds('elbow', 0.2, 2, 40, 1.5,
                     {'wrist': 0.0, 'claw': 1.0}, {}, 3, 0.3,

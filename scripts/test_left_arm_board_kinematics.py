@@ -29,6 +29,28 @@ class BoardKinematicsTests(unittest.TestCase):
             error = rotation_error(axis_rotation(axis, np.pi), np.eye(3))
             self.assertAlmostEqual(np.linalg.norm(error), np.pi)
 
+    def test_seed_projection_is_opt_in_and_keeps_target_bounds_strict(self):
+        bounds = self.bounds.copy()
+        q = self.model.reference.copy()
+        axis = self.model.names.index('shoulder_rotate')
+        bounds[axis, 1] = q[axis]
+        seed = q.copy()
+        seed[axis] += np.radians(.043)
+        target = tcp_pose(self.model, q, self.tcp)
+        with self.assertRaisesRegex(ValueError, 'seed outside'):
+            solve_ik(self.model, target[:3, 3], seed, self.tcp, bounds)
+        tolerance = np.zeros(self.model.n)
+        tolerance[axis] = np.radians(.1)
+        answer = solve_ik(self.model, target[:3, 3], seed, self.tcp, bounds,
+                          seed_projection_tolerance_rad=tolerance)
+        self.assertTrue(answer['success'])
+        self.assertLessEqual(answer['encoder_rad']['shoulder_rotate'], bounds[axis, 1])
+        self.assertAlmostEqual(answer['seed_projection_delta_deg']['shoulder_rotate'], -.043)
+        seed[axis] = bounds[axis, 1] + np.radians(.11)
+        with self.assertRaisesRegex(ValueError, 'seed outside'):
+            solve_ik(self.model, target[:3, 3], seed, self.tcp, bounds,
+                     seed_projection_tolerance_rad=tolerance)
+
     def test_ik_recovers_cartesian_pose_with_encoder_signs(self):
         rng = np.random.default_rng(89)
         for _ in range(12):
@@ -49,6 +71,22 @@ class BoardKinematicsTests(unittest.TestCase):
         angles = np.array(list(result['encoder_rad'].values()))
         self.assertTrue(np.all(angles >= self.bounds[:, 0]))
         self.assertTrue(np.all(angles <= self.bounds[:, 1]))
+
+    def test_axis_only_orientation_preserves_tool_axis_without_locking_yaw(self):
+        q = self.model.reference.copy()
+        frame = tcp_pose(self.model, q, self.tcp)
+        axis_local = np.array([0., 0., 1.])
+        # Change only the requested yaw about the same tool axis. The starting
+        # pose already satisfies the reduced orientation task exactly.
+        desired = frame[:3, :3]@axis_rotation(axis_local, 1.2)
+        answer = solve_ik(self.model, frame[:3, 3], q, self.tcp, self.bounds,
+                          desired, tool_axis_local=axis_local)
+        self.assertTrue(answer['success'])
+        self.assertEqual(answer['orientation_constraint'], 'tool-axis')
+        np.testing.assert_allclose(list(answer['encoder_rad'].values()), q, atol=1e-12)
+        strict = solve_ik(self.model, frame[:3, 3], q, self.tcp, self.bounds,
+                          desired, max_iterations=0)
+        self.assertFalse(strict['success'])
 
     def test_invalid_limits_and_seed_rejected(self):
         for limits, seed in ((None, self.model.reference),

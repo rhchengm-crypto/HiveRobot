@@ -31,6 +31,7 @@ V31_DYNAMICS_SCRIPT = str(Path(__file__).parent / "left_arm_v3_1_model_control.p
 GENERAL_MOVE_SCRIPT = str(Path(__file__).parent / "left_arm_general_move.py")
 BOARD_GRASP_SCRIPT = str(Path(__file__).parent / "left_arm_board_grasp.py")
 BOARD_GRASP_MODEL = str(Path(__file__).parent / "data" / "left_arm_board_grasp.json")
+BOARD_WORKSPACE_CANDIDATE = str(Path(__file__).parent / "data" / "left_arm_board_workspace_candidate.json")
 _V31_MODEL_IN_DATA = Path(__file__).parent / "data" / "left_arm_v3_1_dynamics.json"
 _V31_MODEL_NEXT_TO_SCRIPT = Path(__file__).parent / "left_arm_v3_1_dynamics.json"
 V31_DYNAMICS_MODEL = str(
@@ -242,6 +243,36 @@ def build_dynamics_command(args, action: str, payload: dict) -> list[str]:
     if action not in DYNAMICS_ACTIONS:
         raise ValueError("unsupported dynamics action")
     if action == "board-grasp":
+        trial = payload.get('validate_candidate_above', False)
+        touch_trial = payload.get('validate_candidate_touch', False)
+        approach_trial = payload.get('validate_candidate_approach', False)
+        if not isinstance(approach_trial, bool):
+            raise ValueError('validate_candidate_approach must be boolean')
+        if approach_trial and (trial or touch_trial or payload.get('stage') != 'approach'
+                or payload.get('test_protective_stop') or payload.get('direction_check_joint') is not None):
+            raise ValueError('candidate complete approach requires standalone approach without fault/direction test')
+        prepare = payload.get('prepare_execution',False)
+        prepared = payload.get('prepared_plan')
+        if not isinstance(prepare,bool):
+            raise ValueError('prepare_execution must be boolean')
+        if (prepare or prepared is not None) and not approach_trial:
+            raise ValueError('prepared path requires complete common approach validation')
+        if prepare and (payload.get('execute') is True or prepared is not None or not payload.get('prepare_start_rad')):
+            raise ValueError('prepare requires offline start, no execution or prepared input')
+        if prepared is not None and (not isinstance(prepared,str) or not prepared.startswith('approach_')
+                or not prepared.endswith('.json') or Path(prepared).name!=prepared
+                or any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.' for c in prepared)):
+            raise ValueError('invalid prepared plan identifier')
+        if not isinstance(trial, bool):
+            raise ValueError('validate_candidate_above must be boolean')
+        if not isinstance(touch_trial,bool):
+            raise ValueError('validate_candidate_touch must be boolean')
+        if touch_trial and (trial or payload.get('stage')!='touch' or payload.get('test_protective_stop')
+                            or payload.get('direction_check_joint') is not None):
+            raise ValueError('candidate touch validation requires standalone staged Touch')
+        if trial and (payload.get('stage') != 'approach' or payload.get('test_protective_stop')
+                      or payload.get('direction_check_joint') is not None):
+            raise ValueError('candidate validation only permits a common approach planned as above-only transit')
         if payload.get("execute") is True and payload.get("stage", "above") not in {"above", "touch", "approach", "cartesian-check"}:
             raise PermissionError("Only Above, staged Touch and model Approach + Touch are released for hardware validation")
         if not getattr(args, "rigid_body_model", None):
@@ -256,13 +287,26 @@ def build_dynamics_command(args, action: str, payload: dict) -> list[str]:
             raise ValueError("piece has no board grasp profile")
         command = [str(args.python_bin), "-u", BOARD_GRASP_SCRIPT,
                    "--model", os.path.abspath(args.rigid_body_model),
-                   "--board-model", BOARD_GRASP_MODEL,
+                   "--board-model", BOARD_WORKSPACE_CANDIDATE if trial or touch_trial or approach_trial else BOARD_GRASP_MODEL,
                    "--hold-model", os.path.abspath(args.dynamics_model),
                    "--mode", args.rigid_body_mode, "--x-mm", str(x), "--y-mm", str(y),
                    "--piece", piece, "--stage", stage, "--no-model-hold"]
         height = _finite_number(payload, "grip_height_mm", minimum=10, maximum=150)
         if height is not None:
             command += ["--grip-height-mm", str(height)]
+        if trial:
+            command += ['--validate-candidate-above', '--plan-output',
+                        str(Path(__file__).parent/'data'/'board_workspace_trials'/('above_'+secrets.token_hex(8)+'.json'))]
+        if touch_trial:
+            command += ['--validate-candidate-touch','--plan-output',
+                        str(Path(__file__).parent/'data'/'board_workspace_trials'/('touch_'+secrets.token_hex(8)+'.json'))]
+        if approach_trial:
+            command += ['--validate-candidate-approach','--plan-output',
+                        str(Path(__file__).parent/'data'/'board_workspace_trials'/('approach_'+secrets.token_hex(8)+'.json'))]
+        if prepare:
+            command += ['--prepare-execution','--start-json',_pose_json_arg({'pose':payload['prepare_start_rad']})]
+        if prepared is not None:
+            command += ['--prepared-plan',str(Path(__file__).parent/'data'/'board_workspace_trials'/prepared)]
         if payload.get("execute") is True:
             command.append("--execute")
         if payload.get("test_protective_stop") is True:

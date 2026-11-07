@@ -58,6 +58,7 @@ class FaultSupport:
         self.latest_velocity = {}
         self.last_io_failures = []
         self.last_commands = {}
+        self.entry_policy = {}
         self.max_drift_deg = {n: 0. for n in names}
 
     def observe(self, status):
@@ -81,12 +82,32 @@ class FaultSupport:
         self.feedback_age_ms = (self.started-self.snapshot_at)*1000
         for n in self.names:
             row = self.snapshot[n]
+            previous = self.last_commands.get(n)
+            # A moving/oscillating sample is not a static load estimate.
+            # Freeze the last command law instead of injecting kd*velocity
+            # (7.05 Nm in the recorded shoulder incident). Keep damping active.
+            dynamic = (abs(row['vel']) > .3 or
+                       'oscillation' in self.reason.lower())
+            valid_previous = (isinstance(previous, dict) and
+                all(k in previous and math.isfinite(float(previous[k]))
+                    for k in ('kp','kd','q','dq','tau_ff')) and
+                0 <= previous['kp'] <= 500 and 0 <= previous['kd'] <= 5 and
+                abs(previous['tau_ff']) <= MIT_TAU_MAX[n])
+            if dynamic and valid_previous:
+                self.targets[n] = float(previous['q'])
+                self.gains[n] = {k:float(previous[k]) for k in ('kp','kd')}
+                self.support_tau[n] = self.bridge_tau[n] = float(previous['tau_ff'])
+                self.entry_policy[n] = 'freeze-last-command; zero-velocity-demand; no-damping-cancellation'
+                continue
             self.targets[n] = row['pos']
             self.support_tau[n] = row['tau']
             # Same measured-load/damping bridge as the existing Model Hold:
             # at q_target=q_measured, the first net torque is measured_tau.
-            self.bridge_tau[n] = clamp(row['tau']+self.gains[n]['kd']*row['vel'],
+            bridge_velocity = 0. if dynamic else row['vel']
+            self.bridge_tau[n] = clamp(row['tau']+self.gains[n]['kd']*bridge_velocity,
                                        -MIT_TAU_MAX[n], MIT_TAU_MAX[n])
+            self.entry_policy[n] = ('measured-load; no-damping-cancellation; missing-command'
+                                    if dynamic else 'quasi-static-measured-load-bridge')
         self.latched = True
         self.step()  # Refresh support before logging or other cleanup.
         trace = getattr(cause, 'trace', None)
@@ -139,6 +160,7 @@ class FaultSupport:
                        'reason': self.reason, 'diagnostics': self.diagnostics,
                        'hold_elapsed_s': elapsed, 'snapshot_age_at_entry_ms': self.feedback_age_ms,
                        'targets_rad': dict(self.targets), 'load_support_tau': dict(self.support_tau),
+                       'entry_policy': dict(self.entry_policy),
                        'max_drift_deg': dict(self.max_drift_deg),
                        'latest_velocity_rad_s': dict(self.latest_velocity),
                        'feedback_age_ms': None if self.last_feedback_at is None else
@@ -167,8 +189,9 @@ class FaultSupport:
 class BoardWatchdog:
     def __init__(self, arm, support, max_velocity, max_error_deg, *,
                  inject_after_checks=None, context=None, check_every_calls=8,
-                 record_only=False):
+                 record_only=False, feedback_reader=None):
         self.arm, self.support = arm, support
+        self.feedback_reader = feedback_reader
         self.max_velocity, self.max_error_deg = max_velocity, max_error_deg
         self.calls = self.checks = 0
         self.inject_after_checks = inject_after_checks
@@ -196,7 +219,7 @@ class BoardWatchdog:
             return
         self.checks += 1
         feedback_read_started_wall_s = time.time()
-        status = self.arm.read_status(self.support.names)
+        status = (self.feedback_reader or self.arm.read_status)(self.support.names)
         feedback_read_finished_wall_s = time.time()
         self.support.observe(status)
         now = self.support.clock()

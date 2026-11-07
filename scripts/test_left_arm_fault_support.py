@@ -21,6 +21,30 @@ class Clock:
 
 
 class FaultSupportTests(unittest.TestCase):
+    def test_recorded_oscillation_freezes_sent_law_without_7Nm_velocity_bridge(self):
+        name='shoulder_rotate'
+        arm=mock.Mock();arm.motors={name:name}
+        snapshot={name:dict(pos=1.9869153499603271,vel=1.355311393737793,tau=.949938952922821)}
+        previous=dict(kp=36.,kd=4.5,q=1.9853808,dq=0.,tau_ff=-.33658)
+        arm.read_status.return_value=snapshot
+        support=FaultSupport(arm,[name],{name:dict(kp=36.,kd=4.5)},clock=Clock(),emit=lambda _:None)
+        support.activate(snapshot);support.last_commands={name:dict(previous)}
+        support.latch(MotionStop('confirmed encoder oscillation during board trajectory'))
+        call=arm.ctrl.controlMIT.call_args.args
+        self.assertEqual(call,(name,36.,4.5,previous['q'],0.,previous['tau_ff']))
+        self.assertEqual(support.support_tau[name],previous['tau_ff'])
+        self.assertEqual(support.bridge_tau[name],previous['tau_ff'])
+        support.clock.now=1.;support.step()
+        self.assertEqual(arm.ctrl.controlMIT.call_args.args,call)
+        arm.enable.assert_not_called();arm.disable.assert_not_called()
+
+    def test_fast_fault_without_previous_command_does_not_cancel_damping(self):
+        self.status['wrist']['vel']=1.4
+        self.support.observe(self.status)
+        self.support.latch(MotionStop('unexpected stop'))
+        self.assertEqual(self.support.bridge_tau['wrist'],self.status['wrist']['tau'])
+        self.assertEqual(self.support.targets['wrist'],self.status['wrist']['pos'])
+
     def setUp(self):
         self.clock = Clock()
         self.names = ['elbow', 'wrist']

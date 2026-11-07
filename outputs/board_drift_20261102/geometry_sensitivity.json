@@ -1,0 +1,103 @@
+{
+  "motion_issued": false,
+  "production_modified": false,
+  "baseline_delta_xyz_mm": [
+    -0.7403321649896734,
+    0.4341520852157533,
+    -87.73511397292036
+  ],
+  "wrist_orientation_change_deg": 0.2632119331610017,
+  "perturbations": [
+    {
+      "parameter": "shoulder_front_encoder_zero",
+      "perturbation_degrees": 1,
+      "delta_xyz_change_mm": [
+        0.033501937798813386,
+        1.530550968558063,
+        0.02065030512294186
+      ]
+    },
+    {
+      "parameter": "shoulder_side_encoder_zero",
+      "perturbation_degrees": 1,
+      "delta_xyz_change_mm": [
+        1.0127580752424534,
+        0.05438340534572789,
+        -0.014878184834174135
+      ]
+    },
+    {
+      "parameter": "shoulder_rotate_encoder_zero",
+      "perturbation_degrees": 1,
+      "delta_xyz_change_mm": [
+        -0.4183914670890275,
+        -0.01319342675761026,
+        -0.025015029488415053
+      ]
+    },
+    {
+      "parameter": "elbow_encoder_zero",
+      "perturbation_degrees": 1,
+      "delta_xyz_change_mm": [
+        -0.3113906512671366,
+        -1.5017711401091556,
+        -0.2749333149751294
+      ]
+    },
+    {
+      "parameter": "arm_roll_encoder_zero",
+      "perturbation_degrees": 1,
+      "delta_xyz_change_mm": [
+        -0.5238179899298882,
+        0.18581326616978122,
+        0.07033476974923758
+      ]
+    },
+    {
+      "parameter": "wrist_side_encoder_zero",
+      "perturbation_degrees": 1,
+      "delta_xyz_change_mm": [
+        0.8372529768897327,
+        -0.20014316879070088,
+        0.03307688645976725
+      ]
+    },
+    {
+      "parameter": "wrist_encoder_zero",
+      "perturbation_degrees": 1,
+      "delta_xyz_change_mm": [
+        -0.0043226117755432725,
+        -0.00840775932799015,
+        0.009471677528040345
+      ]
+    },
+    {
+      "parameter": "tcp_local_x",
+      "perturbation_mm": 10,
+      "delta_xyz_change_mm": [
+        0.014106931928929978,
+        0.02531132721088014,
+        -0.02540865436397155
+      ]
+    },
+    {
+      "parameter": "tcp_local_y",
+      "perturbation_mm": 10,
+      "delta_xyz_change_mm": [
+        -0.028434324315567916,
+        -0.019782320068844506,
+        -0.029568533114684215
+      ]
+    },
+    {
+      "parameter": "tcp_local_z",
+      "perturbation_mm": 10,
+      "delta_xyz_change_mm": [
+        -0.00476824083541505,
+        -0.013496081835229878,
+        0.02136598513932597
+      ]
+    }
+  ],
+  "interpretation": "Sensitivity alone cannot identify actual calibration error. No parameter should be changed to fit the reported 8 mm without independent evidence."
+}
