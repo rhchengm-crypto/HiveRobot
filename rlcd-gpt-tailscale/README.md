@@ -107,3 +107,5 @@ News speech: the physically leftmost K1 (GPIO3) cycles current news entries from
 2026-11-07：连续转文字录音栈改用 PSRAM，诊断和实板测试见 REALTIME_CAPTURE_FIX.md / REALTIME_CAPTURE_VALIDATION.json。
 
 2026-11-07：GPT 等待阶段/BOOT重试与长回答分页缓存优化，详见 GPT_CONNECTION_FIX.md / GPT_RETRY_VALIDATION.json。
+
+2026-11-07：已入网节点重连不再发送原Tailscale Auth Key，迁移与重启实测见 NODE_AUTH_FIX.md / NODE_AUTH_VALIDATION.json。

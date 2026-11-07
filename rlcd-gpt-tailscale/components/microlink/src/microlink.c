@@ -34,6 +34,7 @@ static const char *TAG = "microlink";
 #define NVS_KEY_WG_PUB      "wg_public"
 #define NVS_KEY_DISCO_PRI   "disco_pri"
 #define NVS_KEY_DISCO_PUB   "disco_pub"
+#define NVS_KEY_ENROLLED    "enrolled"
 
 /* X25519 from x25519.h */
 #include "x25519.h"
@@ -96,7 +97,12 @@ static esp_err_t load_or_generate_keys(microlink_t *ml) {
         nvs_get_blob(nvs, NVS_KEY_DISCO_PUB, ml->disco_public_key, &key_len);
     }
 
+    uint8_t enrolled = 0;
+    if (!need_save && nvs_get_u8(nvs, NVS_KEY_ENROLLED, &enrolled) == ESP_OK) {
+        ml->identity_enrolled = enrolled == 1;
+    }
     if (need_save) {
+        nvs_set_u8(nvs, NVS_KEY_ENROLLED, 0);
         nvs_set_blob(nvs, NVS_KEY_MACHINE_PRI, ml->machine_private_key, 32);
         nvs_set_blob(nvs, NVS_KEY_MACHINE_PUB, ml->machine_public_key, 32);
         nvs_set_blob(nvs, NVS_KEY_WG_PRI, ml->wg_private_key, 32);
@@ -111,6 +117,22 @@ static esp_err_t load_or_generate_keys(microlink_t *ml) {
 
     nvs_close(nvs);
     return ESP_OK;
+}
+
+/* Called by the coordinator only after successful server authorization. */
+void ml_identity_mark_enrolled(microlink_t *ml) {
+    if (!ml) return;
+    ml->auth_enroll_requested = false;
+    if (ml->identity_enrolled) return;
+    ml->identity_enrolled = true;
+    nvs_handle_t nvs;
+    esp_err_t err = nvs_open(NVS_NAMESPACE, NVS_READWRITE, &nvs);
+    if (err == ESP_OK) {
+        err = nvs_set_u8(nvs, NVS_KEY_ENROLLED, 1);
+        if (err == ESP_OK) err = nvs_commit(nvs);
+        nvs_close(nvs);
+    }
+    ESP_LOGW(TAG, "[ML_AUTH] enrollment_confirmed=1 persisted=%u", err == ESP_OK);
 }
 
 /* ============================================================================

@@ -88,11 +88,12 @@ void manage(void*){
   int previous=-1;
   while(wanted&&!disconnectRequested&&!microlink_is_connected(vpn)&&millis()-start<60000&&WiFi.status()==WL_CONNECTED){
    const int state=int(microlink_get_state(vpn));connectPhase=2+state;
+   if(state==ML_STATE_ERROR){message="Tailscale需要重新授权，请更新入网密钥";break;}
    if(state!=previous){previous=state;Serial.printf("[GPT_CONNECT] attempt=%u vpn_state=%d elapsed_ms=%lu\n",connectAttempt.load(),state,(unsigned long)(millis()-connectAt.load()));}
    vTaskDelay(pdMS_TO_TICKS(100));
   }
   if(!wanted||disconnectRequested)break;
-  if(!microlink_is_connected(vpn)){message="家庭VPN连接超时，按BOOT重试";break;}
+  if(!microlink_is_connected(vpn)){if(message.isEmpty())message="家庭VPN连接超时，按BOOT重试";break;}
   connectPhase=100;
   JsonDocument health;
   if(!request("/v1/health",nullptr,0,health,message,10000))break;

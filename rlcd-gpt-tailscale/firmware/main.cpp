@@ -627,7 +627,7 @@ void setup() {
   else if(!NetworkConfig::hasCredentials() || !DASHSCOPE_API_KEY[0])status(Mode::Failure,"请先配置 Wi-Fi 和 API Key");
   else status(Mode::Ready,"转文字：按 BOOT 开始听写");
   Serial.println("[BUTTON_MAP] BOOT_GPIO0=enter_record KEY_GPIO18=page_hold_next_tab RX_GPIO44=sleep_setup");
- Serial.printf("[READY] build=gpt-tailnet-gateway-20261107-connect-retry ESP32-S3-RLCD-4.2 psram=%u mic=%u config=%u\n",ESP.getPsramSize(),micReady,NetworkConfig::hasCredentials() && DASHSCOPE_API_KEY[0]);
+ Serial.printf("[READY] build=gpt-tailnet-gateway-20261107-node-auth ESP32-S3-RLCD-4.2 psram=%u mic=%u config=%u\n",ESP.getPsramSize(),micReady,NetworkConfig::hasCredentials() && DASHSCOPE_API_KEY[0]);
 }
 void loop() {
   static uint32_t lastLoopAt=0,maxLoopGap=0;const uint32_t loopNow=millis();

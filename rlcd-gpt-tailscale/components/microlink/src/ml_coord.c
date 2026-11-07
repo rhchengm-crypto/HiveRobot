@@ -704,8 +704,14 @@ static int do_register(microlink_t *ml, ml_noise_state_t *noise) {
     snprintf(key_str, sizeof(key_str), "nodekey:%s", key_hex);
     cJSON_AddStringToObject(root, "NodeKey", key_str);
 
-    /* Auth - only include if auth_key is valid (matching v1 behavior) */
-    if (ml->config.auth_key && strlen(ml->config.auth_key) > 0) {
+    /* A stale enrollment key must never veto a valid persistent node identity.
+     * Legacy installations also try node-only first. Only an explicit server
+     * enrollment/expiry response may enable the auth key, once per instance. */
+    const bool send_auth = ml->auth_enroll_requested && !ml->auth_key_attempted &&
+                           ml->config.auth_key && ml->config.auth_key[0];
+    ESP_LOGW(TAG, "[ML_AUTH] register auth_key_sent=%u enrolled=%u", send_auth, ml->identity_enrolled);
+    if (send_auth) {
+        ml->auth_key_attempted = true;
         cJSON *auth = cJSON_CreateObject();
         cJSON_AddStringToObject(auth, "AuthKey", ml->config.auth_key);
         cJSON_AddItemToObject(root, "Auth", auth);
@@ -940,13 +946,38 @@ static int do_register(microlink_t *ml, ml_noise_state_t *noise) {
     cJSON *resp_json = cJSON_Parse(parse_start);
     if (!resp_json) {
         ESP_LOGW(TAG, "Failed to parse RegisterResponse JSON (len=%d)", (int)parse_len);
-        ESP_LOGW(TAG, "First 100 chars: %.100s", parse_start);
+        /* Do not log response contents: they may contain a login URL. */
         parse_start[parse_len] = saved;
         free(resp_buf);
         return 0;  /* Not fatal - we'll get peers in MapResponse */
     }
     parse_start[parse_len] = saved;
     free(resp_buf);
+
+    cJSON *authorized = cJSON_GetObjectItem(resp_json, "MachineAuthorized");
+    cJSON *expired = cJSON_GetObjectItem(resp_json, "NodeKeyExpired");
+    cJSON *auth_url = cJSON_GetObjectItem(resp_json, "AuthURL");
+    cJSON *error = cJSON_GetObjectItem(resp_json, "Error");
+    const bool node_expired = cJSON_IsTrue(expired);
+    const bool requires_auth = node_expired ||
+                               (cJSON_IsBool(authorized) && !cJSON_IsTrue(authorized)) ||
+                               (cJSON_IsString(auth_url) && auth_url->valuestring[0]);
+    const bool denied = requires_auth || (cJSON_IsString(error) && error->valuestring[0]);
+    if (node_expired || denied) {
+        ml->key_expired = node_expired;
+        const bool can_enroll = requires_auth && (!ml->identity_enrolled || node_expired) &&
+                                !ml->auth_key_attempted && ml->config.auth_key && ml->config.auth_key[0];
+        if (can_enroll) ml->auth_enroll_requested = true;
+        ESP_LOGW(TAG, "[ML_AUTH] authorization_required=1 node_expired=%u enrollment_retry=%u", node_expired, can_enroll);
+        cJSON_Delete(resp_json);
+        /* -2 is explicit rejection: stop retrying this instance without clearing
+         * the identity or automatically re-enrolling a deliberately removed node. */
+        return can_enroll ? -1 : -2;
+    }
+    if (cJSON_IsTrue(authorized)) {
+        ml->key_expired = false;
+        ml_identity_mark_enrolled(ml);
+    }
 
     /* Extract our VPN IP from Node.Addresses */
     cJSON *node = cJSON_GetObjectItem(resp_json, "Node");
@@ -2260,11 +2291,13 @@ void ml_coord_task(void *arg) {
 
         case COORD_REGISTER:
             ESP_LOGI(TAG, "Registering...");
-            if (do_register(ml, &noise) < 0) {
+            int registration_result = do_register(ml, &noise);
+            if (registration_result < 0) {
                 ESP_LOGE(TAG, "Registration failed");
                 ml_close_sock(ml->coord_sock);
                 ml->coord_sock = -1;
-                state = COORD_RECONNECTING;
+                state = registration_result == -2 ? COORD_IDLE : COORD_RECONNECTING;
+                if (registration_result == -2) ml->state = ML_STATE_ERROR;
                 break;
             }
             state = COORD_FETCH_PEERS;
