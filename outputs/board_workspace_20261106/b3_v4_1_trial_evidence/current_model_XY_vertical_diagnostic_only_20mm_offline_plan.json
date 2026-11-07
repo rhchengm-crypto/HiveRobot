@@ -1,0 +1,141 @@
+{
+  "ok": true,
+  "build": "seven-axis-board-grasp-v21-restored-endpoint-settle",
+  "motion_issued": false,
+  "stage": "touch",
+  "piece": "white_knight",
+  "start_rad": {
+    "shoulder_front": 0.7375829815864563,
+    "shoulder_side": -2.9314489364624023,
+    "shoulder_rotate": 2.2314412593841553,
+    "elbow": 0.8188372850418091,
+    "arm_roll": -3.126382827758789,
+    "wrist_side": 0.343900203704834,
+    "wrist": -3.4514000415802
+  },
+  "target_source": "requested-board-xyz",
+  "joint_target_source": "geometric-IK; recorded poses are solver seeds or checked transit references only",
+  "target_board_mm": [
+    71.15397584067746,
+    136.9948623497396,
+    102.58794252086038
+  ],
+  "waypoints": [
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.35951425877477844,
+        0.03380667123431633,
+        -0.0026216317236597286
+      ],
+      "target_board_mm": [
+        71.15397584067739,
+        136.99486234973966,
+        115.92127585419368
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.7497741857190237,
+        "shoulder_side": -2.939830551379473,
+        "shoulder_rotate": 2.2293705783728397,
+        "elbow": 0.8079720626632131,
+        "arm_roll": -3.12807872698269,
+        "wrist_side": 0.34614934555537724,
+        "wrist": -3.4317225503328608
+      },
+      "position_error_mm": 0.08838365632987469,
+      "rotation_error_deg": 0.012274744636965953
+    },
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.3596277098708264,
+        0.03227160118486632,
+        -0.009108166487039326
+      ],
+      "target_board_mm": [
+        71.15397584067735,
+        136.9948623497396,
+        109.25460918752697
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.7607925704140195,
+        "shoulder_side": -2.9482059367194053,
+        "shoulder_rotate": 2.226931560618013,
+        "elbow": 0.7961817991094927,
+        "arm_roll": -3.1304760508607963,
+        "wrist_side": 0.34845811845276814,
+        "wrist": -3.4122639122635157
+      },
+      "position_error_mm": 0.08841703419486559,
+      "rotation_error_deg": 0.012067823413076478
+    },
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.35974116096687436,
+        0.03073653113541632,
+        -0.015594701250418924
+      ],
+      "target_board_mm": [
+        71.15397584067728,
+        136.9948623497396,
+        102.58794252086027
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.7726679606550697,
+        "shoulder_side": -2.9466947777662167,
+        "shoulder_rotate": 2.2272130705145954,
+        "elbow": 0.7837068774402595,
+        "arm_roll": -3.13931770977607,
+        "wrist_side": 0.3469726040577736,
+        "wrist": -3.3896772689625703
+      },
+      "position_error_mm": 0.08264048808940634,
+      "rotation_error_deg": 0.0065556628476441696
+    }
+  ],
+  "endpoint_settle_enabled": true,
+  "registration_status": "optical lateral/normal registration plus user-confirmed fingertip touch plane datum; pending empty-load validation",
+  "fit_errors_mm": {},
+  "tcp_datum": "gripper mount centreline intersecting distal finger-tip plane",
+  "joint_bound_source": "observed saved-pose/reference envelope plus 10deg; NOT mechanical limits; elbow upper provisionally restricted to accepted full-pose observations; NOT a measured mechanical limit",
+  "entry_route": [],
+  "collision_scope": "sampled link-axis envelopes vs finite board and configured body obstacles; other pieces and remaining self collisions not modeled",
+  "body_collision_physically_validated": false,
+  "tool_orientation_constraint": "axis-only",
+  "workflow": "checked-above-transit/contact/pressure-close/lift; above and touch omit claw commands",
+  "selected_wrist_rotation_in_board": [
+    [
+      -0.35756596389092576,
+      0.3503900364367074,
+      -0.8656635627266724
+    ],
+    [
+      0.7455325860888797,
+      0.6653483558034722,
+      -0.03863584487550315
+    ],
+    [
+      0.5624302130454774,
+      -0.6591952577161783,
+      -0.49913311617054656
+    ]
+  ],
+  "orientation_policy": "current wrist orientation; vertical-only staged descent",
+  "posture_selection": {
+    "policy": "common complete-path clearance and joint travel",
+    "score": 13.946091193937061,
+    "joint_travel_rad": 0.0839098018967642,
+    "waypoint_body_clearance_lower_bound_mm": 1.8457439404021325,
+    "per_square_parameters": false,
+    "posture_load_preference": {
+      "elbow_height_mean_mm": 133.60162583031877,
+      "elbow_height_peak_mm": 133.8604425366144,
+      "elbow_height_terminal_mm": 133.56994861906523,
+      "nominal_gravity_squared_mean_Nm2": 26.946684390823137,
+      "added_cost": 13.89909627084834,
+      "physical_load_independently_verified": false
+    },
+    "feasible_orientation_count": 5
+  }
+}
