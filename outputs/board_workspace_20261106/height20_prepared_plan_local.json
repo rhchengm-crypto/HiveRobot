@@ -1,0 +1,108 @@
+{
+  "ok": true,
+  "build": "seven-axis-board-grasp-v25-consistent-dynamics-origin",
+  "motion_issued": false,
+  "stage": "approach",
+  "piece": "white_knight",
+  "start_rad": {
+    "arm_roll": -2.649538516998291,
+    "elbow": 0.8165484070777893,
+    "shoulder_front": 1.9357976913452148,
+    "shoulder_rotate": 2.341306209564209,
+    "shoulder_side": -2.7143893241882324,
+    "wrist": -1.0313191413879395,
+    "wrist_side": 0.3057526648044586
+  },
+  "target_source": "requested-board-xyz",
+  "joint_target_source": "geometric-IK; recorded poses are solver seeds or checked transit references only",
+  "target_board_mm": [
+    82.5,
+    137.5,
+    20.2
+  ],
+  "endpoint_settle_enabled": true,
+  "registration_status": "optical lateral/normal registration plus user-confirmed fingertip touch plane datum; pending empty-load validation",
+  "fit_errors_mm": {},
+  "tcp_datum": "gripper mount centreline intersecting distal finger-tip plane",
+  "joint_bound_source": "observed saved-pose/reference envelope plus 10deg; NOT mechanical limits; elbow upper provisionally restricted to accepted full-pose observations; NOT a measured mechanical limit",
+  "entry_route": [
+    "source_above"
+  ],
+  "collision_scope": "sampled link-axis envelopes vs finite board and configured body obstacles; other pieces and remaining self collisions not modeled",
+  "body_collision_physically_validated": false,
+  "tool_orientation_constraint": "full-wrist",
+  "workflow": "checked-above-transit/contact/pressure-close/lift; above and touch omit claw commands",
+  "selected_wrist_rotation_in_board": [
+    [
+      0.3597132909743766,
+      0.42957112159554606,
+      -0.8282964443890417
+    ],
+    [
+      0.5212442546931378,
+      0.6437686794338732,
+      0.560237730190823
+    ],
+    [
+      0.7738932583023205,
+      -0.6332697204754972,
+      0.00766067119162169
+    ]
+  ],
+  "orientation_policy": "nearest feasible taught tool orientation; geometric IK at requested XY",
+  "orientation_acceptance": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 16,
+    "max_error_deg": 0.13539746150617962,
+    "tolerance_deg": 0.2864788975654116,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "posture_selection": {
+    "policy": "common complete-path clearance and joint travel",
+    "score": 21.620377639449465,
+    "joint_travel_rad": 3.7750285196547235,
+    "waypoint_body_clearance_lower_bound_mm": 9.408860109624797,
+    "per_square_parameters": false,
+    "posture_load_preference": {
+      "elbow_height_mean_mm": 175.95414249427185,
+      "elbow_height_peak_mm": 282.5912079744135,
+      "elbow_height_terminal_mm": 140.97960361403818,
+      "nominal_gravity_squared_mean_Nm2": 21.905603628002538,
+      "added_cost": 18.03352632198724,
+      "physical_load_independently_verified": false
+    },
+    "feasible_orientation_count": 5
+  },
+  "validation_trial": {
+    "approach_contact": true,
+    "above_only": false,
+    "touch_only": false,
+    "claw_commanded": false,
+    "body_physically_validated": false
+  },
+  "prepared_execution": {
+    "version": 1,
+    "created_wall_s": 1794030808.6617742,
+    "request": {
+      "x_mm": 82.5,
+      "y_mm": 137.5,
+      "piece": "white_knight",
+      "stage": "approach",
+      "grip_height_mm": 20.2
+    },
+    "source_hashes": {
+      "rigid_model": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+      "board_model": "d2b692b52065f66178f84dfa52bb211397da3da57a4a9e3c58e124b12d959e12",
+      "planner": "f97627d5112f8f288e4ec286a5eceb60f4d779736faaabc59ac7f63e49e0df25",
+      "controller": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+      "motion_adapter": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+      "fault_support": "9376aab30c3aa10592df2845c3dc946a1e30abdce09f280e3160c0b68e072e0e",
+      "kinematics": "03dd8362418be37dabe7f49a0bdde91a819d6514c62a28650950f93c58c9b39b",
+      "collision": "f25023589d6f142416c2d4ae74b5af1ed35d1c58e892264f728ae9f8c3bc15a3",
+      "trace": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461"
+    },
+    "plan_sha256": "5d94f168e4a91c9233bff0e11f3e00d445a97b30b3cc1f04cc21517852840553",
+    "origin": "new geometric solution before fixed Clearance motion; not taught-angle replay"
+  }
+}

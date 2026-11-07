@@ -1,0 +1,551 @@
+{
+  "schema": 1,
+  "motion_issued": false,
+  "runtime_files_replaced": false,
+  "trials": [
+    {
+      "id": "C4-V24",
+      "model_sha256": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57",
+      "target_board_mm": [
+        113.8,
+        190.3,
+        50.2
+      ],
+      "observation": "operator accepted about 2mm B drift, visible board gap, no oscillation",
+      "exact_external_endpoint_measurement_available": false,
+      "loaded_grasp_validated": false
+    },
+    {
+      "id": "C5-active-set",
+      "model_sha256": "d8c7a069414937aceef9f83222822a6891701e263b35ef4af44aa603cc91146a",
+      "target_board_mm": [
+        137.5,
+        247.5,
+        30.2
+      ],
+      "observation": {
+        "torso_gap": "sufficient",
+        "lateral_drift": "none observed",
+        "oscillation": "none observed",
+        "height": "appropriate",
+        "verbatim": "间隙足够，无横移，无抖动，夹持区域离板高度正好，这组很完美"
+      },
+      "exact_external_endpoint_measurement_available": false,
+      "loaded_grasp_validated": false
+    }
+  ],
+  "frozen_files": [
+    {
+      "path": "outputs/board_drift_20261102/accepted_v24_sync_manifest.json",
+      "bytes": 1312,
+      "sha256": "afbf58688b18485253d140692dd2b8019465eccbd75a486f672f348f24c1e0fd"
+    },
+    {
+      "path": "outputs/board_drift_20261102/jetson_snapshot_v24_accepted/left_arm_board_grasp.json",
+      "bytes": 15894,
+      "sha256": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57"
+    },
+    {
+      "path": "outputs/board_drift_20261102/jetson_snapshot_v24_accepted/left_arm_general_dynamics.json",
+      "bytes": 31263,
+      "sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+    },
+    {
+      "path": "outputs/board_drift_20261102/jetson_snapshot_v24_accepted/left_arm_v3_1_dynamics.json",
+      "bytes": 87512,
+      "sha256": "a468947c9fd023fe8765de6a9470c26be707641707aba6a1bc5c7f88645821a6"
+    },
+    {
+      "path": "outputs/board_drift_20261102/motion_control_logs/data/left_arm_v2_8_full_runs/arm_run_1793681494917_16715.txt",
+      "bytes": 1016914,
+      "sha256": "8df2ff3918c205728eafc2d019ba9ba24909a070931b5fb7bd9cc755149572a8"
+    },
+    {
+      "path": "outputs/board_workspace_20261106/baseline/left_arm_board_grasp.json",
+      "bytes": 15894,
+      "sha256": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57"
+    },
+    {
+      "path": "outputs/board_workspace_20261106/baseline/left_arm_board_grasp.py",
+      "bytes": 51045,
+      "sha256": "72935085e4555a2e25093dd4649175b5eaf4f99f291c87de33bb7fedddef7410"
+    },
+    {
+      "path": "outputs/board_workspace_20261106/baseline/left_arm_board_kinematics.py",
+      "bytes": 13763,
+      "sha256": "33aeb1331ef31d6b6fca99d1c13998c18c6d1efcc98e10e36e291098d81bd65a"
+    },
+    {
+      "path": "outputs/board_workspace_20261106/baseline/left_arm_general_dynamics.json",
+      "bytes": 31263,
+      "sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+    },
+    {
+      "path": "outputs/board_workspace_20261106/baseline/left_arm_v3_1_dynamics.json",
+      "bytes": 85181,
+      "sha256": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f"
+    },
+    {
+      "path": "outputs/c5_test_20261106/accepted_collection_manifest.json",
+      "bytes": 65970,
+      "sha256": "4ad6df2c02cc27f1eb389615dfe302f1595035c1189118fa164e95c764f00c51"
+    },
+    {
+      "path": "outputs/c5_test_20261106/accepted_jetson_raw/data/left_arm_board_grasp.json",
+      "bytes": 16713,
+      "sha256": "d8c7a069414937aceef9f83222822a6891701e263b35ef4af44aa603cc91146a"
+    },
+    {
+      "path": "outputs/c5_test_20261106/accepted_jetson_raw/data/left_arm_general_dynamics.json",
+      "bytes": 31263,
+      "sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+    },
+    {
+      "path": "outputs/c5_test_20261106/accepted_jetson_raw/data/left_arm_v2_8_full_runs/arm_run_1794009150847_13024.txt",
+      "bytes": 1015293,
+      "sha256": "45f702138b243ab118586842a64172d47ca6523c5725bfe02544dfe4ab532b6b"
+    },
+    {
+      "path": "outputs/c5_test_20261106/accepted_jetson_raw/data/left_arm_v3_1_dynamics.json",
+      "bytes": 85181,
+      "sha256": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f"
+    },
+    {
+      "path": "outputs/c5_test_20261106/accepted_run_result.json",
+      "bytes": 16840,
+      "sha256": "b2abf8a9fe463d794cc18016316531bc25775156060afd679b01714bfb7b01ac"
+    },
+    {
+      "path": "outputs/c5_test_20261106/accepted_summary.json",
+      "bytes": 5026,
+      "sha256": "b99f444ef737a2dd38ae8c3ca7db10d6fbc37e041ad3f64beeb11e64e7457af4"
+    },
+    {
+      "path": "outputs/c5_test_20261106/source_snapshots/accepted_active_set/left_arm_board_grasp.py",
+      "bytes": 51045,
+      "sha256": "72935085e4555a2e25093dd4649175b5eaf4f99f291c87de33bb7fedddef7410"
+    },
+    {
+      "path": "outputs/c5_test_20261106/source_snapshots/accepted_active_set/left_arm_board_kinematics.py",
+      "bytes": 13763,
+      "sha256": "33aeb1331ef31d6b6fca99d1c13998c18c6d1efcc98e10e36e291098d81bd65a"
+    }
+  ],
+  "historical_correspondences": [
+    {
+      "id": "grasp_anchors/white_knight:c4",
+      "board_tcp_mm": [
+        137.5,
+        192.5,
+        55.0
+      ],
+      "validated_flag": null,
+      "current_model_residual_mm": [
+        -14.603878661976253,
+        19.52606313032385,
+        -0.04073561580725027
+      ],
+      "usable_as_numerical_seed": true,
+      "usable_as_exact_tcp_measurement": false,
+      "reason": "historical taught contact convention is not independently matched to the current fingertip-plane TCP"
+    },
+    {
+      "id": "grasp_anchors/white_bishop:d4",
+      "board_tcp_mm": [
+        192.5,
+        192.5,
+        55.0
+      ],
+      "validated_flag": null,
+      "current_model_residual_mm": [
+        -15.062426539570396,
+        -8.444231198078114,
+        -21.51031472050881
+      ],
+      "usable_as_numerical_seed": true,
+      "usable_as_exact_tcp_measurement": false,
+      "reason": "historical taught contact convention is not independently matched to the current fingertip-plane TCP"
+    },
+    {
+      "id": "placement_anchors/white_bishop:c1",
+      "board_tcp_mm": [
+        137.5,
+        27.5,
+        55.0
+      ],
+      "validated_flag": true,
+      "current_model_residual_mm": [
+        -0.07520771032611151,
+        2.8916538676748864,
+        -18.488433438995635
+      ],
+      "usable_as_numerical_seed": true,
+      "usable_as_exact_tcp_measurement": false,
+      "reason": "historical taught contact convention is not independently matched to the current fingertip-plane TCP"
+    },
+    {
+      "id": "placement_anchors/white_knight:b1",
+      "board_tcp_mm": [
+        82.5,
+        27.5,
+        55.0
+      ],
+      "validated_flag": false,
+      "current_model_residual_mm": [
+        4.588996382572006,
+        6.2242265864258925,
+        -29.365215982265774
+      ],
+      "usable_as_numerical_seed": true,
+      "usable_as_exact_tcp_measurement": false,
+      "reason": "historical taught contact convention is not independently matched to the current fingertip-plane TCP"
+    }
+  ],
+  "dynamics_data_audit": {
+    "raw_pose_records": 102,
+    "operating_bound_coverage": {
+      "shoulder_front": {
+        "observed_min_rad": 0.6570916175842285,
+        "observed_max_rad": 1.942282795906067,
+        "existing_bounds_rad": [
+          0.10718675940139713,
+          2.1103306165446476
+        ],
+        "samples_outside_existing_bounds": 0
+      },
+      "shoulder_side": {
+        "observed_min_rad": -2.8601129055023193,
+        "observed_max_rad": -2.673189878463745,
+        "existing_bounds_rad": [
+          -3.122766768049164,
+          -2.1797434934864803
+        ],
+        "samples_outside_existing_bounds": 0
+      },
+      "shoulder_rotate": {
+        "observed_min_rad": 1.8789578676223755,
+        "observed_max_rad": 2.7273595333099365,
+        "existing_bounds_rad": [
+          1.6994657167683405,
+          2.9232550016154484
+        ],
+        "samples_outside_existing_bounds": 0
+      },
+      "elbow": {
+        "observed_min_rad": -1.28233003616333,
+        "observed_max_rad": 0.838674008846283,
+        "existing_bounds_rad": [
+          -1.4702146402110297,
+          1.0170216909159857
+        ],
+        "samples_outside_existing_bounds": 0
+      },
+      "arm_roll": {
+        "observed_min_rad": -2.9406042098999023,
+        "observed_max_rad": -2.5755321979522705,
+        "existing_bounds_rad": [
+          -3.421080624174042,
+          -2.3483554968128963
+        ],
+        "samples_outside_existing_bounds": 0
+      },
+      "wrist_side": {
+        "observed_min_rad": -0.5518043637275696,
+        "observed_max_rad": 0.3065156042575836,
+        "existing_bounds_rad": [
+          -0.718707775186463,
+          0.5848098746051031
+        ],
+        "samples_outside_existing_bounds": 0
+      },
+      "wrist": {
+        "observed_min_rad": -2.628938674926758,
+        "observed_max_rad": -1.025978446006775,
+        "existing_bounds_rad": [
+          -3.4836426130046085,
+          -0.8567862161885065
+        ],
+        "samples_outside_existing_bounds": 0
+      }
+    },
+    "existing_shared_parameter_fit": {
+      "gravity_records_used": 73,
+      "unique_inertia_records_used": 29,
+      "inertia_records": [
+        {
+          "joint": "shoulder_front",
+          "captured_at": "2026-10-14 14:22:43",
+          "label": "shoulder_front_home_step_positive",
+          "effective_inertia": 0.16079633681167171
+        },
+        {
+          "joint": "shoulder_front",
+          "captured_at": "2026-10-14 14:23:45",
+          "label": "shoulder_front_home_step_positive_repeat2",
+          "effective_inertia": 0.18472564713038625
+        },
+        {
+          "joint": "shoulder_front",
+          "captured_at": "2026-10-14 14:31:52",
+          "label": "shoulder_front_clearance_step_positive",
+          "effective_inertia": 0.2800788630107806
+        },
+        {
+          "joint": "shoulder_front",
+          "captured_at": "2026-10-14 14:32:39",
+          "label": "shoulder_front_clearance_step_positive_repeat2",
+          "effective_inertia": 0.261309267008994
+        },
+        {
+          "joint": "shoulder_side",
+          "captured_at": "2026-10-15 13:15:46",
+          "label": "shoulder_side_home_step_positive_repeat2",
+          "effective_inertia": 0.4246522923264835
+        },
+        {
+          "joint": "shoulder_side",
+          "captured_at": "2026-10-15 13:17:11",
+          "label": "shoulder_side_home_step_positive_repeat3",
+          "effective_inertia": 0.4101764398651533
+        },
+        {
+          "joint": "shoulder_side",
+          "captured_at": "2026-10-15 13:18:58",
+          "label": "shoulder_side_clearance_step_positive",
+          "effective_inertia": 0.15002050657557808
+        },
+        {
+          "joint": "shoulder_side",
+          "captured_at": "2026-10-15 13:20:06",
+          "label": "shoulder_side_clearance_step_positive_repeat2",
+          "effective_inertia": 0.1723461846799389
+        },
+        {
+          "joint": "shoulder_rotate",
+          "captured_at": "2026-10-15 13:54:34",
+          "label": "shoulder_rotate_home_step_positive_kp18",
+          "effective_inertia": 0.009687070682629648
+        },
+        {
+          "joint": "shoulder_rotate",
+          "captured_at": "2026-10-15 13:56:37",
+          "label": "shoulder_rotate_home_step_negative_kp18",
+          "effective_inertia": 0.00903788780178258
+        },
+        {
+          "joint": "elbow",
+          "captured_at": "2026-10-13 17:32:38",
+          "label": "elbow_home_step_reprocessed",
+          "effective_inertia": 0.04776166937253475
+        },
+        {
+          "joint": "elbow",
+          "captured_at": "2026-10-13 17:56:44",
+          "label": "elbow_clearance_step_positive_reprocessed",
+          "effective_inertia": 0.21221605780551
+        },
+        {
+          "joint": "elbow",
+          "captured_at": "2026-10-13 18:00:16",
+          "label": "elbow_clearance_step_positive",
+          "effective_inertia": 0.18472564713038625
+        },
+        {
+          "joint": "elbow",
+          "captured_at": "2026-10-14 13:46:40",
+          "label": "elbow_d4_grasp_step_positive",
+          "effective_inertia": 0.2899633417483065
+        },
+        {
+          "joint": "elbow",
+          "captured_at": "2026-10-14 13:50:38",
+          "label": "elbow_d4_grasp_step_positive_repeat2",
+          "effective_inertia": 0.2899633417483065
+        },
+        {
+          "joint": "arm_roll",
+          "captured_at": "2026-10-15 14:08:00",
+          "label": "arm_roll_home_step_positive_kp12",
+          "effective_inertia": 0.009687070682629648
+        },
+        {
+          "joint": "arm_roll",
+          "captured_at": "2026-10-15 14:10:09",
+          "label": "arm_roll_home_step_positive_kp12_repeat2",
+          "effective_inertia": 0.010382883752081379
+        },
+        {
+          "joint": "arm_roll",
+          "captured_at": "2026-10-15 14:11:05",
+          "label": "arm_roll_home_step_negative_kp12",
+          "effective_inertia": 0.007867122262756333
+        },
+        {
+          "joint": "arm_roll",
+          "captured_at": "2026-10-15 14:13:38",
+          "label": "arm_roll_clearance_step_positive_kp12",
+          "effective_inertia": 0.00903788780178258
+        },
+        {
+          "joint": "arm_roll",
+          "captured_at": "2026-10-15 14:14:25",
+          "label": "arm_roll_clearance_step_positive_kp12_repeat2",
+          "effective_inertia": 0.00903788780178258
+        },
+        {
+          "joint": "wrist_side",
+          "captured_at": "2026-10-15 14:28:01",
+          "label": "wrist_side_home_step_positive_kp8",
+          "effective_inertia": 0.020068294251632784
+        },
+        {
+          "joint": "wrist_side",
+          "captured_at": "2026-10-15 14:32:48",
+          "label": "wrist_side_home_step_positive_kp8_repeat2_rehome",
+          "effective_inertia": 0.01938419181774353
+        },
+        {
+          "joint": "wrist_side",
+          "captured_at": "2026-10-16 13:40:54",
+          "label": "wrist_side_clearance_step_negative_kp16_kd1",
+          "effective_inertia": 0.029390084641925343
+        },
+        {
+          "joint": "wrist",
+          "captured_at": "2026-10-15 20:58:28",
+          "label": "wrist_home_step_positive_kp10",
+          "effective_inertia": 0.01746865284734181
+        },
+        {
+          "joint": "wrist",
+          "captured_at": "2026-10-15 21:01:28",
+          "label": "wrist_home_step_positive_kp10_repeat3_reprocessed",
+          "effective_inertia": 0.016297984153833715
+        },
+        {
+          "joint": "wrist",
+          "captured_at": "2026-10-15 21:04:03",
+          "label": "wrist_home_step_negative_kp10",
+          "effective_inertia": 0.020068294251632784
+        },
+        {
+          "joint": "wrist",
+          "captured_at": "2026-10-15 21:13:30",
+          "label": "wrist_clearance_step_positive_kp10",
+          "effective_inertia": 0.021509780731846884
+        },
+        {
+          "joint": "wrist",
+          "captured_at": "2026-10-15 21:14:08",
+          "label": "wrist_clearance_step_positive_kp10_repeat2",
+          "effective_inertia": 0.021509780731846884
+        },
+        {
+          "joint": "wrist",
+          "captured_at": "2026-10-15 21:18:02",
+          "label": "wrist_d4_step_positive_kp10_reprocessed",
+          "effective_inertia": 0.022268898960217446
+        }
+      ],
+      "fit_columns": 28,
+      "fit_design_rank": 20,
+      "iterations": 11,
+      "gravity_training_rmse_with_nuisance_Nm": 0.3900828094729635,
+      "effective_inertia_training_rmse_kg_m2": 0.09824524835861957,
+      "effective_inertia_median_relative_error": 0.14307073266770487,
+      "total_nominal_mass_kg": 3.6362952290668407,
+      "nominal_shape_radius_m": 0.0285,
+      "claw_CAD_bbox_center_m": [
+        -0.065849089745,
+        0.031821266443,
+        -0.420545278977
+      ],
+      "assumptions": [
+        "scalar closed-loop effective inertia approximates M_ii as a soft constraint",
+        "CAD segments use nonnegative cylinder mixtures at 20/50/80 percent",
+        "claw bounding-box centre defines only a nominal mass distribution, not a measured COM or TCP",
+        "diagonal residual inertias are fitted nuisance drive/shape priors, not measured rotor inertias",
+        "static offset and approach nuisance terms are not deployed feedforward",
+        "rank deficiency is regularized; the inferred masses are not uniquely identified"
+      ],
+      "physical_parameters_independently_verified": false,
+      "link_mass_interpretation": "effective lumped bodies; near-zero fitted mass does not mean the physical link is absent",
+      "fit_is_not_hardware_validation": true
+    },
+    "action": "retain shared fit; existing bounds already contain all recorded gravity/inertia poses"
+  },
+  "fitting_policy": {
+    "shared_geometry": true,
+    "per_square_bias_fit": false,
+    "optical_board_pose": {
+      "source": "six CAD holes on existing wrist plate + board intersections",
+      "source_step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
+      "robot_joint_zero_changes": false,
+      "camera_fit_training_run": "arm_run_1793671770732_5069.txt",
+      "independent_validation_run": "arm_run_1793679218917_10319.txt",
+      "camera_fit_validation": {
+        "median_px": 0.7432126690038967,
+        "p95_px": 1.8073263980191658,
+        "motion_median_px": 1.1331744963896693,
+        "motion_p95_px": 2.9163115651849187
+      },
+      "live_board_reprojection_max_px": 0.8202226828553149,
+      "calibration_scope": "board-to-CAD transform; no fixed Cartesian error offset",
+      "old_transform": {
+        "rotation": [
+          [
+            0.02302481630029465,
+            0.9930755230024824,
+            -0.11519923371136136
+          ],
+          [
+            -0.985805329033361,
+            0.04172126570019549,
+            0.16262591809979515
+          ],
+          [
+            0.16630607650884346,
+            0.10981958660330511,
+            0.9799397671870019
+          ]
+        ],
+        "translation_m": [
+          0.23007844984011125,
+          0.08030933143658178,
+          -0.15445011278148413
+        ]
+      },
+      "physical_grasp_validation_complete": false
+    },
+    "surface_datum": {
+      "source": "user-confirmed light fingertip contact, no gripper close or new motion used for calibration",
+      "source_log": "arm_run_1793680858524_14500.txt",
+      "contact_pose_source": "same-serial model hold final feedback",
+      "CAD_envelope": "part7 OmniPicker vertex envelope in approved revised STEP",
+      "minimum_vertex_before_calibration_board_mm": [
+        108.56050584397863,
+        160.98134342257353,
+        41.34974077754125
+      ],
+      "plane_origin_normal_change_mm": 41.34974077754125,
+      "optical_plane_translation_before_touch_m": [
+        0.22865720002950568,
+        0.0724107509527527,
+        -0.17568465049476553
+      ],
+      "optical_board_rotation_unchanged": true,
+      "board_XY_coordinates_unchanged": true,
+      "target_grip_height_unchanged_mm": 50.2,
+      "runtime_height_offset_mm": 0.0,
+      "calibration_scope": "same gripper opening and local board surface; not yet validated for other openings or grasp contact centers",
+      "assumptions": [
+        "user-reported light contact is on the board surface",
+        "lowest CAD gripper vertex represents the first touching fingertip at this unchanged opening",
+        "no board/camera/base movement since contact"
+      ],
+      "physical_trial_complete": false
+    },
+    "current_action": "retain existing optical fit and touch datum; no new exact XYZ samples available",
+    "reason": "encoder FK is a model prediction, not independent position ground truth; qualitative C5 acceptance is validation evidence"
+  }
+}
