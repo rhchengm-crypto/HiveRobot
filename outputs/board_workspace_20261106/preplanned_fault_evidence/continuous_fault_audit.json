@@ -1,0 +1,285 @@
+{
+  "run_log": "arm_run_1794027438013_48721.txt",
+  "frames": 4802,
+  "trace_queue_dropped_frames": 0,
+  "capture_ms": {
+    "p50": 0.07003449900366832,
+    "p99": 0.16893172836716983,
+    "max": 1.5319250014727004
+  },
+  "first_excess_frame": 4628,
+  "first_excess": {
+    "event": "motor_frame",
+    "wall_s": 1794027530.0074272,
+    "monotonic_s": 23149.717119512,
+    "frame_interval_ms": 47.791362998395925,
+    "context": {
+      "stage": "contact",
+      "waypoint_index": 38,
+      "target_board_mm": [
+        82.52299694822474,
+        137.47471726390694,
+        65.10242444030972
+      ],
+      "attempt": null
+    },
+    "commands": {
+      "shoulder_front": {
+        "kp": 90.0,
+        "kd": 4.0,
+        "q": 0.732623815536499,
+        "dq": 0.0,
+        "tau_ff": -3.5686546177227596
+      },
+      "shoulder_side": {
+        "kp": 70.0,
+        "kd": 3.0,
+        "q": -2.818150520324707,
+        "dq": 0.0,
+        "tau_ff": 1.8183054988761462
+      },
+      "shoulder_rotate": {
+        "kp": 36.0,
+        "kd": 4.5,
+        "q": 1.9800487756729126,
+        "dq": 0.0,
+        "tau_ff": 0.023551069581704276
+      },
+      "elbow": {
+        "kp": 70.0,
+        "kd": 3.0,
+        "q": 0.5422675013542175,
+        "dq": 0.0,
+        "tau_ff": 3.6150605795903963
+      },
+      "arm_roll": {
+        "kp": 18.0,
+        "kd": 1.0,
+        "q": -2.9741740226745605,
+        "dq": 0.0,
+        "tau_ff": -0.849040120197018
+      },
+      "wrist_side": {
+        "kp": 16.0,
+        "kd": 2.2,
+        "q": -0.7024872303009033,
+        "dq": 0.0,
+        "tau_ff": -0.0918836215906648
+      },
+      "wrist": {
+        "kp": 22.0,
+        "kd": 1.4,
+        "q": -3.1507973670959473,
+        "dq": 0.0,
+        "tau_ff": 0.6026853382628031
+      }
+    },
+    "control_call_completed_monotonic_s": {
+      "shoulder_front": 23149.713966604,
+      "shoulder_side": 23149.714609346,
+      "shoulder_rotate": 23149.715127604,
+      "elbow": 23149.715614373,
+      "arm_roll": 23149.716129334,
+      "wrist_side": 23149.716603143,
+      "wrist": 23149.717067318
+    },
+    "feedback_source": "MIT-reply-cache",
+    "individual_feedback_freshness_verified": false,
+    "feedback": {
+      "shoulder_front": {
+        "pos": 0.732623815536499,
+        "vel": -0.0019536020699888468,
+        "tau": -3.6034188270568848
+      },
+      "shoulder_side": {
+        "pos": -2.8177690505981445,
+        "vel": 0.013675213791429996,
+        "tau": 1.6478632688522339
+      },
+      "shoulder_rotate": {
+        "pos": 1.9777599573135376,
+        "vel": -1.2527472972869873,
+        "tau": -0.8180708289146423
+      },
+      "elbow": {
+        "pos": 0.541886031627655,
+        "vel": -0.021489622071385384,
+        "tau": 3.6307692527770996
+      },
+      "arm_roll": {
+        "pos": -2.972266674041748,
+        "vel": -0.08058608323335648,
+        "tau": -0.910866916179657
+      },
+      "wrist_side": {
+        "pos": -0.7021057605743408,
+        "vel": 0.13919414579868317,
+        "tau": -0.10012210160493851
+      },
+      "wrist": {
+        "pos": -3.1507973670959473,
+        "vel": 0.007326007355004549,
+        "tau": 0.5738705992698669
+      }
+    },
+    "invalid_feedback_fields": [],
+    "capture_ms": 0.10224400102742948,
+    "queue_dropped_frames_before_submit": 0,
+    "writer_error": null
+  },
+  "boundary": {
+    "old_command": {
+      "kp": 36.0,
+      "kd": 4.5,
+      "q": 1.9910080775049408,
+      "dq": 0.0,
+      "tau_ff": -0.370983796371311
+    },
+    "new_command": {
+      "kp": 36.0,
+      "kd": 4.5,
+      "q": 1.9800487756729126,
+      "dq": 0.0,
+      "tau_ff": 0.023551069581704276
+    },
+    "position_reference_jump_deg": -0.627921741385207,
+    "feedforward_jump_Nm": 0.3945348659530153,
+    "ideal_total_law_change_at_same_feedback_Nm": 5.551115123125783e-17,
+    "frame_gap_ms": 142.40554500065628
+  },
+  "stages": [
+    {
+      "stage": "source_above",
+      "index": 28,
+      "frames": 3759,
+      "peak_velocity_rad_s": 0.08058608323335648,
+      "position_span_deg": 24.7201963045145,
+      "reference_span_deg": 25.426593309721536,
+      "max_frame_interval_ms": 58.52837100246688
+    },
+    {
+      "stage": "contact",
+      "index": 29,
+      "frames": 101,
+      "peak_velocity_rad_s": 0.021978022530674934,
+      "position_span_deg": 0.04371321068808161,
+      "reference_span_deg": 0.2856513485192399,
+      "max_frame_interval_ms": 194.49238399829483
+    },
+    {
+      "stage": "contact",
+      "index": 30,
+      "frames": 101,
+      "peak_velocity_rad_s": 0.03663003817200661,
+      "position_span_deg": 0.04371321068808161,
+      "reference_span_deg": 0.1404068768188577,
+      "max_frame_interval_ms": 135.14673699683044
+    },
+    {
+      "stage": "contact",
+      "index": 31,
+      "frames": 100,
+      "peak_velocity_rad_s": 0.021978022530674934,
+      "position_span_deg": 0.0655698160321224,
+      "reference_span_deg": 0.5116124901669674,
+      "max_frame_interval_ms": 151.93435100081842
+    },
+    {
+      "stage": "contact",
+      "index": 32,
+      "frames": 96,
+      "peak_velocity_rad_s": 0.03663003817200661,
+      "position_span_deg": 0.1311396320642448,
+      "reference_span_deg": 0.828259319849439,
+      "max_frame_interval_ms": 153.19810599976336
+    },
+    {
+      "stage": "contact",
+      "index": 33,
+      "frames": 99,
+      "peak_velocity_rad_s": 0.05128205195069313,
+      "position_span_deg": 0.37156912103786366,
+      "reference_span_deg": 1.0685235992466502,
+      "max_frame_interval_ms": 151.64115600055084
+    },
+    {
+      "stage": "contact",
+      "index": 34,
+      "frames": 93,
+      "peak_velocity_rad_s": 0.03663003817200661,
+      "position_span_deg": 0.24042948897361885,
+      "reference_span_deg": 1.0574502507437646,
+      "max_frame_interval_ms": 163.09300499779056
+    },
+    {
+      "stage": "contact",
+      "index": 35,
+      "frames": 94,
+      "peak_velocity_rad_s": 0.03663003817200661,
+      "position_span_deg": 0.3934257263819045,
+      "reference_span_deg": 1.1882318814167678,
+      "max_frame_interval_ms": 153.67146599965054
+    },
+    {
+      "stage": "contact",
+      "index": 36,
+      "frames": 91,
+      "peak_velocity_rad_s": 0.03663003817200661,
+      "position_span_deg": 0.4589955424140269,
+      "reference_span_deg": 1.1326500627934377,
+      "max_frame_interval_ms": 144.02806499856524
+    },
+    {
+      "stage": "contact",
+      "index": 37,
+      "frames": 93,
+      "peak_velocity_rad_s": 0.06593406945466995,
+      "position_span_deg": 0.4152755015367753,
+      "reference_span_deg": 1.0213406375779415,
+      "max_frame_interval_ms": 138.6449370002083
+    },
+    {
+      "stage": "contact",
+      "index": 38,
+      "frames": 98,
+      "peak_velocity_rad_s": 2.527472496032715,
+      "position_span_deg": 2.0764116586297265,
+      "reference_span_deg": 0.9411000064458047,
+      "max_frame_interval_ms": 142.40554500065628
+    },
+    {
+      "stage": "contact",
+      "index": 39,
+      "frames": 77,
+      "peak_velocity_rad_s": 2.219780206680298,
+      "position_span_deg": 1.3769934574312506,
+      "reference_span_deg": 0.41029298511529744,
+      "max_frame_interval_ms": 150.5183670014958
+    }
+  ],
+  "counterfactual_new_oscillation_detector": {
+    "frame_index": 4634,
+    "time_after_first_excess_s": 0.09418594300223049,
+    "context": {
+      "stage": "contact",
+      "waypoint_index": 38,
+      "target_board_mm": [
+        82.52299694822474,
+        137.47471726390694,
+        65.10242444030972
+      ],
+      "attempt": null
+    },
+    "diagnostic": {
+      "joint": "shoulder_rotate",
+      "fast_velocity_reversals": 2,
+      "encoder_span_deg": 0.9617042955161353,
+      "reference_span_deg": 0.0013173176856627275,
+      "peak_velocity_rad_s": 2.1611721515655518,
+      "window_seconds": 0.1419773060006264,
+      "feedback_source": "MIT-reply-cache",
+      "individual_feedback_freshness_verified": false
+    }
+  },
+  "caveat": "Cache feedback is not independently timestamped ground truth. Disturbance timing is identified; neither this reference jump nor frame gap is proven the sole physical cause. Counterfactual detector replay did not control this historical run."
+}

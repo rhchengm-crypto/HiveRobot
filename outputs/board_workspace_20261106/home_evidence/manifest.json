@@ -1,0 +1,44 @@
+{
+  "remote_files": {
+    "data/left_arm_v2_8_full_runs/arm_run_1794009803601_14553.txt": "310371d537b1fe04ffea2fbcc1266b4aadbb26ad7b12d14830dbc6f2e9e53913",
+    "data/left_arm_v2_8_full_runs/arm_run_1794009878777_14833.txt": "2655f4a5e1289d7c3a63dd6bdf6a07f4dbac774e26fb3c27a41556dea22776fc"
+  },
+  "runtime_hashes": {
+    "left_arm_board_grasp.py": "72935085e4555a2e25093dd4649175b5eaf4f99f291c87de33bb7fedddef7410",
+    "left_arm_board_kinematics.py": "33aeb1331ef31d6b6fca99d1c13998c18c6d1efcc98e10e36e291098d81bd65a",
+    "data/left_arm_board_grasp.json": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57",
+    "data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+  },
+  "run": {
+    "action": "dynamics:model-hold-after:home",
+    "running": false,
+    "ok": true,
+    "returncode": 0,
+    "post_move_model_hold": {
+      "enabled": true,
+      "state": "complete",
+      "seconds": 5.0,
+      "joints": [
+        "shoulder_front",
+        "shoulder_side",
+        "shoulder_rotate",
+        "elbow",
+        "arm_roll",
+        "wrist_side",
+        "wrist"
+      ],
+      "motor_enable_mode": "reused-existing-enable",
+      "preceding_motion_enabled_joints": [
+        "arm_roll",
+        "elbow",
+        "shoulder_front",
+        "shoulder_rotate",
+        "shoulder_side",
+        "wrist",
+        "wrist_side"
+      ]
+    },
+    "finished_at": "2026-11-06 16:04:44"
+  },
+  "motion_issued": false
+}

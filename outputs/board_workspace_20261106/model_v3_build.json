@@ -1,0 +1,72 @@
+{
+  "motion_issued": false,
+  "output": "scripts\\data\\left_arm_board_workspace_candidate.json",
+  "sha256": "2afa6ecad4a6fca899fa7164c401bb1dbd3651864a8a89d35a3fe49ad04fbd10",
+  "runtime_model_replaced": false,
+  "registration": {
+    "source_files": {
+      "scripts\\data\\left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+      "scripts\\data\\left_arm_board_grasp.json": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57",
+      "roboparty_rpo_hardware\\rpo_hardware-main\\V2.0\\roboto_origin_mechanic\\03_URDF\\urdf\\roboto_origin.urdf": "310e74493a6fc29d07b58286d6891f1cd3c0b82107c53e7a20d071efa9ea0ab9",
+      "roboparty_rpo_hardware\\rpo_hardware-main\\V2.0\\roboto_origin_mechanic\\03_URDF\\meshes\\torso_link.STL": "c0aef7f4c5eff6c469f868764dd5c0f5e037e3c44c86bffae7acf76cf6183d19"
+    },
+    "method": "align first shoulder axis line and nominal up; fit free axial translation to second shoulder axis line; mesh AABB becomes OBB",
+    "frame_registration_physically_verified": false,
+    "pitch_axis_nominal_up_dot_abs": 1.067229243015807e-17,
+    "initial_coordinate_origin_difference_mm": [
+      3.5468531000009667,
+      -9.011916575576318,
+      3.496135092273617
+    ],
+    "initial_coordinate_origin_difference_norm_mm": 10.296492988467515,
+    "origin_difference_is_not_physical_mounting_error": true,
+    "first_axis_free_axial_translation_mm": -9.354360304454561,
+    "second_axis_line_residual_mm": [
+      0.037829363576197254,
+      0.33797503528912776,
+      1.9167516694196631
+    ],
+    "second_axis_line_residual_norm_mm": 1.9466882512231722,
+    "second_axis_direction_disagreement_deg": 2.36312393623472,
+    "mesh_bounds_in_torso_frame_m": [
+      [
+        -0.10869999974966049,
+        -0.125,
+        -0.01599999889731407
+      ],
+      [
+        0.08243308961391449,
+        0.125,
+        0.24167586863040924
+      ]
+    ],
+    "torso_to_cad_rotation": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        -0.0,
+        0.9848077529548818,
+        0.17364817799204443
+      ],
+      [
+        0.0,
+        -0.17364817799204443,
+        0.9848077529548817
+      ]
+    ],
+    "torso_to_cad_translation_m": [
+      -0.038,
+      -0.06875355129412734,
+      0.05117534518241521
+    ],
+    "limitations": [
+      "old five-axis chassis mesh is not the approved seven-axis assembly",
+      "chassis mounting registration requires verification before hardware use",
+      "30mm link-axis capsules are simplified; motors, wires, supports and finger sweep are incomplete",
+      "no new exact Cartesian measurements were inferred from qualitative C4/C5 observations"
+    ]
+  }
+}

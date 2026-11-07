@@ -1,0 +1,211 @@
+{
+  "schema": 2,
+  "motion_issued": false,
+  "physical_validation_complete": false,
+  "model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+  "board_model_sha256": "402d3926ac644f5c34e89e1c62e3f07537aa2e71fb66af7abd8c38bee8dd60f1",
+  "source_sha256": {
+    "left_arm_board_grasp.py": "fb898458a08cff22f35edf49c69fa7feebc32948e0571ec6138fb04cb5edd396",
+    "left_arm_board_kinematics.py": "03dd8362418be37dabe7f49a0bdde91a819d6514c62a28650950f93c58c9b39b",
+    "left_arm_board_collision.py": "f03900d832ec52673b43ff507b618524fef3b5e1a70c91593b2fecddc3a59c91",
+    "left_arm_board_transit.py": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f"
+  },
+  "start_source": "C:\\Users\\rhche\\OneDrive\\\u6587\u6863\\HiveRobot\\scripts\\data\\left_arm_v2_home.json",
+  "start_rad": {
+    "shoulder_front": 0.8363851308822632,
+    "shoulder_side": -2.853627920150757,
+    "shoulder_rotate": 2.3554208278656006,
+    "elbow": -1.2956817150115967,
+    "arm_roll": -2.657930850982666,
+    "wrist_side": 0.1668955534696579,
+    "wrist": -2.0780880451202393
+  },
+  "piece": "white_knight",
+  "requested_stage": "grasp",
+  "height_mm": 50.2,
+  "collision_scope": "finite board plus configured body scene; not complete self/occupied-board collision",
+  "body_registration_status": "nominal-old-chassis-registration; offline-only",
+  "point_source_file": null,
+  "search_failure_is_physical_unreachable_proof": false,
+  "results": [
+    {
+      "point": "c1",
+      "target_board_mm": [
+        137.5,
+        27.5,
+        50.2
+      ],
+      "success": false,
+      "message": "common planner time budget exhausted; physical unreachability is not established",
+      "failure_code": "planning_budget_exhausted",
+      "diagnostics": {
+        "code": "planning_budget_exhausted",
+        "physical_unreachable_proven": false
+      },
+      "elapsed_s": 60.43570689999615
+    },
+    {
+      "point": "c2",
+      "target_board_mm": [
+        137.5,
+        82.5,
+        50.2
+      ],
+      "success": true,
+      "samples": 51,
+      "entry_route": [
+        "entry_search",
+        "source_above"
+      ],
+      "posture_selection": {
+        "policy": "common complete-path clearance and joint travel",
+        "score": 3.0548572802093323,
+        "joint_travel_rad": 3.425481566337834,
+        "waypoint_body_clearance_lower_bound_mm": 18.531214306425074,
+        "per_square_parameters": false,
+        "feasible_orientation_count": 3
+      },
+      "waypoint_min_body_clearance_lower_bound_mm": 18.531214306425074,
+      "joint_bound_margin_deg": 0.8826948729398084,
+      "elapsed_s": 60.78921149999951
+    },
+    {
+      "point": "c3",
+      "target_board_mm": [
+        137.5,
+        137.5,
+        50.2
+      ],
+      "success": true,
+      "samples": 50,
+      "entry_route": [
+        "entry_search",
+        "entry_search",
+        "source_above"
+      ],
+      "posture_selection": {
+        "policy": "common complete-path clearance and joint travel",
+        "score": 2.815718219933833,
+        "joint_travel_rad": 3.1852561341121337,
+        "waypoint_body_clearance_lower_bound_mm": 18.476895708915034,
+        "per_square_parameters": false,
+        "feasible_orientation_count": 3
+      },
+      "waypoint_min_body_clearance_lower_bound_mm": 18.476895708915034,
+      "joint_bound_margin_deg": 13.359204177414327,
+      "elapsed_s": 61.53108269999211
+    },
+    {
+      "point": "c4",
+      "target_board_mm": [
+        137.5,
+        192.5,
+        50.2
+      ],
+      "success": true,
+      "samples": 49,
+      "entry_route": [
+        "entry_search",
+        "source_above"
+      ],
+      "posture_selection": {
+        "policy": "common complete-path clearance and joint travel",
+        "score": 3.0821168538515344,
+        "joint_travel_rad": 3.2320001724259355,
+        "waypoint_body_clearance_lower_bound_mm": 7.4941659287200535,
+        "per_square_parameters": false,
+        "feasible_orientation_count": 3
+      },
+      "waypoint_min_body_clearance_lower_bound_mm": 7.4941659287200535,
+      "joint_bound_margin_deg": 14.8669217808067,
+      "elapsed_s": 61.49522130000696
+    },
+    {
+      "point": "c5",
+      "target_board_mm": [
+        137.5,
+        247.5,
+        50.2
+      ],
+      "success": true,
+      "samples": 54,
+      "entry_route": [
+        "entry_search",
+        "source_above"
+      ],
+      "posture_selection": {
+        "policy": "common complete-path clearance and joint travel",
+        "score": 3.245455066559608,
+        "joint_travel_rad": 3.5988524822038843,
+        "waypoint_body_clearance_lower_bound_mm": 17.669870782213827,
+        "per_square_parameters": false,
+        "feasible_orientation_count": 5
+      },
+      "waypoint_min_body_clearance_lower_bound_mm": 17.669870782213827,
+      "joint_bound_margin_deg": 13.852277183473324,
+      "elapsed_s": 55.690655099999276
+    },
+    {
+      "point": "c6",
+      "target_board_mm": [
+        137.5,
+        302.5,
+        50.2
+      ],
+      "success": true,
+      "samples": 52,
+      "entry_route": [
+        "entry_search",
+        "source_above"
+      ],
+      "posture_selection": {
+        "policy": "common complete-path clearance and joint travel",
+        "score": 3.2734342977521,
+        "joint_travel_rad": 3.3133146398467095,
+        "waypoint_body_clearance_lower_bound_mm": 1.9940171047304793,
+        "per_square_parameters": false,
+        "feasible_orientation_count": 3
+      },
+      "waypoint_min_body_clearance_lower_bound_mm": 1.9940171047304793,
+      "joint_bound_margin_deg": 1.6847688674128003,
+      "elapsed_s": 62.34222050000972
+    },
+    {
+      "point": "c7",
+      "target_board_mm": [
+        137.5,
+        357.5,
+        50.2
+      ],
+      "success": false,
+      "message": "common planner time budget exhausted; physical unreachability is not established",
+      "failure_code": "planning_budget_exhausted",
+      "diagnostics": {
+        "code": "planning_budget_exhausted",
+        "physical_unreachable_proven": false
+      },
+      "elapsed_s": 60.17249849998916
+    },
+    {
+      "point": "c8",
+      "target_board_mm": [
+        137.5,
+        412.5,
+        50.2
+      ],
+      "success": false,
+      "message": "common planner time budget exhausted; physical unreachability is not established",
+      "failure_code": "planning_budget_exhausted",
+      "diagnostics": {
+        "code": "planning_budget_exhausted",
+        "physical_unreachable_proven": false
+      },
+      "elapsed_s": 60.11067759999423
+    }
+  ],
+  "tested": 8,
+  "successes": 5,
+  "failure_codes": {
+    "planning_budget_exhausted": 3
+  }
+}
