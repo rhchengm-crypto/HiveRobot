@@ -1,0 +1,42 @@
+{
+  "rules": {
+    "low_shoulder": {
+      "arm_roll": {
+        "negative": {
+          "applied_tau": -0.29697174547619687,
+          "best_error_deg": 0.5059013815252378,
+          "best_tau": -0.3024050907189949,
+          "delta_tau": -0.010000000000000009,
+          "direction": "negative",
+          "label": "replay-adaptive-group",
+          "last_error_deg": -3.5335587038879273,
+          "learning_state": "backoff",
+          "previous_tau": -0.3024050907189949,
+          "refined_best": false,
+          "samples": 364,
+          "step_scale": 0.2,
+          "tau": -0.3124050907189949,
+          "updated_at": "2026-10-27 14:06:53"
+        },
+        "positive": {
+          "applied_tau": -0.32242902078048336,
+          "best_error_deg": 1.65340048284406,
+          "best_tau": -0.33121585857286884,
+          "delta_tau": 0.008809199497797626,
+          "direction": "positive",
+          "label": "nudge-hold-active",
+          "last_error_deg": 2.2022998744494116,
+          "learning_state": "plateau",
+          "previous_tau": -0.33121585857286884,
+          "refined_best": false,
+          "samples": 45,
+          "step_scale": 0.2,
+          "tau": -0.3224066590750712,
+          "updated_at": "2026-10-15 14:02:29"
+        }
+      }
+    }
+  },
+  "type": "left_arm_v2_6_adaptive_active_tau",
+  "updated_at": "2026-10-27 14:06:53"
+}

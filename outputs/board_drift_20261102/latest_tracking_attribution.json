@@ -1,0 +1,159 @@
+{
+  "source_log": "C:\\Users\\rhche\\OneDrive\\\u6587\u6863\\HiveRobot\\outputs\\board_drift_20261102\\jetson_snapshot\\arm_run_1793679218917_10319.txt",
+  "source_sha256": "207ce6e42f3c30898d155e09171cf73249ca0662acd525ff5f92820b29446d43",
+  "contact_sample_count": 66,
+  "physical_observation_B_drift_mm": null,
+  "physical_observation_source": "operator report; estimate, not independent metrology",
+  "reference_contact_model_delta_mm": [
+    0.5890676597950915,
+    2.0521977713167416,
+    -83.04387601514182
+  ],
+  "measured_contact_model_delta_mm": [
+    1.0727483864974374,
+    1.1531288440693288,
+    -84.72190743326922
+  ],
+  "tracking_model_X_error_range_mm": [
+    -0.9971201513850474,
+    3.1812271403511403
+  ],
+  "end_tracking_model_xyz_error_mm": [
+    0.48368072670234596,
+    -0.8990689272474128,
+    -1.6780314181273894
+  ],
+  "max_command_minus_reference_deg": 0.0,
+  "joint_attribution_sum_error_mm": 8.526512829121202e-14,
+  "joints": [
+    {
+      "joint": "shoulder_front",
+      "reference_descent_deg": 3.4440157355373913,
+      "measured_descent_deg": 3.453398285871807,
+      "reference_model_X_mm": -0.1622534254603514,
+      "measured_model_X_mm": -0.16369717737401412,
+      "tracking_model_X_difference_mm": -0.001443751913662722,
+      "max_tracking_error_deg": 0.772468191399105,
+      "max_command_minus_reference_deg": 0.0,
+      "kp_range": [
+        90.0,
+        90.0
+      ],
+      "kd_range": [
+        4.0,
+        4.0
+      ]
+    },
+    {
+      "joint": "shoulder_side",
+      "reference_descent_deg": 2.0892708343705184,
+      "measured_descent_deg": 2.120118039128638,
+      "reference_model_X_mm": -10.878974105454967,
+      "measured_model_X_mm": -11.124821005277798,
+      "tracking_model_X_difference_mm": -0.2458468998228316,
+      "max_tracking_error_deg": 0.5194071774770779,
+      "max_command_minus_reference_deg": 0.0,
+      "kp_range": [
+        70.0,
+        70.0
+      ],
+      "kd_range": [
+        3.0,
+        3.0
+      ]
+    },
+    {
+      "joint": "shoulder_rotate",
+      "reference_descent_deg": 0.0,
+      "measured_descent_deg": -0.06558347641046243,
+      "reference_model_X_mm": 0.00846472106930736,
+      "measured_model_X_mm": -0.4648580900799488,
+      "tracking_model_X_difference_mm": -0.4733228111492562,
+      "max_tracking_error_deg": 0.08744008175450324,
+      "max_command_minus_reference_deg": 0.0,
+      "kp_range": [
+        36.0,
+        36.0
+      ],
+      "kd_range": [
+        4.5,
+        4.5
+      ]
+    },
+    {
+      "joint": "elbow",
+      "reference_descent_deg": -12.681864540734995,
+      "measured_descent_deg": -12.85188031023463,
+      "reference_model_X_mm": -0.3676022116137169,
+      "measured_model_X_mm": -0.31209931445283223,
+      "tracking_model_X_difference_mm": 0.05550289716088469,
+      "max_tracking_error_deg": 0.5365557598654306,
+      "max_command_minus_reference_deg": 0.0,
+      "kp_range": [
+        70.0,
+        70.0
+      ],
+      "kd_range": [
+        3.0,
+        3.0
+      ]
+    },
+    {
+      "joint": "arm_roll",
+      "reference_descent_deg": -1.9264826359312373,
+      "measured_descent_deg": -2.1638449101950594,
+      "reference_model_X_mm": 5.462932828123921,
+      "measured_model_X_mm": 6.073576437910474,
+      "tracking_model_X_difference_mm": 0.6106436097865533,
+      "max_tracking_error_deg": 0.23736227426382225,
+      "max_command_minus_reference_deg": 0.0,
+      "kp_range": [
+        18.0,
+        18.0
+      ],
+      "kd_range": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "joint": "wrist_side",
+      "reference_descent_deg": 0.14767493387752503,
+      "measured_descent_deg": -0.021856605344040804,
+      "reference_model_X_mm": -0.4485735323463857,
+      "measured_model_X_mm": 0.17050346746265888,
+      "tracking_model_X_difference_mm": 0.6190769998090446,
+      "max_tracking_error_deg": 0.19205539834827695,
+      "max_command_minus_reference_deg": 0.0,
+      "kp_range": [
+        16.0,
+        16.0
+      ],
+      "kd_range": [
+        2.2,
+        2.2
+      ]
+    },
+    {
+      "joint": "wrist",
+      "reference_descent_deg": 16.924342804796805,
+      "measured_descent_deg": 16.807989056755837,
+      "reference_model_X_mm": 6.975073385477333,
+      "measured_model_X_mm": 6.89414406830898,
+      "tracking_model_X_difference_mm": -0.08092931716835317,
+      "max_tracking_error_deg": 0.36516510915164313,
+      "max_command_minus_reference_deg": 0.0,
+      "kp_range": [
+        22.0,
+        22.0
+      ],
+      "kd_range": [
+        1.4,
+        1.4
+      ]
+    }
+  ],
+  "endpoint_settle_attempts": 0,
+  "physical_cause_identified": false,
+  "warning": "All model-mm quantities use the same unverified CAD-to-board/TCP mapping; they cannot validate physical accuracy."
+}

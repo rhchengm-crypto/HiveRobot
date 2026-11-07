@@ -1,0 +1,415 @@
+{
+  "anchors": {
+    "6c48d6989e46f62e": {
+      "created_at": "2026-09-10 15:45:36",
+      "hold_bias": {
+        "clearance": {
+          "elbow": {
+            "bias_deg": 0.4,
+            "delta_bias_deg": 0.4,
+            "label": "clearance-final",
+            "last_error_deg": 3.5845370641624057,
+            "learning_state": "integrating",
+            "previous_bias_deg": 0.0,
+            "samples": 1,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-10 15:46:00"
+          },
+          "shoulder_front": {
+            "bias_deg": -0.4,
+            "delta_bias_deg": -0.4,
+            "label": "clearance-final",
+            "last_error_deg": -3.40968166008914,
+            "learning_state": "integrating",
+            "previous_bias_deg": 0.0,
+            "samples": 1,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-10 15:46:00"
+          },
+          "shoulder_side": {
+            "bias_deg": 0.4,
+            "delta_bias_deg": 0.4,
+            "label": "clearance-final",
+            "last_error_deg": 2.9506827025805284,
+            "learning_state": "integrating",
+            "previous_bias_deg": 0.0,
+            "samples": 1,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-10 15:46:00"
+          },
+          "wrist": {
+            "bias_deg": -0.4,
+            "delta_bias_deg": -0.4,
+            "label": "clearance-final",
+            "last_error_deg": -1.4862696539622846,
+            "learning_state": "integrating",
+            "previous_bias_deg": 0.0,
+            "samples": 1,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-10 15:46:00"
+          },
+          "wrist_side": {
+            "bias_deg": 0.4,
+            "delta_bias_deg": 0.4,
+            "label": "clearance-final",
+            "last_error_deg": 1.7485540407326519,
+            "learning_state": "integrating",
+            "previous_bias_deg": 0.0,
+            "samples": 1,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-10 15:46:00"
+          }
+        }
+      },
+      "joint_bias": {},
+      "move_names": [
+        "clearance:left_arm_v2_table_clearance.json"
+      ],
+      "move_validation": {
+        "clearance:left_arm_v2_table_clearance.json": {
+          "blocking_errors_deg": {
+            "elbow": 3.5845370641624057,
+            "shoulder_front": -3.40968166008914,
+            "shoulder_side": 2.9506827025805284,
+            "wrist": -1.4862696539622846,
+            "wrist_side": 1.7485540407326519
+          },
+          "checked_at": "2026-09-10 15:46:00",
+          "errors_deg": {
+            "arm_roll": -0.37156229084869363,
+            "elbow": 3.5845370641624057,
+            "shoulder_front": -3.40968166008914,
+            "shoulder_side": 2.9506827025805284,
+            "wrist": -1.4862696539622846,
+            "wrist_side": 1.7485540407326519
+          },
+          "status": "training",
+          "tolerance_deg": 0.5
+        }
+      },
+      "target_pose_rad": {
+        "arm_roll": -2.4851224422454834,
+        "elbow": 0.2626459002494812,
+        "shoulder_front": 0.6334401369094849,
+        "shoulder_rotate": 1.8686579465866089,
+        "shoulder_side": -2.713244915008545,
+        "wrist": -1.273556113243103,
+        "wrist_side": 0.26836803555488586
+      },
+      "updated_at": "2026-09-10 15:46:00"
+    },
+    "8b20a284d5592a0c": {
+      "best_snapshots": {
+        "clearance": {
+          "created_at": "2026-09-11 15:53:38",
+          "hold_bias": {
+            "arm_roll": {
+              "bias_deg": 0.3671909697798855,
+              "delta_bias_deg": 0.0,
+              "label": "placement1-shared-clearance-recovery",
+              "last_error_deg": 0.0,
+              "learning_state": "restored_pre_placement1",
+              "previous_bias_deg": 0.3671909697798855,
+              "samples": 4,
+              "step_scale": 1.0,
+              "updated_at": "2026-09-11 15:53:37"
+            },
+            "elbow": {
+              "bias_deg": 2.456792077600552,
+              "delta_bias_deg": 0.1912476873265665,
+              "label": "clearance-final",
+              "last_error_deg": 0.54642196379019,
+              "learning_state": "integrating",
+              "previous_bias_deg": 2.2655443902739854,
+              "samples": 7,
+              "step_scale": 1.0,
+              "updated_at": "2026-09-10 16:24:29"
+            },
+            "shoulder_side": {
+              "bias_deg": 0.18359548488994273,
+              "delta_bias_deg": 0.18359548488994273,
+              "label": "clearance-final",
+              "last_error_deg": 0.5245585282569792,
+              "learning_state": "integrating",
+              "previous_bias_deg": 0.0,
+              "samples": 1,
+              "step_scale": 1.0,
+              "updated_at": "2026-09-10 16:01:49"
+            },
+            "wrist": {
+              "bias_deg": -0.820746824571414,
+              "delta_bias_deg": 0.0,
+              "label": "placement1-shared-clearance-recovery",
+              "last_error_deg": 0.0,
+              "learning_state": "restored_pre_placement1",
+              "previous_bias_deg": -0.820746824571414,
+              "samples": 5,
+              "step_scale": 1.0,
+              "updated_at": "2026-09-11 15:53:37"
+            },
+            "wrist_side": {
+              "bias_deg": 0.6578945784035709,
+              "delta_bias_deg": 0.0,
+              "label": "placement1-shared-clearance-recovery",
+              "last_error_deg": 0.0,
+              "learning_state": "restored_pre_placement1",
+              "previous_bias_deg": 0.6578945784035709,
+              "samples": 10,
+              "step_scale": 1.0,
+              "updated_at": "2026-09-11 15:53:37"
+            }
+          },
+          "source": "active shared Clearance parameters before transactional verification"
+        }
+      },
+      "created_at": "2026-09-10 16:01:24",
+      "hold_bias": {
+        "clearance": {
+          "arm_roll": {
+            "best_bias_deg": 0.3671909697798855,
+            "best_error_deg": 0.0,
+            "bias_deg": 0.543136642799414,
+            "delta_bias_deg": 0.17594567301952846,
+            "label": "clearance-validated",
+            "last_error_deg": 0.5027019229129385,
+            "learning_state": "integrating",
+            "previous_bias_deg": 0.3671909697798855,
+            "samples": 5,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-12 13:21:14"
+          },
+          "elbow": {
+            "best_bias_deg": 2.2655443902739854,
+            "best_error_deg": 0.54642196379019,
+            "bias_deg": 2.63274014118629,
+            "delta_bias_deg": 0.175948063585738,
+            "label": "clearance-validated",
+            "last_error_deg": 0.5027087531021085,
+            "learning_state": "integrating",
+            "previous_bias_deg": 2.456792077600552,
+            "samples": 8,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-12 20:29:55"
+          },
+          "shoulder_side": {
+            "bias_deg": 0.18359548488994273,
+            "delta_bias_deg": 0.18359548488994273,
+            "label": "clearance-final",
+            "last_error_deg": 0.5245585282569792,
+            "learning_state": "integrating",
+            "previous_bias_deg": 0.0,
+            "samples": 1,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-10 16:01:49"
+          },
+          "wrist": {
+            "bias_deg": -0.820746824571414,
+            "delta_bias_deg": 0.0,
+            "label": "placement1-shared-clearance-recovery",
+            "last_error_deg": 0.0,
+            "learning_state": "restored_pre_placement1",
+            "previous_bias_deg": -0.820746824571414,
+            "samples": 5,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-11 15:53:37"
+          },
+          "wrist_side": {
+            "best_bias_deg": 0.6578945784035709,
+            "best_error_deg": 0.502710460649401,
+            "bias_deg": 1.7135865457673125,
+            "delta_bias_deg": 0.17594866122729025,
+            "label": "clearance-validated",
+            "last_error_deg": 0.502710460649401,
+            "learning_state": "integrating",
+            "previous_bias_deg": 1.5376378845400223,
+            "samples": 16,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-15 21:29:04"
+          }
+        }
+      },
+      "joint_bias": {},
+      "migrations": {
+        "remove-placement1-shared-clearance-20260911-v1": {
+          "applied_at": "2026-09-11 15:38:39",
+          "recovered": {
+            "arm_roll": {
+              "contaminated_bias_deg": 0.2835907037575238,
+              "restored_bias_deg": 0.3671909697798855
+            },
+            "wrist": {
+              "contaminated_bias_deg": -0.6647338404678486,
+              "restored_bias_deg": -0.820746824571414
+            },
+            "wrist_side": {
+              "contaminated_bias_deg": 1.257894578403571,
+              "restored_bias_deg": 0.6578945784035709
+            }
+          },
+          "source": "pre-Placement1 execution log 2026-09-11 14:48"
+        },
+        "restore-pre-placement1-clearance-20260911-v2": {
+          "applied_at": "2026-09-11 15:53:37",
+          "recovered": {
+            "arm_roll": {
+              "contaminated_bias_deg": 0.3671909697798855,
+              "restored_bias_deg": 0.3671909697798855
+            },
+            "wrist": {
+              "contaminated_bias_deg": -0.820746824571414,
+              "restored_bias_deg": -0.820746824571414
+            },
+            "wrist_side": {
+              "contaminated_bias_deg": 0.6578945784035709,
+              "restored_bias_deg": 0.6578945784035709
+            }
+          },
+          "source": "pre-Placement1 execution log 2026-09-11 14:48"
+        }
+      },
+      "move_names": [
+        "clearance:left_arm_v2_table_clearance.json"
+      ],
+      "move_validation": {
+        "clearance:left_arm_v2_table_clearance.json": {
+          "blocking_errors_deg": {},
+          "checked_at": "2026-10-21 17:06:59",
+          "effective_tolerance_deg": 0.511,
+          "encoder_half_count_margin_deg": 0.011,
+          "errors_deg": {
+            "arm_roll": 0.24042265878444882,
+            "elbow": -0.08742642137616322,
+            "shoulder_front": -0.37156912103786366,
+            "shoulder_side": 0.4152755015367753,
+            "wrist": -0.1311396320642448,
+            "wrist_side": -0.021856605344040804
+          },
+          "status": "validated",
+          "tolerance_deg": 0.5,
+          "validated_at": "2026-10-21 17:06:59"
+        }
+      },
+      "target_pose_rad": {
+        "arm_roll": -2.649538516998291,
+        "elbow": 0.8165484070777893,
+        "shoulder_front": 1.9357976913452148,
+        "shoulder_rotate": 1.9323643445968628,
+        "shoulder_side": -2.7143893241882324,
+        "wrist": -1.0313191413879395,
+        "wrist_side": 0.3057526648044586
+      },
+      "updated_at": "2026-10-21 17:06:59"
+    },
+    "f7a9b8e8195c2d76": {
+      "created_at": "2026-09-10 15:30:16",
+      "hold_bias": {
+        "clearance": {
+          "arm_roll": {
+            "bias_deg": -0.21420190407022835,
+            "delta_bias_deg": -0.14534881610408082,
+            "label": "clearance-final",
+            "last_error_deg": -0.8305646634518905,
+            "learning_state": "integrating",
+            "previous_bias_deg": -0.06885308796614753,
+            "samples": 4,
+            "step_scale": 0.5,
+            "updated_at": "2026-09-10 15:58:13"
+          },
+          "elbow": {
+            "bias_deg": 2.4,
+            "delta_bias_deg": 0.3999999999999999,
+            "label": "clearance-final",
+            "last_error_deg": 1.3988432325861215,
+            "learning_state": "integrating",
+            "previous_bias_deg": 2.0,
+            "samples": 6,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-10 15:58:13"
+          },
+          "shoulder_front": {
+            "bias_deg": -2.0,
+            "delta_bias_deg": -0.3999999999999999,
+            "label": "clearance-final",
+            "last_error_deg": -1.3551300218980398,
+            "learning_state": "integrating",
+            "previous_bias_deg": -1.6,
+            "samples": 5,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-10 15:52:40"
+          },
+          "shoulder_side": {
+            "bias_deg": 1.962790528832647,
+            "delta_bias_deg": 0.2141995135040189,
+            "label": "clearance-final",
+            "last_error_deg": 0.6119986100114825,
+            "learning_state": "integrating",
+            "previous_bias_deg": 1.7485910153286282,
+            "samples": 6,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-10 15:58:13"
+          },
+          "wrist": {
+            "bias_deg": -1.080842818731709,
+            "delta_bias_deg": -0.18359787545615225,
+            "label": "clearance-final",
+            "last_error_deg": -0.5245653584461493,
+            "learning_state": "integrating",
+            "previous_bias_deg": -0.8972449432755567,
+            "samples": 4,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-10 15:58:13"
+          },
+          "wrist_side": {
+            "bias_deg": 1.6261925312981185,
+            "delta_bias_deg": 0.24479756570257116,
+            "label": "clearance-final",
+            "last_error_deg": 0.6994216162930608,
+            "learning_state": "integrating",
+            "previous_bias_deg": 1.3813949655955473,
+            "samples": 5,
+            "step_scale": 1.0,
+            "updated_at": "2026-09-10 15:52:40"
+          }
+        }
+      },
+      "joint_bias": {},
+      "move_names": [
+        "clearance:left_arm_v2_table_clearance.json"
+      ],
+      "move_validation": {
+        "clearance:left_arm_v2_table_clearance.json": {
+          "blocking_errors_deg": {
+            "arm_roll": -0.8305646634518905,
+            "elbow": 1.3988432325861215,
+            "shoulder_side": 0.6119986100114825,
+            "wrist": -0.5245653584461493
+          },
+          "checked_at": "2026-09-10 15:58:13",
+          "errors_deg": {
+            "arm_roll": -0.8305646634518905,
+            "elbow": 1.3988432325861215,
+            "shoulder_front": -0.32785591034978206,
+            "shoulder_side": 0.6119986100114825,
+            "wrist": -0.5245653584461493,
+            "wrist_side": 0.04371406446172786
+          },
+          "status": "training",
+          "tolerance_deg": 0.5
+        }
+      },
+      "target_pose_rad": {
+        "arm_roll": -2.6537346839904785,
+        "elbow": 0.536163866519928,
+        "shoulder_front": 1.2006943225860596,
+        "shoulder_rotate": 1.744296908378601,
+        "shoulder_side": -2.7342259883880615,
+        "wrist": -1.0645074844360352,
+        "wrist_side": 0.2450980395078659
+      },
+      "updated_at": "2026-09-10 15:58:13"
+    }
+  },
+  "schema": 1,
+  "type": "left_arm_v2_8_local_target_bias",
+  "updated_at": "2026-10-21 17:06:59"
+}
