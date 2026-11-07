@@ -1150,11 +1150,31 @@ class LeftArmV2:
         trajectory: str = "smoothstep",
         linear_blend: float = 0.0,
         watchdog=None,
+        move_tau_ff_initializer=None,
+        move_reference_starts=None,
+        move_boundary_keepalive=None,
     ) -> None:
         active_names = self.validate(targets.keys())
         self.validate(list(hold_targets.keys()))
+        if move_boundary_keepalive is not None:move_boundary_keepalive()
         starts = self.positions(active_names)
-        dynamics = begin_motion(self, active_names + list(hold_targets))
+        if move_boundary_keepalive is not None:move_boundary_keepalive()
+        # Resolve continuation torque at the actual interpolation origin.
+        # Ordinary callers keep their existing feedforward behavior.
+        if move_tau_ff_initializer is not None:
+            move_tau_ff = move_tau_ff_initializer(dict(starts))
+        if move_reference_starts is not None:
+            if set(move_reference_starts)!=set(starts) or not all(
+                    math.isfinite(float(q)) for q in move_reference_starts.values()):
+                raise ValueError('invalid continued interpolation references')
+            starts={n:float(move_reference_starts[n]) for n in active_names}
+        if move_reference_starts is not None and set(starts) == set(DEFAULT_JOINTS):
+            # The gravity delta and interpolator must share the same origin.
+            # Actual feedback was read above and remains available to guards.
+            dynamics = begin_motion(self, active_names + list(hold_targets), entry_pose=starts)
+        else:
+            dynamics = begin_motion(self, active_names + list(hold_targets))
+        if move_boundary_keepalive is not None:move_boundary_keepalive()
         hold_tau = hold_tau or {}
         progress_windows = progress_windows or {}
         pre_window_gains = pre_window_gains or {}
@@ -1415,7 +1435,10 @@ def home_hold_plan_for(
 def prehome_clearance_gains_for(name: str, fallback_kp: float, fallback_kd: float) -> Dict[str, float]:
     if name in PREHOME_CLEARANCE_GAINS:
         return PREHOME_CLEARANCE_GAINS[name]
-    return NUDGE_GAINS.get(name, CLEARANCE_MOVE_GAINS.get(name, {"kp": fallback_kp, "kd": fallback_kd}))
+    result = NUDGE_GAINS.get(name, CLEARANCE_MOVE_GAINS.get(name, {"kp": fallback_kp, "kd": fallback_kd}))
+    if name == 'shoulder_rotate':
+        result = dict(result, kp=min(36.,result['kp']), kd=min(4.5,result['kd']))
+    return result
 
 
 def prehome_clearance_seconds_for(name: str, delta_deg: float) -> float:
@@ -1424,7 +1447,12 @@ def prehome_clearance_seconds_for(name: str, delta_deg: float) -> float:
     seconds_per_deg = PREHOME_CLEARANCE_SECONDS_PER_DEG.get(name)
     if seconds_per_deg is not None:
         base = max(base, abs(delta_deg) * seconds_per_deg)
-    return min(PREHOME_CLEARANCE_MAX_SECONDS.get(name, 20.0), base)
+    seconds = min(PREHOME_CLEARANCE_MAX_SECONDS.get(name, 20.0), base)
+    if name == 'wrist':
+        # Unlike the old six-second constant, scale a large return from any
+        # board pose. 1.875 bounds all supported interpolation derivatives.
+        seconds = max(seconds,1.875*abs(math.radians(delta_deg))/.2)
+    return seconds
 
 
 def prehome_clearance_hold_gains_for(
@@ -1447,7 +1475,34 @@ def prehome_clearance_hold_gains_for(
     for compliant_name in NUDGE_COMPLIANT_HOLDS_BY_ACTIVE.get(active, set()):
         if compliant_name in hold_gains:
             hold_gains[compliant_name] = nudge_compliant_gains[compliant_name]
+    if 'shoulder_rotate' in hold_gains:
+        row = hold_gains['shoulder_rotate']
+        hold_gains['shoulder_rotate'] = dict(row,kp=min(36.,row['kp']),kd=min(4.5,row['kd']))
     return hold_gains
+
+
+def prehome_load_transfer(status, active_gains, end_tau, hold_targets, hold_gains,
+                         fallback_kp, fallback_kd):
+    """Match measured support at stage entry; retain trained active end torque."""
+    from left_arm_v3_1_model_control import MIT_TAU_MAX
+    moving,holding,audit={},{},{}
+    for name,gains in active_gains.items():
+        row=status[name];kd=float(gains.get('kd',fallback_kd))
+        start=float(row['tau'])+kd*float(row['vel'])
+        end=float(end_tau.get(name,0.))
+        if not all(math.isfinite(v) for v in (start,end)) or max(abs(start),abs(end))>MIT_TAU_MAX[name]:
+            raise ValueError('invalid prehome entry torque for '+name)
+        moving[name]={'start_tau':start,'end_tau':end,'ramp_fraction':1.,'ramp':'smoothstep'}
+        audit[name]={'mode':'measured-entry-to-trained-end','start_tau':start,'end_tau':end}
+    for name,target in hold_targets.items():
+        row=status[name];gains=hold_gains.get(name,{})
+        kp=float(gains.get('kp',fallback_kp));kd=float(gains.get('kd',fallback_kd))
+        tau=float(row['tau'])-kp*(float(target)-float(row['pos']))+kd*float(row['vel'])
+        if not math.isfinite(tau) or abs(tau)>MIT_TAU_MAX[name]:
+            raise ValueError('invalid prehome hold torque for '+name)
+        holding[name]=tau
+        audit[name]={'mode':'current-fixed-pose-support','tau_ff':tau,'nominal_hold_target':target}
+    return moving,holding,audit
 
 
 def clamp_tau(name: str, tau: float, limits: Dict[str, Tuple[float, float]]) -> float:
@@ -2929,6 +2984,11 @@ def main() -> None:
                         )
                         if active_tau:
                             print("v2.6 pre-home clearance wrist-first active_tau=", {wrist_name: active_tau})
+                        entry_status=arm.read_status(list(hold_targets))
+                        _,hold_tau,entry_audit=prehome_load_transfer(entry_status,{}, {},
+                            hold_targets,hold_gains,args.kp,args.kd)
+                        print('v2.6 pre-home entry support= '+json.dumps({
+                            'stage':'wrist-first','joints':entry_audit,'learning_written':False}),flush=True)
                         print(
                             "v2.6 pre-home clearance wrist-first hold_tau=",
                             json.dumps({joint: hold_tau[joint] for joint in hold_targets if joint in hold_tau}, ensure_ascii=False),
@@ -3000,6 +3060,11 @@ def main() -> None:
                         args.kd,
                     )
                     hold_tau = nudge_hold_tau_for("wrist_side", hold_targets, low_shoulder)
+                    entry_status=arm.read_status(list(group_targets)+list(hold_targets))
+                    group_tau,hold_tau,entry_audit=prehome_load_transfer(entry_status,group_gains,group_tau,
+                        hold_targets,hold_gains,args.kp,args.kd)
+                    print('v2.6 pre-home entry support= '+json.dumps({
+                        'stage':'coupled','joints':entry_audit,'learning_written':False}),flush=True)
                     print(
                         "v2.6 pre-home clearance coupled active",
                         ",".join(group_targets.keys()),

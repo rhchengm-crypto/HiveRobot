@@ -1,0 +1,46 @@
+{
+  "run": {
+    "ok": true,
+    "running": true,
+    "action": "dynamics:board-grasp",
+    "command": [
+      "python3",
+      "-u",
+      "left_arm_board_grasp.py",
+      "--model",
+      "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json",
+      "--board-model",
+      "data/left_arm_board_workspace_candidate.json",
+      "--hold-model",
+      "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json",
+      "--mode",
+      "apply",
+      "--x-mm",
+      "82.5",
+      "--y-mm",
+      "137.5",
+      "--piece",
+      "white_knight",
+      "--stage",
+      "approach",
+      "--no-model-hold",
+      "--grip-height-mm",
+      "50.2",
+      "--validate-candidate-above",
+      "--plan-output",
+      "data/board_workspace_trials/above_20e61216b1993205.json"
+    ],
+    "command_text": "python3 -u left_arm_board_grasp.py --model /home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json --board-model data/left_arm_board_workspace_candidate.json --hold-model /home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json --mode apply --x-mm 82.5 --y-mm 137.5 --piece white_knight --stage approach --no-model-hold --grip-height-mm 50.2 --validate-candidate-above --plan-output data/board_workspace_trials/above_20e61216b1993205.json",
+    "started_at": "2026-11-06 16:55:25",
+    "started_epoch": 1794012925.5340629,
+    "stdout": "general motion configuration= {\"build\": \"seven-axis-rigid-body-motion-v3-prepared\", \"mode\": \"apply\", \"model\": \"/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json\", \"workflow_action\": \"board-grasp\", \"workflow_run_id\": \"1c83847f9f602acf\", \"model_sha256\": \"83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7\", \"gravity_in_cad_frame_m_s2\": [-0.0, -1.7029069047056824, -9.65766495051499], \"gravity_configuration\": {\"source\": \"nominal-horizontal-shoulder-axes\", \"status\": \"assumed_for_on_robot_validation\", \"physically_measured\": false, \"magnitude_m_s2\": 9.80665, \"assumptions\": [\"approved nominal 90-degree shoulder geometry\", \"nominal shoulder_front and shoulder_side axes horizontal\", \"down points toward negative CAD Z in approved reference pose\"], \"user_instruction\": \"Use the CAD-based nominal direction directly; no additional physical angle or distance measurements.\"}, \"dynamics_parameters_available\": true, \"parameter_status\": \"nominal-estimate-from-existing-tests; not independently measured link mass properties\", \"identification_records\": {\"gravity_records_used\": 73, \"unique_inertia_records_used\": 29}, \"parameters_independently_verified\": false, \"missing_inertials\": [], \"torque_policy\": \"bounded-pose-relative-ID-plus-friction; legacy/adaptive baseline retained\", \"compute_backend\": \"independent-process-latest-reference-mailbox\", \"max_result_age_ms\": 100.0, \"torque_cap_Nm\": 0.5, \"log\": \"/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_motion_runs.jsonl\"}\ngeneral motion configuration= {\"build\": \"seven-axis-rigid-body-motion-v3-prepared\", \"mode\": \"apply\", \"model\": \"/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json\", \"workflow_action\": \"board-grasp\", \"workflow_run_id\": \"1c83847f9f602acf\", \"model_sha256\": \"83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7\", \"gravity_in_cad_frame_m_s2\": [-0.0, -1.7029069047056824, -9.65766495051499], \"gravity_configuration\": {\"source\": \"nominal-horizontal-shoulder-axes\", \"status\": \"assumed_for_on_robot_validation\", \"physically_measured\": false, \"magnitude_m_s2\": 9.80665, \"assumptions\": [\"approved nominal 90-degree shoulder geometry\", \"nominal shoulder_front and shoulder_side axes horizontal\", \"down points toward negative CAD Z in approved reference pose\"], \"user_instruction\": \"Use the CAD-based nominal direction directly; no additional physical angle or distance measurements.\"}, \"dynamics_parameters_available\": true, \"parameter_status\": \"nominal-estimate-from-existing-tests; not independently measured link mass properties\", \"identification_records\": {\"gravity_records_used\": 73, \"unique_inertia_records_used\": 29}, \"parameters_independently_verified\": false, \"missing_inertials\": [], \"torque_policy\": \"bounded-pose-relative-ID-plus-friction; legacy/adaptive baseline retained\", \"compute_backend\": \"independent-process-latest-reference-mailbox\", \"max_result_age_ms\": 100.0, \"torque_cap_Nm\": 0.5, \"log\": \"/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_motion_runs.jsonl\"}\nSerial port is open\nboard planning input= {\"build\": \"seven-axis-board-grasp-v21-restored-endpoint-settle\", \"start_rad\": {\"shoulder_front\": 0.8184558153152466, \"shoulder_side\": -2.8364615440368652, \"shoulder_rotate\": 2.349698543548584, \"elbow\": -1.27775239944458, \"arm_roll\": -2.6651790142059326, \"wrist_side\": 0.16918440163135529, \"wrist\": -2.0708401203155518}, \"x_mm\": 82.5, \"y_mm\": 137.5, \"piece\": \"white_knight\", \"stage\": \"approach\", \"board_model_sha256\": \"402d3926ac644f5c34e89e1c62e3f07537aa2e71fb66af7abd8c38bee8dd60f1\", \"orientation_hint_count\": 4}\n",
+    "stderr": "",
+    "returncode": null,
+    "duration_s": null,
+    "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794012925534_19222.txt"
+  },
+  "plan": null,
+  "processes": [
+    "  19222      51  448 python3 -u left_arm_board_grasp.py --model /home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json --board-model data/left_arm_board_workspace_candidate.json --hold-model /home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json --mode apply --x-mm 82.5 --y-mm 137.5 --piece white_knight --stage approach --no-model-hold --grip-height-mm 50.2 --validate-candidate-above --plan-output data/board_workspace_trials/above_20e61216b1993205.json"
+  ]
+}

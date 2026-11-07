@@ -1,0 +1,401 @@
+{
+  "success": false,
+  "message": "no feasible complete board path",
+  "details": {
+    "code": "no_complete_board_path",
+    "start_rad": {
+      "shoulder_front": 0.7688639760017395,
+      "shoulder_side": -2.8379874229431152,
+      "shoulder_rotate": 2.365720510482788,
+      "elbow": -1.27927827835083,
+      "arm_roll": -2.6689937114715576,
+      "wrist_side": 0.1661325991153717,
+      "wrist": -2.0780880451202393
+    },
+    "target_board_mm": [
+      137.5,
+      247.5,
+      30.2
+    ],
+    "orientation_attempts": [
+      {
+        "message": "no reachable above pose with a board-plane-clear joint transit",
+        "details": {
+          "code": "above_transit_blocked",
+          "above_target_cad_m": [
+            0.46640308757405424,
+            -0.02970171261855055,
+            0.0390248421205715
+          ],
+          "ik_attempt_count": 16,
+          "best_ik_attempts": [
+            {
+              "success": true,
+              "position_error_mm": 0.001147214141213623,
+              "rotation_error_deg": 5.6785939685470535e-05,
+              "iterations": 19
+            },
+            {
+              "success": true,
+              "position_error_mm": 0.0012479841472502905,
+              "rotation_error_deg": 0.00012417800359792525,
+              "iterations": 7
+            },
+            {
+              "success": true,
+              "position_error_mm": 0.003634248463596828,
+              "rotation_error_deg": 9.51234638549448e-05,
+              "iterations": 8
+            }
+          ],
+          "ik_solutions": 14,
+          "blocked_path_count": 15,
+          "blocked_paths": [
+            {
+              "route": "direct",
+              "transit_fraction": 0.33157894736842103,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                37.19244313794304,
+                -17.49578809261714,
+                -306.84650790289646
+              ],
+              "minimum_height_mm": 5.0
+            },
+            {
+              "route": "direct",
+              "transit_fraction": 0.33157894736842103,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                37.19126147345656,
+                -17.495505351009715,
+                -306.84621167352907
+              ],
+              "minimum_height_mm": 5.0
+            },
+            {
+              "route": "direct",
+              "transit_fraction": 0.33157894736842103,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                37.4186243728118,
+                -17.484282225866828,
+                -306.84706312275125
+              ],
+              "minimum_height_mm": 5.0
+            }
+          ]
+        },
+        "orientation_reference_xy_mm": [
+          137.5,
+          192.5
+        ]
+      },
+      {
+        "message": "no reachable above pose with a board-plane-clear joint transit",
+        "details": {
+          "code": "above_transit_blocked",
+          "above_target_cad_m": [
+            0.46640308757405424,
+            -0.02970171261855055,
+            0.0390248421205715
+          ],
+          "ik_attempt_count": 16,
+          "best_ik_attempts": [
+            {
+              "success": true,
+              "position_error_mm": 0.0011259610329956361,
+              "rotation_error_deg": 0.00012414291749006186,
+              "iterations": 12
+            },
+            {
+              "success": true,
+              "position_error_mm": 0.0023079916869260075,
+              "rotation_error_deg": 0.00026035327454666286,
+              "iterations": 6
+            },
+            {
+              "success": true,
+              "position_error_mm": 0.003879724223007932,
+              "rotation_error_deg": 0.0004828108201502546,
+              "iterations": 6
+            }
+          ],
+          "ik_solutions": 14,
+          "blocked_path_count": 15,
+          "blocked_paths": [
+            {
+              "route": "direct",
+              "transit_fraction": 0.3316062176165803,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                23.520452998496424,
+                -18.669560864956253,
+                -307.6369118299606
+              ],
+              "minimum_height_mm": 5.0
+            },
+            {
+              "route": "direct",
+              "transit_fraction": 0.3316062176165803,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                27.555565276387927,
+                -19.331662147733493,
+                -307.88133991259645
+              ],
+              "minimum_height_mm": 5.0
+            },
+            {
+              "route": "direct",
+              "transit_fraction": 0.3316062176165803,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                31.491677429430897,
+                -19.93379497419494,
+                -308.08621109455123
+              ],
+              "minimum_height_mm": 5.0
+            }
+          ]
+        },
+        "orientation_reference_xy_mm": [
+          192.5,
+          192.5
+        ]
+      },
+      {
+        "message": "no reachable above pose with a board-plane-clear joint transit",
+        "details": {
+          "code": "above_transit_blocked",
+          "above_target_cad_m": [
+            0.46640308757405424,
+            -0.02970171261855055,
+            0.0390248421205715
+          ],
+          "ik_attempt_count": 16,
+          "best_ik_attempts": [
+            {
+              "success": true,
+              "position_error_mm": 0.0006043247309339281,
+              "rotation_error_deg": 7.442745812290907e-05,
+              "iterations": 7
+            },
+            {
+              "success": true,
+              "position_error_mm": 0.0010897488531327589,
+              "rotation_error_deg": 0.0002007933999204994,
+              "iterations": 9
+            },
+            {
+              "success": true,
+              "position_error_mm": 0.0011943063854812329,
+              "rotation_error_deg": 0.0001820581669581751,
+              "iterations": 14
+            }
+          ],
+          "ik_solutions": 14,
+          "blocked_path_count": 15,
+          "blocked_paths": [
+            {
+              "route": "direct",
+              "transit_fraction": 0.33146067415730335,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                10.66486331263873,
+                -16.073312386308405,
+                -307.06234545851555
+              ],
+              "minimum_height_mm": 5.0
+            },
+            {
+              "route": "direct",
+              "transit_fraction": 0.3258426966292135,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                2.1604288401337857,
+                -18.82198778694988,
+                -308.49948486801253
+              ],
+              "minimum_height_mm": 5.0
+            },
+            {
+              "route": "direct",
+              "transit_fraction": 0.3240223463687151,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                -4.3589455007432205,
+                -18.5957287887747,
+                -308.39638546285994
+              ],
+              "minimum_height_mm": 5.0
+            }
+          ]
+        },
+        "orientation_reference_xy_mm": [
+          137.5,
+          27.5
+        ]
+      },
+      {
+        "message": "no reachable above pose with a board-plane-clear joint transit",
+        "details": {
+          "code": "above_transit_blocked",
+          "above_target_cad_m": [
+            0.46640308757405424,
+            -0.02970171261855055,
+            0.0390248421205715
+          ],
+          "ik_attempt_count": 16,
+          "best_ik_attempts": [
+            {
+              "success": true,
+              "position_error_mm": 0.0007307366610921531,
+              "rotation_error_deg": 0.00010105373508625496,
+              "iterations": 28
+            },
+            {
+              "success": true,
+              "position_error_mm": 0.001090814628289325,
+              "rotation_error_deg": 0.00013340387391198844,
+              "iterations": 21
+            },
+            {
+              "success": true,
+              "position_error_mm": 0.0014573405536408611,
+              "rotation_error_deg": 9.146830146445893e-05,
+              "iterations": 9
+            }
+          ],
+          "ik_solutions": 14,
+          "blocked_path_count": 15,
+          "blocked_paths": [
+            {
+              "route": "direct",
+              "transit_fraction": 0.3216374269005848,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                13.034679081426267,
+                -18.730974925163558,
+                -308.82707967925245
+              ],
+              "minimum_height_mm": 5.0
+            },
+            {
+              "route": "direct",
+              "transit_fraction": 0.3216374269005848,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                9.87000507149569,
+                -17.87593645565092,
+                -308.51123942904496
+              ],
+              "minimum_height_mm": 5.0
+            },
+            {
+              "route": "direct",
+              "transit_fraction": 0.32941176470588235,
+              "code": "tool_board_intersection",
+              "tool_fraction": 0.9285714285714285,
+              "board_point_mm": [
+                32.28600334034837,
+                -19.438567905465305,
+                -292.7943096282319
+              ],
+              "minimum_height_mm": 5.0
+            }
+          ]
+        },
+        "orientation_reference_xy_mm": [
+          82.5,
+          27.5
+        ]
+      },
+      {
+        "message": "no reachable above pose with a board-plane-clear joint transit",
+        "details": {
+          "code": "above_transit_blocked",
+          "above_target_cad_m": [
+            0.46640308757405424,
+            -0.02970171261855055,
+            0.0390248421205715
+          ],
+          "ik_attempt_count": 16,
+          "best_ik_attempts": [
+            {
+              "success": true,
+              "position_error_mm": 0.001147214141213623,
+              "rotation_error_deg": 5.6785939685470535e-05,
+              "iterations": 19
+            },
+            {
+              "success": true,
+              "position_error_mm": 0.0012479841472502905,
+              "rotation_error_deg": 0.00012417800359792525,
+              "iterations": 7
+            },
+            {
+              "success": true,
+              "position_error_mm": 0.003634248463596828,
+              "rotation_error_deg": 9.51234638549448e-05,
+              "iterations": 8
+            }
+          ],
+          "ik_solutions": 14,
+          "blocked_path_count": 15,
+          "blocked_paths": [
+            {
+              "route": "direct",
+              "transit_fraction": 0.33157894736842103,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                37.19244313794304,
+                -17.49578809261714,
+                -306.84650790289646
+              ],
+              "minimum_height_mm": 5.0
+            },
+            {
+              "route": "direct",
+              "transit_fraction": 0.33157894736842103,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                37.19126147345656,
+                -17.495505351009715,
+                -306.84621167352907
+              ],
+              "minimum_height_mm": 5.0
+            },
+            {
+              "route": "direct",
+              "transit_fraction": 0.33157894736842103,
+              "code": "tool_board_intersection",
+              "tool_fraction": 1.0,
+              "board_point_mm": [
+                37.4186243728118,
+                -17.484282225866828,
+                -306.84706312275125
+              ],
+              "minimum_height_mm": 5.0
+            }
+          ]
+        },
+        "orientation_reference_xy_mm": null
+      }
+    ]
+  },
+  "elapsed_s": 25.02005590000772
+}

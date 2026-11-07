@@ -1,0 +1,180 @@
+{
+  "trial": "C5 accepted empty-load approach/descent",
+  "target_board_mm": [
+    137.5,
+    247.5,
+    30.2
+  ],
+  "board_model_sha256": "d8c7a069414937aceef9f83222822a6891701e263b35ef4af44aa603cc91146a",
+  "code_sha256": {
+    "left_arm_board_grasp.py": "72935085e4555a2e25093dd4649175b5eaf4f99f291c87de33bb7fedddef7410",
+    "left_arm_board_kinematics.py": "33aeb1331ef31d6b6fca99d1c13998c18c6d1efcc98e10e36e291098d81bd65a"
+  },
+  "log_sha256": "45f702138b243ab118586842a64172d47ca6523c5725bfe02544dfe4ab532b6b",
+  "motion_ok": true,
+  "post_move_model_hold": {
+    "enabled": true,
+    "state": "complete",
+    "same_serial_session": true,
+    "seconds": 5
+  },
+  "endpoint_settle_attempts": 0,
+  "max_nominal_error_deg": 0.1952226742833689,
+  "nominal_joint_target_reached": true,
+  "hold_duration_s": 5.019359827041626,
+  "max_hold_error_deg": 0.1952226742833689,
+  "max_hold_velocity_rad_s": 0.03663003817200661,
+  "recorded_violation_audits": 2,
+  "feedback_seed_projection_events": 3,
+  "operator_observation": {
+    "torso_gap": "sufficient",
+    "lateral_drift": "none observed",
+    "oscillation": "none observed",
+    "height": "appropriate",
+    "verbatim": "间隙足够，无横移，无抖动，夹持区域离板高度正好，这组很完美"
+  },
+  "accepted_scope": "single C5 empty-load trial; no claw closure or loaded lift; no full-board validation",
+  "robot_end_state": "C5 endpoint, not Home; not disabled",
+  "phases": {
+    "contact": {
+      "audit_count": 78,
+      "shoulder_side": {
+        "reference_range_rad": [
+          -2.910086154937744,
+          -2.9036011695861816
+        ],
+        "feedback_range_rad": [
+          -2.910086154937744,
+          -2.9036011695861816
+        ]
+      },
+      "shoulder_rotate": {
+        "reference_range_rad": [
+          2.419508695602417,
+          2.42638
+        ],
+        "feedback_range_rad": [
+          2.4191272258758545,
+          2.4259936809539795
+        ]
+      },
+      "wrist_side": {
+        "reference_range_rad": [
+          -0.048256658017635345,
+          -0.02841992862522602
+        ],
+        "feedback_range_rad": [
+          -0.048256658017635345,
+          -0.02841992862522602
+        ]
+      }
+    },
+    "entry_clearance": {
+      "audit_count": 106,
+      "shoulder_side": {
+        "reference_range_rad": [
+          -2.8547723293304443,
+          -2.7143893241882324
+        ],
+        "feedback_range_rad": [
+          -2.8547723293304443,
+          -2.72163724899292
+        ]
+      },
+      "shoulder_rotate": {
+        "reference_range_rad": [
+          2.357709646224975,
+          2.357709646224976
+        ],
+        "feedback_range_rad": [
+          2.357328176498413,
+          2.365720510482788
+        ]
+      },
+      "wrist_side": {
+        "reference_range_rad": [
+          0.16956588625907898,
+          0.3057526648044586
+        ],
+        "feedback_range_rad": [
+          0.16918440163135529,
+          0.28400853276252747
+        ]
+      }
+    },
+    "entry_xy_alignment": {
+      "audit_count": 19,
+      "shoulder_side": {
+        "reference_range_rad": [
+          -2.905915785199813,
+          -2.812047004699707
+        ],
+        "feedback_range_rad": [
+          -2.9036011695861816,
+          -2.812047004699707
+        ]
+      },
+      "shoulder_rotate": {
+        "reference_range_rad": [
+          2.4114975929260254,
+          2.427138090133667
+        ],
+        "feedback_range_rad": [
+          2.4114975929260254,
+          2.427138090133667
+        ]
+      },
+      "wrist_side": {
+        "reference_range_rad": [
+          -0.03681239113211632,
+          -0.024006298927499312
+        ],
+        "feedback_range_rad": [
+          -0.03643091395497322,
+          -0.02841992862522602
+        ]
+      }
+    },
+    "source_above": {
+      "audit_count": 97,
+      "shoulder_side": {
+        "reference_range_rad": [
+          -2.83383317500677,
+          -2.72163724899292
+        ],
+        "feedback_range_rad": [
+          -2.812047004699707,
+          -2.72163724899292
+        ]
+      },
+      "shoulder_rotate": {
+        "reference_range_rad": [
+          2.365720510482788,
+          2.42638
+        ],
+        "feedback_range_rad": [
+          2.3653390407562256,
+          2.4114975929260254
+        ]
+      },
+      "wrist_side": {
+        "reference_range_rad": [
+          -0.07123397701539247,
+          0.28400853276252747
+        ],
+        "feedback_range_rad": [
+          -0.03681239113211632,
+          0.28400853276252747
+        ]
+      }
+    }
+  },
+  "final_encoder_FK_board_mm": [
+    136.6811244782572,
+    247.18518658275622,
+    29.04023475724032
+  ],
+  "final_encoder_FK_warning": "Model-dependent internal result, not physical metrology",
+  "web_production_configuration_restored": true,
+  "accepted_model_file": "scripts/data/left_arm_board_grasp_c5_accepted.json"
+}

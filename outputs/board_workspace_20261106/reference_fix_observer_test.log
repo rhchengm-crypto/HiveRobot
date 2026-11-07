@@ -1,0 +1,9 @@
+board watchdog policy= {"build": "seven-axis-board-grasp-v24-continuous-reference-traced-motion", "warning_velocity_rad_s": 0.2, "mode": "record-only", "velocity_error_automatic_stop": false, "tracking_error_automatic_stop": false, "endpoint_correction_confirmed_motion_abort": true, "confirmed_encoder_oscillation_abort": true, "warning_position_error_deg": 5.0, "reference_peak_velocity_limit_rad_s": 0.06999999999999999}
+board motor trace= {"path": "C:\\Users\\rhche\\AppData\\Local\\Temp\\tmpbnr8yerr\\data\\board_motion_traces\\trace_1794028070955965100.jsonl", "writer": "bounded-asynchronous", "sampling": "each complete command frame", "additional_CAN_queries": false}
+board execution groups= {"planner_samples": 1, "execution_groups": 1, "groups": [{"stage": "source_above", "first_original_index": 0, "last_original_index": 0}]}
+board waypoint= {"index": 0, "stage": "source_above", "group_index": 0, "first_original_index": 0, "target_board_mm": [82.5, 137.5, 140.0], "timing": {"seconds": 0.8, "reference_peak_velocity_rad_s": 0.023437499999999997, "reference_peak_acceleration_rad_s2": 0.09021097956093749, "feedback_velocity_limit_rad_s": 0.2}, "entry_feedback": {"shoulder_front": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "shoulder_side": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "shoulder_rotate": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "elbow": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "arm_roll": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "wrist_side": {"pos": 0.0, "vel": 0.0, "tau": 0.0}, "wrist": {"pos": 0.0, "vel": 0.0, "tau": 0.0}}}
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.018s
+
+OK

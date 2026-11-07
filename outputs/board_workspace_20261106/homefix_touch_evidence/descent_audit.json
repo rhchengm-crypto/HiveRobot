@@ -1,0 +1,47 @@
+{
+  "source": "encoder-feedback-through-common-FK; not externally measured",
+  "start_board_mm": [
+    72.9047701447746,
+    136.13894789063602,
+    130.28193505710317
+  ],
+  "end_board_mm": [
+    73.78912737946987,
+    142.2302903285181,
+    123.94887447483468
+  ],
+  "delta_board_mm": [
+    0.8843572346952726,
+    6.091342437882076,
+    -6.333060582268487
+  ],
+  "hold_duration_s": 5.0103302001953125,
+  "hold_max_abs_error_deg": {
+    "shoulder_front": 0.0,
+    "shoulder_side": 0.0,
+    "shoulder_rotate": 0.021856605344040804,
+    "elbow": 0.0,
+    "arm_roll": 0.021856605344040804,
+    "wrist_side": 0.021856605344040804,
+    "wrist": 0.0
+  },
+  "hold_max_velocity_rad_s": {
+    "shoulder_front": 0.005860805977135897,
+    "shoulder_side": 0.005860805977135897,
+    "shoulder_rotate": 0.021978022530674934,
+    "elbow": 0.005860805977135897,
+    "arm_roll": 0.03663003817200661,
+    "wrist_side": 0.021978022530674934,
+    "wrist": 0.021978022530674934
+  },
+  "claw_commanded": false,
+  "run_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794024982735_41847.txt",
+  "orientation_acceptance": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 3,
+    "max_error_deg": 0.01417264901307675,
+    "tolerance_deg": 0.2864788975654116,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  }
+}

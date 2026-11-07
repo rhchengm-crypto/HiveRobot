@@ -1,0 +1,143 @@
+{
+  "motion_commands_sent": false,
+  "physical_orientation_verified": false,
+  "state": "support-commanding; not normal Model Hold completion",
+  "fault": "terminal command target is stale for arm_roll",
+  "arm_roll_error_deg": 2.582350106959074,
+  "hold_stale_limit_deg": 2.5,
+  "actual_full_frame_error_vs_task_model_deg": 3.1045031524503583,
+  "model_feedback_tcp_board_mm": [
+    72.92838312264844,
+    136.19496464839207,
+    131.52678803324667
+  ],
+  "joints": {
+    "shoulder_front": {
+      "last_feedback": {
+        "pos": 0.6387808322906494,
+        "vel": -0.0019536020699888468,
+        "tau": -6.420512676239014
+      },
+      "last_command": {
+        "kp": 90.0,
+        "kd": 4.0,
+        "q": 0.615299530479948,
+        "dq": 0.0,
+        "tau_ff": -4.264396516903897
+      },
+      "calculated_pd_tau_Nm": -2.105502754683171,
+      "calculated_total_tau_Nm": -6.369899271587068,
+      "feedback_minus_command_ff_Nm": -2.1561161593351166,
+      "feedback_minus_calculated_total_Nm": -0.05061340465194597
+    },
+    "shoulder_side": {
+      "last_feedback": {
+        "pos": -2.8715572357177734,
+        "vel": -0.0019536020699888468,
+        "tau": -0.5538461804389954
+      },
+      "last_command": {
+        "kp": 70.0,
+        "kd": 3.0,
+        "q": -2.892373986296095,
+        "dq": 0.0,
+        "tau_ff": 0.9484018141731101
+      },
+      "calculated_pd_tau_Nm": -1.45131173427255,
+      "calculated_total_tau_Nm": -0.5029099200994398,
+      "feedback_minus_command_ff_Nm": -1.5022479946121055,
+      "feedback_minus_calculated_total_Nm": -0.05093626033955556
+    },
+    "shoulder_rotate": {
+      "last_feedback": {
+        "pos": 1.9457160234451294,
+        "vel": 0.007326007355004549,
+        "tau": -0.2954823076725006
+      },
+      "last_command": {
+        "kp": 24.0,
+        "kd": 4.5,
+        "q": 1.932624130424914,
+        "dq": 0.0,
+        "tau_ff": 0.054699672282097475
+      },
+      "calculated_pd_tau_Nm": -0.34717246558268755,
+      "calculated_total_tau_Nm": -0.29247279330059006,
+      "feedback_minus_command_ff_Nm": -0.3501819799545981,
+      "feedback_minus_calculated_total_Nm": -0.003009514371910535
+    },
+    "elbow": {
+      "last_feedback": {
+        "pos": 0.6528953909873962,
+        "vel": -0.0019536020699888468,
+        "tau": 2.837606906890869
+      },
+      "last_command": {
+        "kp": 70.0,
+        "kd": 3.0,
+        "q": 0.6310520933479677,
+        "dq": 0.0,
+        "tau_ff": 4.421283548027173
+      },
+      "calculated_pd_tau_Nm": -1.523170028550028,
+      "calculated_total_tau_Nm": 2.898113519477145,
+      "feedback_minus_command_ff_Nm": -1.5836766411363037,
+      "feedback_minus_calculated_total_Nm": -0.06050661258627521
+    },
+    "arm_roll": {
+      "last_feedback": {
+        "pos": -3.11570143699646,
+        "vel": -0.007326007355004549,
+        "tau": -0.9890109896659851
+      },
+      "last_command": {
+        "kp": 18.0,
+        "kd": 1.0,
+        "q": -3.1607719488021235,
+        "dq": 0.0,
+        "tau_ff": -0.1617903252926393
+      },
+      "calculated_pd_tau_Nm": -0.8039432051469397,
+      "calculated_total_tau_Nm": -0.965733530439579,
+      "feedback_minus_command_ff_Nm": -0.8272206643733458,
+      "feedback_minus_calculated_total_Nm": -0.02327745922640609
+    },
+    "wrist_side": {
+      "last_feedback": {
+        "pos": -0.6906614899635315,
+        "vel": 0.007326007355004549,
+        "tau": -0.3003663122653961
+      },
+      "last_command": {
+        "kp": 16.0,
+        "kd": 2.2,
+        "q": -0.718707775186463,
+        "dq": 0.0,
+        "tau_ff": 0.17288878837170316
+      },
+      "calculated_pd_tau_Nm": -0.4648577797479142,
+      "calculated_total_tau_Nm": -0.291968991376211,
+      "feedback_minus_command_ff_Nm": -0.4732551006370993,
+      "feedback_minus_calculated_total_Nm": -0.008397320889185073
+    },
+    "wrist": {
+      "last_feedback": {
+        "pos": -3.466277599334717,
+        "vel": -0.007326007355004549,
+        "tau": 0.21245421469211578
+      },
+      "last_command": {
+        "kp": 22.0,
+        "kd": 1.4,
+        "q": -3.4836426130046085,
+        "dq": 0.0,
+        "tau_ff": 0.6194163127396617
+      },
+      "calculated_pd_tau_Nm": -0.3717738904406119,
+      "calculated_total_tau_Nm": 0.2476424222990498,
+      "feedback_minus_command_ff_Nm": -0.4069620980475459,
+      "feedback_minus_calculated_total_Nm": -0.035188207606934085
+    }
+  },
+  "interpretation": "Terminal command and feedback are consistent with PD bearing a static residual; residuals include friction/model/load terms and must not be treated as separately identified gravity or used to overwrite fitted parameters from this single trial."
+}

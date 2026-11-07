@@ -98,7 +98,9 @@ def plan_board_approach(model, point_mm, seed_encoder, config, clearance_mm=120.
 
 def solve_ik(model, target_m, seed_encoder, tcp_local_m, limits_encoder,
              target_wrist_rotation=None, max_iterations=300,
-             position_tolerance_m=.001, rotation_tolerance_rad=.01):
+             position_tolerance_m=.001, rotation_tolerance_rad=.01,
+             seed_projection_tolerance_rad=None, clearance_function=None,
+             tool_axis_local=None):
     """Damped Jacobian IK; no angle wrapping, invented limits, or execution.
 
     Supply a wrist rotation to constrain grasp orientation. Position-only IK
@@ -111,29 +113,108 @@ def solve_ik(model, target_m, seed_encoder, tcp_local_m, limits_encoder,
     if (limits.shape != (model.n, 2) or not np.isfinite(limits).all()
             or np.any(limits[:, 0] >= limits[:, 1])):
         raise ValueError('explicit ordered encoder joint limits required')
-    if np.any(q < limits[:, 0]) or np.any(q > limits[:, 1]):
+    # A caller may explicitly distinguish soft planning boundaries from motor
+    # limits. Only the numerical initial guess is projected; target bounds and
+    # the real measured start used for swept-path checks remain unchanged.
+    projected = np.clip(q, limits[:, 0], limits[:, 1])
+    projection = projected-q
+    tolerance = (np.zeros(model.n) if seed_projection_tolerance_rad is None else
+                 np.asarray(seed_projection_tolerance_rad, dtype=float))
+    if (tolerance.shape != (model.n,) or not np.isfinite(tolerance).all()
+            or np.any(tolerance < 0)):
+        raise ValueError('finite nonnegative per-joint seed projection tolerance required')
+    if np.any(np.abs(projection) > tolerance):
         raise ValueError('seed outside joint limits')
+    q = projected
     if not (position_tolerance_m > 0 and rotation_tolerance_rad > 0):
         raise ValueError('positive tolerances required')
     desired_r = None if target_wrist_rotation is None else rotation(target_wrist_rotation)
+    tool_axis = None if tool_axis_local is None else vector(tool_axis_local, 3, 'tool axis')
+    if tool_axis is not None:
+        if desired_r is None or np.linalg.norm(tool_axis) < 1e-10:
+            raise ValueError('axis-only orientation requires a nonzero local axis and target rotation')
+        tool_axis = tool_axis/np.linalg.norm(tool_axis)
+
+    def angular_residual(current):
+        if desired_r is None:
+            return np.zeros(3)
+        if tool_axis is None:
+            return rotation_error(desired_r, current)
+        actual, desired = current@tool_axis, desired_r@tool_axis
+        turn = np.cross(actual, desired)
+        sine = np.linalg.norm(turn)
+        cosine = np.clip(actual@desired, -1., 1.)
+        if sine > 1e-10:
+            return turn*np.arctan2(sine, cosine)/sine
+        if cosine > 0:
+            return np.zeros(3)
+        helper = np.eye(3)[np.argmin(np.abs(actual))]
+        turn = np.cross(actual, helper)
+        return turn/np.linalg.norm(turn)*np.pi
+
+    def clearances(angles):
+        if clearance_function is None:
+            return np.empty(0)
+        values = np.asarray(clearance_function(angles), dtype=float)
+        if values.ndim != 1 or not len(values) or not np.isfinite(values).all():
+            raise ValueError('clearance function must return a nonempty finite vector in metres')
+        return values
 
     def residual(angles):
         frame = tcp_pose(model, angles, tcp)
         linear = target - frame[:3, 3]
-        angular = np.zeros(3) if desired_r is None else rotation_error(desired_r, frame[:3, :3])
+        angular = angular_residual(frame[:3, :3])
         error = linear if desired_r is None else np.r_[linear, .15 * angular]
+        if clearance_function is not None:
+            # Two millimetres numerical reserve outside the configured capsule
+            # margin. The hard acceptance check below still uses zero clearance.
+            error = np.r_[error, -2.*np.minimum(clearances(angles)-.002, 0.)]
         return error, np.linalg.norm(linear), np.linalg.norm(angular)
 
     for iteration in range(max_iterations + 1):
         error, position_error, angular_error = residual(q)
-        if position_error <= position_tolerance_m and angular_error <= rotation_tolerance_rad:
+        if (position_error <= position_tolerance_m and angular_error <= rotation_tolerance_rad
+                and np.all(clearances(q) >= 0)):
             break
         if iteration == max_iterations:
             break
         jv, jw = model.point_jacobian(model.encoder_to_model(q), model.n - 1, tcp)
+        if tool_axis is not None:
+            current_axis = tcp_pose(model, q, tcp)[:3, :3]@tool_axis
+            jw = (np.eye(3)-np.outer(current_axis, current_axis))@jw
         jac = jv if desired_r is None else np.vstack([jv, .15 * jw])
         jac *= model.signs[None, :]
-        delta = jac.T @ np.linalg.solve(jac @ jac.T + .003**2 * np.eye(len(error)), error)
+        if clearance_function is not None:
+            base = clearances(q)
+            if hasattr(clearance_function, 'jacobian'):
+                gradient = np.asarray(clearance_function.jacobian(q), dtype=float)
+                if gradient.shape != (len(base), model.n) or not np.isfinite(gradient).all():
+                    raise ValueError('invalid clearance Jacobian')
+            else:
+                gradient = np.zeros((len(base), model.n))
+                for column in range(model.n):
+                    perturbation = np.eye(model.n)[column]*1e-5
+                    gradient[:, column] = (clearances(q+perturbation)-clearances(q-perturbation))/2e-5
+            gradient[base >= .002] = 0.
+            jac = np.vstack([jac, 2.*gradient])
+        if np.any(tolerance > 0) or clearance_function is not None:
+            # Re-solve with saturated outward-pointing axes removed. Merely
+            # clipping an unconstrained DLS step can leave no descent direction
+            # even when the remaining joints have a feasible solution.
+            free = np.ones(model.n, dtype=bool)
+            delta = np.zeros(model.n)
+            for _ in range(model.n + 1):
+                delta[:] = 0
+                jfree = jac[:, free]
+                delta[free] = jfree.T @ np.linalg.solve(
+                    jfree @ jfree.T + .003**2 * np.eye(len(error)), error)
+                blocked = free & (((q <= limits[:, 0] + 1e-10) & (delta < 0))
+                                  | ((q >= limits[:, 1] - 1e-10) & (delta > 0)))
+                if not np.any(blocked):
+                    break
+                free[blocked] = False
+        else:
+            delta = jac.T @ np.linalg.solve(jac @ jac.T + .003**2 * np.eye(len(error)), error)
         delta *= min(1., .08 / max(np.max(np.abs(delta)), 1e-12))
         accepted = False
         for scale in (1., .5, .25, .125, .0625):
@@ -144,11 +225,19 @@ def solve_ik(model, target_m, seed_encoder, tcp_local_m, limits_encoder,
                 break
         if not accepted:
             break
-    success = bool(position_error <= position_tolerance_m and angular_error <= rotation_tolerance_rad)
+    final_clearance = clearances(q)
+    success = bool(position_error <= position_tolerance_m and angular_error <= rotation_tolerance_rad
+                   and np.all(final_clearance >= 0))
     return {'success': success, 'encoder_rad': dict(zip(model.names, q.tolist())),
+            'seed_projection_delta_deg': dict(zip(model.names, np.degrees(projection).tolist())),
             'position_error_mm': float(position_error * 1000),
             'rotation_error_deg': float(np.degrees(angular_error)),
             'iterations': iteration, 'orientation_constrained': desired_r is not None,
+            'orientation_constraint': ('tool-axis' if tool_axis is not None else
+                                       'full-wrist' if desired_r is not None else 'position-only'),
+            'body_constraints_checked': clearance_function is not None,
+            'minimum_body_clearance_lower_bound_mm': (float(final_clearance.min()*1000)
+                                                       if len(final_clearance) else None),
             'motion_issued': False, 'collision_checked': False}
 
 

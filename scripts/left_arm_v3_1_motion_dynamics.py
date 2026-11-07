@@ -110,7 +110,7 @@ def configured_model():
     return model
 
 
-def begin_motion(arm, commanded_names):
+def begin_motion(arm, commanded_names, *, entry_pose=None):
     model = getattr(arm, 'motion_dynamics_model', None)
     if model is None:
         return None
@@ -119,7 +119,16 @@ def begin_motion(arm, commanded_names):
         return None
     # All seven coordinates are needed to query a pose-dependent model. This
     # read does not enable or command any joint, including skipped rotate.
-    pose = arm.positions(JOINTS)
+    if entry_pose is None:
+        pose = arm.positions(JOINTS)
+    else:
+        if set(entry_pose) != set(JOINTS) or not all(
+                math.isfinite(float(entry_pose[n])) for n in JOINTS):
+            raise ValueError('continued dynamics entry needs seven finite coordinates')
+        pose = {n:float(entry_pose[n]) for n in JOINTS}
+        print('motion dynamics continued origin= '+json.dumps({
+            'source':'previous-sent-position-reference','entry_encoder_rad':pose,
+            'additional_CAN_queries':False,'measured_feedback_used_by_guards':True}),flush=True)
     if 'rigid_body_configuration' in model:
         from left_arm_general_motion import GeneralMotionSession
         config = model['rigid_body_configuration']

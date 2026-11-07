@@ -13,6 +13,21 @@ import chessboard_vision_v3_0_web_control as web
 
 
 class BoardHoldGainTests(unittest.TestCase):
+    def test_common_terminal_reanchor_preserves_entire_torque_law_at_stale_arm_roll_target(self):
+        import left_arm_board_grasp as board
+        old={'kp':18.,'kd':1.,'q':-3.1607719488021235,'dq':0.,'tau_ff':-.1617903252926393}
+        status={'arm_roll':{'pos':-3.11570143699646,'vel':-.007326007355004549}}
+        commands,audit=board.reanchor_terminal_commands({'arm_roll':old},status,{'arm_roll':10.})
+        new=commands['arm_roll']
+        self.assertAlmostEqual(audit['arm_roll']['nominal_error_deg'],2.582350106959074)
+        for q,v in ((status['arm_roll']['pos'],status['arm_roll']['vel']),(-3.1,.02),(-3.13,-.01)):
+            torque=lambda c:c['kp']*(c['q']-q)+c['kd']*(c['dq']-v)+c['tau_ff']
+            self.assertAlmostEqual(torque(old),torque(new))
+        self.assertEqual(new['kp'],old['kp']);self.assertEqual(new['kd'],old['kd'])
+        self.assertEqual(old['q'],-3.1607719488021235)
+        with self.assertRaisesRegex(ValueError,'MIT torque range'):
+            board.reanchor_terminal_commands({'arm_roll':old},status,{'arm_roll':.5})
+
     def test_terminal_command_survives_biased_feedback_and_entire_hold(self):
         command={'kp':90.,'kd':4.,'q':-.003,'dq':0.,'tau_ff':-3.2}
         sent=[];clock=[0.]
@@ -31,9 +46,9 @@ class BoardHoldGainTests(unittest.TestCase):
             args=control.build_parser().parse_args(['--model',str(path),'model-hold','--joints','shoulder_front',
                 '--seconds','.1','--motors-already-enabled','--execute','--log',str(Path(directory)/'run.jsonl'),
                 '--motion-gain-floor-json',json.dumps({'shoulder_front':command})])
-            with (mock.patch.object(control,'open_arm') as opened,
-                  mock.patch.object(control.time,'time',side_effect=lambda:clock[0]),
-                  mock.patch.object(control.time,'sleep',side_effect=sleep),contextlib.redirect_stdout(io.StringIO())):
+            with mock.patch.object(control,'open_arm') as opened, \
+                  mock.patch.object(control.time,'time',side_effect=lambda:clock[0]), \
+                  mock.patch.object(control.time,'sleep',side_effect=sleep),contextlib.redirect_stdout(io.StringIO()):
                 result=control.model_hold(args,arm_context=(None,arm),prepared_model=model)
             opened.assert_not_called()
             self.assertTrue(result['ok']);self.assertEqual(path.read_bytes(),before)
@@ -59,6 +74,26 @@ class BoardHoldGainTests(unittest.TestCase):
         with mock.patch.object(control,'model_hold',side_effect=hold),contextlib.redirect_stdout(io.StringIO()):
             result=board.same_session_model_hold(arm,legacy,{'endpoint':{'model_hold_motion_gains':commands}},
                                                 model,rigid,'unused.json')
+        self.assertTrue(result['ok']);arm.close.assert_not_called();arm.enable.assert_not_called()
+
+    def test_common_same_session_reanchors_without_reopening_or_reenabling(self):
+        import left_arm_board_grasp as board
+        commands={n:{'kp':18.,'kd':1.,'q':0.,'dq':0.,'tau_ff':.1} for n in control.JOINTS}
+        commands['arm_roll']['q']=-math.radians(2.58235)
+        sent=[]
+        arm=types.SimpleNamespace(motors={n:n for n in control.JOINTS},
+            ctrl=types.SimpleNamespace(controlMIT=lambda *values:sent.append(values)),
+            read_status=lambda names:{n:dict(pos=0.,vel=0.,tau=.1) for n in names},
+            close=mock.Mock(),enable=mock.Mock())
+        def hold(args,**kwargs):
+            floor=json.loads(args.motion_gain_floor_json)
+            self.assertEqual(floor['arm_roll']['q'],0.)
+            self.assertAlmostEqual(floor['arm_roll']['tau_ff'],.1-18.*math.radians(2.58235))
+            self.assertEqual(len(sent),14)
+            return {'ok':True}
+        with mock.patch.object(control,'model_hold',side_effect=hold),contextlib.redirect_stdout(io.StringIO()):
+            result=board.same_session_model_hold(arm,None,{'endpoint':{'model_hold_motion_gains':commands}},
+                {},None,'unused.json',reanchor_terminal=True)
         self.assertTrue(result['ok']);arm.close.assert_not_called();arm.enable.assert_not_called()
 
     def test_terminal_command_rejects_nonstationary_or_partial_payload(self):
@@ -124,10 +159,10 @@ class BoardHoldGainTests(unittest.TestCase):
             args=control.build_parser().parse_args(['--model',str(path),'model-hold','--joints','shoulder_front',
                 '--seconds','3','--motors-already-enabled','--execute','--log',str(Path(directory)/'run.jsonl'),
                 '--motion-gain-floor-json',json.dumps({'shoulder_front':{'kp':90.,'kd':4.}})])
-            with (mock.patch.object(control,'open_arm',return_value=(None,plant)),
-                  mock.patch.object(control.time,'time',side_effect=lambda:plant.now),
-                  mock.patch.object(control.time,'sleep',side_effect=plant.sleep),
-                  contextlib.redirect_stdout(io.StringIO())):
+            with mock.patch.object(control,'open_arm',return_value=(None,plant)), \
+                  mock.patch.object(control.time,'time',side_effect=lambda:plant.now), \
+                  mock.patch.object(control.time,'sleep',side_effect=plant.sleep), \
+                  contextlib.redirect_stdout(io.StringIO()):
                 result=control.model_hold(args)
             self.assertEqual(path.read_bytes(),before)
         self.assertTrue(result['ok'])

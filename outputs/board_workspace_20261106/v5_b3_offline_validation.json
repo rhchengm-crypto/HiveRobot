@@ -1,0 +1,62 @@
+{
+  "motion_commands_sent": false,
+  "board_sha256": "d2b692b52065f66178f84dfa52bb211397da3da57a4a9e3c58e124b12d959e12",
+  "source_sha256": "0779a5fb4152f7d8bfba5057af26b5bb2c8595d3f9325369014628c207142c51",
+  "orientation_constraint": "full-wrist",
+  "ok": true,
+  "above_target_board_mm": [
+    82.63798168934885,
+    137.3483035834422,
+    139.61454664185973
+  ],
+  "orientation_acceptance": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 13,
+    "max_error_deg": 0.13539746150635343,
+    "tolerance_deg": 0.2864788975654116,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "full_contact_orientation_error_deg_max": 0.12327886576704145,
+  "free_transit_orientation_error_deg_max": 65.51387739975507,
+  "full_target_orientation_error_deg_above": 0.13539746150635343,
+  "above_goal_encoder_rad": {
+    "shoulder_front": 0.615299530479944,
+    "shoulder_side": -2.89237398629609,
+    "shoulder_rotate": 1.9326241304249132,
+    "elbow": 0.6310520933479642,
+    "arm_roll": -3.160771948802129,
+    "wrist_side": -0.718707775186463,
+    "wrist": -3.4836426130046085
+  },
+  "v4_1_to_v5_goal_change_deg": {
+    "shoulder_front": -5.671346116429924,
+    "shoulder_side": 3.2111236846369815,
+    "shoulder_rotate": -16.963773500333538,
+    "elbow": -11.895859492475482,
+    "arm_roll": -1.0882422231133702,
+    "wrist_side": -59.049384444583936,
+    "wrist": 0.0
+  },
+  "path_posture": {
+    "policy": "common complete-path clearance and joint travel",
+    "score": 21.75452473822534,
+    "joint_travel_rad": 3.603016640003392,
+    "waypoint_body_clearance_lower_bound_mm": 2.4554239782092107,
+    "per_square_parameters": false,
+    "posture_load_preference": {
+      "elbow_height_mean_mm": 177.72585127200298,
+      "elbow_height_peak_mm": 282.55106996161146,
+      "elbow_height_terminal_mm": 139.91726560928305,
+      "nominal_gravity_squared_mean_Nm2": 21.401572529291787,
+      "added_cost": 18.200616577786132,
+      "physical_load_independently_verified": false
+    },
+    "feasible_orientation_count": 5
+  },
+  "entry_route": [
+    "source_above"
+  ],
+  "complete_path_waypoints": 41,
+  "elapsed_s": 22.84568820000277
+}

@@ -1,0 +1,297 @@
+{
+  "motion_commands_sent": false,
+  "physical_measurement_claimed": false,
+  "provenance": {
+    "model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "board_sha256": "c5dfcfec02f249f353b9d1b39c5e8c8af2fe2513b7f46e52d2b41050b27d6465",
+    "actual_source": "last completed same-session Model Hold feedback; saved data, not a fresh robot poll"
+  },
+  "requested_xy_mm": [
+    82.5,
+    137.5
+  ],
+  "model_goal_xyz_mm": [
+    82.59064464001692,
+    137.60699404011257,
+    139.82431783952592
+  ],
+  "model_feedback_xyz_mm": [
+    71.15397584067746,
+    136.9948623497396,
+    122.58794252086038
+  ],
+  "model_feedback_minus_goal_mm": [
+    -11.436668799339458,
+    -0.6121316903729621,
+    -17.236375318665537
+  ],
+  "xy_distance_from_request_mm": 11.35726323854657,
+  "endpoint_jacobian_xyz_mm_per_degree": {
+    "shoulder_front": [
+      -0.21967858137265944,
+      -3.9158754557054865,
+      -6.855264421675381
+    ],
+    "shoulder_side": [
+      -4.124569952017152,
+      -0.018878011394552315,
+      -0.876917321917988
+    ],
+    "shoulder_rotate": [
+      6.616066429535061,
+      -0.6149684567280608,
+      0.3156667622301639
+    ],
+    "elbow": [
+      -0.3608173223221027,
+      -0.041648953149645083,
+      6.662818277396011
+    ],
+    "arm_roll": [
+      -3.1811086352960083,
+      0.3146651632674832,
+      -1.2444136981191367
+    ],
+    "wrist_side": [
+      -1.8841805595264813,
+      -0.04246235173830248,
+      -1.1702445319891515
+    ],
+    "wrist": [
+      -1.0838526508188453,
+      2.7119862255782223,
+      1.912718623028161
+    ]
+  },
+  "first_order_joint_error_contributions_xyz_mm": {
+    "shoulder_front": [
+      -0.29326641068879417,
+      -5.227613599939334,
+      -9.151637718639883
+    ],
+    "shoulder_side": [
+      -4.010294433066774,
+      -0.018354976369335065,
+      -0.8526214115068321
+    ],
+    "shoulder_rotate": [
+      1.0399585438457317,
+      -0.09666494549011267,
+      0.049618659347779204
+    ],
+    "elbow": [
+      0.41009073552138187,
+      0.04733655723875223,
+      -7.572696428314632
+    ],
+    "arm_roll": [
+      -2.806085428269703,
+      0.2775690586709023,
+      -1.0977088635976093
+    ],
+    "wrist_side": [
+      -3.454773223155254,
+      -0.0778576103208253,
+      -2.1457229527280615
+    ],
+    "wrist": [
+      -2.0022695699180586,
+      5.010023723621262,
+      3.533486117150222
+    ]
+  },
+  "first_order_sum_mm": [
+    -11.116639785731468,
+    -0.08556179258869001,
+    -17.237282598289017
+  ],
+  "model_clearance_worst_pair": {
+    "capsule": "elbow-to-arm_roll",
+    "obstacle": "torso_mesh_obb",
+    "clearance_lower_bound_mm": 4.803327038763743,
+    "centerline_fraction": 1.0,
+    "radius_mm": 30.0,
+    "margin_mm": 5.0
+  },
+  "tracking_records": 132,
+  "baseline_count": 4,
+  "elbow_anchor_tau_by_refresh": [
+    4.027350425720215,
+    4.027350425720215,
+    4.027350425720215,
+    4.027350425720215
+  ],
+  "elbow_applied_baseline_tau_by_refresh": [
+    4.027350425720215,
+    4.359188376462141,
+    4.359357138140513,
+    4.359524507746931
+  ],
+  "elbow_entry_feedback_tau_by_settle": [
+    5.613675117492676,
+    5.613675117492676,
+    5.613675117492676
+  ],
+  "elbow_limit_rad": [
+    -1.4702146402110297,
+    0.838674008846283
+  ],
+  "continuation_diagnostics": [
+    {
+      "case": "requested_B3",
+      "target_xyz_mm": [
+        82.5,
+        137.5,
+        102.58794252086038
+      ],
+      "physical_target_verified": false,
+      "solved": false,
+      "error": "no feasible complete board path",
+      "diagnostics": {
+        "code": "no_complete_board_path",
+        "start_rad": {
+          "shoulder_front": 0.7375829815864563,
+          "shoulder_side": -2.9314489364624023,
+          "shoulder_rotate": 2.2314412593841553,
+          "elbow": 0.8188372850418091,
+          "arm_roll": -3.126382827758789,
+          "wrist_side": 0.343900203704834,
+          "wrist": -3.4514000415802
+        },
+        "target_board_mm": [
+          82.5,
+          137.5,
+          102.58794252086038
+        ],
+        "orientation_attempts": [
+          {
+            "message": "Touch requires matching hover XY and a 1..25mm descent",
+            "details": {
+              "code": "touch_start_mismatch",
+              "start_tcp_board_mm": [
+                71.15397584067746,
+                136.9948623497396,
+                122.58794252086038
+              ],
+              "requested_contact_board_mm": [
+                82.5,
+                137.5,
+                102.58794252086038
+              ],
+              "xy_error_mm": 11.35726323854657,
+              "descent_mm": 20.0,
+              "max_descent_per_test_mm": 25.0
+            },
+            "orientation_reference_xy_mm": [
+              137.5,
+              192.5
+            ]
+          },
+          {
+            "message": "Touch requires matching hover XY and a 1..25mm descent",
+            "details": {
+              "code": "touch_start_mismatch",
+              "start_tcp_board_mm": [
+                71.15397584067746,
+                136.9948623497396,
+                122.58794252086038
+              ],
+              "requested_contact_board_mm": [
+                82.5,
+                137.5,
+                102.58794252086038
+              ],
+              "xy_error_mm": 11.35726323854657,
+              "descent_mm": 20.0,
+              "max_descent_per_test_mm": 25.0
+            },
+            "orientation_reference_xy_mm": [
+              82.5,
+              27.5
+            ]
+          },
+          {
+            "message": "Touch requires matching hover XY and a 1..25mm descent",
+            "details": {
+              "code": "touch_start_mismatch",
+              "start_tcp_board_mm": [
+                71.15397584067746,
+                136.9948623497396,
+                122.58794252086038
+              ],
+              "requested_contact_board_mm": [
+                82.5,
+                137.5,
+                102.58794252086038
+              ],
+              "xy_error_mm": 11.35726323854657,
+              "descent_mm": 20.0,
+              "max_descent_per_test_mm": 25.0
+            },
+            "orientation_reference_xy_mm": [
+              192.5,
+              192.5
+            ]
+          },
+          {
+            "message": "Touch requires matching hover XY and a 1..25mm descent",
+            "details": {
+              "code": "touch_start_mismatch",
+              "start_tcp_board_mm": [
+                71.15397584067746,
+                136.9948623497396,
+                122.58794252086038
+              ],
+              "requested_contact_board_mm": [
+                82.5,
+                137.5,
+                102.58794252086038
+              ],
+              "xy_error_mm": 11.35726323854657,
+              "descent_mm": 20.0,
+              "max_descent_per_test_mm": 25.0
+            },
+            "orientation_reference_xy_mm": [
+              137.5,
+              27.5
+            ]
+          },
+          {
+            "message": "Touch requires matching hover XY and a 1..25mm descent",
+            "details": {
+              "code": "touch_start_mismatch",
+              "start_tcp_board_mm": [
+                71.15397584067746,
+                136.9948623497396,
+                122.58794252086038
+              ],
+              "requested_contact_board_mm": [
+                82.5,
+                137.5,
+                102.58794252086038
+              ],
+              "xy_error_mm": 11.35726323854657,
+              "descent_mm": 20.0,
+              "max_descent_per_test_mm": 25.0
+            },
+            "orientation_reference_xy_mm": null
+          }
+        ]
+      },
+      "elapsed_s": 9.762788499996532
+    },
+    {
+      "case": "current_model_XY_vertical_diagnostic_only",
+      "target_xyz_mm": [
+        71.15397584067746,
+        136.9948623497396,
+        102.58794252086038
+      ],
+      "physical_target_verified": false,
+      "solved": true,
+      "waypoints": 3,
+      "maximum_joint_change_deg": 3.5364543708358394,
+      "elapsed_s": 9.012610999998287
+    }
+  ]
+}
