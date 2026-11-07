@@ -1,0 +1,60 @@
+{
+  "schema": 2,
+  "motion_issued": false,
+  "physical_validation_complete": false,
+  "model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+  "board_model_sha256": "a4c20fa2465414b5f6eef2a304ad9fc268ebc8bad872210bde2c8f47cbbb0710",
+  "source_sha256": {
+    "left_arm_board_grasp.py": "14b3cf5a8f91f38ea9d62dadaac9a805ab003835b6ea85feecb3de09952013c6",
+    "left_arm_board_kinematics.py": "675ad02bda0066636092f44a793c9c0901dcf476ef2f2bfdc253d2d9a4c3f8ba",
+    "left_arm_board_collision.py": "0449749797c0e89bfa1762215ec7d818aeeca1dd9a03924f5568505dddfaa644",
+    "left_arm_board_transit.py": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f"
+  },
+  "start_source": "C:\\Users\\rhche\\OneDrive\\\u6587\u6863\\HiveRobot\\scripts\\data\\left_arm_v2_home.json",
+  "start_rad": {
+    "shoulder_front": 0.8363851308822632,
+    "shoulder_side": -2.853627920150757,
+    "shoulder_rotate": 2.3554208278656006,
+    "elbow": -1.2956817150115967,
+    "arm_roll": -2.657930850982666,
+    "wrist_side": 0.1668955534696579,
+    "wrist": -2.0780880451202393
+  },
+  "piece": "white_knight",
+  "requested_stage": "grasp",
+  "height_mm": 30.2,
+  "collision_scope": "finite board plus configured body scene; not complete self/occupied-board collision",
+  "body_registration_status": "nominal-old-chassis-registration; offline-only",
+  "search_failure_is_physical_unreachable_proof": false,
+  "results": [
+    {
+      "point": "c5",
+      "target_board_mm": [
+        137.5,
+        247.5,
+        30.2
+      ],
+      "success": true,
+      "samples": 51,
+      "entry_route": [
+        "entry_search",
+        "entry_search",
+        "source_above"
+      ],
+      "posture_selection": {
+        "policy": "common complete-path clearance and joint travel",
+        "score": 3.036961502051452,
+        "joint_travel_rad": 3.2163627474600105,
+        "waypoint_body_clearance_lower_bound_mm": 8.970062270427906,
+        "per_square_parameters": false,
+        "feasible_orientation_count": 5
+      },
+      "waypoint_min_body_clearance_lower_bound_mm": 8.970062270427906,
+      "joint_bound_margin_deg": 14.741658061736274,
+      "elapsed_s": 43.892297699989285
+    }
+  ],
+  "tested": 1,
+  "successes": 1,
+  "failure_codes": {}
+}

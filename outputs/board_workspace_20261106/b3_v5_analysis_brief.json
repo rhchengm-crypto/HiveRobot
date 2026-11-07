@@ -1,0 +1,172 @@
+{
+  "run": {
+    "ok": false,
+    "running": false,
+    "returncode": null,
+    "duration_s": null,
+    "post_move_model_hold": {
+      "enabled": true,
+      "state": "same-process-protective-hold",
+      "automatic_resume": false,
+      "timeout_seconds": null
+    }
+  },
+  "descent_executed": false,
+  "claw_commanded": false,
+  "physical_validation_pending": true,
+  "source_sha256": "0779a5fb4152f7d8bfba5057af26b5bb2c8595d3f9325369014628c207142c51",
+  "endpoint": [
+    {
+      "automatic_endpoint_correction": true,
+      "endpoint_settle_attempts": 3,
+      "fixed_board_offset_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "model_hold_motion_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "q": 0.615299530479948,
+          "dq": 0.0,
+          "tau_ff": -4.264396516903897
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "q": -2.892373986296095,
+          "dq": 0.0,
+          "tau_ff": 0.9484018141731101
+        },
+        "shoulder_rotate": {
+          "kp": 24.0,
+          "kd": 4.5,
+          "q": 1.932624130424914,
+          "dq": 0.0,
+          "tau_ff": 0.054699672282097475
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "q": 0.6310520933479677,
+          "dq": 0.0,
+          "tau_ff": 4.421283548027173
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "q": -3.1607719488021235,
+          "dq": 0.0,
+          "tau_ff": -0.1617903252926393
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "q": -0.718707775186463,
+          "dq": 0.0,
+          "tau_ff": 0.17288878837170316
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "q": -3.4836426130046085,
+          "dq": 0.0,
+          "tau_ff": 0.6194163127396617
+        }
+      },
+      "nominal_target_rad": {
+        "shoulder_front": 0.615299530479948,
+        "shoulder_side": -2.892373986296095,
+        "shoulder_rotate": 1.932624130424914,
+        "elbow": 0.6310520933479677,
+        "arm_roll": -3.1607719488021235,
+        "wrist_side": -0.718707775186463,
+        "wrist": -3.4836426130046085
+      },
+      "measured_pose_rad": {
+        "shoulder_front": 0.6387808322906494,
+        "shoulder_side": -2.8715572357177734,
+        "shoulder_rotate": 1.9457160234451294,
+        "elbow": 0.6528953909873962,
+        "arm_roll": -3.11570143699646,
+        "wrist_side": -0.6906614899635315,
+        "wrist": -3.466277599334717
+      },
+      "nominal_error_deg": {
+        "shoulder_front": 1.3453794912260884,
+        "shoulder_side": 1.192711951314347,
+        "shoulder_rotate": 0.750110215895117,
+        "elbow": 1.2515287653873266,
+        "arm_roll": 2.582350106959074,
+        "wrist_side": 1.6069337742941028,
+        "wrist": 0.9949419944717776
+      },
+      "max_nominal_error_deg": 2.582350106959074,
+      "nominal_joint_target_reached": false,
+      "physical_board_target_verified": false,
+      "completion_scope": "trajectory-and-endpoint-settle-complete; measured-pose-handoff"
+    }
+  ],
+  "takeover": [
+    {
+      "same_process": true,
+      "same_serial_session": true,
+      "terminal_to_first_refresh_ms": 81.42596400102775,
+      "enable_frames_sent": false
+    }
+  ],
+  "hold": [],
+  "peak_feedback_tau_Nm": {
+    "shoulder_front": 6.7076921463012695,
+    "shoulder_side": 0.6632478833198547,
+    "shoulder_rotate": 0.9352869391441345,
+    "elbow": 4.095726490020752,
+    "arm_roll": 1.08669114112854,
+    "wrist_side": 0.45665445923805237,
+    "wrist": 0.6471306681632996
+  },
+  "peak_feedback_error_deg": {
+    "shoulder_front": 1.5313109585932552,
+    "shoulder_side": 1.192711951314347,
+    "shoulder_rotate": 1.0291720533422481,
+    "elbow": 1.2784142225736876,
+    "arm_roll": 2.8624886003349284,
+    "wrist_side": 1.9622960943917258,
+    "wrist": 1.511225753884298
+  },
+  "motion_segments": [
+    {
+      "frames": 3757,
+      "mode": "apply",
+      "workflow_action": "dynamics:board-grasp",
+      "workflow_run_id": "9cece63449ccd925",
+      "worker_error_frames": 0,
+      "terminal_correction_zero": true
+    },
+    {
+      "frames": 114,
+      "mode": "apply",
+      "workflow_action": "dynamics:board-grasp",
+      "workflow_run_id": "9cece63449ccd925",
+      "worker_error_frames": 0,
+      "terminal_correction_zero": true
+    },
+    {
+      "frames": 107,
+      "mode": "apply",
+      "workflow_action": "dynamics:board-grasp",
+      "workflow_run_id": "9cece63449ccd925",
+      "worker_error_frames": 0,
+      "terminal_correction_zero": true
+    },
+    {
+      "frames": 106,
+      "mode": "apply",
+      "workflow_action": "dynamics:board-grasp",
+      "workflow_run_id": "9cece63449ccd925",
+      "worker_error_frames": 0,
+      "terminal_correction_zero": true
+    }
+  ]
+}

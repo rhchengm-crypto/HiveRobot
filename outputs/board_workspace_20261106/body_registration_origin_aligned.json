@@ -1,0 +1,63 @@
+{
+  "motion_issued": false,
+  "output": "scripts\\data\\left_arm_board_workspace_candidate.json",
+  "sha256": "a4c20fa2465414b5f6eef2a304ad9fc268ebc8bad872210bde2c8f47cbbb0710",
+  "runtime_model_replaced": false,
+  "registration": {
+    "source_files": {
+      "scripts\\data\\left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+      "scripts\\data\\left_arm_board_grasp.json": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57",
+      "roboparty_rpo_hardware\\rpo_hardware-main\\V2.0\\roboto_origin_mechanic\\03_URDF\\urdf\\roboto_origin.urdf": "310e74493a6fc29d07b58286d6891f1cd3c0b82107c53e7a20d071efa9ea0ab9",
+      "roboparty_rpo_hardware\\rpo_hardware-main\\V2.0\\roboto_origin_mechanic\\03_URDF\\meshes\\torso_link.STL": "c0aef7f4c5eff6c469f868764dd5c0f5e037e3c44c86bffae7acf76cf6183d19"
+    },
+    "method": "register old URDF pitch origin/axis and nominal installation up to CAD; mesh AABB becomes OBB",
+    "frame_registration_physically_verified": false,
+    "pitch_axis_nominal_up_dot_abs": 1.067229243015807e-17,
+    "second_shoulder_datum_disagreement_mm": [
+      3.5468531000009667,
+      -9.011916575576318,
+      3.496135092273617
+    ],
+    "second_shoulder_datum_disagreement_norm_mm": 10.296492988467515,
+    "mesh_bounds_in_torso_frame_m": [
+      [
+        -0.10869999974966049,
+        -0.125,
+        -0.01599999889731407
+      ],
+      [
+        0.08243308961391449,
+        0.125,
+        0.24167586863040924
+      ]
+    ],
+    "torso_to_cad_rotation": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        -0.0,
+        0.9848077529548818,
+        0.17364817799204443
+      ],
+      [
+        0.0,
+        -0.17364817799204443,
+        0.9848077529548817
+      ]
+    ],
+    "torso_to_cad_translation_m": [
+      -0.038,
+      -0.0595413047423671,
+      0.049550977559265574
+    ],
+    "limitations": [
+      "old five-axis chassis mesh is not the approved seven-axis assembly",
+      "chassis mounting registration requires verification before hardware use",
+      "30mm link-axis capsules are simplified; motors, wires, supports and finger sweep are incomplete",
+      "no new exact Cartesian measurements were inferred from qualitative C4/C5 observations"
+    ]
+  }
+}
