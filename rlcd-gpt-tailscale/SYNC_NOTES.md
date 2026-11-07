@@ -15,3 +15,7 @@ build/、private-backup/、日志、用户历史、真实配置与固件二进�
 2026-11-06：RX 轻睡眠恢复修正版已刷入，短时测试通过，整夜待验证。源码工作目录迁移至 Desktop/esp32/rlcd-gpt-tailscale，build.ps1 默认使用 build-sleep-recovery；完整配置见 sdkconfig.verified，实测及 9 键对比见 SLEEP_RECOVERY.md。
 
 天气页假死已修正 VPN 退出与页面锁定逻辑；四项生命周期、网关上传、休眠/麦克风回归通过，实体 KEY 用户已确认正常、不再卡住，整夜仍待验证。详见 VPN_EXIT_FIX.md。
+
+2026-11-07：用户确认整夜休眠正常。随后实板复现转文字录音任务创建失败（frames=0）；改用 PSRAM 录音任务栈，固件已刷入并校验，四项实板采集/上传/停止回归通过（启动、重复、退出VPN、休眠唤醒）。详见 REALTIME_CAPTURE_FIX.md / REALTIME_CAPTURE_VALIDATION.json。真人识别结果待用户确认。
+
+2026-11-07 真人验收：用户确认“正常出字，不再报录音任务失败”。

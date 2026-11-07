@@ -45,7 +45,7 @@
     "[SLEEP_INFO] count=4 result=0 reason=7 mic=1 slept_ms=1921 restore_ms=311 cpu_power_down=0 rx=1"
   ],
   "user_acceptance": "三次都正常恢复",
-  "overnight_verified": false,
+  "overnight_verified": true,
   "nine_key_comparison": {
     "nine_key": "Display backlight off; keys.service, touch and network keep running. No esp_light_sleep_start.",
     "rlcd": "esp_light_sleep_start; GPIO44 wakes chip; display, USB, microphone and Wi-Fi restored.",
@@ -62,5 +62,11 @@
     "[WIFI_INFO] configured=1 stored=1 portal=0 pending=0 connected=1 ip=[local]",
     "[MIC_TEST] ok=1 frames=32000 L_rms=14 L_peak=115 R_rms=0 R_peak=2",
     "[SLEEP_INFO] count=1 result=0 reason=4 mic=1 slept_ms=2999 restore_ms=302 cpu_power_down=0 rx=1"
-  ]
+  ],
+  "overnight_user_acceptance": {
+    "date": "2026-11-07",
+    "report": "整夜休眠正常了",
+    "evidence": "user_report",
+    "measured_duration": null
+  }
 }
