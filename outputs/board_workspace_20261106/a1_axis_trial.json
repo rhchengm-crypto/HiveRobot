@@ -1,0 +1,259 @@
+{
+  "schema": 2,
+  "motion_issued": false,
+  "physical_validation_complete": false,
+  "model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+  "board_model_sha256": "f23867cf6f47fad0c72e242a0fbc5bdbdf523d87bb4f6e3d1c24d9361fd39c43",
+  "source_sha256": {
+    "left_arm_board_grasp.py": "81ea035ef93ff247ea26ffd814770e3e8be66ca76975bfdbdb1093e1fb6f042d",
+    "left_arm_board_kinematics.py": "03dd8362418be37dabe7f49a0bdde91a819d6514c62a28650950f93c58c9b39b",
+    "left_arm_board_collision.py": "0449749797c0e89bfa1762215ec7d818aeeca1dd9a03924f5568505dddfaa644",
+    "left_arm_board_transit.py": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f"
+  },
+  "start_source": "C:\\Users\\rhche\\OneDrive\\\u6587\u6863\\HiveRobot\\scripts\\data\\left_arm_v2_home.json",
+  "start_rad": {
+    "shoulder_front": 0.8363851308822632,
+    "shoulder_side": -2.853627920150757,
+    "shoulder_rotate": 2.3554208278656006,
+    "elbow": -1.2956817150115967,
+    "arm_roll": -2.657930850982666,
+    "wrist_side": 0.1668955534696579,
+    "wrist": -2.0780880451202393
+  },
+  "piece": "white_knight",
+  "requested_stage": "grasp",
+  "height_mm": 50.2,
+  "collision_scope": "finite board plus configured body scene; not complete self/occupied-board collision",
+  "body_registration_status": "nominal-old-chassis-registration; offline-only",
+  "search_failure_is_physical_unreachable_proof": false,
+  "results": [
+    {
+      "point": "a1",
+      "target_board_mm": [
+        27.5,
+        27.5,
+        50.2
+      ],
+      "success": false,
+      "message": "no feasible complete board path",
+      "failure_code": "no_complete_board_path",
+      "diagnostics": {
+        "code": "no_complete_board_path",
+        "start_rad": {
+          "shoulder_front": 0.8363851308822632,
+          "shoulder_side": -2.853627920150757,
+          "shoulder_rotate": 2.3554208278656006,
+          "elbow": -1.2956817150115967,
+          "arm_roll": -2.657930850982666,
+          "wrist_side": 0.1668955534696579,
+          "wrist": -2.0780880451202393
+        },
+        "target_board_mm": [
+          27.5,
+          27.5,
+          50.2
+        ],
+        "orientation_attempts": [
+          {
+            "message": "no reachable above pose with a board-plane-clear joint transit",
+            "details": {
+              "code": "above_ik_unsolved",
+              "above_target_cad_m": [
+                0.2517642436263052,
+                0.08629970172153198,
+                0.007818455917195238
+              ],
+              "ik_attempt_count": 16,
+              "best_ik_attempts": [
+                {
+                  "success": false,
+                  "position_error_mm": 4.631374402494382,
+                  "rotation_error_deg": 1.2043175705007028,
+                  "iterations": 11
+                },
+                {
+                  "success": false,
+                  "position_error_mm": 4.631375311359302,
+                  "rotation_error_deg": 1.204317060539057,
+                  "iterations": 12
+                },
+                {
+                  "success": false,
+                  "position_error_mm": 4.631375311359302,
+                  "rotation_error_deg": 1.204317060539057,
+                  "iterations": 12
+                }
+              ],
+              "ik_solutions": 0,
+              "blocked_path_count": 0,
+              "blocked_paths": []
+            },
+            "orientation_reference_xy_mm": [
+              82.5,
+              27.5
+            ]
+          },
+          {
+            "message": "no reachable above pose with a board-plane-clear joint transit",
+            "details": {
+              "code": "above_ik_unsolved",
+              "above_target_cad_m": [
+                0.2517642436263052,
+                0.08629970172153198,
+                0.007818455917195238
+              ],
+              "ik_attempt_count": 16,
+              "best_ik_attempts": [
+                {
+                  "success": false,
+                  "position_error_mm": 3.561658802927552,
+                  "rotation_error_deg": 0.7913866248332271,
+                  "iterations": 98
+                },
+                {
+                  "success": false,
+                  "position_error_mm": 3.561677777400237,
+                  "rotation_error_deg": 0.7913741668315275,
+                  "iterations": 94
+                },
+                {
+                  "success": false,
+                  "position_error_mm": 3.659298194000379,
+                  "rotation_error_deg": 0.7856405933698467,
+                  "iterations": 27
+                }
+              ],
+              "ik_solutions": 0,
+              "blocked_path_count": 0,
+              "blocked_paths": []
+            },
+            "orientation_reference_xy_mm": [
+              137.5,
+              27.5
+            ]
+          },
+          {
+            "message": "no reachable above pose with a board-plane-clear joint transit",
+            "details": {
+              "code": "above_ik_unsolved",
+              "above_target_cad_m": [
+                0.2517642436263052,
+                0.08629970172153198,
+                0.007818455917195238
+              ],
+              "ik_attempt_count": 16,
+              "best_ik_attempts": [
+                {
+                  "success": false,
+                  "position_error_mm": 12.629850895629632,
+                  "rotation_error_deg": 7.281290243790005,
+                  "iterations": 100
+                },
+                {
+                  "success": false,
+                  "position_error_mm": 12.629908358471116,
+                  "rotation_error_deg": 7.281275680947417,
+                  "iterations": 31
+                },
+                {
+                  "success": false,
+                  "position_error_mm": 12.629908400517138,
+                  "rotation_error_deg": 7.281275670305968,
+                  "iterations": 71
+                }
+              ],
+              "ik_solutions": 0,
+              "blocked_path_count": 0,
+              "blocked_paths": []
+            },
+            "orientation_reference_xy_mm": [
+              137.5,
+              192.5
+            ]
+          },
+          {
+            "message": "no reachable above pose with a board-plane-clear joint transit",
+            "details": {
+              "code": "above_ik_unsolved",
+              "above_target_cad_m": [
+                0.2517642436263052,
+                0.08629970172153198,
+                0.007818455917195238
+              ],
+              "ik_attempt_count": 16,
+              "best_ik_attempts": [
+                {
+                  "success": false,
+                  "position_error_mm": 5.195351501466648,
+                  "rotation_error_deg": 2.1842543181635006,
+                  "iterations": 32
+                },
+                {
+                  "success": false,
+                  "position_error_mm": 5.195354454561537,
+                  "rotation_error_deg": 2.184253293283388,
+                  "iterations": 63
+                },
+                {
+                  "success": false,
+                  "position_error_mm": 5.195354454561537,
+                  "rotation_error_deg": 2.184253293283388,
+                  "iterations": 63
+                }
+              ],
+              "ik_solutions": 0,
+              "blocked_path_count": 0,
+              "blocked_paths": []
+            },
+            "orientation_reference_xy_mm": [
+              192.5,
+              192.5
+            ]
+          },
+          {
+            "message": "no reachable above pose with a board-plane-clear joint transit",
+            "details": {
+              "code": "above_ik_unsolved",
+              "above_target_cad_m": [
+                0.2517642436263052,
+                0.08629970172153198,
+                0.007818455917195238
+              ],
+              "ik_attempt_count": 16,
+              "best_ik_attempts": [
+                {
+                  "success": false,
+                  "position_error_mm": 12.629850895629632,
+                  "rotation_error_deg": 7.281290243790005,
+                  "iterations": 100
+                },
+                {
+                  "success": false,
+                  "position_error_mm": 12.629908358471116,
+                  "rotation_error_deg": 7.281275680947417,
+                  "iterations": 31
+                },
+                {
+                  "success": false,
+                  "position_error_mm": 12.629908400517138,
+                  "rotation_error_deg": 7.281275670305968,
+                  "iterations": 71
+                }
+              ],
+              "ik_solutions": 0,
+              "blocked_path_count": 0,
+              "blocked_paths": []
+            },
+            "orientation_reference_xy_mm": null
+          }
+        ]
+      },
+      "elapsed_s": 16.17888479999965
+    }
+  ],
+  "tested": 1,
+  "successes": 0,
+  "failure_codes": {
+    "no_complete_board_path": 1
+  }
+}
