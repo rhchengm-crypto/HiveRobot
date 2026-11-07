@@ -1,0 +1,66 @@
+{
+  "before": [
+    "[SLEEP_INFO] count=1 result=0 reason=7 mic=1",
+    "[BATTERY] valid=1 gpio=4 raw=1623 voltage=4.116 estimated_percent=96 low=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=1 mode=1 width=400 height=300 ask=0 news=0",
+    "[SD_INFO] ready=1 records=0 dropped=0 queued=0",
+    "[WIFI_INFO] configured=1 stored=1 portal=0 pending=0 connected=1 ip=[local]"
+  ],
+  "info": [
+    "[SLEEP_INFO] count=0 result=-1 reason=0 mic=1 slept_ms=0 restore_ms=0 cpu_power_down=0 rx=1",
+    "[BATTERY] valid=1 gpio=4 raw=1625 voltage=4.112 estimated_percent=96 low=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=1 mode=1 width=400 height=300 ask=0 news=0",
+    "[SD_INFO] ready=1 records=0 dropped=0 queued=0",
+    "[WIFI_INFO] configured=1 stored=1 portal=0 pending=0 connected=1 ip=[local]"
+  ],
+  "after-long": [
+    "[MIC_TEST] ok=1 frames=32000 L_rms=279 L_peak=8297 R_rms=0 R_peak=2",
+    "[SLEEP_INFO] count=1 result=0 reason=4 mic=1 slept_ms=119999 restore_ms=310 cpu_power_down=0 rx=1",
+    "[BATTERY] valid=1 gpio=4 raw=1623 voltage=4.115 estimated_percent=96 low=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=1 mode=1 width=400 height=300 ask=0 news=0",
+    "[SD_INFO] ready=1 records=0 dropped=0 queued=0",
+    "[WIFI_INFO] configured=1 stored=1 portal=0 pending=0 connected=1 ip=[local]"
+  ],
+  "long_cycle_result": {
+    "sleep_ms": 119999,
+    "restore_ms": 310,
+    "wake_cause": "timer (4)",
+    "result": 0,
+    "cpu_power_down": false,
+    "microphone_frames": 32000,
+    "microphone_result": "ok=1 received in after-long capture",
+    "sd_ready": true,
+    "wifi_connected": true,
+    "host_note": "Initial probe used a 4-second microphone deadline; delayed completion was captured successfully immediately afterward. Probe deadline increased to 10 seconds.",
+    "overnight_verified": false
+  },
+  "physical": [
+    "[SLEEP_INFO] count=4 result=0 reason=7 mic=1 slept_ms=1921 restore_ms=311 cpu_power_down=0 rx=1",
+    "[SLEEP_INFO] count=4 result=0 reason=7 mic=1 slept_ms=1921 restore_ms=311 cpu_power_down=0 rx=1",
+    "[BATTERY] valid=1 gpio=4 raw=1624 voltage=4.115 estimated_percent=96 low=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=1 mode=1 width=400 height=300 ask=0 news=0",
+    "[SD_INFO] ready=1 records=0 dropped=0 queued=0",
+    "[WIFI_INFO] configured=1 stored=1 portal=0 pending=0 connected=1 ip=[local]",
+    "[MIC_TEST] ok=1 frames=32000 L_rms=16 L_peak=108 R_rms=0 R_peak=2",
+    "[SLEEP_INFO] count=4 result=0 reason=7 mic=1 slept_ms=1921 restore_ms=311 cpu_power_down=0 rx=1"
+  ],
+  "user_acceptance": "三次都正常恢复",
+  "overnight_verified": false,
+  "nine_key_comparison": {
+    "nine_key": "Display backlight off; keys.service, touch and network keep running. No esp_light_sleep_start.",
+    "rlcd": "esp_light_sleep_start; GPIO44 wakes chip; display, USB, microphone and Wi-Fi restored.",
+    "conclusion": "The two paths are different. Nine-key overnight success does not validate RLCD chip-sleep recovery."
+  },
+  "short": [
+    "[SLEEP] display_restored=1 slept_ms=2999 reason=4 result=0",
+    "[SLEEP] microphone_restored=1",
+    "[SLEEP] resumed result=0 reason=4 mic=1 restore_ms=302",
+    "[SLEEP_INFO] count=1 result=0 reason=4 mic=1 slept_ms=2999 restore_ms=302 cpu_power_down=0 rx=1",
+    "[BATTERY] valid=1 gpio=4 raw=1625 voltage=4.118 estimated_percent=96 low=0",
+    "[STATUS] chip=ESP32-S3 psram=8388608 mic=1 config=1 wifi=1 mode=1 width=400 height=300 ask=0 news=0",
+    "[SD_INFO] ready=1 records=0 dropped=0 queued=0",
+    "[WIFI_INFO] configured=1 stored=1 portal=0 pending=0 connected=1 ip=[local]",
+    "[MIC_TEST] ok=1 frames=32000 L_rms=14 L_peak=115 R_rms=0 R_peak=2",
+    "[SLEEP_INFO] count=1 result=0 reason=4 mic=1 slept_ms=2999 restore_ms=302 cpu_power_down=0 rx=1"
+  ]
+}
