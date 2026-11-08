@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "experiment_id": "20261107_d1_v25_height30_planning",
+  "request": {
+    "x_mm": 192.5,
+    "y_mm": 27.5,
+    "grip_height_mm": 30.2,
+    "piece": "white_knight",
+    "stage": "approach",
+    "claw_closed": false
+  },
+  "operator_preflight": "已清空、未移动，我在旁边",
+  "home_completed": true,
+  "d1_motion_issued": false,
+  "final_state": "Home; no Clearance or D1 motion after successful Home",
+  "active_models_modified": false,
+  "web_preview": {
+    "returncode": 1,
+    "reason": "120 second planning budget exhausted",
+    "log": "arm_run_1794095655352_16877.txt"
+  },
+  "extended_offline_search": {
+    "budget_s": 360,
+    "elapsed_s": 41.95509790000142,
+    "result": "no complete board path; above IK unsolved for available full-wrist orientation candidates"
+  },
+  "causal_diagnosis": {
+    "position_only_with_original_bounds_and_body_constraints": {
+      "above140_error_mm": 0.000559458653740653,
+      "final30_2_error_mm": 0.0024695551989694716
+    },
+    "interpretation": "Position-only targets are solvable; current fixed full-wrist orientation candidates obstruct the operational planner. Position-only answers are diagnostic, not executable grasp poses. Physical unreachability is not established."
+  },
+  "evidence_directory": "outputs/d1_test_20261107",
+  "models": {
+    "rigid_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "board_sha256": "d2b692b52065f66178f84dfa52bb211397da3da57a4a9e3c58e124b12d959e12"
+  },
+  "accepted_validation": false
+}

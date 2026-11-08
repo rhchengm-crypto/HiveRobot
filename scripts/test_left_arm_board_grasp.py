@@ -13,6 +13,59 @@ import chessboard_vision_v3_0_web_control as web
 
 
 class BoardGraspTests(unittest.TestCase):
+    def test_executor_latches_above_gains_for_every_contact_segment(self):
+        names=list(self.model.names);state={n:dict(pos=0.,vel=0.,tau=0.) for n in names}
+        arm=mock.Mock();arm.motors={n:object() for n in names}
+        arm.read_status.side_effect=lambda _: {n:dict(s) for n,s in state.items()}
+        def complete(target,**kwargs):
+            for n,q in target.items():
+                g=kwargs['move_gains'][n]
+                arm.ctrl.controlMIT(arm.motors[n],g['kp'],g['kd'],q,0.,0.)
+                state[n]['pos']=q
+        arm.move_targets_with_holds.side_effect=complete
+        gains={n:dict(kp=20.,kd=1.) for n in names};gains['shoulder_rotate']=dict(kp=36.,kd=4.5)
+        scheduled=[]
+        for kp in (36.,24.,30.):
+            g={n:dict(v) for n,v in gains.items()};g['shoulder_rotate']['kp']=kp
+            scheduled.append((g,None))
+        route={'stage':'approach','precomputed_before_motion':True,
+            'waypoints':[dict(stage=s,encoder_rad=dict.fromkeys(names,q),target_board_mm=[17.5,357.5,h])
+                         for s,q,h in [('source_above',.01,100.),('contact',.02,98.),('contact',.03,90.)]]}
+        with mock.patch.object(board,'check_transit_edge'), \
+             mock.patch.object(board,'board_motion_gains',side_effect=scheduled):
+            result=board.execute(arm,types.SimpleNamespace(HOME_GAINS=gains),route,geometry=(self.model,{}))
+        self.assertTrue(result['ok'])
+        calls=arm.move_targets_with_holds.call_args_list
+        self.assertEqual(len(calls),3)
+        for c in calls:
+            self.assertEqual(c.kwargs['move_gains']['shoulder_rotate']['kp'],36.)
+            self.assertEqual(c.kwargs['move_gains']['shoulder_rotate']['kd'],4.5)
+
+    def test_descent_retains_acquired_gains_instead_of_v31_36_to_24_switch(self):
+        old={'shoulder_rotate':dict(kp=36.,kd=4.5,q=1.8122273430215732,dq=0.,tau_ff=.1904232705982657)}
+        request={'shoulder_rotate':dict(kp=24.,kd=4.5,seconds=8.)}
+        gain,frozen=board.descent_gain_continuation(request,old)
+        self.assertEqual(gain['shoulder_rotate']['kp'],36.)
+        self.assertEqual(request['shoulder_rotate']['kp'],24.)
+        # A later pose scheduler or mutated live command cannot change the latch.
+        later,again=board.descent_gain_continuation(request,
+            {'shoulder_rotate':dict(kp=24.,kd=4.5)},frozen)
+        self.assertEqual(again,frozen)
+        self.assertEqual(later,gain)
+        ff,_=board.bridge_segment_feedforward(old,{'shoulder_rotate':1.8221179246902466},
+            {'shoulder_rotate':-.007326007355004549},gain,
+            {'shoulder_rotate':old['shoulder_rotate']['tau_ff']},{'shoulder_rotate':10.},
+            {'shoulder_rotate':old['shoulder_rotate']['q']})
+        self.assertEqual(ff['shoulder_rotate']['start_tau'],old['shoulder_rotate']['tau_ff'])
+
+    def test_descent_without_previous_frame_uses_requested_valid_gains(self):
+        request={'shoulder_rotate':dict(kp=24.,kd=4.5)}
+        gain,frozen=board.descent_gain_continuation(request,{})
+        self.assertEqual(gain,request)
+        for kp,kd in [(45.,4.5),(36.,5.),(float('nan'),4.5)]:
+            with self.assertRaises(ValueError):
+                board.descent_gain_continuation(request,{'shoulder_rotate':dict(kp=kp,kd=kd)})
+
     def test_continued_reference_retains_recorded_literal_mit_fields(self):
         name='shoulder_rotate'
         old={name:dict(kp=36.,kd=4.5,q=1.9910080775049408,dq=0.,tau_ff=-.370983796371311)}
@@ -90,18 +143,21 @@ class BoardGraspTests(unittest.TestCase):
 
     def test_prepared_approach_is_bound_to_fresh_request_sources_and_entry(self):
         import tempfile,time
-        args=types.SimpleNamespace(x_mm=82.5,y_mm=137.5,piece='white_knight',stage='approach',grip_height_mm=50.2)
-        route={'stage':'approach','start_rad':{'elbow':.5},'waypoints':[{'stage':'contact'}]}
+        args=types.SimpleNamespace(x_mm=82.5,y_mm=137.5,piece='white_knight',stage='approach',grip_height_mm=50.2,
+                                  model=str(self.here/'data/left_arm_general_dynamics.json'))
+        start=dict(zip(self.model.names,map(float,self.model.reference))); start['elbow']=.5
+        route={'stage':'approach','start_rad':start,
+               'waypoints':[{'stage':'contact','encoder_rad':dict(start,elbow=.51)}]}
         with tempfile.TemporaryDirectory() as d, \
              mock.patch.object(board,'prepared_source_hashes',return_value={'model':'abc'}):
             path=Path(d)/'approach_test.json'
             stamped=board.stamp_prepared_approach(route,args)
             path.write_text(json.dumps(stamped))
-            result=board.load_prepared_approach(path,args,{'elbow':.51})
+            result=board.load_prepared_approach(path,args,dict(start,elbow=.51))
             self.assertTrue(result['precomputed_before_motion'])
             self.assertEqual(result['waypoints'],route['waypoints'])
             self.assertNotIn('precomputed_before_motion',json.loads(path.read_text()))
-            with self.assertRaises(board.BoardPlanningError):board.load_prepared_approach(path,args,{'elbow':.7})
+            with self.assertRaises(board.BoardPlanningError):board.load_prepared_approach(path,args,dict(start,elbow=.7))
             args.x_mm+=1
             with self.assertRaises(ValueError):board.load_prepared_approach(path,args,{'elbow':.5})
             args.x_mm-=1

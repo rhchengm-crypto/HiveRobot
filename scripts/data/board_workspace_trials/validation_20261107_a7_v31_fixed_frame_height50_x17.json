@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "experiment_id": "20261107_a7_v31_fixed_frame_height50_x17",
+  "build": "seven-axis-board-grasp-v31-fixed-descent-frame",
+  "request": {
+    "x_mm": 17.5,
+    "y_mm": 357.5,
+    "grip_height_mm": 50.2,
+    "piece": "white_knight",
+    "stage": "approach",
+    "claw_closed": false
+  },
+  "changes": {
+    "shared_full_descent_wrist_frame_fixed": true,
+    "descent_axis_cone_deg": 0.0,
+    "joint_interpolated_edge_orientation_checked": true,
+    "new_fixed_XY_compensation": false,
+    "per_square_replay": false,
+    "full_path_precomputed_before_clearance": true,
+    "model_hold_adaptive_and_ordinary_clearance_logic_preserved": true,
+    "runtime_files": [
+      "left_arm_board_grasp.py",
+      "left_arm_board_task_pose.py",
+      "data/left_arm_board_workspace_candidate.json"
+    ]
+  },
+  "comparison": {
+    "v30_hover_mm": 140.0,
+    "v31_hover_mm": 100.2,
+    "v30_contact_peak_shoulder_rotate_velocity": 0.06593406945466995,
+    "same_36_to_24_kp_transition_also_occurred_in_v30": true,
+    "not_single_variable_comparison": true
+  },
+  "controller_validation": {
+    "motion_completed": false,
+    "same_serial_model_hold_completed": false,
+    "endpoint_settle_reached": false,
+    "fault": {
+      "event": "confirmed_encoder_oscillation",
+      "diagnostics": {
+        "joint": "shoulder_rotate",
+        "fast_velocity_reversals": 2,
+        "encoder_span_deg": 0.5027087531021085,
+        "reference_span_deg": 0.006808224667931174,
+        "peak_velocity_rad_s": 0.6520146727561951,
+        "window_seconds": 0.23997231799876317,
+        "feedback_source": "MIT-reply-cache",
+        "individual_feedback_freshness_verified": false
+      },
+      "wall_s": 1794111984.2523818,
+      "context": {
+        "stage": "contact",
+        "waypoint_index": 26,
+        "target_board_mm": [
+          17.5,
+          357.5,
+          98.2
+        ],
+        "attempt": null,
+        "phase": "interpolation_origin_ready"
+      }
+    },
+    "trace_integrity": {
+      "parsed_records": 5322,
+      "motor_frames": 4341,
+      "has_normal_close_footer": false,
+      "maximum_reported_queue_drops": 0,
+      "trailing_frames_not_guaranteed": "Emergency stop terminated the process; no normal close footer."
+    },
+    "shoulder_rotate_support_peak_velocity_rad_s": 2.219780206680298,
+    "support_did_not_settle_oscillation": true,
+    "operator_emergency_stop_executed": true,
+    "original_motion_process_exited": true
+  },
+  "operator_validation": {
+    "accepted": false,
+    "shaking": true,
+    "reports": [
+      "仍有抖动或其他异常，已急停",
+      "已停止、有可靠支撑，无下坠或卡压"
+    ],
+    "post_estop_state": "Stopped, reliably supported, no falling or trapping.",
+    "endpoint_height_accepted": null,
+    "lateral_drift_mm": null
+  },
+  "fitting": {
+    "eligible": false,
+    "reason": "Aborted due to confirmed encoder oscillation; operator emergency stop. Not a successful A7 descent or lateral-drift validation."
+  },
+  "root_cause_status": {
+    "established": [
+      "Trajectory reference did not command repeated fast reversals.",
+      "Shoulder rotate encoder oscillation continued after target and feedforward were frozen.",
+      "Fault support reused Kp24/Kd4.5 and did not promptly settle the oscillation.",
+      "The complete descent, endpoint settle and normal model hold were not reached."
+    ],
+    "unresolved": [
+      "Which gain/pose/drive-dynamics interaction initiated oscillation.",
+      "Whether full-frame descent reduces the previously reported physical 8mm drift.",
+      "Individual CAN feedback freshness and exact motor-internal stability margins."
+    ],
+    "gain_switch_alone_not_proven_root_cause": true,
+    "fault_support_inherited_unstable_command_law": true
+  },
+  "prepared_plan": "approach_a7_v31_height50_x17_20261107.json",
+  "execution_plan": "approach_209797b136517ee9.json",
+  "source_hashes": {
+    "rigid_model": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "board_model": "7ef5d7b8fdb1edd84a5869a7dae7ec1c24ff0040a656aaa5a4a7eea713ec5abb",
+    "planner": "bb7191b7a3239f93066dc2228fbee70b3ce22bc7c9788f238027edac1e785152",
+    "controller": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "motion_adapter": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "fault_support": "9376aab30c3aa10592df2845c3dc946a1e30abdce09f280e3160c0b68e072e0e",
+    "kinematics": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "collision": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "trace": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "task_pose": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+    "trajectory_support": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "general_motion": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47"
+  },
+  "evidence": {
+    "directory": "outputs/a7_v31_execution_20261107",
+    "collection": {
+      "motion_issued_by_collector": false,
+      "arm_process_not_interrupted": true,
+      "trace_snapshot_not_final": false,
+      "archive_directory": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_v31_20261107_1794112040482971693",
+      "rgb_frames": 510,
+      "depth_frames": 510,
+      "run": {
+        "action": "emergency-stop",
+        "ok": true,
+        "running": false,
+        "support_running": null,
+        "returncode": 0,
+        "full_log_path": null,
+        "duration_s": 2.079,
+        "post_move_model_hold": null
+      },
+      "control": {
+        "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_v31_20261107_1794112040482971693/control_evidence.zip",
+        "bytes": 1768870,
+        "sha256": "19eb9341bffb23d6af2625ffd34f52d85507a316a6bdb775525cfb973c470a71"
+      },
+      "rgbd": {
+        "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_v31_20261107_1794112040482971693/rgbd_evidence.zip",
+        "bytes": 64651354,
+        "sha256": "0305a48f1f9baceebdac174ec736ea7a22281c4b54e82783ed51101584c36300"
+      }
+    },
+    "execution_plan_sha256": "ef9bc210863e39e585963b5982c90e32db8a91a15efc11b4208fec613af163f7",
+    "archives_sha256_verified": true,
+    "rgb_frames": 510,
+    "depth_frames": 510,
+    "audit": "fault_audit.json",
+    "tests_passed": 130,
+    "test_scope": "Offline tests do not prove hardware closed-loop stability."
+  },
+  "no_motion_after_emergency_stop": true,
+  "github_uploaded_this_turn": false
+}

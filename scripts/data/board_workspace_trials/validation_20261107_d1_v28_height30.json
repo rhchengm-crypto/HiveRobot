@@ -1,0 +1,306 @@
+{
+  "schema": 1,
+  "experiment_id": "20261107_d1_v28_height30",
+  "build": "seven-axis-board-grasp-v28-approved-pose-bank",
+  "request": {
+    "board_location": "D1 square centre",
+    "x_mm": 192.5,
+    "y_mm": 27.5,
+    "grip_height_mm": 30.2,
+    "piece_parameter": "white_knight",
+    "stage": "approach",
+    "claw_closed": false
+  },
+  "workflow": [
+    "Verified existing Home staging pose; no additional Home motion in this trial",
+    "ordinary fixed Clearance",
+    "precomputed geometric approach",
+    "complete descent",
+    "existing endpoint settle",
+    "same-serial Model Hold"
+  ],
+  "precomputed_before_any_motion": true,
+  "prepared_plan": "approach_v28_d1_20261107.json",
+  "execution_plan": "approach_e3f03634fb90364b.json",
+  "motion_started_at": "2026-11-07 16:51:02",
+  "duration_s": 80.635,
+  "operator_validation": {
+    "accepted": true,
+    "motion_accepted": true,
+    "jitter": false,
+    "lateral_drift": false,
+    "contact": false,
+    "torso_gap_acceptable": true,
+    "gripper_orientation_acceptable": true,
+    "gripping_height_acceptable": true,
+    "extra_motion_during_hold_separately_reported": false,
+    "original_response": "所有动作符合预期，现在继续你之前参考库的工作"
+  },
+  "controller_validation": {
+    "returncode": 0,
+    "trace_records_total": 3860,
+    "complete_motor_frames": 3776,
+    "trace_closed": true,
+    "trace_dropped_frames": 0,
+    "trace_capture_errors": 0,
+    "oscillation_events": 0,
+    "descent_shoulder_rotate_peak_rad_s": 0.08058608323335648,
+    "model_hold_seconds": 5.013322591781616,
+    "same_serial_session": true,
+    "model_hold_max_error_deg": 0.021856605344040804,
+    "nominal_joint_target_reached": false,
+    "max_nominal_joint_error_deg": 0.9276262192769003,
+    "endpoint_settle_attempts": 3,
+    "segment_boundary_count": 10,
+    "max_segment_position_reference_jump_deg": 0.0,
+    "max_segment_feedforward_jump_Nm": 0.0,
+    "all_recorded_motion_sessions_apply": true,
+    "worker_error_frames": 0
+  },
+  "encoder_endpoint_rad": {
+    "shoulder_front": 1.054207682609558,
+    "shoulder_side": -2.400434970855713,
+    "shoulder_rotate": 2.606431722640991,
+    "elbow": 0.8146410584449768,
+    "arm_roll": -2.985999822616577,
+    "wrist_side": -0.2508201599121094,
+    "wrist": -2.8147172927856445
+  },
+  "sources": {
+    "left_arm_board_task_pose.py": "603979cb502a1e9c28d155a2bc221886d68348d2372413ace371ff0d4b78947e",
+    "left_arm_board_grasp.py": "bfdc5eb4ad8e8bc99ac9af673b050fa2d7665acd87a606b1a28b4186ad1eb99a",
+    "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "left_arm_board_collision.py": "7b7d572216e97dc493c739d1ef0edb2ee20cd9a9e0ecf047af7d8a05aa55928b",
+    "left_arm_board_transit.py": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f",
+    "left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+    "left_arm_fault_support.py": "9376aab30c3aa10592df2845c3dc946a1e30abdce09f280e3160c0b68e072e0e",
+    "left_arm_board_home_handoff.py": "0a341c4f34dddd0176c5229f33095d3bbb534616dd673bf8b7f6fa9e87f1a472",
+    "left_arm_motion_trace.py": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "left_arm_v3_1_motion_dynamics.py": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+    "chessboard_vision_v3_0_web_control.py": "5f6cfb5dce9a3bb15141711972676a5807b580ef2af2a8821f6c879c901459a2"
+  },
+  "model_snapshots": {
+    "left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "left_arm_board_workspace_candidate.json": "d93703104dd93217d6358dfef7ea962a00bf18df3309ed22eb15227f6d446443",
+    "left_arm_board_grasp.json": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57",
+    "left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+    "left_arm_v2_home.json": "b50735e9ae53e24cea91045c3ce2528e26ecd9dbb4990e8295e9a616c0d74d39",
+    "left_arm_v2_table_clearance.json": "dead14fe6a7bcdca9ccfd8235ed268b3c10c557b32d953de4f98d736cd59b2b1",
+    "left_arm_v2_8_clearance_bias.json": "0e837b073321a232febded5d21b6da02e696f7fa5ee904a460282f4215b276b5",
+    "left_arm_v2_6_adaptive_target_bias.json": "c6ed63842f8a37a22fb70fe2f086631378af852ea3e3bf93d6b707dfce26e62e",
+    "left_arm_v2_6_adaptive_hold_target_bias.json": "935ee941d36abb37b5834c12485814ece3a97d250aca8a4c34e71957cb40e0bd"
+  },
+  "evidence": {
+    "directory": "outputs/d1_v28_test_20261107",
+    "control_log": "arm_run_1794099062498_25382.txt",
+    "trace": "trace_1794099064097121361.jsonl",
+    "archives": {
+      "motion_issued_by_collector": false,
+      "archive_directory": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/d1_v28_20261107_1794099396030071012",
+      "control": {
+        "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/d1_v28_20261107_1794099396030071012/control_evidence.zip",
+        "bytes": 2027489,
+        "sha256": "37b68c789d7479c70e42c58e25b13148033f246fcea376974ce17ee0f81cb083"
+      },
+      "rgbd": {
+        "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/d1_v28_20261107_1794099396030071012/rgbd_evidence.zip",
+        "bytes": 99244250,
+        "sha256": "89259ae6f925313eace7b33aeaaa7138a9c2baff63e21189b9c49f676b2be5a9"
+      },
+      "rgb_frames": 795,
+      "depth_frames": 795,
+      "run": {
+        "ok": true,
+        "running": false,
+        "returncode": 0,
+        "action": "dynamics:model-hold-after:home",
+        "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794099290913_26120.txt",
+        "duration_s": 6.209,
+        "post_move_model_hold": {
+          "enabled": true,
+          "state": "complete",
+          "seconds": 5.0,
+          "joints": [
+            "shoulder_front",
+            "shoulder_side",
+            "shoulder_rotate",
+            "elbow",
+            "arm_roll",
+            "wrist_side",
+            "wrist"
+          ],
+          "motor_enable_mode": "reused-existing-enable",
+          "preceding_motion_enabled_joints": [
+            "arm_roll",
+            "elbow",
+            "shoulder_front",
+            "shoulder_rotate",
+            "shoulder_side",
+            "wrist",
+            "wrist_side"
+          ]
+        }
+      }
+    },
+    "manifest": {
+      "data/left_arm_v2_8_full_runs/arm_run_1794098246614_23238.txt": {
+        "bytes": 21630,
+        "sha256": "fd8b996b6c0ae6e1ac4972becc648d4e8da46b76ad9fcbce14f3dd1e67f09b17"
+      },
+      "data/left_arm_v2_8_full_runs/arm_run_1794098999589_25140.txt": {
+        "bytes": 15905,
+        "sha256": "d334fafe169c38b0256b9b86cb9f248e33954e2c717c0ab32543457d424ca9aa"
+      },
+      "data/left_arm_v2_8_full_runs/arm_run_1794099025916_25226.txt": {
+        "bytes": 10266,
+        "sha256": "e63237a24baea1b9f6e08259f227e6680e01d8b16668942938961ee2f9765546"
+      },
+      "data/left_arm_v2_8_full_runs/arm_run_1794099062498_25382.txt": {
+        "bytes": 504352,
+        "sha256": "62d895910f209fd5fd0d9123a6ab750942deefd72bc746651e89526db8028a14"
+      },
+      "data/left_arm_v2_8_full_runs/arm_run_1794099290913_26120.txt": {
+        "bytes": 10358,
+        "sha256": "41f50b2ab18a741d5b7799a8dea6fcabc638b802def434bda4197284501096ab"
+      },
+      "data/left_arm_v2_8_full_runs/arm_run_1794099208674_25805.txt": {
+        "bytes": 39485,
+        "sha256": "533cb65b9c7b489edf85b32a39c8f0444b12a4794cb2f4f8c67af2031aa25ab7"
+      },
+      "data/board_workspace_trials/approach_v28_d1_20261107.json": {
+        "bytes": 27358,
+        "sha256": "dd07fed044b1f30ad243869f5f9d6d21d23c21d9cb0d27637e304afb177c9bad"
+      },
+      "data/board_workspace_trials/approach_e3f03634fb90364b.json": {
+        "bytes": 26814,
+        "sha256": "7aab17c439cce154a32420a16ed31d236a4cf88554851090cb179b0d0ce1994b"
+      },
+      "data/board_motion_traces/trace_1794099064097121361.jsonl": {
+        "bytes": 7833965,
+        "sha256": "4618501a024ea08e4ce9bad341d79664291fe340e12ee0f52dc33f5f26f10d86"
+      },
+      "source/left_arm_board_task_pose.py": {
+        "bytes": 27232,
+        "sha256": "603979cb502a1e9c28d155a2bc221886d68348d2372413ace371ff0d4b78947e"
+      },
+      "source/left_arm_board_grasp.py": {
+        "bytes": 98709,
+        "sha256": "bfdc5eb4ad8e8bc99ac9af673b050fa2d7665acd87a606b1a28b4186ad1eb99a"
+      },
+      "source/left_arm_board_kinematics.py": {
+        "bytes": 17772,
+        "sha256": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4"
+      },
+      "source/left_arm_board_collision.py": {
+        "bytes": 12214,
+        "sha256": "7b7d572216e97dc493c739d1ef0edb2ee20cd9a9e0ecf047af7d8a05aa55928b"
+      },
+      "source/left_arm_board_transit.py": {
+        "bytes": 2572,
+        "sha256": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f"
+      },
+      "source/left_arm_v2_6.py": {
+        "bytes": 157029,
+        "sha256": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9"
+      },
+      "source/left_arm_v2_8.py": {
+        "bytes": 21016,
+        "sha256": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2"
+      },
+      "source/left_arm_fault_support.py": {
+        "bytes": 14110,
+        "sha256": "9376aab30c3aa10592df2845c3dc946a1e30abdce09f280e3160c0b68e072e0e"
+      },
+      "source/left_arm_board_home_handoff.py": {
+        "bytes": 5488,
+        "sha256": "0a341c4f34dddd0176c5229f33095d3bbb534616dd673bf8b7f6fa9e87f1a472"
+      },
+      "source/left_arm_motion_trace.py": {
+        "bytes": 2895,
+        "sha256": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461"
+      },
+      "source/left_arm_v3_1_motion_dynamics.py": {
+        "bytes": 18018,
+        "sha256": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c"
+      },
+      "source/left_arm_general_motion.py": {
+        "bytes": 20721,
+        "sha256": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47"
+      },
+      "source/chessboard_vision_v3_0_web_control.py": {
+        "bytes": 90032,
+        "sha256": "5f6cfb5dce9a3bb15141711972676a5807b580ef2af2a8821f6c879c901459a2"
+      },
+      "models/left_arm_general_dynamics.json": {
+        "bytes": 31263,
+        "sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+      },
+      "models/left_arm_board_workspace_candidate.json": {
+        "bytes": 22801,
+        "sha256": "d93703104dd93217d6358dfef7ea962a00bf18df3309ed22eb15227f6d446443"
+      },
+      "models/left_arm_board_grasp.json": {
+        "bytes": 15894,
+        "sha256": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57"
+      },
+      "models/left_arm_v3_1_dynamics.json": {
+        "bytes": 85181,
+        "sha256": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f"
+      },
+      "models/left_arm_v2_home.json": {
+        "bytes": 555,
+        "sha256": "b50735e9ae53e24cea91045c3ce2528e26ecd9dbb4990e8295e9a616c0d74d39"
+      },
+      "models/left_arm_v2_table_clearance.json": {
+        "bytes": 543,
+        "sha256": "dead14fe6a7bcdca9ccfd8235ed268b3c10c557b32d953de4f98d736cd59b2b1"
+      },
+      "models/left_arm_v2_8_clearance_bias.json": {
+        "bytes": 14908,
+        "sha256": "0e837b073321a232febded5d21b6da02e696f7fa5ee904a460282f4215b276b5"
+      },
+      "models/left_arm_v2_6_adaptive_target_bias.json": {
+        "bytes": 2877,
+        "sha256": "c6ed63842f8a37a22fb70fe2f086631378af852ea3e3bf93d6b707dfce26e62e"
+      },
+      "models/left_arm_v2_6_adaptive_hold_target_bias.json": {
+        "bytes": 25761,
+        "sha256": "935ee941d36abb37b5834c12485814ece3a97d250aca8a4c34e71957cb40e0bd"
+      },
+      "motion_records.jsonl": {
+        "bytes": 2098962,
+        "sha256": "c50044efe13787029a4db79b5e42352dd76cb38d55ab34a549e9a74ea83bd620"
+      },
+      "web_status.json": {
+        "bytes": 111209,
+        "sha256": "078941631e2bba9af0f0405afdd352a9a481d45d3e70333568477c86710fdcc8"
+      }
+    },
+    "collection_note": "Collection Web status was subsequent operator Home, not the D1 run; D1 outcome uses explicitly identified execution_complete and D1 control log."
+  },
+  "fitting": {
+    "data_role": "Prospective D1 validation using shared approved reference bank; no per-square trajectory or offsets",
+    "running_model_refitted": false,
+    "historical_gravity_inertia_samples_modified": false,
+    "external_tcp_ground_truth": null,
+    "external_force_ground_truth": null,
+    "driver_sample_freshness_independently_verified": false,
+    "physical_grasp_success_not_tested": true,
+    "accepted_scope": "One empty-load D1 approach/descent/hold; no claw closure or loaded lift",
+    "notes": "Requested XYZ is not measured TCP ground truth. Operator acceptance is qualitative. Preserve a grouped holdout if fitting later.",
+    "per_square_parameters_modified": false
+  },
+  "planner_changes": {
+    "exact_box_distance": true,
+    "approved_reference": "saved:white_queen_D1",
+    "upper_descent_axis_cone_deg": 20.0,
+    "terminal_full_frame_reference_tolerance_deg": 0.2864788975654116,
+    "terminal_full_frame_lock_mm": 10.0,
+    "common_extra_collision_margin_mm": 5.0,
+    "operating_bounds_modified": false,
+    "forced_acceptance": false
+  },
+  "operator_model_policy": "Treat operator-approved real posture/path as valid empirical evidence; investigate model discrepancies and correct approximations; preserve genuine checks and report unresolved differences honestly"
+}

@@ -1,0 +1,194 @@
+{
+  "schema": 1,
+  "experiment_id": "20261107_a7_expanded_angle_height30",
+  "build": "seven-axis-board-grasp-v28-approved-pose-bank",
+  "request": {
+    "board_location": "A7 square centre",
+    "x_mm": 27.5,
+    "y_mm": 357.5,
+    "grip_height_mm": 30.2,
+    "piece_parameter": "white_knight",
+    "stage": "approach",
+    "claw_closed": false
+  },
+  "workflow": [
+    "existing Home",
+    "ordinary fixed Clearance",
+    "precomputed geometric approach",
+    "complete descent",
+    "existing endpoint settle",
+    "same-serial Model Hold"
+  ],
+  "precomputed_before_any_motion": true,
+  "prepared_plan": "approach_a7_20261107.json",
+  "execution_plan": "approach_c96e76e4f9c21d42.json",
+  "selected_reference": "validated:20261107_a6_v25_height30",
+  "reference_role": "IK seed and task pose; newly calculated A7 path, no replay",
+  "duration_s": 114.021,
+  "operator_validation": {
+    "accepted": false,
+    "motion_accepted": false,
+    "contact": true,
+    "gripping_height_acceptable": false,
+    "terminal_position_acceptable": true,
+    "gripper_orientation_acceptable": true,
+    "approach_tool_clearance_acceptable": false,
+    "jitter": null,
+    "lateral_drift": null,
+    "torso_gap_acceptable": null,
+    "original_response": "这次运动不符合预期，虽然爪夹最后到达的位置和朝向可以接受，但是高度已经接触棋盘，需抬高10mm。最重要的一点，是机械臂在运行到上方的过程中，爪夹没有抬起，几乎是贴着棋盘过去的，可以和A6的运动轨迹比较一下"
+  },
+  "controller_validation": {
+    "returncode": 0,
+    "trace_records_total": 5562,
+    "complete_motor_frames": 5448,
+    "trace_closed": true,
+    "trace_dropped_frames": 0,
+    "trace_capture_errors": 0,
+    "oscillation_events": 0,
+    "same_serial_session": true,
+    "model_hold_seconds": 5.01246452331543,
+    "model_hold_max_error_deg": 0.021856605344040804,
+    "nominal_joint_target_reached": false,
+    "nominal_error_deg": {
+      "shoulder_front": 3.3225126542602275,
+      "shoulder_side": 0.27523068078997076,
+      "shoulder_rotate": -0.6980930016906034,
+      "elbow": 1.998611133784976,
+      "arm_roll": 0.1748471131285845,
+      "wrist_side": 0.6329658362063445,
+      "wrist": 1.1350076958255786
+    }
+  },
+  "encoder_endpoint_rad": {
+    "shoulder_front": -0.09136339277029037,
+    "shoulder_side": -2.727741003036499,
+    "shoulder_rotate": 1.8938353061676025,
+    "elbow": -0.80663001537323,
+    "arm_roll": -2.2528038024902344,
+    "wrist_side": -0.45643550157546997,
+    "wrist": -2.2348744869232178
+  },
+  "model_snapshots": {
+    "left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "left_arm_board_workspace_candidate.json": "c1a3d0fd2e9e23f334f826df71a9689b5378424993cf1e2468915d23cf54b6e9",
+    "left_arm_board_grasp.json": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57",
+    "left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+    "left_arm_v2_home.json": "b50735e9ae53e24cea91045c3ce2528e26ecd9dbb4990e8295e9a616c0d74d39",
+    "left_arm_v2_table_clearance.json": "dead14fe6a7bcdca9ccfd8235ed268b3c10c557b32d953de4f98d736cd59b2b1",
+    "left_arm_validated_path_library.json": "bce67a01c6b073c66ef79a27405ef1710c58429ac8f41bb28913942b38839b64",
+    "left_arm_v2_8_clearance_bias.json": "73570f3cd5e329bc80b3fc018e58ef787aa9f68cc325f8942a30e2c23eb6fbdd",
+    "left_arm_v2_6_adaptive_target_bias.json": "c6ed63842f8a37a22fb70fe2f086631378af852ea3e3bf93d6b707dfce26e62e",
+    "left_arm_v2_6_adaptive_hold_target_bias.json": "935ee941d36abb37b5834c12485814ece3a97d250aca8a4c34e71957cb40e0bd"
+  },
+  "sources": {
+    "left_arm_board_grasp.py": "bfdc5eb4ad8e8bc99ac9af673b050fa2d7665acd87a606b1a28b4186ad1eb99a",
+    "left_arm_board_task_pose.py": "48bf6adac3174a0851425c07f3a0dc1dab7c4a54c13ed9495671c2ba1d2d3671",
+    "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "left_arm_board_collision.py": "7b7d572216e97dc493c739d1ef0edb2ee20cd9a9e0ecf047af7d8a05aa55928b",
+    "left_arm_board_transit.py": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f",
+    "left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+    "left_arm_fault_support.py": "9376aab30c3aa10592df2845c3dc946a1e30abdce09f280e3160c0b68e072e0e",
+    "left_arm_board_home_handoff.py": "0a341c4f34dddd0176c5229f33095d3bbb534616dd673bf8b7f6fa9e87f1a472",
+    "left_arm_motion_trace.py": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "left_arm_v3_1_motion_dynamics.py": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+    "chessboard_vision_v3_0_web_control.py": "5f6cfb5dce9a3bb15141711972676a5807b580ef2af2a8821f6c879c901459a2"
+  },
+  "angle_range_trial": {
+    "requested_by_user": true,
+    "requested_target_board_mm": [
+      27.5,
+      357.5,
+      30.2
+    ],
+    "previous_limits_rad": [
+      [
+        0.10718675940139713,
+        2.1103306165446476
+      ],
+      [
+        -3.122766768049164,
+        -2.1797434934864803
+      ],
+      [
+        1.6994657167683405,
+        2.9232550016154484
+      ],
+      [
+        -1.4702146402110297,
+        0.838674008846283
+      ],
+      [
+        -3.421080624174042,
+        -2.3483554968128963
+      ],
+      [
+        -0.718707775186463,
+        0.5848098746051031
+      ],
+      [
+        -3.4836426130046085,
+        -0.8567862161885065
+      ]
+    ],
+    "physical_joint_limits_verified": false,
+    "scope": "explicit empty approach trial; no per-square IK parameters or replay",
+    "full_period_diagnostic_sha256": "a2821b8527a3d0f96ee90dea3bedd2cb73b886820c23d518f94613c2a37f6ede"
+  },
+  "evidence": {
+    "directory": "outputs/a7_execution_20261107",
+    "control_log": "arm_run_1794101005121_29275.txt",
+    "trace": "trace_1794101006747544649.jsonl",
+    "archives": {
+      "motion_issued_by_collector": false,
+      "archive_directory": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_20261107_1794101133132347511",
+      "rgb_frames": 344,
+      "depth_frames": 344,
+      "run": {
+        "action": "dynamics:board-grasp",
+        "ok": true,
+        "running": false,
+        "returncode": 0,
+        "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794101005121_29275.txt",
+        "duration_s": 114.021,
+        "post_move_model_hold": {
+          "enabled": true,
+          "state": "complete",
+          "same_serial_session": true,
+          "seconds": 5.0,
+          "joints": [
+            "shoulder_front",
+            "shoulder_side",
+            "shoulder_rotate",
+            "elbow",
+            "arm_roll",
+            "wrist_side",
+            "wrist"
+          ]
+        }
+      },
+      "control": {
+        "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_20261107_1794101133132347511/control_evidence.zip",
+        "bytes": 2554123,
+        "sha256": "4ce684a6a5e72e4edb7501cb3d94ee10d3b7ecf2829613b397232fd31f4adcb8"
+      },
+      "rgbd": {
+        "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_20261107_1794101133132347511/rgbd_evidence.zip",
+        "bytes": 43208977,
+        "sha256": "44f2b1b5d798f9304e0b4cf0f484ba9e8ce87eb13804e7fac411c20c9bae1d6a"
+      }
+    },
+    "archives_downloaded_sha256_verified": true,
+    "rgb_frames": 344,
+    "depth_frames": 344
+  },
+  "fitting": {
+    "eligible": false,
+    "reason": "Rejected: board contact at endpoint and insufficient approach tool clearance; retain as negative evidence, not an accepted path reference."
+  },
+  "physical_limits_certified": false,
+  "physical_board_target_verified": false,
+  "requested_next_height_mm": 40.2
+}

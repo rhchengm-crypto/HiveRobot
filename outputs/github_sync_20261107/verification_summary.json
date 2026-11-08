@@ -1,0 +1,46 @@
+{
+  "scope": "read-only source audit and offline regression; no robot serial/network actions",
+  "local_test_command": "python -X utf8 -m unittest -v test_left_arm_trajectory_support test_left_arm_board_grasp test_left_arm_board_collision test_left_arm_board_home_handoff test_left_arm_board_task_pose test_left_arm_general_motion test_left_arm_gripper_clearance test_left_arm_fault_support",
+  "test_working_directory": "scripts",
+  "regression_status": "passed",
+  "audited_source_and_data_paths": 41,
+  "secret_pattern_scan_findings": [],
+  "secret_scan_limitations": "Pattern-based review of changed tracked and untracked scripts text files; not a proof of absence; archives and raw conversation exports need independent publication selection.",
+  "code_sha256": {
+    "scripts/build_left_arm_path_reference_library.py": "e5a09a67e86773e7a0f8211ce7394ad2e40538021a4bf95c2e49ee5a548d9b16",
+    "scripts/left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "scripts/left_arm_board_grasp.py": "b0a4b9a1353e4198a112712e492139b96450ad7be89e17f7b7e4d4efccc4d7ac",
+    "scripts/left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "scripts/left_arm_board_task_pose.py": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+    "scripts/left_arm_fault_support.py": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+    "scripts/left_arm_trajectory_support.py": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "scripts/test_left_arm_board_collision.py": "1bff0ba0f4a8ac62fce3e5593018c4f7cfbd62a92c3a04b1a2eddb2cd547d0ab",
+    "scripts/test_left_arm_board_grasp.py": "dbcfee2ed74418720872ea088a77807a6d533e5006af7dab723f29f7a753875a",
+    "scripts/test_left_arm_board_task_pose.py": "bdd16a1b82d6f42e08239e6eb0d66648f44aded1e3e33bca5711faab9aa4b4b6",
+    "scripts/test_left_arm_fault_support.py": "31c47a2da23559574705456ab3c9a1c29b9579ba4b831a9dc1297723fae79fbf",
+    "scripts/test_left_arm_gripper_clearance.py": "0ac0183b309134f49dc2f0d7fe792998d3641edc378a3143e2c91fc97220877d",
+    "scripts/test_left_arm_trajectory_support.py": "87f207cb2e5c92b662c650251b426afc9a41de914ec64c6f8817f1e102a54370"
+  },
+  "review_notes": [
+    "v32 latches acquired contact-stage gains, preventing a shoulder_rotate Kp 36-to-24 transition; geometry and reference trajectories remain computed.",
+    "Gripper envelope and exact outside-box separation improve geometric collision validation; CAD and encoder predictions remain model values rather than external measurements.",
+    "Fault-only soft recovery applies only to the confirmed implicated oscillating joint, preserves fixed target and static load transfer, and does not re-enable motors.",
+    "A7 v32 user accepted empty-load motion, no oscillation, no drift, no contact, and acceptable height; grasp closure and loaded lifting are not tested.",
+    "Successful v32 motion did not exercise the new oscillation recovery branch; unique physical cause of earlier oscillation is not independently proven.",
+    "Mac migration package contains private conversation and user-attachment exports; publication should exclude this duplicated private migration bundle."
+  ],
+  "tests_run": 138,
+  "test_duration_s": 38.163,
+  "test_exit_code": 0,
+  "python_version": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "offline_verification_log_sha256": "5d352eb778dc2d503c4aad033c8d6f7fd495a36ea9289b3228c1199322b12c02",
+  "library_acceptance": {
+    "records": 11,
+    "eligible_reference_count": 10,
+    "a7_v32_operator_accepted": true,
+    "common_model_unchanged_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "selection_policy": "primary-then-nearest-validated-path",
+    "qualitative_only": true
+  },
+  "output_secret_scan": "Broader publication scan delegated to root; own scripts-only scan completed with no findings."
+}

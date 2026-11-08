@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "experiment_id": "20261107_d1_v27_queen_reference_planning",
+  "motion_issued": false,
+  "active_runtime_modified": false,
+  "request": {
+    "x_mm": 192.5,
+    "y_mm": 27.5,
+    "grip_height_mm": 30.2,
+    "stage": "approach",
+    "piece_parameter": "white_knight",
+    "claw_commanded": false
+  },
+  "current_bishop_reference_result": "no endpoint meets the approved complete-frame tolerance; see extended_search_diagnosis.json",
+  "selected_reference": "Saved Moves white_queen_D1",
+  "reference_selection": "operator-requested alternative orientation and IK initialization; same numerical planner; no conditional joint replay or XYZ compensation",
+  "result": {
+    "success": true,
+    "waypoints": 30,
+    "orientation_acceptance": {
+      "constraint": "bounded-axis-with-fixed-terminal-frame",
+      "passed": true,
+      "max_axis_deviation_deg": 12.513323634276736,
+      "axis_cone_deg": 20.0,
+      "terminal_reference_error_deg": 0.00029517946148201955,
+      "terminal_reference_tolerance_deg": 0.2864788975654116,
+      "max_adjacent_rotation_deg": 2.020856129604376,
+      "adjacent_rotation_limit_deg": 6.0,
+      "terminal_full_frame_max_error_deg": 0.016010181753022157,
+      "terminal_full_frame_tolerance_deg": 0.2864788975654116,
+      "terminal_lock_mm": 10.0,
+      "max_position_error_mm": 0.42966463401077404,
+      "position_tolerance_mm": 0.5,
+      "checked_task_samples": 10,
+      "physical_pose_verified": false
+    },
+    "posture_selection": {
+      "policy": "endpoint-first complete reverse branch and checked transit",
+      "score": 24.508180887282627,
+      "feasible_orientation_count": 1,
+      "waypoint_body_clearance_lower_bound_mm": 10.214363389640214,
+      "posture_load_preference": {
+        "elbow_height_mean_mm": 216.41070704922248,
+        "elbow_height_peak_mm": 281.73189139741146,
+        "elbow_height_terminal_mm": 183.11577284219277,
+        "nominal_gravity_squared_mean_Nm2": 17.531351324278276,
+        "added_cost": 21.99169773140781,
+        "physical_load_independently_verified": false
+      },
+      "per_square_parameters": false
+    },
+    "terminal_encoder_rad": {
+      "shoulder_front": 1.0619564950882263,
+      "shoulder_side": -2.4166251026099217,
+      "shoulder_rotate": 2.609562999650256,
+      "elbow": 0.8018684279613382,
+      "arm_roll": -2.999298224961306,
+      "wrist_side": -0.25368648337945254,
+      "wrist": -2.82120415573208
+    },
+    "elapsed_s": 8.728059799999755,
+    "motion_issued": false,
+    "active_runtime_modified": false,
+    "reference": "Saved Moves white_queen_D1",
+    "saved_pose_board_tcp_mm": [
+      207.76100342173268,
+      25.75257871574354,
+      39.2894797789863
+    ],
+    "operating_bounds_modified": false
+  },
+  "runtime_source_hashes": {
+    "left_arm_board_grasp.py": "86f61c7e3a565196989edc930e677944d7a86223857be330c749c990917fcb16",
+    "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "left_arm_board_collision.py": "7b7d572216e97dc493c739d1ef0edb2ee20cd9a9e0ecf047af7d8a05aa55928b",
+    "left_arm_board_task_pose.py": "e6194f4da471a04bc540e4d1a074ec125eb18f0f8cf5efb5610fec369d9c22c1",
+    "data/left_arm_board_workspace_candidate.json": "707c0fb3302b0603499058a93e2456556744e88ab8ef780f69831db23794fc36"
+  },
+  "reference_candidate_sha256": "77ba7afdd60bf4cdab411139b3f0413d0f9c848d98806d6b1765fd144955f350",
+  "model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+  "current_runtime_candidate_changed": false,
+  "accepted_physical_validation": false,
+  "next_step": "If requested, add approved orientations as a coordinate-independent common reference bank and prepare the executable path under the matching config hash before any motion",
+  "evidence_directory": "outputs/d1_v27_test_20261107"
+}

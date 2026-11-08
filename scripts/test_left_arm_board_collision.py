@@ -6,7 +6,7 @@ from unittest import mock
 
 import numpy as np
 
-from left_arm_board_collision import BodyCollisionScene, segment_box_clearance
+from left_arm_board_collision import BodyCollisionScene, segment_box_clearance, segment_box_distance
 from left_arm_board_kinematics import solve_ik
 import left_arm_board_grasp as board
 from left_arm_board_transit import connect_path
@@ -41,6 +41,30 @@ class CollisionTests(unittest.TestCase):
         gap, _ = segment_box_clearance([2., 2., 0], [3., 2., 0],
                                        np.zeros(3), np.eye(3), np.ones(3))
         self.assertEqual(gap, 1.)  # Conservative vs Euclidean sqrt(2).
+
+    def test_exact_corner_separation_does_not_use_plane_lower_bound(self):
+        gap, fraction = segment_box_distance([2., 0., 0.], [0., 2., 0.],
+            np.zeros(3), np.eye(3), np.full(3, .5))
+        self.assertAlmostEqual(gap, np.sqrt(.5))
+        self.assertAlmostEqual(fraction, .5)
+        crossing, _ = segment_box_distance([-2., 0., 0.], [2., 0., 0.],
+            np.zeros(3), np.eye(3), np.ones(3))
+        self.assertLess(crossing, 0.)
+
+    def test_saved_bishop_corner_false_positive_regression(self):
+        here = Path(__file__).parent
+        model = RigidBodyModel.load(here/'data/left_arm_general_dynamics.json')
+        cfg = json.loads((here/'data/left_arm_board_workspace_candidate.json').read_text(encoding='utf-8'))
+        saved = json.loads((here/'data/left_arm_v2_6_saved_moves.json').read_text(encoding='utf-8'))['moves']['white_bishop_place']['pose']
+        q = np.array([saved[n] for n in model.names])
+        scene = BodyCollisionScene(model, cfg)
+        row = next(r for r in scene.evaluate(q, details=True)
+                   if r['capsule']=='wrist_side-to-wrist' and r['obstacle']=='torso_mesh_obb')
+        capsule = next(c for c in cfg['body_collision']['capsules'] if c['name']=='wrist_side-to-wrist')
+        expected = 42.4086567889481-1000*(capsule['radius_m']+capsule['margin_m'])
+        self.assertAlmostEqual(row['clearance_lower_bound_mm'], expected, places=6)
+        self.assertGreater(row['clearance_lower_bound_mm'], 0.)
+        board.check_board_intersection(model, q, cfg)
 
     def test_rotated_box_uses_declared_frame(self):
         axes = np.array([[0., -1., 0.], [1., 0., 0.], [0., 0., 1.]])
@@ -135,6 +159,7 @@ class CollisionTests(unittest.TestCase):
         model = RigidBodyModel.load(here/'data/left_arm_general_dynamics.json')
         cfg = json.loads((here/'data/left_arm_board_workspace_candidate.json').read_text(encoding='utf-8'))
         cfg.pop('support_surface', None)  # Isolate the synthetic thin obstacle.
+        cfg.pop('gripper_vertex_envelope', None)
         # Deliberately narrow synthetic obstacle to expose sampling aliasing.
         # Its dimensions are TEST data, never deployment geometry.
         start, goal = model.reference.copy(), model.reference.copy()
@@ -159,10 +184,12 @@ class CollisionTests(unittest.TestCase):
         here = Path(__file__).parent
         model = RigidBodyModel.load(here/'data/left_arm_general_dynamics.json')
         cfg = json.loads((here/'data/left_arm_board_workspace_candidate.json').read_text(encoding='utf-8'))
+        cfg.pop('gripper_vertex_envelope', None)  # Isolate the link/table halfspace regression.
         home = json.loads((here/'data/left_arm_v2_home.json').read_text())['joints']
         q = np.array([home[n] for n in model.names])
         old = copy.deepcopy(cfg)
         old.pop('support_surface')
+        old.pop('gripper_vertex_envelope', None)  # Reproduce the historical axes-only scene.
         board.check_board_intersection(model, q, old)
         with self.assertRaises(board.BoardPlanningError) as failure:
             board.check_board_intersection(model, q, cfg)

@@ -26,7 +26,7 @@ from left_arm_board_collision import collision_scene, board_prism_clearances
 from left_arm_fault_support import FaultSupport, BoardWatchdog, MotionStop, segment_timing
 
 HERE = Path(__file__).resolve().parent
-PLANNER_BUILD = 'seven-axis-board-grasp-v25-consistent-dynamics-origin'
+PLANNER_BUILD = 'seven-axis-board-grasp-v32-descent-gain-continuity'
 BOARD_EXECUTION_SUSPENDED = False
 SUPPORTED_EXECUTION_STAGES = ('above', 'touch', 'approach', 'cartesian-check')
 BOARD_EXECUTION_SUSPENSION_REASON = (
@@ -62,6 +62,9 @@ def load_board_config(path, model):
     if limits.shape != (model.n, 2) or not np.isfinite(limits).all() or np.any(limits[:, 0] >= limits[:, 1]):
         raise ValueError('invalid operating bounds')
     collision_scene(model, cfg)  # Validate an explicitly enabled body scene.
+    if cfg.get('continuous_grasp_search', {}).get('enabled'):
+        from left_arm_board_task_pose import task_settings
+        task_settings(cfg)
     return cfg
 
 
@@ -144,7 +147,11 @@ def check_transit_edge(model, start, goal, cfg, keepalive=None):
         # Triangle-inequality radius from each axis to the TCP bounds motion
         # of every checked link-axis endpoint as well. Encoder signs are +/-1.
         lengths = np.linalg.norm(np.diff(model.points, axis=0), axis=1)
-        radii = np.r_[np.cumsum(lengths[::-1])[::-1], 0.]+np.linalg.norm(cfg['tcp_in_wrist_frame_m'])
+        tool_radius = np.linalg.norm(cfg['tcp_in_wrist_frame_m'])
+        if cfg.get('gripper_vertex_envelope'):
+            tool_radius = max(tool_radius, np.linalg.norm(
+                cfg['gripper_vertex_envelope']['vertices_in_wrist_frame_m'], axis=1).max())
+        radii = np.r_[np.cumsum(lengths[::-1])[::-1], 0.]+tool_radius
         def clearance(q):
             if keepalive is not None:keepalive()
             check_planning_budget(cfg)
@@ -271,12 +278,56 @@ def lower_elbow_goal(model, cfg, goal, target_position, desired_rotation):
     return current
 
 
+def transit_clearance_config(cfg):
+    """The same CAD tool travel clearance for every target, above contact height."""
+    envelope = cfg.get('gripper_vertex_envelope')
+    if envelope is None:
+        return cfg
+    minimum = float(envelope.get('minimum_height_mm', 5.))
+    travel = float(envelope['travel_minimum_height_mm'])
+    if not math.isfinite(minimum) or minimum < 0 or not math.isfinite(travel) or travel < minimum:
+        raise ValueError('gripper travel clearance must be finite and at least contact clearance')
+    return dict(cfg, _gripper_min_height_mm=travel)
+
+
+def check_planned_gripper_clearance(model, cfg, trajectory):
+    """Recheck each commanded interpolation, including the approach detour."""
+    envelope = cfg.get('gripper_vertex_envelope')
+    if envelope is None:
+        return None
+    travel_cfg = transit_clearance_config(cfg)
+    previous = np.array([trajectory['start_rad'][n] for n in model.names])
+    minima = {}
+    for index, row in enumerate(trajectory['waypoints']):
+        travel = row['stage'] in ('entry_clearance', 'entry_search', 'source_above')
+        stage_cfg = travel_cfg if travel else cfg
+        q = np.array([row['encoder_rad'][n] for n in model.names])
+        try:
+            check_transit_edge(model, previous, q, stage_cfg)
+        except BoardPlanningError as exc:
+            raise BoardPlanningError('planned gripper travel clearance failed',
+                dict(code='planned_gripper_clearance_failed', waypoint_index=index,
+                     stage=row['stage'], cause=exc.diagnostics)) from exc
+        scene = collision_scene(model, stage_cfg)
+        rows = scene.evaluate(q, details=True)
+        witness = next(v for v in rows if v.get('code')=='gripper_surface_clearance')
+        key = 'travel' if travel else 'task'
+        minima[key] = min(minima.get(key, float('inf')), witness['lowest_vertex_height_mm'])
+        previous = q
+    return dict(passed=True, complete_edges_checked=True,
+        travel_minimum_required_mm=envelope['travel_minimum_height_mm'],
+        task_minimum_required_mm=envelope['minimum_height_mm'],
+        waypoint_minimum_vertex_heights_mm=minima,
+        physical_clearance_verified=False, gripper_opening=envelope.get('opening_scope'))
+
+
 def find_entry_transit(model, start, candidates, cfg):
     """Try direct edges first, then checked raised reference waypoints.
 
     A reference is a configuration-space waypoint, not a saved grasp action.
-    Both legs must pass all existing board checks and operating bounds.
+    Every edge retains the same full-tool travel floor and operating bounds.
     """
+    cfg = transit_clearance_config(cfg)
     blocked = []
     ordered = sorted(candidates, key=lambda pair: pair[0])
     if cfg.get('lower_elbow_nullspace'):
@@ -518,18 +569,33 @@ def check_planned_tool_orientation(model, cfg, result):
     """Audit task endpoints; free transit need not already have grasp orientation."""
     if cfg.get('tool_orientation_constraint') != 'full-wrist':
         return None
+    variable = float(cfg.get('continuous_grasp_search', {}).get('descent_axis_cone_deg', 0.))
+    if variable and result.get('task_pose_search', {}).get('descent_axis_cone_deg'):
+        from left_arm_board_task_pose import audit_bounded_descent_orientation
+        return audit_bounded_descent_orientation(model, cfg, result)
     desired=np.asarray(cfg['board_to_cad_rotation'])@np.asarray(result['selected_wrist_rotation_in_board'])
     above=[row for row in result['waypoints'] if row['stage']=='source_above']
     rows=above[-1:]+[row for row in result['waypoints'] if row['stage'] in ('contact','lift')]
     if not rows:
         return None
     errors=[]
+    previous=None
+    edge_samples=0
     for row in rows:
         q=np.array([row['encoder_rad'][n] for n in model.names])
         actual=tcp_pose(model,q,cfg['tcp_in_wrist_frame_m'])[:3,:3]
         errors.append(float(np.linalg.norm(rotation_error(desired,actual))))
+        if previous is not None:
+            count=max(1,int(math.ceil(np.max(np.abs(q-previous))/math.radians(.5))))
+            for fraction in np.linspace(0.,1.,count+1)[1:-1]:
+                intermediate=previous+fraction*(q-previous)
+                orientation=tcp_pose(model,intermediate,cfg['tcp_in_wrist_frame_m'])[:3,:3]
+                errors.append(float(np.linalg.norm(rotation_error(desired,orientation))))
+                edge_samples+=1
+        previous=q
     audit=dict(constraint='full-gripper-frame',checked_task_samples=len(errors),
         max_error_deg=math.degrees(max(errors)),tolerance_deg=math.degrees(.005),
+        checked_task_edge_samples=edge_samples,max_joint_sample_step_deg=.5,
         free_transit_excluded=True,physical_pose_verified=False)
     if max(errors)>.005+1e-8:
         raise BoardPlanningError('planned complete gripper orientation violates task constraint',
@@ -567,6 +633,14 @@ def plan(model, cfg, start, x_mm, y_mm, piece='white_bishop', stage='above', hei
         cfg['_planning_deadline'] = time.monotonic()+budget
     if stage == 'cartesian-check':
         return plan_cartesian_check(model, cfg, start, x_mm, y_mm, piece, height_mm)
+    if stage == 'approach' and cfg.get('continuous_grasp_search', {}).get('enabled'):
+        from left_arm_board_task_pose import plan_from_approved_references
+        result = plan_from_approved_references(model, cfg, start, x_mm, y_mm, piece,
+                                             height_mm, sys.modules[__name__])
+        audit = check_planned_gripper_clearance(model, cfg, result)
+        if audit is not None:
+            result['gripper_clearance_acceptance'] = audit
+        return result
     hints = sorted(cfg.get('orientation_hints', []),
                    key=lambda h: np.linalg.norm(np.array(h['board_xy_mm'])-[x_mm, y_mm]))
     choices = hints + [cfg['profiles'][piece]]
@@ -595,6 +669,9 @@ def plan(model, cfg, start, x_mm, y_mm, piece='white_bishop', stage='above', hei
             orientation_audit=check_planned_tool_orientation(model,cfg,result)
             if orientation_audit is not None:
                 result['orientation_acceptance']=orientation_audit
+            tool_audit = check_planned_gripper_clearance(model, cfg, result)
+            if tool_audit is not None:
+                result['gripper_clearance_acceptance'] = tool_audit
             if cfg.get('workspace_planning_policy') != 'shared-body-constrained-IK':
                 return result
             # Evaluate complete descent/lift branches rather than accepting the
@@ -837,6 +914,27 @@ def board_motion_gains(legacy, geometry, positions):
                       target_offset_rad=0., physical_validation_complete=False)
 
 
+def descent_gain_continuation(requested, previous, frozen=None):
+    """Keep the acquired controller through descent, not just its first torque.
+
+    Changing Kp and bridging FF preserves torque at one pose only. It changes
+    the subsequent feedback law. Freeze gains for the entire Cartesian descent;
+    q and gravity still come from the common geometric/dynamics models.
+    """
+    result = {n: dict(g) for n, g in requested.items()}
+    chosen = {}
+    for n, gain in result.items():
+        source = (frozen or {}).get(n) or previous.get(n) or gain
+        kp, kd = float(source['kp']), float(source['kd'])
+        if (not all(math.isfinite(x) for x in (kp,kd)) or
+                not 0 <= kp <= 500 or not 0 <= kd <= 5 or
+                (n == 'shoulder_rotate' and (kp > 36 or kd > 4.5))):
+            raise ValueError('invalid continued descent gains for '+n)
+        gain.update(kp=kp,kd=kd)
+        chosen[n] = dict(kp=kp,kd=kd)
+    return result, chosen
+
+
 def soft_posture_seed_tolerance(model, cfg):
     """Explicit, inward-only initial-guess projection for soft posture bounds."""
     values = cfg.get('ik_soft_posture_seed_tolerance_deg', {})
@@ -940,7 +1038,12 @@ def candidate_approach_trial(trajectory, cfg):
             or any(label != 'contact' for label in labels[labels.index('contact'):])):
         raise ValueError('candidate approach requires above transit followed by contact only')
     acceptance = trajectory.get('orientation_acceptance', {})
-    if (acceptance.get('constraint') != 'full-gripper-frame'
+    bounded = float(cfg.get('continuous_grasp_search', {}).get('descent_axis_cone_deg', 0.))
+    if bounded:
+        if (acceptance.get('constraint') != 'bounded-axis-with-fixed-terminal-frame'
+                or not acceptance.get('passed')):
+            raise ValueError('candidate approach requires bounded descent orientation acceptance')
+    elif (acceptance.get('constraint') != 'full-gripper-frame'
             or acceptance.get('max_error_deg', float('inf')) > acceptance.get('tolerance_deg', -1)):
         raise ValueError('candidate approach requires full-frame orientation acceptance')
     return dict(trajectory, validation_trial={'approach_contact':True,'above_only':False,
@@ -966,7 +1069,8 @@ def candidate_touch_trial(model, trajectory, cfg):
 
 class TrajectorySupportBaseline:
     """One entry load anchor, never recycle later PD torque as new gravity."""
-    def __init__(self, model, positions, measured_tau, status, gains, limits, hardware_limits=None):
+    def __init__(self, model, positions, measured_tau, status, gains, limits, hardware_limits=None,
+                 planned_envelope=None, trajectory=None):
         self.model = model
         self.names = list(positions)
         self.initial_gravity = self.gravity(positions)
@@ -992,6 +1096,15 @@ class TrajectorySupportBaseline:
                                   min(maximum,max(high,self.anchor[n],bridge)))
             else:
                 self.limits[n] = (low,high)
+        self.planned_envelope = planned_envelope
+        if planned_envelope is not None:
+            if hardware_limits is None or trajectory is None:
+                raise ValueError('planned support requires trajectory and hardware bounds')
+            from left_arm_trajectory_support import support_limits
+            planned = support_limits(planned_envelope, trajectory, self.anchor,
+                                     self.initial_gravity, self.model_limits, hardware_limits)
+            self.limits = {n:(min(self.limits[n][0],planned[n][0]),
+                              max(self.limits[n][1],planned[n][1])) for n in self.names}
 
     def gravity(self, positions):
         q = self.model.encoder_to_model([positions[n] for n in self.model.names])
@@ -1009,7 +1122,9 @@ class TrajectorySupportBaseline:
             result[n] = dict(start_tau=start,end_tau=baseline,ramp_fraction=.25,ramp='smoothstep')
             audit[n] = dict(anchor_tau=self.anchor[n],gravity_change_tau=gravity[n]-self.initial_gravity[n],
                             raw_tau=raw,applied_tau=baseline,clamped=baseline!=raw,
-                            model_tau_limits=self.model_limits[n],trajectory_tau_limits=self.limits[n])
+                            model_tau_limits=self.model_limits[n],trajectory_tau_limits=self.limits[n],
+                            support_range_source=('precomputed-path-gravity-plus-single-entry-load'
+                                                  if self.planned_envelope else 'static-model-and-entry-load'))
         return result,audit
 
 
@@ -1024,6 +1139,7 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
             or (trajectory.get('validation_trial', {}).get('approach_contact') and trajectory.get('stage')=='approach'))
         if body.get('enabled') and not body.get('physically_validated', False) and not trial:
             raise RuntimeError('body registration is an offline candidate; hardware clearance is not verified')
+        check_planned_gripper_clearance(geometry[0], geometry[1], trajectory)
     if BOARD_EXECUTION_SUSPENDED:
         raise RuntimeError(BOARD_EXECUTION_SUSPENSION_REASON)
     if trajectory['stage'] not in SUPPORTED_EXECUTION_STAGES:
@@ -1050,6 +1166,7 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
     motor_names = {id(arm.motors[n]): n for n in names}
     trace = None; trace_context={'stage':'initializing'}; frame_seen=set(); completed={}; trace_previous=None
     oscillation_samples=deque(maxlen=24)
+    last_gripper_check = None
     if all(callable(getattr(arm.motors[n],method,None)) for n in names
            for method in ('getPosition','getVelocity','getTorque')):
         from left_arm_motion_trace import MotionTrace
@@ -1064,7 +1181,7 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
             'writer':'bounded-asynchronous','sampling':'each complete command frame',
             'additional_CAN_queries':False}),flush=True)
     def observed_control(motor, kp, kd, q, dq, tau):
-        nonlocal trace_previous
+        nonlocal trace_previous, last_gripper_check
         result = original_control(motor, kp, kd, q, dq, tau)
         name = motor_names.get(id(motor))
         if name is not None:
@@ -1085,6 +1202,7 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
                         row['queue_dropped_frames_before_submit']=trace.dropped
                         row['writer_error']=trace.error
                         trace_previous=row['monotonic_s'];trace.submit(row)
+                        supervisor.record_control_frame(row)
                     except Exception as exc:
                         trace.capture_errors+=1
                         trace.submit({'event':'capture_error','error':str(exc),'wall_s':time.time()})
@@ -1099,6 +1217,16 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
                                           'wall_s':row['wall_s'],'context':dict(trace_context)})
                             supervisor.observe(row['feedback'])
                             raise MotionStop('confirmed encoder oscillation during board trajectory',diagnostic)
+                        if last_gripper_check is None or row['monotonic_s']-last_gripper_check >= .05:
+                            from left_arm_trajectory_support import gripper_feedback_clearance
+                            last_gripper_check = row['monotonic_s']
+                            clearance = gripper_feedback_clearance(geometry[0],geometry[1],row['feedback'])
+                            if clearance is not None:
+                                trace.submit({'event':'gripper_feedback_clearance','diagnostics':clearance,
+                                              'wall_s':row['wall_s'],'context':dict(trace_context)})
+                                if clearance['clearance_mm'] < 0:
+                                    supervisor.observe(row['feedback'])
+                                    raise MotionStop('measured gripper crossed configured clearance floor',clearance)
         return result
     arm.ctrl.controlMIT = observed_control
     claw_target = None
@@ -1176,7 +1304,26 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
 
     # Arm the support branch BEFORE issuing enable frames. No re-enable or
     # disable commands are issued by the support branch itself.
-    supervisor.activate(arm.read_status(names))
+    initial_status = arm.read_status(names)
+    if geometry is not None and geometry[1].get('motion_feedforward_policy')=='single-entry-gravity-anchor':
+        from left_arm_trajectory_support import gravity_envelope
+        envelope = trajectory.get('planned_gravity_envelope')
+        if envelope is None:
+            if trajectory.get('precomputed_before_motion'):
+                raise ValueError('prepared path lacks load-support envelope')
+            envelope = gravity_envelope(geometry[0], trajectory)
+        support_anchor = TrajectorySupportBaseline(geometry[0],
+            {n:float(initial_status[n]['pos']) for n in names},
+            {n:float(initial_status[n]['tau']) for n in names},initial_status,gains,
+            arm.board_gravity_limits,MIT_TAU_MAX,envelope,trajectory)
+        # Per-arm motion budget only. The hold model, Home/Clearance gains,
+        # adaptive learning and accepted geometry remain unchanged.
+        arm.board_gravity_limits = dict(support_anchor.limits)
+        print('board planned load support= '+json.dumps({'entry_load_tau':support_anchor.anchor,
+            'initial_gravity_tau':support_anchor.initial_gravity,
+            'model_tau_limits':support_anchor.model_limits,'motion_tau_limits':support_anchor.limits,
+            'planned_envelope':envelope,'later_measured_pd_torque_reused':False}),flush=True)
+    supervisor.activate(initial_status)
     arm.enable(names)
     if trajectory['stage'] == 'grasp':
         positions, tau, _ = support()
@@ -1191,6 +1338,7 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
         'groups': [{'stage': row['stage'], 'first_original_index': row['first_original_index'],
                     'last_original_index': row['original_index']} for row in rows]}), flush=True)
     feedback_entry = None
+    descent_gains = None
     for group_index, row in enumerate(rows):
         index = row['original_index']
         trace_context.update(stage=row['stage'],waypoint_index=index,
@@ -1226,6 +1374,18 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
                     'seed_projection_delta_deg': answer['seed_projection_delta_deg'],
                     'target_joint_bounds_unchanged': True}), flush=True)
         gains, stiffness_audit = board_motion_gains(legacy, geometry, positions)
+        if row['stage'] == 'contact':
+            requested_gains = {n:dict(g) for n,g in gains.items()}
+            gains, descent_gains = descent_gain_continuation(
+                gains, supervisor.last_commands, descent_gains)
+            print('board descent gain continuation= '+json.dumps({
+                'policy':'freeze-acquired-gains-through-cartesian-descent',
+                'requested_gains':requested_gains,'applied_gains':descent_gains,
+                'reference_and_model_unchanged':True}),flush=True)
+            if stiffness_audit is not None:
+                stiffness_audit.update(kp_applied=gains['shoulder_rotate']['kp'],
+                    kd_applied=gains['shoulder_rotate']['kd'],
+                    gain_policy='continued-descent-gains')
         # A latched fault must retain the same gain used by the live motion.
         supervisor.gains = {n: {k: gains[n][k] for k in ('kp', 'kd')} for n in names}
         if stiffness_audit is not None:
@@ -1408,7 +1568,10 @@ def prepared_source_hashes(args):
            'motion_adapter':HERE/'left_arm_v3_1_motion_dynamics.py',
            'fault_support':HERE/'left_arm_fault_support.py',
            'kinematics':HERE/'left_arm_board_kinematics.py',
-           'collision':HERE/'left_arm_board_collision.py','trace':HERE/'left_arm_motion_trace.py'}
+           'collision':HERE/'left_arm_board_collision.py','trace':HERE/'left_arm_motion_trace.py',
+           'task_pose':HERE/'left_arm_board_task_pose.py',
+           'trajectory_support':HERE/'left_arm_trajectory_support.py',
+           'general_motion':HERE/'left_arm_general_motion.py'}
     return {n:hashlib.sha256(p.read_bytes()).hexdigest() for n,p in files.items()}
 
 
@@ -1418,6 +1581,9 @@ def prepared_digest(trajectory):
 
 
 def stamp_prepared_approach(trajectory,args):
+    from left_arm_trajectory_support import gravity_envelope
+    trajectory = dict(trajectory, planned_gravity_envelope=gravity_envelope(
+        RigidBodyModel.load(args.model), trajectory))
     return dict(trajectory,prepared_execution={'version':1,'created_wall_s':time.time(),
         'request':prepared_request(args),'source_hashes':prepared_source_hashes(args),
         'plan_sha256':prepared_digest(trajectory),
@@ -1504,6 +1670,8 @@ def main(argv=None):
         parser.error('--x-mm and --y-mm are required for board paths')
     model = RigidBodyModel.load(args.model)
     cfg = load_board_config(args.board_model, model)
+    if args.execute and cfg.get('planning_only', False):
+        raise RuntimeError('this mathematical search configuration is offline-only; hardware limits are not established')
     if (args.execute and cfg.get('body_collision', {}).get('enabled')
             and not cfg['body_collision'].get('physically_validated', False)
             and not (args.validate_candidate_above or args.validate_candidate_touch or args.validate_candidate_approach)):

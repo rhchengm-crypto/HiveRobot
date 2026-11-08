@@ -11,6 +11,7 @@ import copy
 from collections import deque
 import json
 import math
+import statistics
 import time
 
 from left_arm_v3_1_model_control import MIT_TAU_MAX, clamp
@@ -60,6 +61,62 @@ class FaultSupport:
         self.last_commands = {}
         self.entry_policy = {}
         self.max_drift_deg = {n: 0. for n in names}
+        self.control_history = deque(maxlen=256)
+        self.oscillation_recovery = {}
+
+    def record_control_frame(self, frame):
+        """Use existing reply-cache frames; no CAN traffic or target updates."""
+        if self.latched:
+            return
+        now = float(frame['monotonic_s'])
+        feedback = clean_feedback(frame['feedback'], self.names)
+        self.control_history.append((now,feedback))
+
+    def _quiet_anchor(self, name):
+        # At least 0.2 s of nearby, slow feedback BEFORE oscillation. Never
+        # estimate gravity from a single dynamic torque/velocity sample.
+        rows=[(t,f[name]) for t,f in self.control_history
+              if 0 <= self.started-t <= 1.0]
+        for end in range(len(rows)-1,-1,-1):
+            window=[r for r in rows[:end+1] if rows[end][0]-r[0] <= .3]
+            if len(window)<5 or window[-1][0]-window[0][0]<.2:
+                continue
+            q=[r['pos'] for _,r in window]
+            if (max(abs(r['vel']) for _,r in window)<=.1 and
+                    max(q)-min(q)<=math.radians(.25)):
+                return {'position_rad':statistics.median(q),
+                        'window_seconds':window[-1][0]-window[0][0],
+                        'samples':len(window),'age_seconds':self.started-window[-1][0],
+                        'source':'recent-quiet-encoder-window',
+                        'independent_feedback_freshness_verified':False}
+        return None
+
+    def _prepare_oscillation_recovery(self, name, previous):
+        """Reduce the implicated feedback loop, retaining static load once.
+
+        This is NOT the normal Model Hold takeover. The robot's tested soft
+        takeover envelope (Kp <= 3, Kd <= .4) is a recovery candidate, not a
+        guarantee that a hardware/firmware oscillation will settle.
+        """
+        anchor=self._quiet_anchor(name)
+        kp=min(3.,float(previous['kp']))
+        kd=min(.4,float(previous['kd']))
+        ff=float(previous['tau_ff'])
+        transfer=0.
+        if anchor is not None:
+            transfer=(float(previous['kp'])-kp)*(float(previous['q'])-anchor['position_rad'])
+        raw=ff+transfer
+        end=clamp(raw,-MIT_TAU_MAX[name],MIT_TAU_MAX[name])
+        recovery={'start':dict(previous),'end':dict(kp=kp,kd=kd,q=float(previous['q']),
+                    dq=0.,tau_ff=end),'anchor':anchor,'static_spring_transfer_tau':transfer,
+                  'clamped':end!=raw,'seconds':.15,
+                  'policy':'bounded-soft-feedback; fixed-reference; single-static-load-transfer',
+                  'velocity_compensation':False,
+                  'fallback':None if anchor is not None else 'retain-prior-feedforward-no-dynamic-load-estimate',
+                  'physically_verified':False}
+        self.oscillation_recovery[name]=recovery
+        self.support_tau[name]=self.bridge_tau[name]=end
+        self.entry_policy[name]='oscillation-soft-recovery; no-velocity-cancellation; no-reenable'
 
     def observe(self, status):
         if self.latched:
@@ -77,6 +134,9 @@ class FaultSupport:
         if not self.active or self.snapshot is None:
             raise RuntimeError('support was not armed before the motion')
         self.started = self.clock()
+        # A later explicit Home may itself fail. Never carry an older board
+        # recovery's gains/feedforward into that fresh Home fault.
+        self.oscillation_recovery = {}
         self.reason = str(cause)
         self.diagnostics = getattr(cause, 'diagnostics', {})
         self.feedback_age_ms = (self.started-self.snapshot_at)*1000
@@ -98,6 +158,8 @@ class FaultSupport:
                 self.gains[n] = {k:float(previous[k]) for k in ('kp','kd')}
                 self.support_tau[n] = self.bridge_tau[n] = float(previous['tau_ff'])
                 self.entry_policy[n] = 'freeze-last-command; zero-velocity-demand; no-damping-cancellation'
+                if ('oscillation' in self.reason.lower() and self.diagnostics.get('joint') == n):
+                    self._prepare_oscillation_recovery(n,previous)
                 continue
             self.targets[n] = row['pos']
             self.support_tau[n] = row['tau']
@@ -128,7 +190,19 @@ class FaultSupport:
         failures = []
         for n in self.names:
             gain = self.gains[n]
-            tau = self.bridge_tau[n]*(1-alpha)+self.support_tau[n]*alpha
+            tau = (self.support_tau[n] if self.bridge_tau[n]==self.support_tau[n]
+                   else self.bridge_tau[n]*(1-alpha)+self.support_tau[n]*alpha)
+            recovery=self.oscillation_recovery.get(n)
+            if recovery is not None:
+                progress=min(1.,max(0.,elapsed/recovery['seconds']))
+                weight=progress*progress*(3-2*progress)
+                before,after=recovery['start'],recovery['end']
+                # Convex interpolation; never re-anchor to oscillating samples.
+                gain={k:after[k] if weight==1. else before[k]+weight*(after[k]-before[k])
+                      for k in ('kp','kd')}
+                self.gains[n]=gain
+                tau=(after['tau_ff'] if weight==1. else
+                     before['tau_ff']+weight*(after['tau_ff']-before['tau_ff']))
             try:
                 self.arm.ctrl.controlMIT(self.arm.motors[n], gain['kp'], gain['kd'],
                                          self.targets[n], 0., tau)
@@ -161,6 +235,8 @@ class FaultSupport:
                        'hold_elapsed_s': elapsed, 'snapshot_age_at_entry_ms': self.feedback_age_ms,
                        'targets_rad': dict(self.targets), 'load_support_tau': dict(self.support_tau),
                        'entry_policy': dict(self.entry_policy),
+                       'oscillation_recovery': copy.deepcopy(self.oscillation_recovery),
+                       'currently_fast_joints': [n for n,v in self.latest_velocity.items() if abs(v)>.1],
                        'max_drift_deg': dict(self.max_drift_deg),
                        'latest_velocity_rad_s': dict(self.latest_velocity),
                        'feedback_age_ms': None if self.last_feedback_at is None else

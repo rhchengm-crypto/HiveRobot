@@ -1,8 +1,8 @@
 """NumPy-only, frame-explicit body obstacles for the common board planner.
 
-Capsules use a conservative half-space clearance to oriented boxes. This
-overestimates collisions near box corners; it never certifies a real chassis
-from an unregistered mesh. No serial imports or controller state changes.
+Capsules use exact Euclidean separation from oriented boxes outside the box,
+and a signed half-space lower bound for intersecting centrelines. Geometry
+registration remains independent of the distance calculation. No serial imports or controller state changes.
 """
 from __future__ import annotations
 
@@ -32,6 +32,42 @@ def segment_box_clearance(start, end, center, axes, half_extents):
     return float(values[best]), float(ts[best])
 
 
+def segment_box_distance(start, end, center, axes, half_extents):
+    """Exact segment/solid-box separation outside; signed bound inside.
+
+    Box-plane crossings partition the segment into intervals with constant
+    active coordinates. Squared Euclidean distance is quadratic on each;
+    its endpoints and stationary point contain the global minimum.
+    """
+    a = (np.asarray(start)-center) @ axes
+    delta = (np.asarray(end)-np.asarray(start)) @ axes
+    half = np.asarray(half_extents)
+    cuts = [0., 1.]
+    for j in range(3):
+        if abs(delta[j]) > 1e-14:
+            for side in (-1., 1.):
+                crossing = (side*half[j]-a[j])/delta[j]
+                if 0. < crossing < 1.:
+                    cuts.append(float(crossing))
+    cuts = np.unique(cuts)
+    candidates = list(cuts)
+    for lo, hi in zip(cuts[:-1], cuts[1:]):
+        middle = a+delta*((lo+hi)/2)
+        active = np.abs(middle) > half
+        velocity = delta[active]
+        denominator = velocity@velocity
+        if denominator > 1e-28:
+            offset = a[active]-np.sign(middle[active])*half[active]
+            candidates.append(float(np.clip(-(offset@velocity)/denominator, lo, hi)))
+    candidates = np.asarray(candidates)
+    excess = np.maximum(np.abs(a[None, :]+candidates[:, None]*delta)-half, 0.)
+    squared = np.einsum('ij,ij->i', excess, excess)
+    best = int(np.argmin(squared))
+    if squared[best] <= 1e-24:
+        return segment_box_clearance(start, end, center, axes, half_extents)
+    return float(np.sqrt(squared[best])), float(candidates[best])
+
+
 class BodyCollisionScene:
     def __init__(self, model, cfg):
         spec = cfg['body_collision']
@@ -41,6 +77,20 @@ class BodyCollisionScene:
         self.spec = spec
         self.tcp = vector(cfg['tcp_in_wrist_frame_m'], 3, 'TCP')
         self.surface = cfg.get('support_surface', {})
+        self.tool_envelope = cfg.get('gripper_vertex_envelope')
+        self.tool_vertices = None
+        if self.tool_envelope is not None:
+            envelope = self.tool_envelope
+            vertices = np.asarray(envelope.get('vertices_in_wrist_frame_m'), dtype=float)
+            height = float(cfg.get('_gripper_min_height_mm', envelope.get('minimum_height_mm', 5.)))
+            if (envelope.get('schema') != 1 or envelope.get('frame') != 'wrist'
+                    or vertices.ndim != 2 or vertices.shape[1] != 3 or not 4 <= len(vertices) <= 2048
+                    or not np.isfinite(vertices).all() or not np.isfinite(height) or height < 0.):
+                raise ValueError('finite wrist-frame gripper envelope and nonnegative clearance required')
+            if not self.surface.get('enabled'):
+                raise ValueError('gripper envelope requires the registered support surface')
+            self.tool_vertices = vertices
+            self.tool_min_height = height/1000.
         if self.surface.get('enabled'):
             if self.surface.get('policy') != 'global-board-height-halfspace':
                 raise ValueError('unsupported support surface policy')
@@ -81,7 +131,7 @@ class BodyCollisionScene:
         rows, values = [], []
         for name, start, end, radius, margin in self.segments:
             for obstacle, center, axes, half in self.obstacles:
-                gap, fraction = segment_box_clearance(points[start], points[end], center, axes, half)
+                gap, fraction = segment_box_distance(points[start], points[end], center, axes, half)
                 clearance = gap-radius-margin
                 values.append(clearance)
                 if details:
@@ -100,6 +150,17 @@ class BodyCollisionScene:
                         capsule=self.model.names[i]+'-to-'+('tcp' if i==self.model.n-1 else self.model.names[i+1]),
                         obstacle='global-board-height-halfspace', clearance_lower_bound_mm=gap*1000,
                         minimum_height_mm=margin*1000, endpoint_index=witness))
+        if self.tool_vertices is not None:
+            vertices = self.tool_vertices@frames[-1, :3, :3].T+frames[-1, :3, 3]
+            heights = (vertices-self.surface_origin)@self.surface_normal
+            witness = int(np.argmin(heights))
+            gap = float(heights[witness]-self.tool_min_height)
+            values.append(gap)
+            if details:
+                rows.append(dict(code='gripper_surface_clearance', capsule='complete-CAD-gripper-envelope',
+                    obstacle='global-board-height-halfspace', clearance_lower_bound_mm=gap*1000,
+                    lowest_vertex_height_mm=float(heights[witness])*1000,
+                    minimum_height_mm=self.tool_min_height*1000, vertex_index=witness))
         return rows if details else np.asarray(values)
 
     def __call__(self, encoder):
@@ -121,8 +182,15 @@ class BodyCollisionScene:
         gradients = []
         for _, start, end, _, _ in self.segments:
             for _, center, rotation, half in self.obstacles:
-                gap, t = segment_box_clearance(points[start], points[end], center, rotation, half)
+                gap, t = segment_box_distance(points[start], points[end], center, rotation, half)
                 a, b = (points[start]-center)@rotation, (points[end]-center)@rotation
+                witness = (1-t)*a+t*b
+                outside = witness-np.clip(witness, -half, half)
+                distance = np.linalg.norm(outside)
+                if distance > 1e-12:
+                    normal = rotation@(outside/distance)
+                    gradients.append(((1-t)*jpoints[start]+t*jpoints[end])@normal)
+                    continue
                 normals = np.vstack([rotation.T, -rotation.T])
                 slopes = np.r_[b-a, a-b]
                 values = np.r_[a-half, -a-half]+t*slopes
@@ -143,6 +211,11 @@ class BodyCollisionScene:
             for i in range(self.model.n):
                 witness = i if heights[i] <= heights[i+1] else i+1
                 gradients.append(jpoints[witness]@self.surface_normal)
+        if self.tool_vertices is not None:
+            vertices = self.tool_vertices@frames[-1, :3, :3].T+frames[-1, :3, 3]
+            witness = vertices[np.argmin((vertices-self.surface_origin)@self.surface_normal)]
+            jacobian = np.cross(axes, witness-origins)*self.model.signs[:, None]
+            gradients.append(jacobian@self.surface_normal)
         return np.asarray(gradients)
 
 
@@ -150,14 +223,19 @@ def collision_scene(model, cfg):
     """Cache derived numeric objects outside the serializable configuration."""
     spec = cfg.get('body_collision')
     if spec is None or not spec.get('enabled', False):
+        if cfg.get('gripper_vertex_envelope') is not None:
+            raise ValueError('gripper envelope requires an enabled collision scene')
         return None
     # Configs are immutable during a plan; avoid modifying/hash-invalidating cfg.
     cached = getattr(model, '_board_body_scene_cache', None)
     surface = cfg.get('support_surface')
-    if cached is not None and len(cached)==3 and cached[0] is spec and cached[1] is surface:
-        return cached[2]
+    envelope = cfg.get('gripper_vertex_envelope')
+    height = cfg.get('_gripper_min_height_mm')
+    if (cached is not None and len(cached)==5 and cached[0] is spec and cached[1] is surface
+            and cached[2] is envelope and cached[3] == height):
+        return cached[4]
     scene = BodyCollisionScene(model, cfg)
-    model._board_body_scene_cache = (spec, surface, scene)
+    model._board_body_scene_cache = (spec, surface, envelope, height, scene)
     return scene
 
 
@@ -179,7 +257,7 @@ def board_prism_clearances(model, cfg, encoder, details=False):
         lateral, height = (.02, .005) if tool else (.03, .03)
         center = np.array([.22, .22, (height-10.)/2])
         half = np.array([.22+lateral, .22+lateral, (height+10.)/2])
-        gap, fraction = segment_box_clearance(a, b, center, np.eye(3), half)
+        gap, fraction = segment_box_distance(a, b, center, np.eye(3), half)
         values.append(gap)
         if details:
             rows.append(dict(code='tool_board_intersection' if tool else 'link_board_intersection',

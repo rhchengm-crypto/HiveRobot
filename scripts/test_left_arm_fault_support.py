@@ -21,6 +21,108 @@ class Clock:
 
 
 class FaultSupportTests(unittest.TestCase):
+    def test_a7_v31_recorded_fault_softens_without_replaying_oscillatory_feedback(self):
+        fixture=json.loads((Path(__file__).parent/'data/test_fixtures/a7_v31_oscillation.json').read_text())
+        names=fixture['names'];arm=mock.Mock();arm.motors=dict(zip(names,names))
+        arm.read_status.return_value=fixture['at_fault']
+        clock=Clock();support=FaultSupport(arm,names,fixture['last_commands'],clock=clock,emit=lambda _:None)
+        support.activate(fixture['at_fault']);support.last_commands=copy.deepcopy(fixture['last_commands'])
+        for frame in fixture['history']:support.record_control_frame(frame)
+        clock.now=fixture['fault_time']
+        support.latch(MotionStop('confirmed encoder oscillation during board trajectory',fixture['fault']))
+        recovery=support.oscillation_recovery['shoulder_rotate']
+        self.assertIsNotNone(recovery['anchor'])
+        clock.now+=.2;support.step()
+        actual={call.args[0]:call.args[1:] for call in arm.ctrl.controlMIT.call_args_list[-len(names):]}
+        self.assertAlmostEqual(actual['shoulder_rotate'][0],3.)
+        self.assertAlmostEqual(actual['shoulder_rotate'][1],.4)
+        self.assertLess(abs(actual['shoulder_rotate'][-1]),.5)
+        for n in names:
+            old=fixture['last_commands'][n]
+            self.assertEqual(actual[n][2],old['q'])
+            if n!='shoulder_rotate':
+                self.assertEqual(actual[n],(old['kp'],old['kd'],old['q'],0.,old['tau_ff']))
+        # This regression proves generated command fields, NOT the robot's
+        # response under those commands. No guessed simulation is used.
+        arm.enable.assert_not_called();arm.disable.assert_not_called()
+
+    def test_confirmed_joint_softens_with_static_load_not_dynamic_velocity(self):
+        names=['shoulder_rotate','elbow']
+        state={'shoulder_rotate':dict(pos=1.8221179246902466,vel=.0073,tau=-.2),
+               'elbow':dict(pos=-.48,vel=0.,tau=2.7)}
+        previous={'shoulder_rotate':dict(kp=24.,kd=4.5,q=1.8143484892491037,dq=0.,tau_ff=.17856666835023832),
+                  'elbow':dict(kp=70.,kd=3.,q=-.51,dq=0.,tau_ff=4.58)}
+        arm=mock.Mock();arm.motors=dict(zip(names,names));arm.read_status.side_effect=lambda _:copy.deepcopy(state)
+        clock=Clock();support=FaultSupport(arm,names,previous,clock=clock,emit=lambda _:None)
+        support.activate(state);support.last_commands=copy.deepcopy(previous)
+        for i in range(21):
+            clock.now=i*.02
+            support.record_control_frame({'monotonic_s':clock.now,'feedback':copy.deepcopy(state)})
+        state['shoulder_rotate'].update(pos=1.8145,vel=.652,tau=7.)
+        clock.now=.5;support.observe(state)
+        support.latch(MotionStop('confirmed encoder oscillation during board trajectory',{'joint':'shoulder_rotate'}))
+        recovery=support.oscillation_recovery['shoulder_rotate']
+        self.assertIsNotNone(recovery['anchor'])
+        anchor=recovery['anchor']['position_rad'];old=previous['shoulder_rotate']
+        static=old['kp']*(old['q']-anchor)+old['tau_ff']
+        # First command is literal, then only the implicated feedback loop is
+        # reduced. The static support law at the quiet anchor is continuous.
+        for elapsed in (0.,.03,.075,.15,1.,3600.):
+            clock.now=.5+elapsed;support.step()
+            calls=arm.ctrl.controlMIT.call_args_list[-2:]
+            name,kp,kd,q,dq,ff=calls[0].args
+            self.assertEqual(name,'shoulder_rotate');self.assertEqual(q,old['q']);self.assertEqual(dq,0.)
+            self.assertLessEqual(kp,24.);self.assertGreaterEqual(kp,3.)
+            self.assertLessEqual(kd,4.5);self.assertGreaterEqual(kd,.4-1e-12)
+            self.assertAlmostEqual(kp*(q-anchor)+ff,static)
+            if elapsed>=.15:
+                self.assertAlmostEqual(kp,3.);self.assertAlmostEqual(kd,.4)
+            self.assertEqual(calls[1].args,('elbow',70.,3.,-.51,0.,4.58))
+        self.assertLess(abs(recovery['end']['tau_ff']),1.)
+        self.assertFalse(recovery['velocity_compensation'])
+        arm.enable.assert_not_called();arm.disable.assert_not_called()
+
+    def test_oscillation_without_quiet_history_does_not_use_dynamic_torque(self):
+        self.status['wrist'].update(vel=2.,tau=9.)
+        previous=dict(kp=22.,kd=1.4,q=-2.05,dq=0.,tau_ff=.3)
+        self.support.last_commands={'wrist':previous}
+        self.support.observe(self.status)
+        self.support.latch(MotionStop('confirmed encoder oscillation during board trajectory',{'joint':'wrist'}))
+        self.clock.now=.2;self.support.step()
+        recovery=self.support.oscillation_recovery['wrist']
+        self.assertIsNone(recovery['anchor'])
+        self.assertEqual(recovery['end']['tau_ff'],.3)
+        self.assertEqual(self.support.targets['wrist'],-2.05)
+        self.assertAlmostEqual(self.support.gains['wrist']['kp'],3.)
+        self.assertAlmostEqual(self.support.gains['wrist']['kd'],.4)
+
+    def test_quiet_history_requires_time_span_and_excludes_stale_or_moving_samples(self):
+        for i in range(20):
+            self.clock.now=i*.02
+            state=copy.deepcopy(self.status);state['wrist']['vel']=.7 if i%2 else -.7
+            self.support.record_control_frame({'monotonic_s':self.clock.now,'feedback':state})
+        self.support.started=.4
+        self.assertIsNone(self.support._quiet_anchor('wrist'))
+        self.support.started=3.
+        self.assertIsNone(self.support._quiet_anchor('elbow'))
+        self.support.control_history.clear()
+        for i in range(20):
+            self.support.record_control_frame({'monotonic_s':3.+i*.001,'feedback':self.status})
+        self.support.started=3.02
+        self.assertIsNone(self.support._quiet_anchor('elbow'))
+
+    def test_later_home_fault_cannot_reuse_old_oscillation_recovery(self):
+        self.support.last_commands['wrist']=dict(kp=22.,kd=1.4,q=-2.,dq=0.,tau_ff=.3)
+        self.support.latch(MotionStop('confirmed encoder oscillation',{'joint':'wrist'}))
+        self.assertIn('wrist',self.support.oscillation_recovery)
+        self.support.latched=False  # Explicit Home handoff opens a new context.
+        self.status['wrist'].update(pos=-1.,vel=0.,tau=-.1)
+        self.support.observe(self.status)
+        self.support.latch(OSError('Home transport failure'))
+        self.assertEqual(self.support.oscillation_recovery,{})
+        self.assertEqual(self.support.targets['wrist'],-1.)
+        self.assertEqual(self.support.support_tau['wrist'],-.1)
+
     def test_recorded_oscillation_freezes_sent_law_without_7Nm_velocity_bridge(self):
         name='shoulder_rotate'
         arm=mock.Mock();arm.motors={name:name}

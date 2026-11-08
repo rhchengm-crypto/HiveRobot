@@ -100,7 +100,7 @@ def solve_ik(model, target_m, seed_encoder, tcp_local_m, limits_encoder,
              target_wrist_rotation=None, max_iterations=300,
              position_tolerance_m=.001, rotation_tolerance_rad=.01,
              seed_projection_tolerance_rad=None, clearance_function=None,
-             tool_axis_local=None):
+             tool_axis_local=None, tool_axis_cone_rad=0.):
     """Damped Jacobian IK; no angle wrapping, invented limits, or execution.
 
     Supply a wrist rotation to constrain grasp orientation. Position-only IK
@@ -130,6 +130,9 @@ def solve_ik(model, target_m, seed_encoder, tcp_local_m, limits_encoder,
         raise ValueError('positive tolerances required')
     desired_r = None if target_wrist_rotation is None else rotation(target_wrist_rotation)
     tool_axis = None if tool_axis_local is None else vector(tool_axis_local, 3, 'tool axis')
+    if (not np.isfinite(tool_axis_cone_rad) or not 0 <= tool_axis_cone_rad < np.pi/2
+            or (tool_axis_cone_rad and tool_axis is None)):
+        raise ValueError('axis cone requires a tool axis and an angle in [0,pi/2)')
     if tool_axis is not None:
         if desired_r is None or np.linalg.norm(tool_axis) < 1e-10:
             raise ValueError('axis-only orientation requires a nonzero local axis and target rotation')
@@ -145,12 +148,13 @@ def solve_ik(model, target_m, seed_encoder, tcp_local_m, limits_encoder,
         sine = np.linalg.norm(turn)
         cosine = np.clip(actual@desired, -1., 1.)
         if sine > 1e-10:
-            return turn*np.arctan2(sine, cosine)/sine
+            angle = np.arctan2(sine, cosine)
+            return turn*max(0., angle-tool_axis_cone_rad)/sine
         if cosine > 0:
             return np.zeros(3)
         helper = np.eye(3)[np.argmin(np.abs(actual))]
         turn = np.cross(actual, helper)
-        return turn/np.linalg.norm(turn)*np.pi
+        return turn/np.linalg.norm(turn)*(np.pi-tool_axis_cone_rad)
 
     def clearances(angles):
         if clearance_function is None:
@@ -182,6 +186,9 @@ def solve_ik(model, target_m, seed_encoder, tcp_local_m, limits_encoder,
         if tool_axis is not None:
             current_axis = tcp_pose(model, q, tcp)[:3, :3]@tool_axis
             jw = (np.eye(3)-np.outer(current_axis, current_axis))@jw
+            if tool_axis_cone_rad and np.linalg.norm(angular_residual(
+                    tcp_pose(model, q, tcp)[:3, :3])) < 1e-12:
+                jw[:] = 0.
         jac = jv if desired_r is None else np.vstack([jv, .15 * jw])
         jac *= model.signs[None, :]
         if clearance_function is not None:
@@ -228,10 +235,14 @@ def solve_ik(model, target_m, seed_encoder, tcp_local_m, limits_encoder,
     final_clearance = clearances(q)
     success = bool(position_error <= position_tolerance_m and angular_error <= rotation_tolerance_rad
                    and np.all(final_clearance >= 0))
+    axis_angle = None if tool_axis is None else float(np.arccos(np.clip(
+        (tcp_pose(model, q, tcp)[:3,:3]@tool_axis)@(desired_r@tool_axis), -1., 1.)))
     return {'success': success, 'encoder_rad': dict(zip(model.names, q.tolist())),
             'seed_projection_delta_deg': dict(zip(model.names, np.degrees(projection).tolist())),
             'position_error_mm': float(position_error * 1000),
             'rotation_error_deg': float(np.degrees(angular_error)),
+            'tool_axis_deviation_deg': None if axis_angle is None else float(np.degrees(axis_angle)),
+            'tool_axis_cone_deg': float(np.degrees(tool_axis_cone_rad)),
             'iterations': iteration, 'orientation_constrained': desired_r is not None,
             'orientation_constraint': ('tool-axis' if tool_axis is not None else
                                        'full-wrist' if desired_r is not None else 'position-only'),

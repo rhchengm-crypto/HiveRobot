@@ -1,0 +1,189 @@
+{
+  "schema": 1,
+  "experiment_id": "20261107_a7_v30_height50_x17",
+  "build": "seven-axis-board-grasp-v30-planned-load-support",
+  "request": {
+    "x_mm": 17.5,
+    "y_mm": 357.5,
+    "grip_height_mm": 50.2,
+    "piece": "white_knight",
+    "stage": "approach",
+    "claw_closed": false
+  },
+  "change_from_rejected_v29": {
+    "operator_requested": "再次抬高10mm，整体朝A方向10mm，修改后再执行",
+    "nominal_request_delta_mm": [
+      -10.0,
+      0.0,
+      10.0
+    ],
+    "physical_displacement_verified": false,
+    "note": "v29 stopped before nominal endpoint. Nominal request changes do not establish actual relative physical displacement.",
+    "shared_controller_fix": "Precomputed pose-dependent gravity envelope, single measured entry load, fixed runtime budget; prevents clipping total motion support to static sample-model torque limits.",
+    "runtime_files": [
+      "left_arm_board_grasp.py",
+      "left_arm_trajectory_support.py"
+    ],
+    "model_hold_adaptive_and_ordinary_clearance_logic_preserved": true,
+    "no_new_per_square_configuration": true,
+    "full_path_precomputed_before_clearance": true
+  },
+  "controller_validation": {
+    "motion_completed": true,
+    "same_serial_model_hold_completed": true,
+    "hold_seconds": 5,
+    "motor_frames": 4724,
+    "trace_closed": {
+      "event": "trace_closed",
+      "frames_written": 6253,
+      "queue_dropped_frames": 0
+    },
+    "confirmed_oscillation_events": 0,
+    "support_fault_frames": 0,
+    "endpoint_settle_attempts": 3,
+    "shoulder_front_final_motion_error_deg": 1.6757606835296528,
+    "shoulder_front_baseline": {
+      "baseline_calls": 17,
+      "clamped_calls": 0,
+      "last": {
+        "anchor_tau": 2.126495838165283,
+        "gravity_change_tau": -10.609696968453239,
+        "raw_tau": -8.483201130287956,
+        "applied_tau": -8.483201130287956,
+        "clamped": false,
+        "model_tau_limits": [
+          -4.8,
+          3.8
+        ],
+        "trajectory_tau_limits": [
+          -8.983201130287956,
+          3.8
+        ],
+        "support_range_source": "precomputed-path-gravity-plus-single-entry-load"
+      }
+    },
+    "hold_max_abs_error_deg": {
+      "shoulder_front": 0.0,
+      "shoulder_side": 0.0,
+      "shoulder_rotate": 0.021856605344040804,
+      "elbow": 0.0,
+      "arm_roll": 0.021856605344040804,
+      "wrist_side": 0.021856605344040804,
+      "wrist": 0.0
+    },
+    "final_nominal_geometry": {
+      "tcp_board_mm": [
+        17.42785155773923,
+        357.33087303137137,
+        50.275965552345134
+      ],
+      "min_gripper_vertex_height_mm": 33.495192488142784,
+      "external_measurement": false
+    },
+    "final_feedback_geometry": {
+      "tcp_board_mm": [
+        -4.014736358059701,
+        351.8055345933128,
+        40.51668274531467
+      ],
+      "min_gripper_vertex_height_mm": 24.262735562503632,
+      "external_measurement": false
+    },
+    "minimum_observed_model_gripper_height_mm": 23.94077529613176,
+    "external_geometry_caveat": "All FK coordinates and clearances above are encoder/model estimates, not physical measurements.",
+    "hold_zero_error_is_not_zero_geometric_error": true
+  },
+  "operator_validation": {
+    "accepted": false,
+    "status": "partial-success-residual-lateral-drift",
+    "report_original": "指尖高度合适，朝A的位置调整合适，但是夹爪向7方向横移了8mm",
+    "height_acceptable": true,
+    "A_direction_position_acceptable": true,
+    "reported_lateral_drift_mm": 8.0,
+    "reported_direction_original": "向7方向",
+    "signed_board_axis_direction": "negative X: outward beyond A file toward printed 7 on board border",
+    "drift_phase": "not observed",
+    "direction_and_phase_awaiting_clarification": false,
+    "physical_contact": null,
+    "shaking": null,
+    "note": "Do not infer no shaking/contact or exact measured displacement from acceptable height; no new motion issued.",
+    "direction_clarification_original": "不是a已是最外面，所以无法再有字母指标，向数字7那里横移",
+    "phase_clarification_original": "没有注意具体阶段"
+  },
+  "fitting": {
+    "eligible": false,
+    "reason": "Height and A-direction alignment accepted, but operator reports 8 mm lateral drift. Diagnostic observation retained; not promoted as a fully validated path."
+  },
+  "prepared_plan": "approach_a7_v30_height50_x17_20261107.json",
+  "execution_plan": "approach_9fe5ddf0717ab5d0.json",
+  "source_hashes": {
+    "rigid_model": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "board_model": "6942441116afbd82c66b8b46bee3ed28ddcdf701554ab8674db1bb2df6aee4c7",
+    "planner": "7dbd56b97b82dcee2423c8071a0e2eaab559a9a2f2eeeb03a103251de765bb0d",
+    "controller": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "motion_adapter": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "fault_support": "9376aab30c3aa10592df2845c3dc946a1e30abdce09f280e3160c0b68e072e0e",
+    "kinematics": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "collision": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "trace": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "task_pose": "48bf6adac3174a0851425c07f3a0dc1dab7c4a54c13ed9495671c2ba1d2d3671",
+    "trajectory_support": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "general_motion": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47"
+  },
+  "evidence": {
+    "directory": "outputs/a7_v30_execution_20261107",
+    "collection": {
+      "motion_issued_by_collector": false,
+      "arm_process_not_interrupted": true,
+      "trace_snapshot_not_final": false,
+      "archive_directory": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_v30_20261107_1794103791915158339",
+      "rgb_frames": 430,
+      "depth_frames": 430,
+      "run": {
+        "action": "dynamics:board-grasp",
+        "ok": true,
+        "running": false,
+        "support_running": null,
+        "returncode": 0,
+        "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794103630647_35806.txt",
+        "duration_s": 108.026,
+        "post_move_model_hold": {
+          "enabled": true,
+          "state": "complete",
+          "same_serial_session": true,
+          "seconds": 5.0,
+          "joints": [
+            "shoulder_front",
+            "shoulder_side",
+            "shoulder_rotate",
+            "elbow",
+            "arm_roll",
+            "wrist_side",
+            "wrist"
+          ]
+        }
+      },
+      "control": {
+        "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_v30_20261107_1794103791915158339/control_evidence.zip",
+        "bytes": 1922034,
+        "sha256": "5f025719671de634698d5bf39b8089d722a885dc29cf04ffb9c57fcdf69c56d3"
+      },
+      "rgbd": {
+        "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_v30_20261107_1794103791915158339/rgbd_evidence.zip",
+        "bytes": 53562938,
+        "sha256": "d28627c8287a630767ddb97708a442ef0e54d64eee3b1f5a04b807664053f9dc"
+      }
+    },
+    "execution_plan_sha256": "bc0a939efda3a6ce06a55fef92a0b8abb45f839d208fc7b2fd5012ae780491ab",
+    "archives_sha256_verified": true,
+    "rgb_frames": 430,
+    "depth_frames": 430,
+    "audit": "execution_audit.json",
+    "test_count": 128,
+    "tests_passed": true,
+    "rank_drift_audit": "rank_drift_audit.json",
+    "lateral_drift_audit": "lateral_drift_audit.json",
+    "visual_phase_index": "visual_phase_index.json"
+  },
+  "github_uploaded_this_turn": false
+}
