@@ -4,6 +4,9 @@ namespace GptGateway {
 enum class State:uint8_t {Off,Connecting,Ready,Failed,Stopping};
 void enter();
 void leave();
+void retry();
+bool needsRestart();
+String connectionStatus();
 bool stopAndWait(uint32_t timeout=35000);
 bool stopping();
 bool active();

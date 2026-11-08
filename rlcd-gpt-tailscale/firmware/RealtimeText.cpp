@@ -99,7 +99,7 @@ void capture(void*){
    if(esp_opus_enc_process(encoder,&input,&encoded)==ESP_AUDIO_ERR_OK)push(output,encoded.encoded_bytes,serial,seq++,granule+1920,4);else fail("Opus收尾失败");}
  }while(false);
  if(encoder)esp_opus_enc_close(encoder);free(output);audioDone=true;
- Serial.printf("[RT_CAPTURE] frames=%lu audio_ms=%lu stack_free=%u\n",(unsigned long)frames,(unsigned long)(frames*40),unsigned(uxTaskGetStackHighWaterMark(nullptr)));vTaskDelete(nullptr);
+ Serial.printf("[RT_CAPTURE] frames=%lu audio_ms=%lu stack_free=%u\n",(unsigned long)frames,(unsigned long)(frames*40),unsigned(uxTaskGetStackHighWaterMark(nullptr)));vTaskDeleteWithCaps(nullptr);
 }
 // Message API emits final standard-Mandarin text directly. No second LLM task.
 void networkBody(){
@@ -155,7 +155,12 @@ void networkBody(){
  ws.setReconnectInterval(1000);ws.beginSslWithClientKey(host.c_str(),443,"/api-ws/v1/inference",asrRootCA,nullptr,nullptr,"");ws.setExtraHeaders(headers.c_str());
  while(!fatal && !finished){
   ws.loop();if(fatal||finished)break;
-  if(ready&&!captureStarted){captureStarted=true;if(!stopping){audioDone=false;if(xTaskCreatePinnedToCore(capture,"rt-opus",32*1024,nullptr,3,nullptr,1)!=pdPASS){audioDone=true;fail("录音任务创建失败");break;}}}
+  if(ready&&!captureStarted){captureStarted=true;if(!stopping){audioDone=false;// Keep the large Opus task stack out of fragmented internal SRAM.
+   const unsigned internalFree=heap_caps_get_free_size(MALLOC_CAP_INTERNAL|MALLOC_CAP_8BIT);
+   const unsigned internalLargest=heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL|MALLOC_CAP_8BIT);
+   const BaseType_t created=xTaskCreatePinnedToCoreWithCaps(capture,"rt-opus",32*1024,nullptr,3,nullptr,1,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT);
+   Serial.printf("[RT_CAPTURE_TASK] created=%u stack_bytes=32768 stack_psram=1 internal_free=%u internal_largest=%u psram_free=%u\n",created==pdPASS,internalFree,internalLargest,unsigned(heap_caps_get_free_size(MALLOC_CAP_SPIRAM)));
+   if(created!=pdPASS){audioDone=true;fail("录音任务创建失败");break;}}}
   if(ready){
    if(contextDirty&&!finishing&&!stopping){
     JsonDocument d;taskHeader(d,"continue-task");for(unsigned i=0;i<recentCount;++i){auto item=d["payload"]["input"]["context"][i];item["role"]="user";item["content"][0]["type"]="input_text";item["content"][0]["text"]=recent[i];}

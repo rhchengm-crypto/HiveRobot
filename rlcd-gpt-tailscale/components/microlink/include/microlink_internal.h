@@ -53,11 +53,11 @@ extern "C" {
 
 #define ML_TASK_COORD_STACK     (12 * 1024)
 #define ML_TASK_COORD_PRIO      5
-#define ML_TASK_COORD_CORE      1
+#define ML_TASK_COORD_CORE      0  /* Keep control-plane crypto off the UI/microphone core. */
 
 #define ML_TASK_WG_MGR_STACK    (8 * 1024)
 #define ML_TASK_WG_MGR_PRIO     7
-#define ML_TASK_WG_MGR_CORE     1
+#define ML_TASK_WG_MGR_CORE     0  /* UI must continue sampling physical buttons during handshakes. */
 
 /* Queue depths */
 #define ML_DERP_TX_QUEUE_DEPTH  16
@@ -346,6 +346,11 @@ struct microlink_s {
     /* State (atomic reads from any task, writes only from coord) */
     volatile microlink_state_t state;
     volatile uint32_t vpn_ip;
+    /* Enrollment is tied to the persisted machine/node keys, never to an auth-key TTL. */
+    bool identity_enrolled;
+    bool auth_enroll_requested;
+    bool auth_key_attempted;
+
 
     /* Event group (cross-task synchronization) */
     EventGroupHandle_t events;
@@ -475,6 +480,8 @@ esp_err_t ml_derp_queue_send(microlink_t *ml, const uint8_t *dest_key,
 
 /* ml_coord.c */
 void ml_coord_task(void *arg);
+
+void ml_identity_mark_enrolled(microlink_t *ml);
 
 /* ml_wg_mgr.c */
 void ml_wg_mgr_task(void *arg);

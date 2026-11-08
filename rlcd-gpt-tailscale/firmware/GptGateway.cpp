@@ -12,8 +12,10 @@
 namespace GptGateway {
 namespace {
 std::atomic<State> current{State::Off};
-std::atomic<bool> wanted{false},worker{false},sending{false},cleaning{false},disconnectRequested{false};
-std::atomic<unsigned> cleanupRetries{0};
+std::atomic<bool> wanted{false},worker{false},sending{false},cleaning{false},disconnectRequested{false},retryPending{false};
+std::atomic<unsigned> cleanupRetries{0},connectAttempt{0};
+std::atomic<uint32_t> connectAt{0};
+std::atomic<int> connectPhase{0};
 microlink_t* vpn=nullptr;
 portMUX_TYPE lock=portMUX_INITIALIZER_UNLOCKED;
 char detail[160]={};
@@ -79,12 +81,20 @@ void manage(void*){
   microlink_config_t config{};config.auth_key=GPT_TAILSCALE_AUTH_KEY;config.device_name="rlcd-qwen";
   config.enable_derp=true;config.enable_disco=true;config.enable_stun=true;config.max_peers=4;
   config.priority_peer_ip=microlink_parse_ip(GPT_GATEWAY_HOST);
+  connectPhase=1;
   vpn=microlink_init(&config);
   if(!vpn||microlink_start(vpn)!=ESP_OK){message="家庭VPN初始化失败";break;}
   uint32_t start=millis();
-  while(wanted&&!disconnectRequested&&!microlink_is_connected(vpn)&&millis()-start<60000&&WiFi.status()==WL_CONNECTED)vTaskDelay(pdMS_TO_TICKS(100));
+  int previous=-1;
+  while(wanted&&!disconnectRequested&&!microlink_is_connected(vpn)&&millis()-start<60000&&WiFi.status()==WL_CONNECTED){
+   const int state=int(microlink_get_state(vpn));connectPhase=2+state;
+   if(state==ML_STATE_ERROR){message="Tailscale需要重新授权，请更新入网密钥";break;}
+   if(state!=previous){previous=state;Serial.printf("[GPT_CONNECT] attempt=%u vpn_state=%d elapsed_ms=%lu\n",connectAttempt.load(),state,(unsigned long)(millis()-connectAt.load()));}
+   vTaskDelay(pdMS_TO_TICKS(100));
+  }
   if(!wanted||disconnectRequested)break;
-  if(!microlink_is_connected(vpn)){message="家庭VPN连接超时，按BOOT重试";break;}
+  if(!microlink_is_connected(vpn)){if(message.isEmpty())message="家庭VPN连接超时，按BOOT重试";break;}
+  connectPhase=100;
   JsonDocument health;
   if(!request("/v1/health",nullptr,0,health,message,10000))break;
   if(!wanted||disconnectRequested)break;
@@ -98,7 +108,7 @@ void manage(void*){
   }
  }while(false);
  while(sending)vTaskDelay(pdMS_TO_TICKS(50));
- const bool leavingPage=disconnectRequested.load();
+ if(!message.isEmpty())Serial.printf("[GPT_CONNECT] failed attempt=%u phase=%d elapsed_ms=%lu detail=%s\n",connectAttempt.load(),connectPhase.load(),(unsigned long)(millis()-connectAt.load()),message.c_str());
  if(vpn){
   cleaning=true;current=State::Stopping;cleanupRetries=0;
   // A join timeout must not abandon a live instance and permanently lock navigation.
@@ -111,16 +121,30 @@ void manage(void*){
   microlink_destroy(vpn);vpn=nullptr;
   cleaning=false;
  }
- if(wanted&&!leavingPage){failure(message.isEmpty()?"家庭网关离线，按BOOT重试":message.c_str());current=State::Failed;}
+ if(wanted&&!disconnectRequested&&!retryPending){failure(message.isEmpty()?"家庭网关离线，按BOOT重试":message.c_str());current=State::Failed;}
  else current=State::Off;
  Serial.printf("[GPT_VPN] stopped=1 was_ready=%u heap=%u\n",connected,unsigned(ESP.getFreeHeap()));worker=false;vTaskDelete(nullptr);
 }
 }
 void enter(){
- wanted=true;if(worker||vpn)return;disconnectRequested=false;current=State::Connecting;failure("");worker=true;
+ wanted=true;if(worker||vpn)return;retryPending=false;disconnectRequested=false;current=State::Connecting;connectAt=millis();connectPhase=0;++connectAttempt;failure("");worker=true;
  if(xTaskCreatePinnedToCore(manage,"gpt-vpn",20*1024,nullptr,2,nullptr,0)!=pdPASS){worker=false;current=State::Failed;failure("家庭VPN任务内存不足");}
 }
-void leave(){disconnectRequested=true;wanted=false;if(worker)current=State::Stopping;}
+void retry(){
+ // Latch a restart until every old task has exited. A retry during cleanup
+ // must end in Off so the foreground page can start a fresh instance.
+ wanted=true;retryPending=true;
+ if(worker||vpn){disconnectRequested=true;current=State::Stopping;Serial.println("[GPT_CONNECT] retry_queued=1");}
+ else enter();
+}
+String connectionStatus(){
+ const unsigned seconds=(millis()-connectAt.load())/1000;
+ const int phase=connectPhase.load();
+ const char* label=current==State::Stopping?"正在清理旧连接":phase==100?"正在检查树莓派网关":phase==5?"正在注册Tailscale":"正在连接家庭VPN";
+ return String(label)+" · "+String(seconds)+"秒";
+}
+bool needsRestart(){return retryPending;}
+void leave(){retryPending=false;disconnectRequested=true;wanted=false;if(worker)current=State::Stopping;}
 bool stopAndWait(uint32_t timeout){leave();const uint32_t at=millis();while(worker&&millis()-at<timeout)delay(20);return !worker&&!vpn;}
 bool stopping(){return cleaning||(!wanted&&worker)||(!worker&&vpn);}
 bool active(){return worker||vpn;}
@@ -137,7 +161,7 @@ bool ask(const uint8_t* wav,size_t length,String& result,String& error){
  if(ok){rememberModel(reply["model"]|"");result=reply["answer"]|"";History::append("gpt",result.c_str(),reply["question"]|"");Serial.printf("[GPT_REPLY] bytes=%u gateway_ms=%lu model=%s\n",unsigned(result.length()),(unsigned long)(reply["gateway_ms"]|0ul),modelName);}
  sending=false;return ok;
 }
-void report(){Serial.printf("[GPT_INFO] state=%u active=%u sending=%u configured=%u cleaning=%u cleanup_retries=%u\n",unsigned(current.load()),active(),sending.load(),bool(GPT_TAILSCALE_AUTH_KEY[0]&&GPT_GATEWAY_TOKEN[0]),cleaning.load(),cleanupRetries.load());}
+void report(){Serial.printf("[GPT_INFO] state=%u active=%u sending=%u configured=%u cleaning=%u cleanup_retries=%u attempt=%u phase=%d elapsed_ms=%lu retry_pending=%u\n",unsigned(current.load()),active(),sending.load(),bool(GPT_TAILSCALE_AUTH_KEY[0]&&GPT_GATEWAY_TOKEN[0]),cleaning.load(),cleanupRetries.load(),connectAttempt.load(),connectPhase.load(),(unsigned long)(millis()-connectAt.load()),retryPending.load());}
 void probeUpload(){
  if(current!=State::Ready||sending.exchange(true))return;
  auto* bytes=static_cast<uint8_t*>(heap_caps_calloc(16384,1,MALLOC_CAP_SPIRAM|MALLOC_CAP_8BIT));

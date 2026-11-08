@@ -100,6 +100,12 @@ Battery UI: the estimate is now centered inside the battery icon. XOR text remai
 
 News speech: the physically leftmost K1 (GPIO3) cycles current news entries from 1 through the actual count, then wraps. Cached audio is stored on SD; uncached audio uses Qwen TTS SSE with separate network/player tasks. See NEWS_SPEECH.md for controls, codec sharing, and validation.
 
-2026-11-06：RX 轻睡眠恢复稳定性修正、实测及与 9 键息屏方式的区别见 [SLEEP_RECOVERY.md](SLEEP_RECOVERY.md)。当前默认构建目录为 build-sleep-recovery。整夜休眠仍待验证。
+2026-11-06：RX 轻睡眠恢复稳定性修正、实测及与 9 键息屏方式的区别见 [SLEEP_RECOVERY.md](SLEEP_RECOVERY.md)。当前默认构建目录为 build-sleep-recovery。2026-11-07 用户确认“整夜休眠正常了”。
 
 天气页无法操作的 VPN 退出修正、四项生命周期回归和验证范围见 [VPN_EXIT_FIX.md](VPN_EXIT_FIX.md)。
+
+2026-11-07：连续转文字录音栈改用 PSRAM，诊断和实板测试见 REALTIME_CAPTURE_FIX.md / REALTIME_CAPTURE_VALIDATION.json。
+
+2026-11-07：GPT 等待阶段/BOOT重试与长回答分页缓存优化，详见 GPT_CONNECTION_FIX.md / GPT_RETRY_VALIDATION.json。
+
+2026-11-07：已入网节点重连不再发送原Tailscale Auth Key，迁移与重启实测见 NODE_AUTH_FIX.md / NODE_AUTH_VALIDATION.json。
