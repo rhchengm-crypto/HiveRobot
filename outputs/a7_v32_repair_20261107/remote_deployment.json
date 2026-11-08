@@ -1,0 +1,162 @@
+{
+  "ok": true,
+  "motion_issued": false,
+  "serial_opened": false,
+  "web_restarted": false,
+  "release": "a7_v32_20261107",
+  "deployed_at_utc": "20261108T043956Z",
+  "backup": "/home/nvidia/hive_robot/DM_Control_Python/data/code_backups/a7_v32_20261108T043956Z",
+  "stage": "/home/nvidia/hive_robot/DM_Control_Python/data/deployment_staging/a7_v32_20261108T043956Z",
+  "before_run": {
+    "action": "dynamics:model-hold-after:home",
+    "running": false,
+    "support_running": null,
+    "finished_at": "2026-11-07 20:29:30",
+    "returncode": 0
+  },
+  "after_run": {
+    "action": "dynamics:model-hold-after:home",
+    "running": false,
+    "support_running": null,
+    "finished_at": "2026-11-07 20:29:30",
+    "returncode": 0
+  },
+  "deployed_sha256": {
+    "left_arm_board_grasp.py": "b0a4b9a1353e4198a112712e492139b96450ad7be89e17f7b7e4d4efccc4d7ac",
+    "left_arm_fault_support.py": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd"
+  },
+  "protected_sha256": {
+    "left_arm_board_task_pose.py": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+    "left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+    "left_arm_v3_1_model_control.py": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996",
+    "left_arm_board_home_handoff.py": "0a341c4f34dddd0176c5229f33095d3bbb534616dd673bf8b7f6fa9e87f1a472",
+    "left_arm_v3_1_motion_dynamics.py": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+    "chessboard_vision_v3_0_web_control.py": "5f6cfb5dce9a3bb15141711972676a5807b580ef2af2a8821f6c879c901459a2",
+    "data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "data/left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+    "data/left_arm_board_workspace_candidate.json": "7ef5d7b8fdb1edd84a5869a7dae7ec1c24ff0040a656aaa5a4a7eea713ec5abb",
+    "data/left_arm_v2_6_adaptive_target_bias.json": "c6ed63842f8a37a22fb70fe2f086631378af852ea3e3bf93d6b707dfce26e62e",
+    "data/left_arm_v2_6_adaptive_hold_target_bias.json": "935ee941d36abb37b5834c12485814ece3a97d250aca8a4c34e71957cb40e0bd",
+    "data/left_arm_v2_8_clearance_bias.json": "70388813e2ed17e70bdd3c255d93011600c22dc2b1136ca78ec8b93bb246cefe"
+  },
+  "offline_mock_regression": {
+    "ok": true,
+    "motion_issued": false,
+    "serial_opened": false,
+    "build": "seven-axis-board-grasp-v32-descent-gain-continuity",
+    "python": "3.8.10",
+    "descent_entry_gain": {
+      "shoulder_rotate": {
+        "kp": 36.0,
+        "kd": 4.5
+      }
+    },
+    "descent_entry_ff": {
+      "shoulder_rotate": {
+        "start_tau": 0.1904232705982657,
+        "end_tau": 0.1904232705982657,
+        "ramp_fraction": 1.0,
+        "ramp": "smoothstep"
+      }
+    },
+    "recovery": {
+      "start": {
+        "kp": 24.0,
+        "kd": 4.5,
+        "q": 1.8143484892491037,
+        "dq": 0.0,
+        "tau_ff": 0.17856666835023832
+      },
+      "end": {
+        "kp": 3.0,
+        "kd": 0.4,
+        "q": 1.8143484892491037,
+        "dq": 0.0,
+        "tau_ff": 0.015408524086238773
+      },
+      "anchor": {
+        "position_rad": 1.8221179246902466,
+        "window_seconds": 0.2887943419991643,
+        "samples": 9,
+        "age_seconds": 0.1729364530001476,
+        "source": "recent-quiet-encoder-window",
+        "independent_feedback_freshness_verified": false
+      },
+      "static_spring_transfer_tau": -0.16315814426399955,
+      "clamped": false,
+      "seconds": 0.15,
+      "policy": "bounded-soft-feedback; fixed-reference; single-static-load-transfer",
+      "velocity_compensation": false,
+      "fallback": null,
+      "physically_verified": false
+    },
+    "command_replay": [
+      {
+        "elapsed_s": 0.0,
+        "shoulder_rotate_command": {
+          "kp": 24.0,
+          "kd": 4.5,
+          "q": 1.8143484892491037,
+          "dq": 0.0,
+          "tau_ff": 0.17856666835023832
+        }
+      },
+      {
+        "elapsed_s": 0.03,
+        "shoulder_rotate_command": {
+          "kp": 21.815999999999995,
+          "kd": 4.073599999999999,
+          "q": 1.8143484892491037,
+          "dq": 0.0,
+          "tau_ff": 0.16159822134678234
+        }
+      },
+      {
+        "elapsed_s": 0.075,
+        "shoulder_rotate_command": {
+          "kp": 13.500000000000009,
+          "kd": 2.450000000000002,
+          "q": 1.8143484892491037,
+          "dq": 0.0,
+          "tau_ff": 0.09698759621823862
+        }
+      },
+      {
+        "elapsed_s": 0.15,
+        "shoulder_rotate_command": {
+          "kp": 3.0,
+          "kd": 0.4,
+          "q": 1.8143484892491037,
+          "dq": 0.0,
+          "tau_ff": 0.015408524086238773
+        }
+      },
+      {
+        "elapsed_s": 0.2,
+        "shoulder_rotate_command": {
+          "kp": 3.0,
+          "kd": 0.4,
+          "q": 1.8143484892491037,
+          "dq": 0.0,
+          "tau_ff": 0.015408524086238773
+        }
+      },
+      {
+        "elapsed_s": 1.0,
+        "shoulder_rotate_command": {
+          "kp": 3.0,
+          "kd": 0.4,
+          "q": 1.8143484892491037,
+          "dq": 0.0,
+          "tau_ff": 0.015408524086238773
+        }
+      }
+    ],
+    "other_six_joint_commands_unchanged": true,
+    "actual_robot_response_tested": false
+  },
+  "hardware_validation_complete": false,
+  "old_precomputed_plans_invalidated_by_source_hash": true
+}

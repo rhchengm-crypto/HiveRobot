@@ -1,0 +1,725 @@
+{
+  "motion_issued_by_audit": false,
+  "build": "seven-axis-board-grasp-v31-fixed-descent-frame",
+  "requested_target_board_mm": [
+    17.5,
+    357.5,
+    50.2
+  ],
+  "result": "failed-confirmed-oscillation-operator-emergency-stop",
+  "operator_confirmations": [
+    "仍有抖动或其他异常，已急停",
+    "已停止、有可靠支撑，无下坠或卡压"
+  ],
+  "fault": {
+    "event": "confirmed_encoder_oscillation",
+    "diagnostics": {
+      "joint": "shoulder_rotate",
+      "fast_velocity_reversals": 2,
+      "encoder_span_deg": 0.5027087531021085,
+      "reference_span_deg": 0.006808224667931174,
+      "peak_velocity_rad_s": 0.6520146727561951,
+      "window_seconds": 0.23997231799876317,
+      "feedback_source": "MIT-reply-cache",
+      "individual_feedback_freshness_verified": false
+    },
+    "wall_s": 1794111984.2523818,
+    "context": {
+      "stage": "contact",
+      "waypoint_index": 26,
+      "target_board_mm": [
+        17.5,
+        357.5,
+        98.2
+      ],
+      "attempt": null,
+      "phase": "interpolation_origin_ready"
+    }
+  },
+  "stages": {
+    "entry_search": {
+      "frames": 2633,
+      "elapsed_s": 50.73686242103577,
+      "first_wall_s": 1794111922.5613997,
+      "last_wall_s": 1794111973.2982621,
+      "first_command_tcp_model_mm": [
+        20.101687463095573,
+        -64.19385215667684,
+        146.93129906208338
+      ],
+      "last_command_tcp_model_mm": [
+        -86.80747043739743,
+        366.1245320231667,
+        187.90124379140872
+      ],
+      "first_feedback_tcp_model_mm": [
+        20.101687463095573,
+        -64.19385215667684,
+        146.93129906208338
+      ],
+      "last_feedback_tcp_model_mm": [
+        -81.8902781111497,
+        360.0981136922867,
+        167.82397583697204
+      ],
+      "command_wrist_rotation_change_deg": 30.59671777063277,
+      "feedback_wrist_rotation_change_model_deg": 32.009015098263845,
+      "joints": {
+        "shoulder_front": {
+          "gain_pairs": [
+            [
+              90.0,
+              4.0
+            ]
+          ],
+          "encoder_span_deg": 105.00073674034014,
+          "reference_span_deg": 107.3153486120088,
+          "tau_ff_span_Nm": 9.88415780733796,
+          "peak_abs_velocity_rad_s": 0.17387057840824127
+        },
+        "shoulder_side": {
+          "gain_pairs": [
+            [
+              70.0,
+              3.0
+            ]
+          ],
+          "encoder_span_deg": 3.475254891215848,
+          "reference_span_deg": 4.248355007676714,
+          "tau_ff_span_Nm": 2.032960984822683,
+          "peak_abs_velocity_rad_s": 0.04884004965424538
+        },
+        "shoulder_rotate": {
+          "gain_pairs": [
+            [
+              24.0,
+              4.5
+            ]
+          ],
+          "encoder_span_deg": 20.98266897935933,
+          "reference_span_deg": 21.47561922431917,
+          "tau_ff_span_Nm": 0.7522671951725369,
+          "peak_abs_velocity_rad_s": 0.06593406945466995
+        },
+        "elbow": {
+          "gain_pairs": [
+            [
+              70.0,
+              3.0
+            ]
+          ],
+          "encoder_span_deg": 59.254160380212355,
+          "reference_span_deg": 60.01484926876463,
+          "tau_ff_span_Nm": 0.9136394532669558,
+          "peak_abs_velocity_rad_s": 0.1308913379907608
+        },
+        "arm_roll": {
+          "gain_pairs": [
+            [
+              18.0,
+              1.0
+            ]
+          ],
+          "encoder_span_deg": 14.40372148777633,
+          "reference_span_deg": 13.28404012067435,
+          "tau_ff_span_Nm": 0.2868196146248355,
+          "peak_abs_velocity_rad_s": 0.10989011079072952
+        },
+        "wrist_side": {
+          "gain_pairs": [
+            [
+              16.0,
+              2.2
+            ]
+          ],
+          "encoder_span_deg": 36.151376776818964,
+          "reference_span_deg": 36.893951886134765,
+          "tau_ff_span_Nm": 0.13135378309519258,
+          "peak_abs_velocity_rad_s": 0.13919414579868317
+        },
+        "wrist": {
+          "gain_pairs": [
+            [
+              22.0,
+              1.4
+            ]
+          ],
+          "encoder_span_deg": 71.0131967628666,
+          "reference_span_deg": 71.7407150169426,
+          "tau_ff_span_Nm": 0.12865459069553908,
+          "peak_abs_velocity_rad_s": 0.21245421469211578
+        }
+      }
+    },
+    "source_above": {
+      "frames": 468,
+      "elapsed_s": 9.037998914718628,
+      "first_wall_s": 1794111973.4144893,
+      "last_wall_s": 1794111982.4524882,
+      "first_command_tcp_model_mm": [
+        -86.80747043739743,
+        366.1245320231667,
+        187.90124379140872
+      ],
+      "last_command_tcp_model_mm": [
+        17.49702946562558,
+        357.4935388429175,
+        100.19855198279451
+      ],
+      "first_feedback_tcp_model_mm": [
+        -81.8902781111497,
+        360.0981136922867,
+        167.82397583697204
+      ],
+      "last_feedback_tcp_model_mm": [
+        -11.495377833490323,
+        348.985084057847,
+        79.36047733192704
+      ],
+      "command_wrist_rotation_change_deg": 28.235350440844474,
+      "feedback_wrist_rotation_change_model_deg": 26.2175657193658,
+      "joints": {
+        "shoulder_front": {
+          "gain_pairs": [
+            [
+              90.0,
+              4.0
+            ]
+          ],
+          "encoder_span_deg": 8.917631157265225,
+          "reference_span_deg": 9.275862848186977,
+          "tau_ff_span_Nm": 0.89637376665421,
+          "peak_abs_velocity_rad_s": 0.1347985416650772
+        },
+        "shoulder_side": {
+          "gain_pairs": [
+            [
+              70.0,
+              3.0
+            ]
+          ],
+          "encoder_span_deg": 4.677395505894772,
+          "reference_span_deg": 6.952035664079621,
+          "tau_ff_span_Nm": 0.8241073577692626,
+          "peak_abs_velocity_rad_s": 0.08009768277406693
+        },
+        "shoulder_rotate": {
+          "gain_pairs": [
+            [
+              24.0,
+              4.5
+            ],
+            [
+              36.0,
+              4.5
+            ]
+          ],
+          "encoder_span_deg": 9.50776675863032,
+          "reference_span_deg": 9.581505100214926,
+          "tau_ff_span_Nm": 0.46976250223639526,
+          "peak_abs_velocity_rad_s": 0.095238097012043
+        },
+        "elbow": {
+          "gain_pairs": [
+            [
+              70.0,
+              3.0
+            ]
+          ],
+          "encoder_span_deg": 15.015716682693228,
+          "reference_span_deg": 15.723371903988566,
+          "tau_ff_span_Nm": 0.6780277568965669,
+          "peak_abs_velocity_rad_s": 0.15824176371097565
+        },
+        "arm_roll": {
+          "gain_pairs": [
+            [
+              18.0,
+              1.0
+            ]
+          ],
+          "encoder_span_deg": 3.4096850751837255,
+          "reference_span_deg": 2.5734438103313084,
+          "tau_ff_span_Nm": 0.061730412087422415,
+          "peak_abs_velocity_rad_s": 0.12454212456941605
+        },
+        "wrist_side": {
+          "gain_pairs": [
+            [
+              16.0,
+              2.2
+            ]
+          ],
+          "encoder_span_deg": 14.097725597865173,
+          "reference_span_deg": 14.908181655636982,
+          "tau_ff_span_Nm": 0.22313251976461707,
+          "peak_abs_velocity_rad_s": 0.13919414579868317
+        },
+        "wrist": {
+          "gain_pairs": [
+            [
+              22.0,
+              1.4
+            ]
+          ],
+          "encoder_span_deg": 16.501982921560927,
+          "reference_span_deg": 16.594416158135083,
+          "tau_ff_span_Nm": 0.15343806008565142,
+          "peak_abs_velocity_rad_s": 0.21245421469211578
+        }
+      }
+    },
+    "contact": {
+      "frames": 92,
+      "elapsed_s": 1.7577142715454102,
+      "first_wall_s": 1794111982.4946675,
+      "last_wall_s": 1794111984.2523818,
+      "first_command_tcp_model_mm": [
+        17.49702946562558,
+        357.4935388429175,
+        100.19855198279451
+      ],
+      "last_command_tcp_model_mm": [
+        17.43590444475683,
+        357.3687189652057,
+        98.18249009361794
+      ],
+      "first_feedback_tcp_model_mm": [
+        -11.503793600106373,
+        348.8743734266248,
+        79.12862242734448
+      ],
+      "last_feedback_tcp_model_mm": [
+        -11.3380824713701,
+        347.7442513711666,
+        74.66244984095952
+      ],
+      "command_wrist_rotation_change_deg": 0.009341865076794707,
+      "feedback_wrist_rotation_change_model_deg": 0.7143797952329443,
+      "joints": {
+        "shoulder_front": {
+          "gain_pairs": [
+            [
+              90.0,
+              4.0
+            ]
+          ],
+          "encoder_span_deg": 0.021856818787452367,
+          "reference_span_deg": 0.050300374957229305,
+          "tau_ff_span_Nm": 0.014149944804660919,
+          "peak_abs_velocity_rad_s": 0.00976801011711359
+        },
+        "shoulder_side": {
+          "gain_pairs": [
+            [
+              70.0,
+              3.0
+            ]
+          ],
+          "encoder_span_deg": 0.0,
+          "reference_span_deg": 0.08224671011882623,
+          "tau_ff_span_Nm": 0.016088164730363674,
+          "peak_abs_velocity_rad_s": 0.005860805977135897
+        },
+        "shoulder_rotate": {
+          "gain_pairs": [
+            [
+              36.0,
+              4.5
+            ],
+            [
+              24.0,
+              4.5
+            ]
+          ],
+          "encoder_span_deg": 0.5027087531021085,
+          "reference_span_deg": 0.12153272656759778,
+          "tau_ff_span_Nm": 0.11868698002408085,
+          "peak_abs_velocity_rad_s": 0.6520146727561951
+        },
+        "elbow": {
+          "gain_pairs": [
+            [
+              70.0,
+              3.0
+            ]
+          ],
+          "encoder_span_deg": 0.7431365345284349,
+          "reference_span_deg": 0.32785410666548526,
+          "tau_ff_span_Nm": 0.09669483803977741,
+          "peak_abs_velocity_rad_s": 0.05665445700287819
+        },
+        "arm_roll": {
+          "gain_pairs": [
+            [
+              18.0,
+              1.0
+            ]
+          ],
+          "encoder_span_deg": 0.17485284275232643,
+          "reference_span_deg": 0.1570622667559213,
+          "tau_ff_span_Nm": 0.005108645824232649,
+          "peak_abs_velocity_rad_s": 0.2857142984867096
+        },
+        "wrist_side": {
+          "gain_pairs": [
+            [
+              16.0,
+              2.2
+            ]
+          ],
+          "encoder_span_deg": 0.04371321068808161,
+          "reference_span_deg": 0.10589951124175381,
+          "tau_ff_span_Nm": 0.007185772628568066,
+          "peak_abs_velocity_rad_s": 0.095238097012043
+        },
+        "wrist": {
+          "gain_pairs": [
+            [
+              22.0,
+              1.4
+            ]
+          ],
+          "encoder_span_deg": 0.24042265878444882,
+          "reference_span_deg": 0.44438483758271935,
+          "tau_ff_span_Nm": 0.030002117279572693,
+          "peak_abs_velocity_rad_s": 0.19780220091342926
+        }
+      }
+    },
+    "fault_support": {
+      "frames": 1148,
+      "elapsed_s": 17.655317306518555,
+      "first_wall_s": 1794111984.2559981,
+      "last_wall_s": 1794112001.9113154,
+      "first_command_tcp_model_mm": [
+        17.43590444475683,
+        357.3687189652057,
+        98.18249009361794
+      ],
+      "last_command_tcp_model_mm": [
+        17.43590444475683,
+        357.3687189652057,
+        98.18249009361794
+      ],
+      "first_feedback_tcp_model_mm": [
+        -9.938403091610855,
+        347.48144565984336,
+        74.03082262288454
+      ],
+      "last_feedback_tcp_model_mm": [
+        -5.667587326237233,
+        351.17119640135195,
+        79.13617930945753
+      ],
+      "command_wrist_rotation_change_deg": 0.0,
+      "feedback_wrist_rotation_change_model_deg": 1.4202127042240622,
+      "joints": {
+        "shoulder_front": {
+          "gain_pairs": [
+            [
+              90.0,
+              4.0
+            ]
+          ],
+          "encoder_span_deg": 0.9617055761766048,
+          "reference_span_deg": 0.0,
+          "tau_ff_span_Nm": 1.7763568394002505e-15,
+          "peak_abs_velocity_rad_s": 0.0683760717511177
+        },
+        "shoulder_side": {
+          "gain_pairs": [
+            [
+              70.0,
+              3.0
+            ]
+          ],
+          "encoder_span_deg": 0.6338415549771833,
+          "reference_span_deg": 0.0,
+          "tau_ff_span_Nm": 4.440892098500626e-16,
+          "peak_abs_velocity_rad_s": 0.04884004965424538
+        },
+        "shoulder_rotate": {
+          "gain_pairs": [
+            [
+              24.0,
+              4.5
+            ]
+          ],
+          "encoder_span_deg": 2.4042607387903385,
+          "reference_span_deg": 0.0,
+          "tau_ff_span_Nm": 5.551115123125783e-17,
+          "peak_abs_velocity_rad_s": 2.219780206680298
+        },
+        "elbow": {
+          "gain_pairs": [
+            [
+              70.0,
+              3.0
+            ]
+          ],
+          "encoder_span_deg": 0.7431348269811423,
+          "reference_span_deg": 0.0,
+          "tau_ff_span_Nm": 8.881784197001252e-16,
+          "peak_abs_velocity_rad_s": 0.07228327542543411
+        },
+        "arm_roll": {
+          "gain_pairs": [
+            [
+              18.0,
+              1.0
+            ]
+          ],
+          "encoder_span_deg": 0.39343255657107445,
+          "reference_span_deg": 0.0,
+          "tau_ff_span_Nm": 5.551115123125783e-17,
+          "peak_abs_velocity_rad_s": 0.6520146727561951
+        },
+        "wrist_side": {
+          "gain_pairs": [
+            [
+              16.0,
+              2.2
+            ]
+          ],
+          "encoder_span_deg": 0.13114304715882982,
+          "reference_span_deg": 0.0,
+          "tau_ff_span_Nm": 5.551115123125783e-17,
+          "peak_abs_velocity_rad_s": 0.21245421469211578
+        },
+        "wrist": {
+          "gain_pairs": [
+            [
+              22.0,
+              1.4
+            ]
+          ],
+          "encoder_span_deg": 0.4152891619151153,
+          "reference_span_deg": 0.0,
+          "tau_ff_span_Nm": 2.220446049250313e-16,
+          "peak_abs_velocity_rad_s": 0.7106227278709412
+        }
+      }
+    }
+  },
+  "shoulder_rotate_gain_transitions": [
+    {
+      "time_before_fault_s": -10.468108654022217,
+      "stage": "source_above",
+      "old_command": {
+        "kp": 24.0,
+        "kd": 4.5,
+        "q": 1.9794561543169529,
+        "dq": 0.0,
+        "tau_ff": -0.2793086726141565
+      },
+      "new_command": {
+        "kp": 36.0,
+        "kd": 4.5,
+        "q": 1.9794561543169529,
+        "dq": 0.0,
+        "tau_ff": -0.17606541473741522
+      },
+      "encoder_before": {
+        "pos": 1.9880597591400146,
+        "vel": -0.007326007355004549,
+        "tau": -0.5347985625267029
+      },
+      "encoder_after": {
+        "pos": 1.9880597591400146,
+        "vel": -0.021978022530674934,
+        "tau": -0.5396825671195984
+      }
+    },
+    {
+      "time_before_fault_s": -1.6199884414672852,
+      "stage": "contact",
+      "old_command": {
+        "kp": 36.0,
+        "kd": 4.5,
+        "q": 1.8122273430215732,
+        "dq": 0.0,
+        "tau_ff": 0.1904232705982657
+      },
+      "new_command": {
+        "kp": 24.0,
+        "kd": 4.5,
+        "q": 1.8122273430215732,
+        "dq": 0.0,
+        "tau_ff": 0.07173629057418485
+      },
+      "encoder_before": {
+        "pos": 1.8221179246902466,
+        "vel": -0.007326007355004549,
+        "tau": -0.20757021009922028
+      },
+      "encoder_after": {
+        "pos": 1.8221179246902466,
+        "vel": -0.021978022530674934,
+        "tau": -0.2173382192850113
+      }
+    }
+  ],
+  "fault_relative_windows": [
+    {
+      "seconds_relative_to_fault": [
+        -1.5,
+        0
+      ],
+      "frames": 80,
+      "shoulder_rotate": {
+        "gain_pairs": [
+          [
+            24.0,
+            4.5
+          ]
+        ],
+        "encoder_span_deg": 0.3934257263819045,
+        "reference_span_deg": 0.12140916961292951,
+        "tau_ff_span_Nm": 0.10631466408228568,
+        "peak_abs_velocity_rad_s": 0.6520146727561951
+      }
+    },
+    {
+      "seconds_relative_to_fault": [
+        0,
+        0.5
+      ],
+      "frames": 35,
+      "shoulder_rotate": {
+        "gain_pairs": [
+          [
+            24.0,
+            4.5
+          ]
+        ],
+        "encoder_span_deg": 1.442556443274203,
+        "reference_span_deg": 0.0,
+        "tau_ff_span_Nm": 5.551115123125783e-17,
+        "peak_abs_velocity_rad_s": 2.0
+      }
+    },
+    {
+      "seconds_relative_to_fault": [
+        0.5,
+        1.5
+      ],
+      "frames": 64,
+      "shoulder_rotate": {
+        "gain_pairs": [
+          [
+            24.0,
+            4.5
+          ]
+        ],
+        "encoder_span_deg": 1.7485557482799443,
+        "reference_span_deg": 0.0,
+        "tau_ff_span_Nm": 0.0,
+        "peak_abs_velocity_rad_s": 2.219780206680298
+      }
+    },
+    {
+      "seconds_relative_to_fault": [
+        1.5,
+        3
+      ],
+      "frames": 99,
+      "shoulder_rotate": {
+        "gain_pairs": [
+          [
+            24.0,
+            4.5
+          ]
+        ],
+        "encoder_span_deg": 1.223983559644625,
+        "reference_span_deg": 0.0,
+        "tau_ff_span_Nm": 0.0,
+        "peak_abs_velocity_rad_s": 2.029304027557373
+      }
+    },
+    {
+      "seconds_relative_to_fault": [
+        3,
+        5
+      ],
+      "frames": 130,
+      "shoulder_rotate": {
+        "gain_pairs": [
+          [
+            24.0,
+            4.5
+          ]
+        ],
+        "encoder_span_deg": 1.1802771791457134,
+        "reference_span_deg": 0.0,
+        "tau_ff_span_Nm": 0.0,
+        "peak_abs_velocity_rad_s": 1.9267399311065674
+      }
+    },
+    {
+      "seconds_relative_to_fault": [
+        5,
+        10
+      ],
+      "frames": 321,
+      "shoulder_rotate": {
+        "gain_pairs": [
+          [
+            24.0,
+            4.5
+          ]
+        ],
+        "encoder_span_deg": 1.6392658913705702,
+        "reference_span_deg": 0.0,
+        "tau_ff_span_Nm": 0.0,
+        "peak_abs_velocity_rad_s": 1.9853479862213135
+      }
+    },
+    {
+      "seconds_relative_to_fault": [
+        10,
+        20
+      ],
+      "frames": 500,
+      "shoulder_rotate": {
+        "gain_pairs": [
+          [
+            24.0,
+            4.5
+          ]
+        ],
+        "encoder_span_deg": 1.7485557482799443,
+        "reference_span_deg": 0.0,
+        "tau_ff_span_Nm": 0.0,
+        "peak_abs_velocity_rad_s": 2.029304027557373
+      }
+    }
+  ],
+  "trace_integrity": {
+    "parsed_records": 5322,
+    "motor_frames": 4341,
+    "has_normal_close_footer": false,
+    "maximum_reported_queue_drops": 0,
+    "trailing_frames_not_guaranteed": "Emergency stop terminated the process; no normal close footer."
+  },
+  "comparison": {
+    "v30_hover_mm": 140.0,
+    "v31_hover_mm": 100.2,
+    "v30_contact_peak_shoulder_rotate_velocity": 0.06593406945466995,
+    "same_36_to_24_kp_transition_also_occurred_in_v30": true,
+    "not_single_variable_comparison": true
+  },
+  "established": [
+    "Trajectory reference did not command repeated fast reversals.",
+    "Shoulder rotate encoder oscillation continued after target and feedforward were frozen.",
+    "Fault support reused Kp24/Kd4.5 and did not promptly settle the oscillation.",
+    "The complete descent, endpoint settle and normal model hold were not reached."
+  ],
+  "not_established": [
+    "Which gain/pose/drive-dynamics interaction initiated oscillation.",
+    "Whether full-frame descent reduces the previously reported physical 8mm drift.",
+    "Individual CAN feedback freshness and exact motor-internal stability margins."
+  ],
+  "fk_is_external_measurement": false,
+  "promote_to_validated_library": false
+}

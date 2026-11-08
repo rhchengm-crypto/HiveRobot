@@ -1,0 +1,1583 @@
+{
+  "motion_issued_by_audit": false,
+  "build": "seven-axis-board-grasp-v32-descent-gain-continuity",
+  "request_board_mm": [
+    17.5,
+    357.5,
+    50.2
+  ],
+  "motion_run": {
+    "full_log_path": "outputs\\a7_v32_execution_20261107\\control_evidence\\data\\left_arm_v2_8_full_runs\\arm_run_1794113116885_55216.txt",
+    "trace_path": "outputs\\a7_v32_execution_20261107\\control_evidence\\data\\board_motion_traces\\trace_1794113126743021138.jsonl"
+  },
+  "motor_frames": 4400,
+  "events": {
+    "trace_started": 1,
+    "segment_boundary": 71,
+    "motor_frame": 4400,
+    "gripper_feedback_clearance": 1333,
+    "trace_closed": 1
+  },
+  "trace_closed": {
+    "event": "trace_closed",
+    "frames_written": 5805,
+    "queue_dropped_frames": 0
+  },
+  "trace_complete": {
+    "path": "/home/nvidia/hive_robot/DM_Control_Python/data/board_motion_traces/trace_1794113126743021138.jsonl",
+    "frames_written": 5805,
+    "dropped_frames": 0,
+    "capture_errors": 0,
+    "error": null
+  },
+  "confirmed_oscillation_events": 0,
+  "fault_support_frames": 0,
+  "stages": {
+    "entry_search": {
+      "frames": 2651,
+      "elapsed_s": 50.7646369934082,
+      "waypoint_indices": [
+        21
+      ],
+      "shoulder_rotate_gain_pairs": [
+        [
+          24.0,
+          4.5
+        ]
+      ],
+      "peak_abs_velocity_rad_s": {
+        "shoulder_front": 0.17387057840824127,
+        "shoulder_side": 0.05274725332856178,
+        "shoulder_rotate": 0.06593406945466995,
+        "elbow": 0.11916971951723099,
+        "arm_roll": 0.10989011079072952,
+        "wrist_side": 0.13919414579868317,
+        "wrist": 0.19780220091342926
+      },
+      "peak_abs_tracking_error_deg": {
+        "shoulder_front": 2.582323186308956,
+        "shoulder_side": 1.115556583868689,
+        "shoulder_rotate": 1.1250418600069132,
+        "elbow": 1.015389270177665,
+        "arm_roll": 1.116528931796513,
+        "wrist_side": 1.2840563406960919,
+        "wrist": 0.8076550967991286
+      },
+      "first_feedback_model_pose": {
+        "tcp_board_mm": [
+          26.180010348981174,
+          -64.552976888612,
+          146.25441642358925
+        ],
+        "lowest_gripper_vertex_mm": 73.52156328095572,
+        "physical_measurement": false
+      },
+      "last_feedback_model_pose": {
+        "tcp_board_mm": [
+          -82.49137677102088,
+          359.97709322983536,
+          168.73865682418906
+        ],
+        "lowest_gripper_vertex_mm": 140.83296480107043,
+        "physical_measurement": false
+      },
+      "first_command_model_pose": {
+        "tcp_board_mm": [
+          26.077892723552836,
+          -64.54626124017175,
+          146.26461477218757
+        ],
+        "lowest_gripper_vertex_mm": 73.52915816940305,
+        "physical_measurement": false
+      },
+      "last_command_model_pose": {
+        "tcp_board_mm": [
+          -86.21722407008444,
+          366.19698359368505,
+          187.75440162016392
+        ],
+        "lowest_gripper_vertex_mm": 159.2993999869796,
+        "physical_measurement": false
+      },
+      "frame_interval_ms": {
+        "p50": 16.073388498625718,
+        "p99": 43.647449229465515,
+        "max": 54.334444997948594
+      }
+    },
+    "source_above": {
+      "frames": 468,
+      "elapsed_s": 9.053142786026001,
+      "waypoint_indices": [
+        25
+      ],
+      "shoulder_rotate_gain_pairs": [
+        [
+          24.0,
+          4.5
+        ],
+        [
+          36.0,
+          4.5
+        ]
+      ],
+      "peak_abs_velocity_rad_s": {
+        "shoulder_front": 0.15824176371097565,
+        "shoulder_side": 0.09572649747133255,
+        "shoulder_rotate": 0.10989011079072952,
+        "elbow": 0.1269841343164444,
+        "arm_roll": 0.12454212456941605,
+        "wrist_side": 0.18315018713474274,
+        "wrist": 0.19780220091342926
+      },
+      "peak_abs_tracking_error_deg": {
+        "shoulder_front": 2.6947003813778583,
+        "shoulder_side": 1.588096875556279,
+        "shoulder_rotate": 0.5664402834474174,
+        "elbow": 1.468344109847614,
+        "arm_roll": 1.9089042178431115,
+        "wrist_side": 1.6957812901953477,
+        "wrist": 0.8400088958481403
+      },
+      "first_feedback_model_pose": {
+        "tcp_board_mm": [
+          -82.49137677102088,
+          359.97709322983536,
+          168.73865682418906
+        ],
+        "lowest_gripper_vertex_mm": 140.83296480107043,
+        "physical_measurement": false
+      },
+      "last_feedback_model_pose": {
+        "tcp_board_mm": [
+          -12.66334358675139,
+          349.0169065907628,
+          79.6979731500235
+        ],
+        "lowest_gripper_vertex_mm": 64.0057482016244,
+        "physical_measurement": false
+      },
+      "first_command_model_pose": {
+        "tcp_board_mm": [
+          -86.21722407008444,
+          366.19698359368505,
+          187.75440162016392
+        ],
+        "lowest_gripper_vertex_mm": 159.2993999869796,
+        "physical_measurement": false
+      },
+      "last_command_model_pose": {
+        "tcp_board_mm": [
+          17.49702946562558,
+          357.4935388429175,
+          100.19855198279451
+        ],
+        "lowest_gripper_vertex_mm": 83.4176993016212,
+        "physical_measurement": false
+      },
+      "frame_interval_ms": {
+        "p50": 15.935318999254378,
+        "p99": 43.12707174824026,
+        "max": 80.58141399669694
+      }
+    },
+    "contact": {
+      "frames": 856,
+      "elapsed_s": 18.23983907699585,
+      "waypoint_indices": [
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "shoulder_rotate_gain_pairs": [
+        [
+          36.0,
+          4.5
+        ]
+      ],
+      "peak_abs_velocity_rad_s": {
+        "shoulder_front": 0.11526251584291458,
+        "shoulder_side": 0.013675213791429996,
+        "shoulder_rotate": 0.03663003817200661,
+        "elbow": 0.11526251584291458,
+        "arm_roll": 0.08058608323335648,
+        "wrist_side": 0.06593406945466995,
+        "wrist": 0.19780220091342926
+      },
+      "peak_abs_tracking_error_deg": {
+        "shoulder_front": 2.849551135029516,
+        "shoulder_side": 1.501540041723983,
+        "shoulder_rotate": 1.0227416688548854,
+        "elbow": 1.7929824059846253,
+        "arm_roll": 1.8903528159222742,
+        "wrist_side": 1.5530311670876087,
+        "wrist": 0.8199514906501605
+      },
+      "first_feedback_model_pose": {
+        "tcp_board_mm": [
+          -12.66334358675139,
+          349.0169065907628,
+          79.6979731500235
+        ],
+        "lowest_gripper_vertex_mm": 64.0057482016244,
+        "physical_measurement": false
+      },
+      "last_feedback_model_pose": {
+        "tcp_board_mm": [
+          15.233850931803664,
+          350.56308414503087,
+          35.97683023963652
+        ],
+        "lowest_gripper_vertex_mm": 19.735868441864078,
+        "physical_measurement": false
+      },
+      "first_command_model_pose": {
+        "tcp_board_mm": [
+          17.49702946562558,
+          357.4935388429175,
+          100.19855198279451
+        ],
+        "lowest_gripper_vertex_mm": 83.4176993016212,
+        "physical_measurement": false
+      },
+      "last_command_model_pose": {
+        "tcp_board_mm": [
+          17.42785155773923,
+          357.33087303137137,
+          50.275965552345134
+        ],
+        "lowest_gripper_vertex_mm": 33.495192488142784,
+        "physical_measurement": false
+      },
+      "frame_interval_ms": {
+        "p50": 16.81330249630264,
+        "p99": 50.03990045297543,
+        "max": 55.011323995131534
+      }
+    },
+    "endpoint_settle": {
+      "frames": 300,
+      "elapsed_s": 6.359248638153076,
+      "waypoint_indices": [
+        32
+      ],
+      "shoulder_rotate_gain_pairs": [
+        [
+          36.0,
+          4.5
+        ]
+      ],
+      "peak_abs_velocity_rad_s": {
+        "shoulder_front": 0.00976801011711359,
+        "shoulder_side": 0.005860805977135897,
+        "shoulder_rotate": 0.05128205195069313,
+        "elbow": 0.005860805977135897,
+        "arm_roll": 0.03663003817200661,
+        "wrist_side": 0.03663003817200661,
+        "wrist": 0.03663003817200661
+      },
+      "peak_abs_tracking_error_deg": {
+        "shoulder_front": 1.9817578541012792,
+        "shoulder_side": 0.7772092817312278,
+        "shoulder_rotate": 0.9269733364967908,
+        "elbow": 1.4450314924009262,
+        "arm_roll": 1.5425434406911025,
+        "wrist_side": 0.6243749702349087,
+        "wrist": 0.11088361398338348
+      },
+      "first_feedback_model_pose": {
+        "tcp_board_mm": [
+          15.233850931803664,
+          350.56308414503087,
+          35.97683023963652
+        ],
+        "lowest_gripper_vertex_mm": 19.735868441864078,
+        "physical_measurement": false
+      },
+      "last_feedback_model_pose": {
+        "tcp_board_mm": [
+          15.289517899907066,
+          350.5462094072527,
+          35.94329262929796
+        ],
+        "lowest_gripper_vertex_mm": 19.706600164690858,
+        "physical_measurement": false
+      },
+      "first_command_model_pose": {
+        "tcp_board_mm": [
+          17.42785155773923,
+          357.33087303137137,
+          50.275965552345134
+        ],
+        "lowest_gripper_vertex_mm": 33.495192488142784,
+        "physical_measurement": false
+      },
+      "last_command_model_pose": {
+        "tcp_board_mm": [
+          17.42785155773923,
+          357.33087303137137,
+          50.275965552345134
+        ],
+        "lowest_gripper_vertex_mm": 33.495192488142784,
+        "physical_measurement": false
+      },
+      "frame_interval_ms": {
+        "p50": 16.61340699865832,
+        "p99": 48.220988649336505,
+        "max": 49.67230899637798
+      }
+    },
+    "model_hold": {
+      "frames": 125,
+      "elapsed_s": 5.13045597076416,
+      "waypoint_indices": [
+        32
+      ],
+      "shoulder_rotate_gain_pairs": [
+        [
+          36.0,
+          4.5
+        ]
+      ],
+      "peak_abs_velocity_rad_s": {
+        "shoulder_front": 0.005860805977135897,
+        "shoulder_side": 0.005860805977135897,
+        "shoulder_rotate": 0.021978022530674934,
+        "elbow": 0.005860805977135897,
+        "arm_roll": 0.03663003817200661,
+        "wrist_side": 0.03663003817200661,
+        "wrist": 0.021978022530674934
+      },
+      "peak_abs_tracking_error_deg": {
+        "shoulder_front": 1.9817578541012786,
+        "shoulder_side": 0.7772092817312024,
+        "shoulder_rotate": 0.9051167311527373,
+        "elbow": 1.4450314924009198,
+        "arm_roll": 1.5206868353470617,
+        "wrist_side": 0.6243749702349024,
+        "wrist": 0.11088361398335803
+      },
+      "first_feedback_model_pose": {
+        "tcp_board_mm": [
+          15.289517899907066,
+          350.5462094072527,
+          35.94329262929796
+        ],
+        "lowest_gripper_vertex_mm": 19.706600164690858,
+        "physical_measurement": false
+      },
+      "last_feedback_model_pose": {
+        "tcp_board_mm": [
+          15.289517899907066,
+          350.5462094072527,
+          35.94329262929796
+        ],
+        "lowest_gripper_vertex_mm": 19.706600164690858,
+        "physical_measurement": false
+      },
+      "first_command_model_pose": {
+        "tcp_board_mm": [
+          17.42785155773923,
+          357.33087303137137,
+          50.275965552345134
+        ],
+        "lowest_gripper_vertex_mm": 33.495192488142784,
+        "physical_measurement": false
+      },
+      "last_command_model_pose": {
+        "tcp_board_mm": [
+          15.289517899907066,
+          350.5462094072527,
+          35.94329262929796
+        ],
+        "lowest_gripper_vertex_mm": 19.706600164690858,
+        "physical_measurement": false
+      },
+      "frame_interval_ms": {
+        "p50": 40.58234500553226,
+        "p99": 54.455079964245726,
+        "max": 99.98390699911397
+      }
+    }
+  },
+  "descent_gain_logs": [
+    {
+      "policy": "freeze-acquired-gains-through-cartesian-descent",
+      "requested_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "seconds": 6.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "shoulder_rotate": {
+          "kp": 24.0,
+          "kd": 4.5,
+          "seconds": 8.0
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "seconds": 12.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "seconds": 6.0
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "seconds": 5.0
+        }
+      },
+      "applied_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "shoulder_rotate": {
+          "kp": 36.0,
+          "kd": 4.5
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4
+        }
+      },
+      "reference_and_model_unchanged": true
+    },
+    {
+      "policy": "freeze-acquired-gains-through-cartesian-descent",
+      "requested_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "seconds": 6.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "shoulder_rotate": {
+          "kp": 24.0,
+          "kd": 4.5,
+          "seconds": 8.0
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "seconds": 12.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "seconds": 6.0
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "seconds": 5.0
+        }
+      },
+      "applied_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "shoulder_rotate": {
+          "kp": 36.0,
+          "kd": 4.5
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4
+        }
+      },
+      "reference_and_model_unchanged": true
+    },
+    {
+      "policy": "freeze-acquired-gains-through-cartesian-descent",
+      "requested_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "seconds": 6.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "shoulder_rotate": {
+          "kp": 24.0,
+          "kd": 4.5,
+          "seconds": 8.0
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "seconds": 12.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "seconds": 6.0
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "seconds": 5.0
+        }
+      },
+      "applied_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "shoulder_rotate": {
+          "kp": 36.0,
+          "kd": 4.5
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4
+        }
+      },
+      "reference_and_model_unchanged": true
+    },
+    {
+      "policy": "freeze-acquired-gains-through-cartesian-descent",
+      "requested_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "seconds": 6.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "shoulder_rotate": {
+          "kp": 24.0,
+          "kd": 4.5,
+          "seconds": 8.0
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "seconds": 12.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "seconds": 6.0
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "seconds": 5.0
+        }
+      },
+      "applied_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "shoulder_rotate": {
+          "kp": 36.0,
+          "kd": 4.5
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4
+        }
+      },
+      "reference_and_model_unchanged": true
+    },
+    {
+      "policy": "freeze-acquired-gains-through-cartesian-descent",
+      "requested_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "seconds": 6.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "shoulder_rotate": {
+          "kp": 24.0,
+          "kd": 4.5,
+          "seconds": 8.0
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "seconds": 12.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "seconds": 6.0
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "seconds": 5.0
+        }
+      },
+      "applied_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "shoulder_rotate": {
+          "kp": 36.0,
+          "kd": 4.5
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4
+        }
+      },
+      "reference_and_model_unchanged": true
+    },
+    {
+      "policy": "freeze-acquired-gains-through-cartesian-descent",
+      "requested_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "seconds": 6.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "shoulder_rotate": {
+          "kp": 24.0,
+          "kd": 4.5,
+          "seconds": 8.0
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "seconds": 12.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "seconds": 6.0
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "seconds": 5.0
+        }
+      },
+      "applied_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "shoulder_rotate": {
+          "kp": 36.0,
+          "kd": 4.5
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4
+        }
+      },
+      "reference_and_model_unchanged": true
+    },
+    {
+      "policy": "freeze-acquired-gains-through-cartesian-descent",
+      "requested_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "seconds": 6.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "shoulder_rotate": {
+          "kp": 24.0,
+          "kd": 4.5,
+          "seconds": 8.0
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "seconds": 6.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "seconds": 12.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "seconds": 6.0
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "seconds": 5.0
+        }
+      },
+      "applied_gains": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "shoulder_rotate": {
+          "kp": 36.0,
+          "kd": 4.5
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4
+        }
+      },
+      "reference_and_model_unchanged": true
+    }
+  ],
+  "endpoint_settle_log": [
+    "board endpoint settle= {\"attempt\": 1, \"max_error_deg\": 1.9817578541012786, \"entry_feedback\": {\"shoulder_front\": {\"pos\": -0.08907453715801239, \"vel\": -0.0019536020699888468, \"tau\": -11.671794891357422}, \"shoulder_side\": {\"pos\": -2.7388036251068115, \"vel\": -0.0019536020699888468, \"tau\": 2.632478713989258}, \"shoulder_rotate\": {\"pos\": 1.8614099025726318, \"vel\": -0.007326007355004549, \"tau\": 0.3394383490085602}, \"elbow\": {\"pos\": -0.7085908055305481, \"vel\": -0.0019536020699888468, \"tau\": 2.769230842590332}, \"arm_roll\": {\"pos\": -2.268444299697876, \"vel\": 0.007326007355004549, \"tau\": -0.7789987921714783}, \"wrist_side\": {\"pos\": -0.5136567950248718, \"vel\": -0.007326007355004549, \"tau\": -0.021978022530674934}, \"wrist\": {\"pos\": -2.3424506187438965, \"vel\": -0.007326007355004549, \"tau\": 0.5885226130485535}}, \"target_rad\": {\"shoulder_front\": -0.12366273668933711, \"shoulder_side\": -2.725238764163542, \"shoulder_rotate\": 1.877588639372698, \"elbow\": -0.7338113628679516, \"arm_roll\": -2.294985291866415, \"wrist_side\": -0.5245541940225125, \"wrist\": -2.3443859028944165}, \"target_source\": \"last geometric IK waypoint\", \"fixed_board_offset_mm\": [0.0, 0.0, 0.0], \"timing\": {\"seconds\": 1.4131350363715336, \"reference_peak_velocity_rad_s\": 0.04589290651780506, \"reference_peak_acceleration_rad_s2\": 0.10000000000000002, \"feedback_velocity_limit_rad_s\": 0.2}}",
+    "board endpoint settle= {\"attempt\": 2, \"max_error_deg\": 1.9817578541012786, \"entry_feedback\": {\"shoulder_front\": {\"pos\": -0.08907453715801239, \"vel\": 0.0019536020699888468, \"tau\": -11.671794891357422}, \"shoulder_side\": {\"pos\": -2.7388036251068115, \"vel\": -0.0019536020699888468, \"tau\": 2.6188035011291504}, \"shoulder_rotate\": {\"pos\": 1.8614099025726318, \"vel\": 0.007326007355004549, \"tau\": 0.3394383490085602}, \"elbow\": {\"pos\": -0.7085908055305481, \"vel\": -0.0019536020699888468, \"tau\": 2.7555556297302246}, \"arm_roll\": {\"pos\": -2.268444299697876, \"vel\": -0.021978022530674934, \"tau\": -0.7838827967643738}, \"wrist_side\": {\"pos\": -0.5136567950248718, \"vel\": -0.007326007355004549, \"tau\": -0.017094017937779427}, \"wrist\": {\"pos\": -2.3424506187438965, \"vel\": -0.007326007355004549, \"tau\": 0.593406617641449}}, \"target_rad\": {\"shoulder_front\": -0.12366273668933711, \"shoulder_side\": -2.725238764163542, \"shoulder_rotate\": 1.877588639372698, \"elbow\": -0.7338113628679516, \"arm_roll\": -2.294985291866415, \"wrist_side\": -0.5245541940225125, \"wrist\": -2.3443859028944165}, \"target_source\": \"last geometric IK waypoint\", \"fixed_board_offset_mm\": [0.0, 0.0, 0.0], \"timing\": {\"seconds\": 1.4131350363715336, \"reference_peak_velocity_rad_s\": 0.04589290651780506, \"reference_peak_acceleration_rad_s2\": 0.10000000000000002, \"feedback_velocity_limit_rad_s\": 0.2}}",
+    "board endpoint settle= {\"attempt\": 3, \"max_error_deg\": 1.9817578541012786, \"entry_feedback\": {\"shoulder_front\": {\"pos\": -0.08907453715801239, \"vel\": -0.005860805977135897, \"tau\": -11.671794891357422}, \"shoulder_side\": {\"pos\": -2.7388036251068115, \"vel\": -0.0019536020699888468, \"tau\": 2.632478713989258}, \"shoulder_rotate\": {\"pos\": 1.8617913722991943, \"vel\": -0.007326007355004549, \"tau\": 0.3345543444156647}, \"elbow\": {\"pos\": -0.7085908055305481, \"vel\": -0.0019536020699888468, \"tau\": 2.769230842590332}, \"arm_roll\": {\"pos\": -2.268444299697876, \"vel\": -0.007326007355004549, \"tau\": -0.7741147875785828}, \"wrist_side\": {\"pos\": -0.5136567950248718, \"vel\": -0.007326007355004549, \"tau\": -0.021978022530674934}, \"wrist\": {\"pos\": -2.3424506187438965, \"vel\": -0.021978022530674934, \"tau\": 0.5885226130485535}}, \"target_rad\": {\"shoulder_front\": -0.12366273668933711, \"shoulder_side\": -2.725238764163542, \"shoulder_rotate\": 1.877588639372698, \"elbow\": -0.7338113628679516, \"arm_roll\": -2.294985291866415, \"wrist_side\": -0.5245541940225125, \"wrist\": -2.3443859028944165}, \"target_source\": \"last geometric IK waypoint\", \"fixed_board_offset_mm\": [0.0, 0.0, 0.0], \"timing\": {\"seconds\": 1.4131350363715336, \"reference_peak_velocity_rad_s\": 0.04589290651780506, \"reference_peak_acceleration_rad_s2\": 0.10000000000000002, \"feedback_velocity_limit_rad_s\": 0.2}}"
+  ],
+  "model_hold": {
+    "ok": true,
+    "reason": "duration_complete",
+    "duration_s": 5.015100002288818,
+    "final": {
+      "shoulder_front": {
+        "pos": -0.08907453715801239,
+        "vel": -0.0019536020699888468,
+        "tau": -11.658119201660156
+      },
+      "shoulder_side": {
+        "pos": -2.7388036251068115,
+        "vel": -0.0019536020699888468,
+        "tau": 2.6461539268493652
+      },
+      "shoulder_rotate": {
+        "pos": 1.8617913722991943,
+        "vel": -0.007326007355004549,
+        "tau": 0.31501832604408264
+      },
+      "elbow": {
+        "pos": -0.7085908055305481,
+        "vel": -0.0019536020699888468,
+        "tau": 2.769230842590332
+      },
+      "arm_roll": {
+        "pos": -2.268444299697876,
+        "vel": -0.007326007355004549,
+        "tau": -0.7838827967643738
+      },
+      "wrist_side": {
+        "pos": -0.5136567950248718,
+        "vel": -0.007326007355004549,
+        "tau": -0.017094017937779427
+      },
+      "wrist": {
+        "pos": -2.3424506187438965,
+        "vel": -0.007326007355004549,
+        "tau": 0.5885226130485535
+      }
+    },
+    "final_error_deg": {
+      "shoulder_front": 0.0,
+      "shoulder_side": 0.0,
+      "shoulder_rotate": 0.0,
+      "elbow": 0.0,
+      "arm_roll": 0.0,
+      "wrist_side": 0.0,
+      "wrist": 0.0
+    },
+    "max_velocity_rad_s": {
+      "shoulder_front": 0.005860805977135897,
+      "shoulder_side": 0.005860805977135897,
+      "shoulder_rotate": 0.03663003817200661,
+      "elbow": 0.005860805977135897,
+      "arm_roll": 0.03663003817200661,
+      "wrist_side": 0.021978022530674934,
+      "wrist": 0.021978022530674934
+    },
+    "max_abs_error_deg": {
+      "shoulder_front": 0.0,
+      "shoulder_side": 0.0,
+      "shoulder_rotate": 0.021856605344040804,
+      "elbow": 0.0,
+      "arm_roll": 0.021856605344040804,
+      "wrist_side": 0.0,
+      "wrist": 0.0
+    },
+    "rejected_velocity_spikes": [],
+    "static_hold_bias_tau": {
+      "shoulder_front": -0.66,
+      "shoulder_side": 0.46,
+      "shoulder_rotate": 0.18643473805532504,
+      "elbow": -0.75,
+      "arm_roll": -0.08,
+      "wrist_side": -0.0022879969805767782,
+      "wrist": 0.17
+    },
+    "load_support": {
+      "shoulder_front": {
+        "measured_tau": -11.658119201660156,
+        "model_tau_with_static_bias": -4.8,
+        "static_hold_bias_tau": -0.66,
+        "load_support_tau": -6.858119201660156,
+        "bridge_tau_ff": -11.606519983493893,
+        "model_tau_limits": [
+          -4.8,
+          3.8
+        ],
+        "hold_tau_limits": [
+          -11.665933609940112,
+          3.8
+        ],
+        "scope": "current-fixed-pose-hold-only",
+        "terminal_command": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "q": -0.08907453715801239,
+          "dq": 0.0,
+          "tau_ff": -11.606519983493893
+        }
+      },
+      "shoulder_side": {
+        "measured_tau": 2.6461539268493652,
+        "model_tau_with_static_bias": 1.0,
+        "static_hold_bias_tau": 0.46,
+        "load_support_tau": 1.6461539268493652,
+        "bridge_tau_ff": 2.6823541281377494,
+        "model_tau_limits": [
+          -1.0,
+          1.0
+        ],
+        "hold_tau_limits": [
+          -1.0,
+          2.6461539268493652
+        ],
+        "scope": "current-fixed-pose-hold-only",
+        "terminal_command": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "q": -2.7388036251068115,
+          "dq": 0.0,
+          "tau_ff": 2.6823541281377494
+        }
+      },
+      "shoulder_rotate": {
+        "measured_tau": 0.3345543444156647,
+        "model_tau_with_static_bias": 0.3345543444156647,
+        "static_hold_bias_tau": 0.18643473805532504,
+        "load_support_tau": 0.0,
+        "bridge_tau_ff": 0.3804351890958815,
+        "model_tau_limits": [
+          -1.0,
+          1.0
+        ],
+        "hold_tau_limits": [
+          -1.0,
+          1.0
+        ],
+        "scope": "current-fixed-pose-hold-only",
+        "terminal_command": {
+          "kp": 36.0,
+          "kd": 4.5,
+          "q": 1.8617913722991943,
+          "dq": 0.0,
+          "tau_ff": 0.3804351890958815
+        }
+      },
+      "elbow": {
+        "measured_tau": 2.7829060554504395,
+        "model_tau_with_static_bias": 2.9486823136670046,
+        "static_hold_bias_tau": -0.75,
+        "load_support_tau": -0.16577625821656516,
+        "bridge_tau_ff": 2.8228693865637267,
+        "model_tau_limits": [
+          -5.4,
+          5.4
+        ],
+        "hold_tau_limits": [
+          -5.4,
+          5.4
+        ],
+        "scope": "current-fixed-pose-hold-only",
+        "terminal_command": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "q": -0.7085908055305481,
+          "dq": 0.0,
+          "tau_ff": 2.8228693865637267
+        }
+      },
+      "arm_roll": {
+        "measured_tau": -0.7838827967643738,
+        "model_tau_with_static_bias": -0.41811746157973545,
+        "static_hold_bias_tau": -0.08,
+        "load_support_tau": -0.36576533518463833,
+        "bridge_tau_ff": -0.7621498798727973,
+        "model_tau_limits": [
+          -0.8,
+          0.8
+        ],
+        "hold_tau_limits": [
+          -0.8,
+          0.8
+        ],
+        "scope": "current-fixed-pose-hold-only",
+        "terminal_command": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "q": -2.268444299697876,
+          "dq": 0.0,
+          "tau_ff": -0.7621498798727973
+        }
+      },
+      "wrist_side": {
+        "measured_tau": -0.017094017937779427,
+        "model_tau_with_static_bias": -0.017094017937779427,
+        "static_hold_bias_tau": -0.0022879969805767782,
+        "load_support_tau": 0.0,
+        "bridge_tau_ff": 0.0054980876256072175,
+        "model_tau_limits": [
+          -0.45,
+          0.45
+        ],
+        "hold_tau_limits": [
+          -0.45,
+          0.45
+        ],
+        "scope": "current-fixed-pose-hold-only",
+        "terminal_command": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "q": -0.5136567950248718,
+          "dq": 0.0,
+          "tau_ff": 0.0054980876256072175
+        }
+      },
+      "wrist": {
+        "measured_tau": 0.5885226130485535,
+        "model_tau_with_static_bias": 0.3450568451714907,
+        "static_hold_bias_tau": 0.17,
+        "load_support_tau": 0.24346576787706276,
+        "bridge_tau_ff": 0.6225180178972737,
+        "model_tau_limits": [
+          -0.7,
+          0.7
+        ],
+        "hold_tau_limits": [
+          -0.7,
+          0.7
+        ],
+        "scope": "current-fixed-pose-hold-only",
+        "terminal_command": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "q": -2.3424506187438965,
+          "dq": 0.0,
+          "tau_ff": 0.6225180178972737
+        }
+      }
+    },
+    "motion_gain_floor": {
+      "shoulder_front": {
+        "kp": 90.0,
+        "kd": 4.0,
+        "q": -0.08907453715801239,
+        "dq": 0.0,
+        "tau_ff": -11.606519983493893
+      },
+      "shoulder_side": {
+        "kp": 70.0,
+        "kd": 3.0,
+        "q": -2.7388036251068115,
+        "dq": 0.0,
+        "tau_ff": 2.6823541281377494
+      },
+      "shoulder_rotate": {
+        "kp": 36.0,
+        "kd": 4.5,
+        "q": 1.8617913722991943,
+        "dq": 0.0,
+        "tau_ff": 0.3804351890958815
+      },
+      "elbow": {
+        "kp": 70.0,
+        "kd": 3.0,
+        "q": -0.7085908055305481,
+        "dq": 0.0,
+        "tau_ff": 2.8228693865637267
+      },
+      "arm_roll": {
+        "kp": 18.0,
+        "kd": 1.0,
+        "q": -2.268444299697876,
+        "dq": 0.0,
+        "tau_ff": -0.7621498798727973
+      },
+      "wrist_side": {
+        "kp": 16.0,
+        "kd": 2.2,
+        "q": -0.5136567950248718,
+        "dq": 0.0,
+        "tau_ff": 0.0054980876256072175
+      },
+      "wrist": {
+        "kp": 22.0,
+        "kd": 1.4,
+        "q": -2.3424506187438965,
+        "dq": 0.0,
+        "tau_ff": 0.6225180178972737
+      }
+    },
+    "serial_session_reused": true,
+    "motor_enable_mode": "reused-existing-enable",
+    "seamless_takeover": {
+      "enabled": true,
+      "mode": "continued-terminal-motion-command",
+      "kp": 2.0,
+      "kd": 0.4,
+      "joints": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "target_rad": -0.08907453715801239,
+          "measured_velocity_rad_s": -0.0019536020699888468,
+          "takeover_tau": -11.606519983493893,
+          "measured_tau": -11.658119201660156,
+          "load_support_tau": -6.858119201660156,
+          "hold_tau_limits": [
+            -11.665933609940112,
+            3.8
+          ]
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "target_rad": -2.7388036251068115,
+          "measured_velocity_rad_s": -0.0019536020699888468,
+          "takeover_tau": 2.6823541281377494,
+          "measured_tau": 2.6461539268493652,
+          "load_support_tau": 1.6461539268493652,
+          "hold_tau_limits": [
+            -1.0,
+            2.6461539268493652
+          ]
+        },
+        "shoulder_rotate": {
+          "kp": 36.0,
+          "kd": 4.5,
+          "target_rad": 1.8617913722991943,
+          "measured_velocity_rad_s": -0.007326007355004549,
+          "takeover_tau": 0.3804351890958815,
+          "measured_tau": 0.3345543444156647,
+          "load_support_tau": 0.0,
+          "hold_tau_limits": [
+            -1.0,
+            1.0
+          ]
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "target_rad": -0.7085908055305481,
+          "measured_velocity_rad_s": -0.0019536020699888468,
+          "takeover_tau": 2.8228693865637267,
+          "measured_tau": 2.7829060554504395,
+          "load_support_tau": -0.16577625821656516,
+          "hold_tau_limits": [
+            -5.4,
+            5.4
+          ]
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "target_rad": -2.268444299697876,
+          "measured_velocity_rad_s": -0.007326007355004549,
+          "takeover_tau": -0.7621498798727973,
+          "measured_tau": -0.7838827967643738,
+          "load_support_tau": -0.36576533518463833,
+          "hold_tau_limits": [
+            -0.8,
+            0.8
+          ]
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "target_rad": -0.5136567950248718,
+          "measured_velocity_rad_s": -0.007326007355004549,
+          "takeover_tau": 0.0054980876256072175,
+          "measured_tau": -0.017094017937779427,
+          "load_support_tau": 0.0,
+          "hold_tau_limits": [
+            -0.45,
+            0.45
+          ]
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "target_rad": -2.3424506187438965,
+          "measured_velocity_rad_s": 0.007326007355004549,
+          "takeover_tau": 0.6225180178972737,
+          "measured_tau": 0.5885226130485535,
+          "load_support_tau": 0.24346576787706276,
+          "hold_tau_limits": [
+            -0.7,
+            0.7
+          ]
+        }
+      },
+      "motion_gain_floor": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "q": -0.08907453715801239,
+          "dq": 0.0,
+          "tau_ff": -11.606519983493893
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "q": -2.7388036251068115,
+          "dq": 0.0,
+          "tau_ff": 2.6823541281377494
+        },
+        "shoulder_rotate": {
+          "kp": 36.0,
+          "kd": 4.5,
+          "q": 1.8617913722991943,
+          "dq": 0.0,
+          "tau_ff": 0.3804351890958815
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "q": -0.7085908055305481,
+          "dq": 0.0,
+          "tau_ff": 2.8228693865637267
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "q": -2.268444299697876,
+          "dq": 0.0,
+          "tau_ff": -0.7621498798727973
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "q": -0.5136567950248718,
+          "dq": 0.0,
+          "tau_ff": 0.0054980876256072175
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "q": -2.3424506187438965,
+          "dq": 0.0,
+          "tau_ff": 0.6225180178972737
+        }
+      }
+    },
+    "preflight_still": {
+      "enabled": false,
+      "reason": "replaced-by-immediate-seamless-takeover"
+    },
+    "post_enable_still": {
+      "enabled": false
+    },
+    "log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_model_runs.jsonl"
+  },
+  "post_move_model_hold": {
+    "enabled": true,
+    "state": "complete",
+    "same_serial_session": true,
+    "seconds": 5
+  },
+  "command_result_ok": true,
+  "motion_sessions": [
+    {
+      "mode": "apply",
+      "frames": 2649,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 2,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.5,
+        "shoulder_side": 0.02494940088069808,
+        "shoulder_rotate": 0.06324961418512576,
+        "elbow": 0.4903407222288809,
+        "arm_roll": 0.013745506690058862,
+        "wrist_side": 0.07602388454219075,
+        "wrist": 0.12464359444275959
+      }
+    },
+    {
+      "mode": "apply",
+      "frames": 450,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 0,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.4197651650587151,
+        "shoulder_side": 0.2356992030569447,
+        "shoulder_rotate": 0.14359364002509212,
+        "elbow": 0.5,
+        "arm_roll": 0.016369923266560227,
+        "wrist_side": 0.1421964709022598,
+        "wrist": 0.14826761420744428
+      }
+    },
+    {
+      "mode": "apply",
+      "frames": 103,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 0,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.013645628143388322,
+        "shoulder_side": 0.015239616642420462,
+        "shoulder_rotate": 0.010765607047167336,
+        "elbow": 0.09846140570884776,
+        "arm_roll": 0.005061464706082652,
+        "wrist_side": 0.007247227336091716,
+        "wrist": 0.030109037076601397
+      }
+    },
+    {
+      "mode": "apply",
+      "frames": 112,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 0,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.006693775365697263,
+        "shoulder_side": 0.05789479015472243,
+        "shoulder_rotate": 0.04118977899042525,
+        "elbow": 0.39493854300131925,
+        "arm_roll": 0.01918675957598248,
+        "wrist_side": 0.032185180591193685,
+        "wrist": 0.09969199360580974
+      }
+    },
+    {
+      "mode": "apply",
+      "frames": 109,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 0,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.02494002814881391,
+        "shoulder_side": 0.06064956206565442,
+        "shoulder_rotate": 0.043180441195550534,
+        "elbow": 0.42529923372728984,
+        "arm_roll": 0.019900969191445683,
+        "wrist_side": 0.03513200964487354,
+        "wrist": 0.10213890260824518
+      }
+    },
+    {
+      "mode": "apply",
+      "frames": 112,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 0,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.04831572157049635,
+        "shoulder_side": 0.06207716987775225,
+        "shoulder_rotate": 0.04421556247710462,
+        "elbow": 0.4486773194659128,
+        "arm_roll": 0.020101413951380986,
+        "wrist_side": 0.03737986977504579,
+        "wrist": 0.1027832823768984
+      }
+    },
+    {
+      "mode": "apply",
+      "frames": 121,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 0,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.07401677530405948,
+        "shoulder_side": 0.06311304199752077,
+        "shoulder_rotate": 0.044936813651477614,
+        "elbow": 0.4706308990380701,
+        "arm_roll": 0.020235922980775978,
+        "wrist_side": 0.03944546395078127,
+        "wrist": 0.10294886224504438
+      }
+    },
+    {
+      "mode": "apply",
+      "frames": 115,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 0,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.10531415917095543,
+        "shoulder_side": 0.0665197978173604,
+        "shoulder_rotate": 0.04731594782844947,
+        "elbow": 0.5,
+        "arm_roll": 0.0210862735232325,
+        "wrist_side": 0.04309275333593955,
+        "wrist": 0.10598340281579366
+      }
+    },
+    {
+      "mode": "apply",
+      "frames": 131,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 0,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.145641694993504,
+        "shoulder_side": 0.0675067115123078,
+        "shoulder_rotate": 0.047633068083879126,
+        "elbow": 0.5,
+        "arm_roll": 0.02112727891947319,
+        "wrist_side": 0.04600183235406409,
+        "wrist": 0.10622450131666222
+      }
+    },
+    {
+      "mode": "apply",
+      "frames": 97,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 0,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.0,
+        "shoulder_side": 0.0,
+        "shoulder_rotate": 0.0,
+        "elbow": 0.0,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0,
+        "wrist": 0.0
+      }
+    },
+    {
+      "mode": "apply",
+      "frames": 94,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 0,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.0,
+        "shoulder_side": 0.0,
+        "shoulder_rotate": 0.0,
+        "elbow": 0.0,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0,
+        "wrist": 0.0
+      }
+    },
+    {
+      "mode": "apply",
+      "frames": 88,
+      "prediction_status": "available",
+      "worker_error_frames": 0,
+      "stale_worker_frames": 0,
+      "peak_applied_delta_tau_Nm": {
+        "shoulder_front": 0.0,
+        "shoulder_side": 0.0,
+        "shoulder_rotate": 0.0,
+        "elbow": 0.0,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0,
+        "wrist": 0.0
+      }
+    }
+  ],
+  "operator_feedback": "这次运动符合预期，无抖动，无横移，无接触，指尖高度合适，可以进入参考库",
+  "physical_validation_accepted": true,
+  "fitting_eligible": false,
+  "comparison_caveat": "Same contact waypoints and orientation as v31; current Home swivel angle changes the precomputed approach. Success does not uniquely identify the physical instability cause.",
+  "measurement_caveat": "FK positions are encoder/model estimates; they cannot certify physical XY drift or fingertip height.",
+  "operator_validation": {
+    "accepted": true,
+    "motion_accepted": true,
+    "jitter": false,
+    "lateral_drift": false,
+    "contact": false,
+    "gripping_height_acceptable": true,
+    "original_response": "这次运动符合预期，无抖动，无横移，无接触，指尖高度合适，可以进入参考库",
+    "qualitative_only": true,
+    "extra_motion_during_hold_separately_reported": false
+  },
+  "physical_validation_basis": "operator qualitative observation, not independent millimetre ground truth",
+  "reference_eligible": true
+}

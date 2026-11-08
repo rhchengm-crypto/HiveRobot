@@ -1,0 +1,488 @@
+{
+  "motion_issued": false,
+  "external_measurement": false,
+  "operator_report": "指尖高度合适，朝A的位置调整合适，但是夹爪向7方向横移了8mm",
+  "rank_direction_and_phase_pending_confirmation": false,
+  "stages": {
+    "source_above": {
+      "first_command_tcp_mm": [
+        -74.45332258908864,
+        323.1819051974952,
+        179.67052974921975
+      ],
+      "last_command_tcp_mm": [
+        17.50058006088661,
+        357.49653088247464,
+        139.99981301879302
+      ],
+      "first_feedback_tcp_mm": [
+        -61.220855872100216,
+        317.50374926786577,
+        164.47866240689348
+      ],
+      "last_feedback_tcp_mm": [
+        -10.052560992782851,
+        352.7191352189488,
+        121.61751079716184
+      ],
+      "command_delta_mm": [
+        91.95390264997525,
+        34.31462568497943,
+        -39.67071673042673
+      ],
+      "feedback_delta_mm": [
+        51.168294879317365,
+        35.21538595108302,
+        -42.861151609731635
+      ],
+      "feedback_y_range_mm": [
+        317.2562157426793,
+        353.6118301061902
+      ],
+      "command_y_range_mm": [
+        323.1819051974952,
+        358.5230359780431
+      ],
+      "joint_movement_deg": {
+        "shoulder_front": {
+          "command": -25.430558276760546,
+          "feedback": -25.288478715630138,
+          "final_tracking_error": 2.105748682831226
+        },
+        "shoulder_side": {
+          "command": -5.321779321270359,
+          "feedback": -2.7321166491401203,
+          "final_tracking_error": 1.630758132212549
+        },
+        "shoulder_rotate": {
+          "command": -12.66022478086613,
+          "feedback": -12.851875187592752,
+          "final_tracking_error": 0.7899683091201093
+        },
+        "elbow": {
+          "command": -27.635743089711116,
+          "feedback": -27.29931735657657,
+          "final_tracking_error": 1.3913236520643044
+        },
+        "arm_roll": {
+          "command": 4.527206672066973,
+          "feedback": 5.770225773096812,
+          "final_tracking_error": 2.022621073753968
+        },
+        "wrist_side": {
+          "command": -26.709131427136807,
+          "feedback": -25.52890607016964,
+          "final_tracking_error": 1.585650693078847
+        },
+        "wrist": {
+          "command": -23.559521742308892,
+          "feedback": -23.321359902117546,
+          "final_tracking_error": 0.6884536193992565
+        }
+      },
+      "one_joint_error_at_a_time_effect_on_endpoint_mm": {
+        "shoulder_front": [
+          -0.9021356372160128,
+          -8.790997606418728,
+          -22.44550725001868
+        ],
+        "shoulder_side": [
+          -17.532880626511684,
+          -0.24712862114330392,
+          1.3888108165640745
+        ],
+        "shoulder_rotate": [
+          2.6844559266982024,
+          -0.6465705934632524,
+          -1.8726500275927833
+        ],
+        "elbow": [
+          -2.6748221131687533,
+          1.9053743799468634,
+          9.148157954829259
+        ],
+        "arm_roll": [
+          -2.6672258985834603,
+          -1.287803844865664,
+          -7.7232563896044155
+        ],
+        "wrist_side": [
+          -7.036140923396163,
+          3.4500226798922995,
+          0.49607269514726227
+        ],
+        "wrist": [
+          0.5314777818913541,
+          0.7126502369875425,
+          2.2330169783461997
+        ]
+      },
+      "one_joint_attribution_nonadditive": true
+    },
+    "contact": {
+      "first_command_tcp_mm": [
+        17.50058006088661,
+        357.49653088247464,
+        139.99981301879302
+      ],
+      "last_command_tcp_mm": [
+        17.42785155773923,
+        357.33087303137137,
+        50.275965552345134
+      ],
+      "first_feedback_tcp_mm": [
+        -10.052560992782851,
+        352.7191352189488,
+        121.61751079716184
+      ],
+      "last_feedback_tcp_mm": [
+        -4.118233930541513,
+        351.83963993622194,
+        40.52215332419475
+      ],
+      "command_delta_mm": [
+        -0.07272850314737767,
+        -0.16565785110327624,
+        -89.72384746644789
+      ],
+      "feedback_delta_mm": [
+        5.934327062241338,
+        -0.8794952827268503,
+        -81.0953574729671
+      ],
+      "feedback_y_range_mm": [
+        350.8822301983445,
+        355.8404523620211
+      ],
+      "command_y_range_mm": [
+        357.272729097498,
+        357.49653088247464
+      ],
+      "joint_movement_deg": {
+        "shoulder_front": {
+          "command": 0.429987999301573,
+          "feedback": 0.0,
+          "final_tracking_error": 1.6757606835296528
+        },
+        "shoulder_side": {
+          "command": -3.515254596561346,
+          "feedback": -4.152809656881113,
+          "final_tracking_error": 0.9932030718927827
+        },
+        "shoulder_rotate": {
+          "command": 1.7825114616490099,
+          "feedback": 0.21857288362957805,
+          "final_tracking_error": -0.7739702688993224
+        },
+        "elbow": {
+          "command": -10.260896215259995,
+          "feedback": -10.250905000706046,
+          "final_tracking_error": 1.4013148666182533
+        },
+        "arm_roll": {
+          "command": 5.594605245838453,
+          "feedback": 5.092671007431547,
+          "final_tracking_error": 1.5206868353470617
+        },
+        "wrist_side": {
+          "command": 13.725731319249704,
+          "feedback": 12.61145594390289,
+          "final_tracking_error": 0.47137531773203173
+        },
+        "wrist": {
+          "command": 2.1949861216315982,
+          "feedback": 1.7266991429359035,
+          "final_tracking_error": 0.22016664070356204
+        }
+      },
+      "one_joint_error_at_a_time_effect_on_endpoint_mm": {
+        "shoulder_front": [
+          -0.6012669233960501,
+          -9.545695806338017,
+          -17.845517266813594
+        ],
+        "shoulder_side": [
+          -11.673832043879662,
+          -0.034867668200774915,
+          0.8100164058068984
+        ],
+        "shoulder_rotate": [
+          -1.8586824546601992,
+          0.6377405360100283,
+          1.3173418754204675
+        ],
+        "elbow": [
+          -3.4480331883324986,
+          3.8193911866414396,
+          9.640913156218495
+        ],
+        "arm_roll": [
+          -1.8149708227694266,
+          -1.597816869594567,
+          -4.3546455022558845
+        ],
+        "wrist_side": [
+          -2.2137480598485144,
+          0.7915246226365866,
+          0.04984830198733192
+        ],
+        "wrist": [
+          0.14801554215514656,
+          0.3593619121667757,
+          0.6631347098833302
+        ]
+      },
+      "one_joint_attribution_nonadditive": true
+    },
+    "endpoint_settle": {
+      "first_command_tcp_mm": [
+        17.42785155773923,
+        357.33087303137137,
+        50.275965552345134
+      ],
+      "last_command_tcp_mm": [
+        17.42785155773923,
+        357.33087303137137,
+        50.275965552345134
+      ],
+      "first_feedback_tcp_mm": [
+        -4.014736358059701,
+        351.8055345933128,
+        40.51668274531467
+      ],
+      "last_feedback_tcp_mm": [
+        -4.118233930541513,
+        351.83963993622194,
+        40.52215332419475
+      ],
+      "command_delta_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "feedback_delta_mm": [
+        -0.10349757248181213,
+        0.03410534290912892,
+        0.005470578880078847
+      ],
+      "feedback_y_range_mm": [
+        351.78165830385524,
+        351.83963993622194
+      ],
+      "command_y_range_mm": [
+        357.33087303137125,
+        357.3308730313715
+      ],
+      "joint_movement_deg": {
+        "shoulder_front": {
+          "command": 0.0,
+          "feedback": 0.0,
+          "final_tracking_error": 1.6757606835296528
+        },
+        "shoulder_side": {
+          "command": 0.0,
+          "feedback": 0.0,
+          "final_tracking_error": 0.9932030718927827
+        },
+        "shoulder_rotate": {
+          "command": 0.0,
+          "feedback": 0.0,
+          "final_tracking_error": -0.7739702688993224
+        },
+        "elbow": {
+          "command": 0.0,
+          "feedback": 0.0,
+          "final_tracking_error": 1.4013148666182533
+        },
+        "arm_roll": {
+          "command": 0.0,
+          "feedback": 0.0,
+          "final_tracking_error": 1.5206868353470617
+        },
+        "wrist_side": {
+          "command": 0.0,
+          "feedback": 0.021856605344040804,
+          "final_tracking_error": 0.47137531773203173
+        },
+        "wrist": {
+          "command": 0.0,
+          "feedback": 0.0,
+          "final_tracking_error": 0.22016664070356204
+        }
+      },
+      "one_joint_error_at_a_time_effect_on_endpoint_mm": {
+        "shoulder_front": [
+          -0.6012669233960501,
+          -9.545695806338017,
+          -17.845517266813594
+        ],
+        "shoulder_side": [
+          -11.673832043879662,
+          -0.034867668200774915,
+          0.8100164058068984
+        ],
+        "shoulder_rotate": [
+          -1.8586824546601992,
+          0.6377405360100283,
+          1.3173418754204675
+        ],
+        "elbow": [
+          -3.4480331883324986,
+          3.8193911866414396,
+          9.640913156218495
+        ],
+        "arm_roll": [
+          -1.8149708227694266,
+          -1.597816869594567,
+          -4.3546455022558845
+        ],
+        "wrist_side": [
+          -2.2137480598485144,
+          0.7915246226365866,
+          0.04984830198733192
+        ],
+        "wrist": [
+          0.14801554215514656,
+          0.3593619121667757,
+          0.6631347098833302
+        ]
+      },
+      "one_joint_attribution_nonadditive": true
+    },
+    "model_hold": {
+      "first_command_tcp_mm": [
+        17.42785155773923,
+        357.33087303137137,
+        50.275965552345134
+      ],
+      "last_command_tcp_mm": [
+        -4.014736358059701,
+        351.8055345933128,
+        40.51668274531467
+      ],
+      "first_feedback_tcp_mm": [
+        -4.014736358059701,
+        351.8055345933128,
+        40.51668274531467
+      ],
+      "last_feedback_tcp_mm": [
+        -4.014736358059701,
+        351.8055345933128,
+        40.51668274531467
+      ],
+      "command_delta_mm": [
+        -21.44258791579893,
+        -5.525338438058554,
+        -9.759282807030466
+      ],
+      "feedback_delta_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "feedback_y_range_mm": [
+        351.78165830385524,
+        351.83963993622194
+      ],
+      "command_y_range_mm": [
+        351.8055345933128,
+        357.33087303137137
+      ],
+      "joint_movement_deg": {
+        "shoulder_front": {
+          "command": 1.6757606835296528,
+          "feedback": 0.0,
+          "final_tracking_error": 0.0
+        },
+        "shoulder_side": {
+          "command": 0.9932030718927827,
+          "feedback": 0.0,
+          "final_tracking_error": 0.0
+        },
+        "shoulder_rotate": {
+          "command": -0.7739702688993224,
+          "feedback": 0.0,
+          "final_tracking_error": 0.0
+        },
+        "elbow": {
+          "command": 1.4013148666182533,
+          "feedback": 0.0,
+          "final_tracking_error": 0.0
+        },
+        "arm_roll": {
+          "command": 1.5206868353470617,
+          "feedback": 0.0,
+          "final_tracking_error": 0.0
+        },
+        "wrist_side": {
+          "command": 0.44951871238799096,
+          "feedback": 0.0,
+          "final_tracking_error": 0.0
+        },
+        "wrist": {
+          "command": 0.22016664070356204,
+          "feedback": 0.0,
+          "final_tracking_error": 0.0
+        }
+      },
+      "one_joint_error_at_a_time_effect_on_endpoint_mm": {
+        "shoulder_front": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "shoulder_side": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "shoulder_rotate": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "elbow": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "arm_roll": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wrist_side": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wrist": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "one_joint_attribution_nonadditive": true
+    }
+  },
+  "interpretation": "Direction corrected to negative board X. Encoder/model descent predicts +5.934 mm X, while operator observes about 8 mm toward the A-side outside. These estimates disagree; no verified root cause yet. Settling and hold show small encoder/model motion. Do not add a fixed offset or alter successful height from this alone.",
+  "operator_direction": "A-file outward edge, toward border label 7; not a rank-to-rank Y translation",
+  "operator_phase": "not observed",
+  "initial_y_axis_interpretation_superseded": true,
+  "visual_check": {
+    "frames": [
+      246,
+      300,
+      312,
+      322
+    ],
+    "image_size": [
+      640,
+      480
+    ],
+    "contact_start": "gripper largely outside image, unsuitable for measuring initial TCP",
+    "contact_end_vs_hold_end": "No obvious additional gripper displacement visible in matched frames; not submillimetre validation.",
+    "physical_8mm_measurement_independently_confirmed": false,
+    "cannot_isolate_entire_descent_tcp_displacement": true
+  }
+}

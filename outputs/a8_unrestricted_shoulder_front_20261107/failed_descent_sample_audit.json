@@ -1,0 +1,1794 @@
+{
+  "success": false,
+  "error": "IK failed at contact sample 3/19: 1.08mm",
+  "diagnostics": {},
+  "motion_issued": false,
+  "elapsed_s": 6.131640700001299,
+  "calls": [
+    {
+      "call": 0,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6339759255576004,
+          "shoulder_side": -2.7474055130446247,
+          "shoulder_rotate": 2.5598651869713107,
+          "elbow": -1.0724584819288048,
+          "arm_roll": -2.996735196454129,
+          "wrist_side": -0.1503957089856073,
+          "wrist": -2.766235560483393
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.3686547708519649,
+        "rotation_error_deg": 0.014914759824618706,
+        "iterations": 45,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.609890887301287,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.609890887301287,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 1,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6396630653671626,
+          "shoulder_side": -2.7520223440953715,
+          "shoulder_rotate": 2.4694135066105387,
+          "elbow": -1.0847722200456735,
+          "arm_roll": -2.9051601859018223,
+          "wrist_side": -0.16131961773823872,
+          "wrist": -2.7631572941096874
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.1542178689239,
+        "rotation_error_deg": 0.01075369149857663,
+        "iterations": 20,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.3796253178159,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.3796253178159,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 2,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6495643561307816,
+          "shoulder_side": -2.7386062178345174,
+          "shoulder_rotate": 2.9232550016154484,
+          "elbow": -1.0861356617914297,
+          "arm_roll": -3.351196956370623,
+          "wrist_side": -0.12119825736515853,
+          "wrist": -2.7453486268867504
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.18210508194506972,
+        "rotation_error_deg": 0.0022842013581318528,
+        "iterations": 37,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 23.048490678168697,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {
+        "shoulder_rotate": {
+          "encoder_rad": 2.9232550016154484,
+          "lower_rad": 1.6994657167683405,
+          "upper_rad": 2.9232550016154484,
+          "distance_to_nearest_bound_deg": 0.0
+        }
+      },
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 23.048490678168697,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 3,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6381868035735063,
+          "shoulder_side": -2.7717110153445135,
+          "shoulder_rotate": 1.9098663857138136,
+          "elbow": -1.076882413715208,
+          "arm_roll": -2.3483554968128963,
+          "wrist_side": -0.21835361463586675,
+          "wrist": -2.7647339355303666
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.15479202464602637,
+        "rotation_error_deg": 0.016733404066935312,
+        "iterations": 27,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.39669666612465,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {
+        "arm_roll": {
+          "encoder_rad": -2.3483554968128963,
+          "lower_rad": -3.421080624174042,
+          "upper_rad": -2.3483554968128963,
+          "distance_to_nearest_bound_deg": 0.0
+        }
+      },
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.39669666612465,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 4,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6371324898032804,
+          "shoulder_side": -2.7720280020270365,
+          "shoulder_rotate": 1.9094839246412014,
+          "elbow": -1.0749091149190526,
+          "arm_roll": -2.3483554968128963,
+          "wrist_side": -0.21868339876694703,
+          "wrist": -2.7655791785266213
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.19868211954780535,
+        "rotation_error_deg": 0.02058719351950866,
+        "iterations": 35,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.380860252487842,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {
+        "arm_roll": {
+          "encoder_rad": -2.3483554968128963,
+          "lower_rad": -3.421080624174042,
+          "upper_rad": -2.3483554968128963,
+          "distance_to_nearest_bound_deg": 0.0
+        }
+      },
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.380860252487842,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 5,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.639662980120154,
+          "shoulder_side": -2.752025748964696,
+          "shoulder_rotate": 2.469314926114336,
+          "elbow": -1.0847737466683782,
+          "arm_roll": -2.9050624013218402,
+          "wrist_side": -0.16132949076400238,
+          "wrist": -2.7631586572452767
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.15417972291574236,
+        "rotation_error_deg": 0.010752681748491075,
+        "iterations": 20,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.37945546528078,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.37945546528078,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 6,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.63154224731961,
+          "shoulder_side": -2.74635319798214,
+          "shoulder_rotate": 2.56979606352974,
+          "elbow": -1.0677189149017718,
+          "arm_roll": -3.0075266890301173,
+          "wrist_side": -0.14853491132659788,
+          "wrist": -2.7679758309554616
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.4545683054523715,
+        "rotation_error_deg": 0.018936776838410895,
+        "iterations": 14,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.662362238038973,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.662362238038973,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 7,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6296622856584025,
+          "shoulder_side": -2.7621224378357865,
+          "shoulder_rotate": 2.1855561847312037,
+          "elbow": -1.0683049248084535,
+          "arm_roll": -2.6266669371837508,
+          "wrist_side": -0.1900874195400192,
+          "wrist": -2.773120706687975
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.37213493682813775,
+        "rotation_error_deg": 0.018355689845855724,
+        "iterations": 15,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.875573318186046,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.875573318186046,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 8,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6356652898970158,
+          "shoulder_side": -2.7550412275386056,
+          "shoulder_rotate": 2.3705275680347304,
+          "elbow": -1.0789650995339426,
+          "arm_roll": -2.808336711103617,
+          "wrist_side": -0.17066759911462182,
+          "wrist": -2.7673914740758736
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.23033443220110753,
+        "rotation_error_deg": 0.013259507247783592,
+        "iterations": 31,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.229008748760524,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.229008748760524,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 9,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6355006093958706,
+          "shoulder_side": -2.7463348068844486,
+          "shoulder_rotate": 2.595144360765544,
+          "elbow": -1.0741591626750264,
+          "arm_roll": -3.031135412141957,
+          "wrist_side": -0.14716395404925958,
+          "wrist": -2.7643960983456815
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.3416482078887255,
+        "rotation_error_deg": 0.01431682891535886,
+        "iterations": 23,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.66327922500042,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.66327922500042,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 10,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6431540436071959,
+          "shoulder_side": -2.7482134989754528,
+          "shoulder_rotate": 2.602040292356201,
+          "elbow": -1.0880470597130116,
+          "arm_roll": -3.035458192062479,
+          "wrist_side": -0.14919408387634125,
+          "wrist": -2.758321848170847
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.11840144609489979,
+        "rotation_error_deg": 0.009388423059431774,
+        "iterations": 27,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.56959911258616,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.56959911258616,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 11,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6402342283579193,
+          "shoulder_side": -2.7520671506845935,
+          "shoulder_rotate": 2.4710570479470775,
+          "elbow": -1.0857596055504943,
+          "arm_roll": -2.9065788798881758,
+          "wrist_side": -0.16128567884916334,
+          "wrist": -2.762687420174808
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.1386100468502464,
+        "rotation_error_deg": 0.010244099043130112,
+        "iterations": 31,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.377390128917323,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.377390128917323,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 12,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6320512435227574,
+          "shoulder_side": -2.757443248326951,
+          "shoulder_rotate": 2.301900291088099,
+          "elbow": -1.072972910816525,
+          "arm_roll": -2.74138736497459,
+          "wrist_side": -0.17750810954260993,
+          "wrist": -2.770774493713118
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.31563603739403534,
+        "rotation_error_deg": 0.015933075012767087,
+        "iterations": 20,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.109141765857242,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.109141765857242,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 13,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6318249360639834,
+          "shoulder_side": -2.754885197080621,
+          "shoulder_rotate": 2.3658120942751926,
+          "elbow": -1.072248089741161,
+          "arm_roll": -2.8050139039462656,
+          "wrist_side": -0.17064851689452523,
+          "wrist": -2.7704886999777707
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.3456383989552881,
+        "rotation_error_deg": 0.016024293637023148,
+        "iterations": 50,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.2367942617745,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.2367942617745,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 14,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.7831419790774278,
+          "shoulder_side": -2.745923618139366,
+          "shoulder_rotate": 2.1413946892893763,
+          "elbow": -1.3401053293540794,
+          "arm_roll": -2.5277186186060474,
+          "wrist_side": -0.17879796807971107,
+          "wrist": -2.6488856156736684
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.36848079090056546,
+        "rotation_error_deg": 0.03299502870534061,
+        "iterations": 74,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.683780849599074,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.683780849599074,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 15,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6316091723252574,
+          "shoulder_side": -2.7593912356244763,
+          "shoulder_rotate": 2.251900291088099,
+          "elbow": -1.0722800866085807,
+          "arm_roll": -2.6918591649136823,
+          "wrist_side": -0.1828307981519882,
+          "wrist": -2.77144321916007
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.34129544114908217,
+        "rotation_error_deg": 0.01492080403157485,
+        "iterations": 0,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.011915420782156,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.011915420782156,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 16,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6312669756757198,
+          "shoulder_side": -2.7613711205878255,
+          "shoulder_rotate": 2.201900291088099,
+          "elbow": -1.0715028179843151,
+          "arm_roll": -2.642262848529172,
+          "wrist_side": -0.18820355124341118,
+          "wrist": -2.7719226632853213
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.3787660480162568,
+        "rotation_error_deg": 0.02023422382049518,
+        "iterations": 0,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.91308202154105,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.91308202154105,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 17,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.631028065058531,
+          "shoulder_side": -2.763383818002446,
+          "shoulder_rotate": 2.1519002910880993,
+          "elbow": -1.0706409330280806,
+          "arm_roll": -2.5925949644827995,
+          "wrist_side": -0.1936199450844896,
+          "wrist": -2.77220921076029
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.42548037988244597,
+        "rotation_error_deg": 0.028668534584301474,
+        "iterations": 0,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.81259555867757,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.81259555867757,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 18,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.630896731484613,
+          "shoulder_side": -2.765430004577853,
+          "shoulder_rotate": 2.1019002910880995,
+          "elbow": -1.0696951908416141,
+          "arm_roll": -2.542851750213898,
+          "wrist_side": -0.19907328230966806,
+          "wrist": -2.7722987491047086
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.47927748360703215,
+        "rotation_error_deg": 0.03831962771760655,
+        "iterations": 0,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.710421911258997,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.710421911258997,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 19,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6409706942374627,
+          "shoulder_side": -2.7657337814315524,
+          "shoulder_rotate": 2.0534844313905265,
+          "elbow": -1.0862007753698841,
+          "arm_roll": -2.490876439042676,
+          "wrist_side": -0.20296653635622808,
+          "wrist": -2.763764342678376
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.03469296635397425,
+        "rotation_error_deg": 0.00514403273956312,
+        "iterations": 1,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.695251931605906,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.695251931605906,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 20,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6308874286137742,
+          "shoulder_side": -2.766469988018119,
+          "shoulder_rotate": 2.0769002910880996,
+          "elbow": -1.0691812535833687,
+          "arm_roll": -2.5179404426232233,
+          "wrist_side": -0.20181486084235084,
+          "wrist": -2.772242710298612
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.4937085669046629,
+        "rotation_error_deg": 0.04084350194827203,
+        "iterations": 0,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.65848596363282,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.65848596363282,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 21,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6409609234215061,
+          "shoulder_side": -2.7665966172967003,
+          "shoulder_rotate": 2.028478732599959,
+          "elbow": -1.0856185878090967,
+          "arm_roll": -2.4659144590074646,
+          "wrist_side": -0.20549453445482055,
+          "wrist": -2.763620651207919
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.034578747232435605,
+        "rotation_error_deg": 0.0051379452775026585,
+        "iterations": 1,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.65216193788558,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.65216193788558,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 22,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6409705583625398,
+          "shoulder_side": -2.7657342719406586,
+          "shoulder_rotate": 2.0534732078376234,
+          "elbow": -1.086200305480699,
+          "arm_roll": -2.4908653215807757,
+          "wrist_side": -0.20296765418826596,
+          "wrist": -2.763764409794455
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.03469203933901626,
+        "rotation_error_deg": 0.005140618894711525,
+        "iterations": 1,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.69522743634403,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.69522743634403,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 23,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6308974336649658,
+          "shoulder_side": -2.7669942477093823,
+          "shoulder_rotate": 2.0644002910880994,
+          "elbow": -1.0689142575060628,
+          "arm_roll": -2.505474453508853,
+          "wrist_side": -0.20318873185239122,
+          "wrist": -2.772188998798003
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.49738624421634803,
+        "rotation_error_deg": 0.04148034949571375,
+        "iterations": 0,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.63230340971026,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.63230340971026,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 24,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6409656822467021,
+          "shoulder_side": -2.7670318910922256,
+          "shoulder_rotate": 2.015974242348435,
+          "elbow": -1.0853205552932574,
+          "arm_roll": -2.453424423328963,
+          "wrist_side": -0.20676066135930793,
+          "wrist": -2.7635306704366576
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.03452078740788478,
+        "rotation_error_deg": 0.005134489118809047,
+        "iterations": 1,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.63042338869137,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.63042338869137,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 25,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6409625321809734,
+          "shoulder_side": -2.766164485923575,
+          "shoulder_rotate": 2.04096885481156,
+          "elbow": -1.0859115486274666,
+          "arm_roll": -2.478385270960171,
+          "wrist_side": -0.20423110107049108,
+          "wrist": -2.763698537303129
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.03463372227360927,
+        "rotation_error_deg": 0.0051369920256462975,
+        "iterations": 1,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.673742891611173,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.673742891611173,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 26,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6409705263445721,
+          "shoulder_side": -2.765734396192971,
+          "shoulder_rotate": 2.0534703575310527,
+          "elbow": -1.086200190018078,
+          "arm_roll": -2.4908624991589194,
+          "wrist_side": -0.20296793792456555,
+          "wrist": -2.76376442646291
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.034691827716895184,
+        "rotation_error_deg": 0.005139695826580653,
+        "iterations": 1,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.695221231376657,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.695221231376657,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 27,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6312587420667177,
+          "shoulder_side": -2.756829115771911,
+          "shoulder_rotate": 2.3158120942751927,
+          "elbow": -1.0716670701541624,
+          "arm_roll": -2.7555716185697343,
+          "wrist_side": -0.175937197611087,
+          "wrist": -2.7713987997829572
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.36950152397026237,
+        "rotation_error_deg": 0.015987692537082602,
+        "iterations": 0,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.139790751248505,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.139790751248505,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 28,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6307913910712589,
+          "shoulder_side": -2.758803481830046,
+          "shoulder_rotate": 2.265812094275193,
+          "elbow": -1.0710030296413764,
+          "arm_roll": -2.7060645515579957,
+          "wrist_side": -0.1812840190134348,
+          "wrist": -2.772121938769329
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.40443618358218164,
+        "rotation_error_deg": 0.021697966753491456,
+        "iterations": 0,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.041252465897585,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.041252465897585,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 29,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.630425139183012,
+          "shoulder_side": -2.760809222449379,
+          "shoulder_rotate": 2.215812094275193,
+          "elbow": -1.0702546180196515,
+          "arm_roll": -2.6564896247012397,
+          "wrist_side": -0.18668260508466805,
+          "wrist": -2.772655123950751
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.44830903961762764,
+        "rotation_error_deg": 0.03015090467686051,
+        "iterations": 0,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.941132793909443,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.941132793909443,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 30,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6301631120844732,
+          "shoulder_side": -2.7628472153201944,
+          "shoulder_rotate": 2.1658120942751933,
+          "elbow": -1.0694213771970116,
+          "arm_roll": -2.6068434563859646,
+          "wrist_side": -0.19212649703414408,
+          "wrist": -2.77299488859026
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.4992263981365557,
+        "rotation_error_deg": 0.039723324077122896,
+        "iterations": 0,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.839387592223623,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.839387592223623,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 31,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6409440145151,
+          "shoulder_side": -2.763590465288128,
+          "shoulder_rotate": 2.1175631165950755,
+          "elbow": -1.0873167077577597,
+          "arm_roll": -2.554812837716208,
+          "wrist_side": -0.19653147477220728,
+          "wrist": -2.7640431001030232
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.03885378123854412,
+        "rotation_error_deg": 0.005487779544676936,
+        "iterations": 1,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.802277585549483,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.802277585549483,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 32,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.641036955603571,
+          "shoulder_side": -2.7627608525519842,
+          "shoulder_rotate": 2.1425567545015216,
+          "elbow": -1.0878277370002791,
+          "arm_roll": -2.5796969308221067,
+          "wrist_side": -0.19402656020455036,
+          "wrist": -2.764021065216014
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.038976231865302274,
+        "rotation_error_deg": 0.005490587205613773,
+        "iterations": 1,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.84369949961926,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.84369949961926,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 33,
+      "target_board_mm": [
+        27.499999999999993,
+        412.5,
+        179.9999999999999
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6410918878353904,
+          "shoulder_side": -2.76234958636413,
+          "shoulder_rotate": 2.155057302600006,
+          "elbow": -1.0880759834745524,
+          "arm_roll": -2.5921360718852497,
+          "wrist_side": -0.19277708642439598,
+          "wrist": -2.7639928829348963
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.03903570733409008,
+        "rotation_error_deg": 0.00549304802616353,
+        "iterations": 1,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.864232758186308,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {},
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.864232758186308,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 34,
+      "target_board_mm": [
+        27.4105613948427,
+        412.3849112565819,
+        172.09966200161657
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6475044651154102,
+          "shoulder_side": -2.764549341863259,
+          "shoulder_rotate": 1.923357448469893,
+          "elbow": -1.1225017474366843,
+          "arm_roll": -2.3483554968128963,
+          "wrist_side": -0.2087695412419182,
+          "wrist": -2.729141179984567
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.3263197134986487,
+        "rotation_error_deg": 0.029343236525702702,
+        "iterations": 1,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 21.75439850168515,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {
+        "arm_roll": {
+          "encoder_rad": -2.3483554968128963,
+          "lower_rad": -3.421080624174042,
+          "upper_rad": -2.3483554968128963,
+          "distance_to_nearest_bound_deg": 0.0
+        }
+      },
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 21.75439850168515,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 35,
+      "target_board_mm": [
+        27.415530206240323,
+        412.3913050756607,
+        164.2163474459712
+      ],
+      "answer": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": -0.6723927255322706,
+          "shoulder_side": -2.7548968801324616,
+          "shoulder_rotate": 1.9431690637267107,
+          "elbow": -1.1971757294133671,
+          "arm_roll": -2.3483554968128963,
+          "wrist_side": -0.19214080454079477,
+          "wrist": -2.67847694945415
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.4642622270861238,
+        "rotation_error_deg": 0.15991590615430215,
+        "iterations": 2,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.236211311391838,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {
+        "arm_roll": {
+          "encoder_rad": -2.3483554968128963,
+          "lower_rad": -3.421080624174042,
+          "upper_rad": -2.3483554968128963,
+          "distance_to_nearest_bound_deg": 0.0
+        }
+      },
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.236211311391838,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    },
+    {
+      "call": 36,
+      "target_board_mm": [
+        27.420499017637955,
+        412.39769889473956,
+        156.33303289032582
+      ],
+      "answer": {
+        "success": false,
+        "encoder_rad": {
+          "shoulder_front": -0.659513275792579,
+          "shoulder_side": -2.756774886157454,
+          "shoulder_rotate": 1.9494373144549992,
+          "elbow": -1.2013362794500841,
+          "arm_roll": -2.3483554968128963,
+          "wrist_side": -0.18677090523123105,
+          "wrist": -2.6574539468433938
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 1.0839174033876393,
+        "rotation_error_deg": 0.3671526340784972,
+        "iterations": 18,
+        "orientation_constrained": true,
+        "orientation_constraint": "full-wrist",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 22.14249706990293,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {
+        "arm_roll": {
+          "encoder_rad": -2.3483554968128963,
+          "lower_rad": -3.421080624174042,
+          "upper_rad": -2.3483554968128963,
+          "distance_to_nearest_bound_deg": 0.0
+        }
+      },
+      "minimum_clearance_witness": {
+        "capsule": "shoulder_rotate-to-elbow",
+        "obstacle": "torso_mesh_obb",
+        "clearance_lower_bound_mm": 22.14249706990293,
+        "centerline_fraction": 0.0,
+        "radius_mm": 30.0,
+        "margin_mm": 5.0
+      }
+    }
+  ],
+  "orientation_reference": [
+    137.5,
+    192.5
+  ]
+}

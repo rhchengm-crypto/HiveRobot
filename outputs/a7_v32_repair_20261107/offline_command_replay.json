@@ -1,0 +1,116 @@
+{
+  "ok": true,
+  "motion_issued": false,
+  "serial_opened": false,
+  "build": "seven-axis-board-grasp-v32-descent-gain-continuity",
+  "python": "3.14.0",
+  "descent_entry_gain": {
+    "shoulder_rotate": {
+      "kp": 36.0,
+      "kd": 4.5
+    }
+  },
+  "descent_entry_ff": {
+    "shoulder_rotate": {
+      "start_tau": 0.1904232705982657,
+      "end_tau": 0.1904232705982657,
+      "ramp_fraction": 1.0,
+      "ramp": "smoothstep"
+    }
+  },
+  "recovery": {
+    "start": {
+      "kp": 24.0,
+      "kd": 4.5,
+      "q": 1.8143484892491037,
+      "dq": 0.0,
+      "tau_ff": 0.17856666835023832
+    },
+    "end": {
+      "kp": 3.0,
+      "kd": 0.4,
+      "q": 1.8143484892491037,
+      "dq": 0.0,
+      "tau_ff": 0.015408524086238773
+    },
+    "anchor": {
+      "position_rad": 1.8221179246902466,
+      "window_seconds": 0.2887943419991643,
+      "samples": 9,
+      "age_seconds": 0.1729364530001476,
+      "source": "recent-quiet-encoder-window",
+      "independent_feedback_freshness_verified": false
+    },
+    "static_spring_transfer_tau": -0.16315814426399955,
+    "clamped": false,
+    "seconds": 0.15,
+    "policy": "bounded-soft-feedback; fixed-reference; single-static-load-transfer",
+    "velocity_compensation": false,
+    "fallback": null,
+    "physically_verified": false
+  },
+  "command_replay": [
+    {
+      "elapsed_s": 0.0,
+      "shoulder_rotate_command": {
+        "kp": 24.0,
+        "kd": 4.5,
+        "q": 1.8143484892491037,
+        "dq": 0.0,
+        "tau_ff": 0.17856666835023832
+      }
+    },
+    {
+      "elapsed_s": 0.03,
+      "shoulder_rotate_command": {
+        "kp": 21.815999999999995,
+        "kd": 4.073599999999999,
+        "q": 1.8143484892491037,
+        "dq": 0.0,
+        "tau_ff": 0.16159822134678234
+      }
+    },
+    {
+      "elapsed_s": 0.075,
+      "shoulder_rotate_command": {
+        "kp": 13.500000000000009,
+        "kd": 2.450000000000002,
+        "q": 1.8143484892491037,
+        "dq": 0.0,
+        "tau_ff": 0.09698759621823862
+      }
+    },
+    {
+      "elapsed_s": 0.15,
+      "shoulder_rotate_command": {
+        "kp": 3.0,
+        "kd": 0.4,
+        "q": 1.8143484892491037,
+        "dq": 0.0,
+        "tau_ff": 0.015408524086238773
+      }
+    },
+    {
+      "elapsed_s": 0.2,
+      "shoulder_rotate_command": {
+        "kp": 3.0,
+        "kd": 0.4,
+        "q": 1.8143484892491037,
+        "dq": 0.0,
+        "tau_ff": 0.015408524086238773
+      }
+    },
+    {
+      "elapsed_s": 1.0,
+      "shoulder_rotate_command": {
+        "kp": 3.0,
+        "kd": 0.4,
+        "q": 1.8143484892491037,
+        "dq": 0.0,
+        "tau_ff": 0.015408524086238773
+      }
+    }
+  ],
+  "other_six_joint_commands_unchanged": true,
+  "actual_robot_response_tested": false
+}

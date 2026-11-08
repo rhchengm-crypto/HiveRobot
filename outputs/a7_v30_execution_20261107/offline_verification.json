@@ -1,0 +1,97 @@
+{
+  "motion_issued": false,
+  "build": "seven-axis-board-grasp-v30-planned-load-support",
+  "requested_board_mm": [
+    17.5,
+    357.5,
+    50.2
+  ],
+  "forecast_clearance": {
+    "shoulder_front": 1.9357976913452148,
+    "shoulder_side": -2.7143893241882324,
+    "shoulder_rotate": 2.3401618003845215,
+    "elbow": 0.8165484070777893,
+    "arm_roll": -2.649538516998291,
+    "wrist_side": 0.3057526648044586,
+    "wrist": -1.0313191413879395
+  },
+  "waypoints": 37,
+  "source_hashes": {
+    "left_arm_board_grasp.py": "7dbd56b97b82dcee2423c8071a0e2eaab559a9a2f2eeeb03a103251de765bb0d",
+    "left_arm_trajectory_support.py": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+    "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "left_arm_board_task_pose.py": "48bf6adac3174a0851425c07f3a0dc1dab7c4a54c13ed9495671c2ba1d2d3671"
+  },
+  "board_model_sha256": "6942441116afbd82c66b8b46bee3ed28ddcdf701554ab8674db1bb2df6aee4c7",
+  "seconds": 53.41940550000072,
+  "gripper_clearance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 32.840338856431224,
+      "task": 33.495192488142784
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "orientation": {
+    "constraint": "bounded-axis-with-fixed-terminal-frame",
+    "passed": true,
+    "max_axis_deviation_deg": 10.389288398385547,
+    "axis_cone_deg": 20.0,
+    "terminal_reference_error_deg": 0.014828404448348449,
+    "terminal_reference_tolerance_deg": 0.2864788975654116,
+    "max_adjacent_rotation_deg": 1.2285575190528002,
+    "adjacent_rotation_limit_deg": 6.0,
+    "terminal_full_frame_max_error_deg": 0.019469598111947994,
+    "terminal_full_frame_tolerance_deg": 0.2864788975654116,
+    "terminal_lock_mm": 10.0,
+    "max_position_error_mm": 0.2660365258948773,
+    "position_tolerance_mm": 0.5,
+    "checked_task_samples": 13,
+    "physical_pose_verified": false
+  },
+  "gravity_envelope": {
+    "version": 1,
+    "path_sha256": "c79531482f22f81a48465350ebc3c36b56aa253691fb315f38569a0f4bcc1c41",
+    "samples": 325,
+    "max_sample_step_deg": 0.5,
+    "headroom_Nm": 0.5,
+    "gravity_encoder_Nm": {
+      "shoulder_front": [
+        -8.447583501397833,
+        2.125017883217139
+      ],
+      "shoulder_side": [
+        0.017819792949085863,
+        2.4025049917843546
+      ],
+      "shoulder_rotate": [
+        -0.8511861124927282,
+        0.16453564846802055
+      ],
+      "elbow": [
+        3.172720382283824,
+        3.9611286407146027
+      ],
+      "arm_roll": [
+        -0.4098968136676053,
+        -0.00040087390638334365
+      ],
+      "wrist_side": [
+        -0.01757508221280278,
+        0.15309787555407622
+      ],
+      "wrist": [
+        0.17691772885329382,
+        0.1944278113029583
+      ]
+    },
+    "physical_torque_rating_verified": false,
+    "scope": "sampled gravity range plus bounded residual headroom; runtime clipping retained"
+  }
+}

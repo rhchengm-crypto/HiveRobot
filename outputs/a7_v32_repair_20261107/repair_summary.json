@@ -1,0 +1,62 @@
+{
+  "kind": "software-repair-not-hardware-validation",
+  "date_local": "2026-11-07",
+  "recorded_at_utc": "2026-11-08T04:40:52.089968+00:00",
+  "build": "seven-axis-board-grasp-v32-descent-gain-continuity",
+  "incident": "validation_20261107_a7_v31_fixed_frame_height50_x17.json",
+  "motion_issued": false,
+  "accepted_physical_trial": false,
+  "fitting_eligible": false,
+  "software_defects": [
+    "descent rescheduled acquired gains from Kp36 to Kp24",
+    "confirmed oscillation support continued the same unstable feedback law"
+  ],
+  "physical_root_cause_uniquely_identified": false,
+  "normal_motion_shoulder_rotate_limits": {
+    "kp_max": 36.0,
+    "kd_max": 4.5
+  },
+  "fault_only_recovery": {
+    "confirmed_joint_only": true,
+    "kp_cap": 3.0,
+    "kd_cap": 0.4,
+    "ramp_seconds": 0.15,
+    "reference_fixed": true,
+    "static_load_transfer_from_recent_quiet_encoder_window": true,
+    "dynamic_torque_or_velocity_load_estimate": false,
+    "physically_verified": false
+  },
+  "geometry_models_changed": false,
+  "path_policy_changed": false,
+  "normal_hold_logic_changed": false,
+  "adaptive_learning_changed": false,
+  "ordinary_clearance_skip_shoulder_rotate_changed": false,
+  "emergency_stop_changed": false,
+  "local_tests": {
+    "count": 138,
+    "failures": 0,
+    "errors": 0,
+    "log": "tests.log"
+  },
+  "jetson_offline_regression": {
+    "ok": true,
+    "python": "3.8.10",
+    "serial_opened": false
+  },
+  "runtime_sha256": {
+    "left_arm_board_grasp.py": "b0a4b9a1353e4198a112712e492139b96450ad7be89e17f7b7e4d4efccc4d7ac",
+    "left_arm_fault_support.py": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd"
+  },
+  "backup_on_jetson": "/home/nvidia/hive_robot/DM_Control_Python/data/code_backups/a7_v32_20261108T043956Z",
+  "evidence_stage_on_jetson": "/home/nvidia/hive_robot/DM_Control_Python/data/deployment_staging/a7_v32_20261108T043956Z",
+  "last_web_run_observed": {
+    "action": "dynamics:model-hold-after:home",
+    "running": false,
+    "support_running": null,
+    "finished_at": "2026-11-07 20:29:30",
+    "returncode": 0
+  },
+  "last_web_run_was_not_issued_by_this_repair": true,
+  "next_test_requires_new_precomputed_plan": true,
+  "github_pushed_this_turn": false
+}

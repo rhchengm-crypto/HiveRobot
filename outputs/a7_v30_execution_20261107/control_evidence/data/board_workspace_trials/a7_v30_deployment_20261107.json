@@ -1,0 +1,49 @@
+{
+  "motion_issued": false,
+  "backup": "/home/nvidia/hive_robot/DM_Control_Python/data/a7_v30_backup_1794103528751470182",
+  "build": "seven-axis-board-grasp-v30-planned-load-support",
+  "plan_path": "/home/nvidia/hive_robot/DM_Control_Python/data/board_workspace_trials/approach_a7_v30_height50_x17_20261107.json",
+  "source_hashes": {
+    "rigid_model": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "board_model": "6942441116afbd82c66b8b46bee3ed28ddcdf701554ab8674db1bb2df6aee4c7",
+    "planner": "7dbd56b97b82dcee2423c8071a0e2eaab559a9a2f2eeeb03a103251de765bb0d",
+    "controller": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "motion_adapter": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "fault_support": "9376aab30c3aa10592df2845c3dc946a1e30abdce09f280e3160c0b68e072e0e",
+    "kinematics": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "collision": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "trace": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "task_pose": "48bf6adac3174a0851425c07f3a0dc1dab7c4a54c13ed9495671c2ba1d2d3671",
+    "trajectory_support": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "general_motion": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47"
+  },
+  "protected_hashes": {
+    "left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+    "left_arm_v3_1_model_control.py": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996",
+    "left_arm_fault_support.py": "9376aab30c3aa10592df2845c3dc946a1e30abdce09f280e3160c0b68e072e0e",
+    "left_arm_board_home_handoff.py": "0a341c4f34dddd0176c5229f33095d3bbb534616dd673bf8b7f6fa9e87f1a472",
+    "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+    "left_arm_v3_1_motion_dynamics.py": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "data/left_arm_board_workspace_candidate.json": "6942441116afbd82c66b8b46bee3ed28ddcdf701554ab8674db1bb2df6aee4c7",
+    "data/left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+    "data/left_arm_v2_table_clearance.json": "dead14fe6a7bcdca9ccfd8235ed268b3c10c557b32d953de4f98d736cd59b2b1",
+    "data/left_arm_validated_path_library.json": "bce67a01c6b073c66ef79a27405ef1710c58429ac8f41bb28913942b38839b64",
+    "data/left_arm_v2_8_clearance_bias.json": "d89f09c37f3cc3ef307f3f9536dac97adfc9798323c8cd84bf1d93dcb679c27f",
+    "data/left_arm_v2_6_adaptive_target_bias.json": "c6ed63842f8a37a22fb70fe2f086631378af852ea3e3bf93d6b707dfce26e62e",
+    "data/left_arm_v2_6_adaptive_hold_target_bias.json": "935ee941d36abb37b5834c12485814ece3a97d250aca8a4c34e71957cb40e0bd"
+  },
+  "plan_sha256": "e93a67bbe303398d2a204ca9a4bb74f729e8955ecfab96331aad5017a6f0f06b",
+  "full_path_precomputed_before_clearance": true,
+  "request": {
+    "model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json",
+    "board_model": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_board_workspace_candidate.json",
+    "x_mm": 17.5,
+    "y_mm": 357.5,
+    "piece": "white_knight",
+    "stage": "approach",
+    "grip_height_mm": 50.2
+  },
+  "physical_validation_pending": true
+}

@@ -1,0 +1,2269 @@
+{
+  "success": false,
+  "error": "no feasible complete board path",
+  "diagnostics": {
+    "code": "no_complete_board_path",
+    "start_rad": {
+      "shoulder_front": 1.9357976913452148,
+      "shoulder_side": -2.7143893241882324,
+      "shoulder_rotate": 2.341306209564209,
+      "elbow": 0.8165484070777893,
+      "arm_roll": -2.649538516998291,
+      "wrist_side": 0.3057526648044586,
+      "wrist": -1.0313191413879395
+    },
+    "target_board_mm": [
+      27.5,
+      412.5,
+      30.2
+    ],
+    "orientation_attempts": [
+      {
+        "message": "no reachable above pose with a board-plane-clear joint transit",
+        "details": {
+          "code": "above_ik_unsolved",
+          "above_target_cad_m": [
+            0.636295500683858,
+            0.07045700740891613,
+            0.01829325341668056
+          ],
+          "ik_attempt_count": 15,
+          "best_ik_attempts": [
+            {
+              "success": false,
+              "position_error_mm": 2.711907638734514,
+              "rotation_error_deg": 0.8741000573097534,
+              "iterations": 100
+            },
+            {
+              "success": false,
+              "position_error_mm": 2.7127558265834093,
+              "rotation_error_deg": 0.8737167523593246,
+              "iterations": 100
+            },
+            {
+              "success": false,
+              "position_error_mm": 2.7342631142773555,
+              "rotation_error_deg": 0.8646772291231756,
+              "iterations": 98
+            }
+          ],
+          "ik_solutions": 0,
+          "blocked_path_count": 1,
+          "blocked_paths": [
+            {
+              "route": "common-entry-height-search",
+              "alternatives": [
+                {
+                  "height_mm": 100.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6369762072601457,
+                      0.06124658711221581,
+                      -0.020625955163596707
+                    ],
+                    "ik_attempt_count": 15,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 8.4629945364502,
+                        "rotation_error_deg": 2.3363206384871895,
+                        "iterations": 92
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 8.60043984101048,
+                        "rotation_error_deg": 2.2707855241377524,
+                        "iterations": 74
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 8.69940557599618,
+                        "rotation_error_deg": 2.1901993956698793,
+                        "iterations": 100
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                },
+                {
+                  "height_mm": 180.0,
+                  "message": "IK failed at contact sample 3/19: 1.08mm",
+                  "diagnostics": {}
+                }
+              ]
+            },
+            {
+              "route": "common-entry-height-search",
+              "alternatives": [
+                {
+                  "height_mm": 100.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6369762072601457,
+                      0.06124658711221581,
+                      -0.020625955163596707
+                    ],
+                    "ik_attempt_count": 15,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 8.4629945364502,
+                        "rotation_error_deg": 2.3363206384871895,
+                        "iterations": 92
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 8.60043984101048,
+                        "rotation_error_deg": 2.2707855241377524,
+                        "iterations": 74
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 8.69940557599618,
+                        "rotation_error_deg": 2.1901993956698793,
+                        "iterations": 100
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                },
+                {
+                  "height_mm": 180.0,
+                  "message": "IK failed at contact sample 3/19: 1.08mm",
+                  "diagnostics": {}
+                }
+              ]
+            }
+          ]
+        },
+        "orientation_reference_xy_mm": [
+          137.5,
+          192.5
+        ]
+      },
+      {
+        "message": "no reachable above pose with a board-plane-clear joint transit",
+        "details": {
+          "code": "above_ik_unsolved",
+          "above_target_cad_m": [
+            0.636295500683858,
+            0.07045700740891613,
+            0.01829325341668056
+          ],
+          "ik_attempt_count": 15,
+          "best_ik_attempts": [
+            {
+              "success": false,
+              "position_error_mm": 4.145732485884127,
+              "rotation_error_deg": 1.6118593095779519,
+              "iterations": 63
+            },
+            {
+              "success": false,
+              "position_error_mm": 4.170372534936459,
+              "rotation_error_deg": 1.5838453712875449,
+              "iterations": 100
+            },
+            {
+              "success": false,
+              "position_error_mm": 4.192611563966801,
+              "rotation_error_deg": 1.596248321947981,
+              "iterations": 99
+            }
+          ],
+          "ik_solutions": 0,
+          "blocked_path_count": 1,
+          "blocked_paths": [
+            {
+              "route": "common-entry-height-search",
+              "alternatives": [
+                {
+                  "height_mm": 100.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6369762072601457,
+                      0.06124658711221581,
+                      -0.020625955163596707
+                    ],
+                    "ik_attempt_count": 15,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 10.17751587970529,
+                        "rotation_error_deg": 3.532847132323648,
+                        "iterations": 41
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 10.17751587970529,
+                        "rotation_error_deg": 3.532847132323648,
+                        "iterations": 41
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 10.480988173790696,
+                        "rotation_error_deg": 3.3685781866642217,
+                        "iterations": 58
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                },
+                {
+                  "height_mm": 180.0,
+                  "message": "IK failed at contact sample 1/19: 0.58mm",
+                  "diagnostics": {}
+                }
+              ]
+            },
+            {
+              "route": "common-entry-height-search",
+              "alternatives": [
+                {
+                  "height_mm": 100.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6369762072601457,
+                      0.06124658711221581,
+                      -0.020625955163596707
+                    ],
+                    "ik_attempt_count": 15,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 10.17751587970529,
+                        "rotation_error_deg": 3.532847132323648,
+                        "iterations": 41
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 10.17751587970529,
+                        "rotation_error_deg": 3.532847132323648,
+                        "iterations": 41
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 10.480988173790696,
+                        "rotation_error_deg": 3.3685781866642217,
+                        "iterations": 58
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                },
+                {
+                  "height_mm": 180.0,
+                  "message": "IK failed at contact sample 1/19: 0.58mm",
+                  "diagnostics": {}
+                }
+              ]
+            }
+          ]
+        },
+        "orientation_reference_xy_mm": [
+          192.5,
+          192.5
+        ]
+      },
+      {
+        "message": "no reachable above pose with a board-plane-clear joint transit",
+        "details": {
+          "code": "above_ik_unsolved",
+          "above_target_cad_m": [
+            0.636295500683858,
+            0.07045700740891613,
+            0.01829325341668056
+          ],
+          "ik_attempt_count": 14,
+          "best_ik_attempts": [
+            {
+              "success": false,
+              "position_error_mm": 23.20631435655788,
+              "rotation_error_deg": 8.85142952513866,
+              "iterations": 100
+            },
+            {
+              "success": false,
+              "position_error_mm": 23.4410333640634,
+              "rotation_error_deg": 8.813740174097232,
+              "iterations": 100
+            },
+            {
+              "success": false,
+              "position_error_mm": 24.62350508258135,
+              "rotation_error_deg": 8.48986873846159,
+              "iterations": 34
+            }
+          ],
+          "ik_solutions": 0,
+          "blocked_path_count": 1,
+          "blocked_paths": [
+            {
+              "route": "common-entry-height-search",
+              "alternatives": [
+                {
+                  "height_mm": 100.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6369762072601457,
+                      0.06124658711221581,
+                      -0.020625955163596707
+                    ],
+                    "ik_attempt_count": 14,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 26.6561644438706,
+                        "rotation_error_deg": 10.383998214102782,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 28.432658592967467,
+                        "rotation_error_deg": 9.754742448488443,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 28.62885803233178,
+                        "rotation_error_deg": 10.147203755758428,
+                        "iterations": 100
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                },
+                {
+                  "height_mm": 180.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6356147941075702,
+                      0.07966742770561644,
+                      0.057212461996957786
+                    ],
+                    "ik_attempt_count": 14,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 17.895327022796444,
+                        "rotation_error_deg": 8.833641812945954,
+                        "iterations": 95
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 18.58620097588366,
+                        "rotation_error_deg": 8.627921977096088,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 19.067502297867502,
+                        "rotation_error_deg": 8.47286618888462,
+                        "iterations": 33
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                }
+              ]
+            },
+            {
+              "route": "common-entry-height-search",
+              "alternatives": [
+                {
+                  "height_mm": 100.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6369762072601457,
+                      0.06124658711221581,
+                      -0.020625955163596707
+                    ],
+                    "ik_attempt_count": 14,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 26.6561644438706,
+                        "rotation_error_deg": 10.383998214102782,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 28.432658592967467,
+                        "rotation_error_deg": 9.754742448488443,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 28.62885803233178,
+                        "rotation_error_deg": 10.147203755758428,
+                        "iterations": 100
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                },
+                {
+                  "height_mm": 180.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6356147941075702,
+                      0.07966742770561644,
+                      0.057212461996957786
+                    ],
+                    "ik_attempt_count": 14,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 17.895327022796444,
+                        "rotation_error_deg": 8.833641812945954,
+                        "iterations": 95
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 18.58620097588366,
+                        "rotation_error_deg": 8.627921977096088,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 19.067502297867502,
+                        "rotation_error_deg": 8.47286618888462,
+                        "iterations": 33
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "orientation_reference_xy_mm": [
+          82.5,
+          27.5
+        ]
+      },
+      {
+        "message": "no reachable above pose with a board-plane-clear joint transit",
+        "details": {
+          "code": "above_ik_unsolved",
+          "above_target_cad_m": [
+            0.636295500683858,
+            0.07045700740891613,
+            0.01829325341668056
+          ],
+          "ik_attempt_count": 15,
+          "best_ik_attempts": [
+            {
+              "success": false,
+              "position_error_mm": 16.442966399025092,
+              "rotation_error_deg": 7.266740121847217,
+              "iterations": 100
+            },
+            {
+              "success": false,
+              "position_error_mm": 16.53560440248661,
+              "rotation_error_deg": 7.302770370151603,
+              "iterations": 100
+            },
+            {
+              "success": false,
+              "position_error_mm": 18.827367251931804,
+              "rotation_error_deg": 6.608925156062647,
+              "iterations": 100
+            }
+          ],
+          "ik_solutions": 0,
+          "blocked_path_count": 1,
+          "blocked_paths": [
+            {
+              "route": "common-entry-height-search",
+              "alternatives": [
+                {
+                  "height_mm": 100.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6369762072601457,
+                      0.06124658711221581,
+                      -0.020625955163596707
+                    ],
+                    "ik_attempt_count": 15,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 22.748080644251782,
+                        "rotation_error_deg": 8.76373358768818,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 24.173898145431473,
+                        "rotation_error_deg": 8.301260721377776,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 24.355906187999594,
+                        "rotation_error_deg": 8.880343790085664,
+                        "iterations": 100
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                },
+                {
+                  "height_mm": 180.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6356147941075702,
+                      0.07966742770561644,
+                      0.057212461996957786
+                    ],
+                    "ik_attempt_count": 15,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 12.174995321490726,
+                        "rotation_error_deg": 6.0747550386434135,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 12.77246573858807,
+                        "rotation_error_deg": 5.902254200170699,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 13.223159964346369,
+                        "rotation_error_deg": 5.780162249845024,
+                        "iterations": 100
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                }
+              ]
+            },
+            {
+              "route": "common-entry-height-search",
+              "alternatives": [
+                {
+                  "height_mm": 100.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6369762072601457,
+                      0.06124658711221581,
+                      -0.020625955163596707
+                    ],
+                    "ik_attempt_count": 15,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 22.748080644251782,
+                        "rotation_error_deg": 8.76373358768818,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 24.173898145431473,
+                        "rotation_error_deg": 8.301260721377776,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 24.355906187999594,
+                        "rotation_error_deg": 8.880343790085664,
+                        "iterations": 100
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                },
+                {
+                  "height_mm": 180.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6356147941075702,
+                      0.07966742770561644,
+                      0.057212461996957786
+                    ],
+                    "ik_attempt_count": 15,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 12.174995321490726,
+                        "rotation_error_deg": 6.0747550386434135,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 12.77246573858807,
+                        "rotation_error_deg": 5.902254200170699,
+                        "iterations": 100
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 13.223159964346369,
+                        "rotation_error_deg": 5.780162249845024,
+                        "iterations": 100
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "orientation_reference_xy_mm": [
+          137.5,
+          27.5
+        ]
+      },
+      {
+        "message": "no reachable above pose with a board-plane-clear joint transit",
+        "details": {
+          "code": "above_ik_unsolved",
+          "above_target_cad_m": [
+            0.636295500683858,
+            0.07045700740891613,
+            0.01829325341668056
+          ],
+          "ik_attempt_count": 15,
+          "best_ik_attempts": [
+            {
+              "success": false,
+              "position_error_mm": 2.711907638734514,
+              "rotation_error_deg": 0.8741000573097534,
+              "iterations": 100
+            },
+            {
+              "success": false,
+              "position_error_mm": 2.7127558265834093,
+              "rotation_error_deg": 0.8737167523593246,
+              "iterations": 100
+            },
+            {
+              "success": false,
+              "position_error_mm": 2.7342631142773555,
+              "rotation_error_deg": 0.8646772291231756,
+              "iterations": 98
+            }
+          ],
+          "ik_solutions": 0,
+          "blocked_path_count": 1,
+          "blocked_paths": [
+            {
+              "route": "common-entry-height-search",
+              "alternatives": [
+                {
+                  "height_mm": 100.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6369762072601457,
+                      0.06124658711221581,
+                      -0.020625955163596707
+                    ],
+                    "ik_attempt_count": 15,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 8.4629945364502,
+                        "rotation_error_deg": 2.3363206384871895,
+                        "iterations": 92
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 8.60043984101048,
+                        "rotation_error_deg": 2.2707855241377524,
+                        "iterations": 74
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 8.69940557599618,
+                        "rotation_error_deg": 2.1901993956698793,
+                        "iterations": 100
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                },
+                {
+                  "height_mm": 180.0,
+                  "message": "IK failed at contact sample 3/19: 1.08mm",
+                  "diagnostics": {}
+                }
+              ]
+            },
+            {
+              "route": "common-entry-height-search",
+              "alternatives": [
+                {
+                  "height_mm": 100.0,
+                  "message": "no reachable above pose with a board-plane-clear joint transit",
+                  "diagnostics": {
+                    "code": "above_ik_unsolved",
+                    "above_target_cad_m": [
+                      0.6369762072601457,
+                      0.06124658711221581,
+                      -0.020625955163596707
+                    ],
+                    "ik_attempt_count": 15,
+                    "best_ik_attempts": [
+                      {
+                        "success": false,
+                        "position_error_mm": 8.4629945364502,
+                        "rotation_error_deg": 2.3363206384871895,
+                        "iterations": 92
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 8.60043984101048,
+                        "rotation_error_deg": 2.2707855241377524,
+                        "iterations": 74
+                      },
+                      {
+                        "success": false,
+                        "position_error_mm": 8.69940557599618,
+                        "rotation_error_deg": 2.1901993956698793,
+                        "iterations": 100
+                      }
+                    ],
+                    "ik_solutions": 0,
+                    "blocked_path_count": 0,
+                    "blocked_paths": []
+                  }
+                },
+                {
+                  "height_mm": 180.0,
+                  "message": "IK failed at contact sample 3/19: 1.08mm",
+                  "diagnostics": {}
+                }
+              ]
+            }
+          ]
+        },
+        "orientation_reference_xy_mm": null
+      }
+    ]
+  },
+  "elapsed_s": 103.651178600001,
+  "planning_budget_s": 360.0,
+  "motion_issued": false,
+  "ik_calls": [
+    {
+      "seconds": 0.5444270999978471,
+      "success": false,
+      "position_error_mm": 2.7553905454651892
+    },
+    {
+      "seconds": 0.7252438999967126,
+      "success": false,
+      "position_error_mm": 2.7510386432444243
+    },
+    {
+      "seconds": 0.3431769000017084,
+      "success": false,
+      "position_error_mm": 2.771287743569935
+    },
+    {
+      "seconds": 0.7245476999996754,
+      "success": false,
+      "position_error_mm": 2.7127558265834093
+    },
+    {
+      "seconds": 0.7112282000016421,
+      "success": false,
+      "position_error_mm": 2.711907638734514
+    },
+    {
+      "seconds": 0.709404999997787,
+      "success": false,
+      "position_error_mm": 2.751297775753162
+    },
+    {
+      "seconds": 0.847208999999566,
+      "success": false,
+      "position_error_mm": 2.755353605700829
+    },
+    {
+      "seconds": 0.7633906000010029,
+      "success": false,
+      "position_error_mm": 2.7342631142773555
+    },
+    {
+      "seconds": 0.5820129999992787,
+      "success": false,
+      "position_error_mm": 2.7498885659705836
+    },
+    {
+      "seconds": 0.5268799000004947,
+      "success": false,
+      "position_error_mm": 2.7560589003643794
+    },
+    {
+      "seconds": 0.5352892000009888,
+      "success": false,
+      "position_error_mm": 2.7596876536757775
+    },
+    {
+      "seconds": 0.540752999997494,
+      "success": false,
+      "position_error_mm": 2.7522835659312945
+    },
+    {
+      "seconds": 0.6597937000005913,
+      "success": false,
+      "position_error_mm": 2.734722817310668
+    },
+    {
+      "seconds": 0.449972099999286,
+      "success": false,
+      "position_error_mm": 2.785099247841971
+    },
+    {
+      "seconds": 0.4680353000003379,
+      "success": false,
+      "position_error_mm": 3.4208228654602926
+    },
+    {
+      "seconds": 0.5424082999998063,
+      "success": false,
+      "position_error_mm": 9.137737778044475
+    },
+    {
+      "seconds": 0.5310763999987103,
+      "success": false,
+      "position_error_mm": 8.814520942432894
+    },
+    {
+      "seconds": 0.494246900001599,
+      "success": false,
+      "position_error_mm": 8.4629945364502
+    },
+    {
+      "seconds": 0.5138861000014003,
+      "success": false,
+      "position_error_mm": 8.69940557599618
+    },
+    {
+      "seconds": 0.588452199997846,
+      "success": false,
+      "position_error_mm": 8.780888551399448
+    },
+    {
+      "seconds": 0.5191709999999148,
+      "success": false,
+      "position_error_mm": 8.814813881816452
+    },
+    {
+      "seconds": 0.46151860000099987,
+      "success": false,
+      "position_error_mm": 9.176006747513078
+    },
+    {
+      "seconds": 0.5243891999998596,
+      "success": false,
+      "position_error_mm": 8.963537810661334
+    },
+    {
+      "seconds": 0.43515299999853596,
+      "success": false,
+      "position_error_mm": 9.239637028583246
+    },
+    {
+      "seconds": 0.5883259000001999,
+      "success": false,
+      "position_error_mm": 8.835137269347964
+    },
+    {
+      "seconds": 0.2885391999989224,
+      "success": false,
+      "position_error_mm": 8.60043984101048
+    },
+    {
+      "seconds": 0.44804669999939506,
+      "success": false,
+      "position_error_mm": 9.19569388166998
+    },
+    {
+      "seconds": 0.5329500999978336,
+      "success": false,
+      "position_error_mm": 8.998336430701668
+    },
+    {
+      "seconds": 0.4398770000007062,
+      "success": false,
+      "position_error_mm": 10.164434018526473
+    },
+    {
+      "seconds": 0.3739947999965807,
+      "success": false,
+      "position_error_mm": 103.02382565447557
+    },
+    {
+      "seconds": 0.16618969999763067,
+      "success": true,
+      "position_error_mm": 0.3686547708519649
+    },
+    {
+      "seconds": 0.10276340000200435,
+      "success": true,
+      "position_error_mm": 0.1542178689239
+    },
+    {
+      "seconds": 0.1454368999984581,
+      "success": true,
+      "position_error_mm": 0.18210508194506972
+    },
+    {
+      "seconds": 0.16653149999910966,
+      "success": true,
+      "position_error_mm": 0.15479202464602637
+    },
+    {
+      "seconds": 0.221359900002426,
+      "success": true,
+      "position_error_mm": 0.19868211954780535
+    },
+    {
+      "seconds": 0.09832859999733046,
+      "success": true,
+      "position_error_mm": 0.15417972291574236
+    },
+    {
+      "seconds": 0.05191299999933108,
+      "success": true,
+      "position_error_mm": 0.4545683054523715
+    },
+    {
+      "seconds": 0.05633219999799621,
+      "success": true,
+      "position_error_mm": 0.37213493682813775
+    },
+    {
+      "seconds": 0.1133633000026748,
+      "success": true,
+      "position_error_mm": 0.23033443220110753
+    },
+    {
+      "seconds": 0.10171339999942575,
+      "success": true,
+      "position_error_mm": 0.3416482078887255
+    },
+    {
+      "seconds": 0.14071179999882588,
+      "success": true,
+      "position_error_mm": 0.11840144609489979
+    },
+    {
+      "seconds": 0.12627009999778238,
+      "success": true,
+      "position_error_mm": 0.1386100468502464
+    },
+    {
+      "seconds": 0.09269800000038231,
+      "success": true,
+      "position_error_mm": 0.31563603739403534
+    },
+    {
+      "seconds": 0.2282844000001205,
+      "success": true,
+      "position_error_mm": 0.3456383989552881
+    },
+    {
+      "seconds": 0.26256040000225767,
+      "success": true,
+      "position_error_mm": 0.36848079090056546
+    },
+    {
+      "seconds": 0.005580400000326335,
+      "success": true,
+      "position_error_mm": 0.34129544114908217
+    },
+    {
+      "seconds": 0.002028999999311054,
+      "success": true,
+      "position_error_mm": 0.3787660480162568
+    },
+    {
+      "seconds": 0.0023193000015453435,
+      "success": true,
+      "position_error_mm": 0.42548037988244597
+    },
+    {
+      "seconds": 0.0019363999999768566,
+      "success": true,
+      "position_error_mm": 0.47927748360703215
+    },
+    {
+      "seconds": 0.005174900001293281,
+      "success": true,
+      "position_error_mm": 0.03469296635397425
+    },
+    {
+      "seconds": 0.0019762999982049223,
+      "success": true,
+      "position_error_mm": 0.4937085669046629
+    },
+    {
+      "seconds": 0.008348700001079123,
+      "success": true,
+      "position_error_mm": 0.034578747232435605
+    },
+    {
+      "seconds": 0.005621399999654386,
+      "success": true,
+      "position_error_mm": 0.03469203933901626
+    },
+    {
+      "seconds": 0.002480999999534106,
+      "success": true,
+      "position_error_mm": 0.49738624421634803
+    },
+    {
+      "seconds": 0.005148200001713121,
+      "success": true,
+      "position_error_mm": 0.03452078740788478
+    },
+    {
+      "seconds": 0.005289400000037858,
+      "success": true,
+      "position_error_mm": 0.03463372227360927
+    },
+    {
+      "seconds": 0.007318399999348912,
+      "success": true,
+      "position_error_mm": 0.034691827716895184
+    },
+    {
+      "seconds": 0.001978700001927791,
+      "success": true,
+      "position_error_mm": 0.36950152397026237
+    },
+    {
+      "seconds": 0.001915799999551382,
+      "success": true,
+      "position_error_mm": 0.40443618358218164
+    },
+    {
+      "seconds": 0.0019332999981998,
+      "success": true,
+      "position_error_mm": 0.44830903961762764
+    },
+    {
+      "seconds": 0.0019217999979446176,
+      "success": true,
+      "position_error_mm": 0.4992263981365557
+    },
+    {
+      "seconds": 0.005165099999430822,
+      "success": true,
+      "position_error_mm": 0.03885378123854412
+    },
+    {
+      "seconds": 0.00568589999966207,
+      "success": true,
+      "position_error_mm": 0.038976231865302274
+    },
+    {
+      "seconds": 0.006500999999843771,
+      "success": true,
+      "position_error_mm": 0.03903570733409008
+    },
+    {
+      "seconds": 0.006653199998254422,
+      "success": true,
+      "position_error_mm": 0.3263197134986487
+    },
+    {
+      "seconds": 0.008516600002621999,
+      "success": true,
+      "position_error_mm": 0.4642622270861238
+    },
+    {
+      "seconds": 0.10531219999757013,
+      "success": false,
+      "position_error_mm": 1.0839174033876393
+    },
+    {
+      "seconds": 0.43990370000028634,
+      "success": false,
+      "position_error_mm": 4.218659000051333
+    },
+    {
+      "seconds": 0.17287810000198078,
+      "success": false,
+      "position_error_mm": 4.324287112970502
+    },
+    {
+      "seconds": 0.2890249000010954,
+      "success": false,
+      "position_error_mm": 5.425278191248718
+    },
+    {
+      "seconds": 0.19479059999866877,
+      "success": false,
+      "position_error_mm": 4.324287112970502
+    },
+    {
+      "seconds": 0.5660391000019445,
+      "success": false,
+      "position_error_mm": 4.199418734568974
+    },
+    {
+      "seconds": 0.540220999999292,
+      "success": false,
+      "position_error_mm": 4.218515880061408
+    },
+    {
+      "seconds": 0.5160971000004793,
+      "success": false,
+      "position_error_mm": 4.215214805591056
+    },
+    {
+      "seconds": 0.5813544000011461,
+      "success": false,
+      "position_error_mm": 4.170372534936459
+    },
+    {
+      "seconds": 0.6205041000030178,
+      "success": false,
+      "position_error_mm": 4.204521614983387
+    },
+    {
+      "seconds": 0.4561581000016304,
+      "success": false,
+      "position_error_mm": 4.194571775585132
+    },
+    {
+      "seconds": 0.6444128999974055,
+      "success": false,
+      "position_error_mm": 4.192611563966801
+    },
+    {
+      "seconds": 0.31020640000133426,
+      "success": false,
+      "position_error_mm": 4.145732485884127
+    },
+    {
+      "seconds": 0.6083524999994552,
+      "success": false,
+      "position_error_mm": 4.198534173845043
+    },
+    {
+      "seconds": 0.42484239999976126,
+      "success": false,
+      "position_error_mm": 4.421005324566131
+    },
+    {
+      "seconds": 0.3584803000012471,
+      "success": false,
+      "position_error_mm": 9.555245384647067
+    },
+    {
+      "seconds": 0.4957436000004236,
+      "success": false,
+      "position_error_mm": 11.607524239064585
+    },
+    {
+      "seconds": 0.22019339999678778,
+      "success": false,
+      "position_error_mm": 10.17751587970529
+    },
+    {
+      "seconds": 0.5362315999991552,
+      "success": false,
+      "position_error_mm": 10.571750289985529
+    },
+    {
+      "seconds": 0.1704332000008435,
+      "success": false,
+      "position_error_mm": 10.17751587970529
+    },
+    {
+      "seconds": 0.22454520000246703,
+      "success": false,
+      "position_error_mm": 13.694866303562794
+    },
+    {
+      "seconds": 0.37873100000069826,
+      "success": false,
+      "position_error_mm": 10.480988173790696
+    },
+    {
+      "seconds": 0.4706406999976025,
+      "success": false,
+      "position_error_mm": 10.597129798663822
+    },
+    {
+      "seconds": 0.4980988999996043,
+      "success": false,
+      "position_error_mm": 11.136738582734417
+    },
+    {
+      "seconds": 0.42859930000122404,
+      "success": false,
+      "position_error_mm": 12.508082125173278
+    },
+    {
+      "seconds": 0.4136830999996164,
+      "success": false,
+      "position_error_mm": 12.377402897297337
+    },
+    {
+      "seconds": 0.634974600001442,
+      "success": false,
+      "position_error_mm": 10.556493779239132
+    },
+    {
+      "seconds": 0.45779380000021774,
+      "success": false,
+      "position_error_mm": 11.503099470481926
+    },
+    {
+      "seconds": 0.516362799997296,
+      "success": false,
+      "position_error_mm": 10.622502781831754
+    },
+    {
+      "seconds": 0.5741105000015523,
+      "success": false,
+      "position_error_mm": 10.565364227141979
+    },
+    {
+      "seconds": 0.3650009000011778,
+      "success": false,
+      "position_error_mm": 139.28671878701672
+    },
+    {
+      "seconds": 0.16780759999892325,
+      "success": true,
+      "position_error_mm": 0.38596700538594536
+    },
+    {
+      "seconds": 0.11083490000237362,
+      "success": true,
+      "position_error_mm": 0.46873172365173704
+    },
+    {
+      "seconds": 0.1418999999987136,
+      "success": true,
+      "position_error_mm": 0.37647188793850783
+    },
+    {
+      "seconds": 0.11433949999991455,
+      "success": true,
+      "position_error_mm": 0.46873172365173704
+    },
+    {
+      "seconds": 0.1836451000017405,
+      "success": true,
+      "position_error_mm": 0.41416132907737385
+    },
+    {
+      "seconds": 0.09623540000029607,
+      "success": true,
+      "position_error_mm": 0.3799112346236885
+    },
+    {
+      "seconds": 0.10158030000093277,
+      "success": true,
+      "position_error_mm": 0.38070195343458757
+    },
+    {
+      "seconds": 0.10348349999912898,
+      "success": true,
+      "position_error_mm": 0.37148804314522205
+    },
+    {
+      "seconds": 0.1327634000008402,
+      "success": true,
+      "position_error_mm": 0.379021388906816
+    },
+    {
+      "seconds": 0.0965381999994861,
+      "success": true,
+      "position_error_mm": 0.4675607975092879
+    },
+    {
+      "seconds": 0.10811430000103428,
+      "success": true,
+      "position_error_mm": 0.46556608547868417
+    },
+    {
+      "seconds": 0.12049299999853247,
+      "success": true,
+      "position_error_mm": 0.41559166452901974
+    },
+    {
+      "seconds": 0.08337570000003325,
+      "success": true,
+      "position_error_mm": 0.49553180791017637
+    },
+    {
+      "seconds": 0.198641700000735,
+      "success": true,
+      "position_error_mm": 0.3807485219115643
+    },
+    {
+      "seconds": 0.572741899999528,
+      "success": true,
+      "position_error_mm": 0.4828422085758794
+    },
+    {
+      "seconds": 0.0022027000013622455,
+      "success": true,
+      "position_error_mm": 0.49856497199121574
+    },
+    {
+      "seconds": 0.007872100002714433,
+      "success": true,
+      "position_error_mm": 0.4741131840958857
+    },
+    {
+      "seconds": 0.0022470000003522728,
+      "success": true,
+      "position_error_mm": 0.4999071582414765
+    },
+    {
+      "seconds": 0.007326499999180669,
+      "success": true,
+      "position_error_mm": 0.4739778562595924
+    },
+    {
+      "seconds": 0.006384000000252854,
+      "success": true,
+      "position_error_mm": 0.47306365885002705
+    },
+    {
+      "seconds": 0.007834600000933278,
+      "success": true,
+      "position_error_mm": 0.47312998671275197
+    },
+    {
+      "seconds": 0.0019949000015913043,
+      "success": true,
+      "position_error_mm": 0.409902163733125
+    },
+    {
+      "seconds": 0.0019737000002351124,
+      "success": true,
+      "position_error_mm": 0.40581301404428655
+    },
+    {
+      "seconds": 0.0020154000012553297,
+      "success": true,
+      "position_error_mm": 0.40498555797319286
+    },
+    {
+      "seconds": 0.0030845000001136214,
+      "success": true,
+      "position_error_mm": 0.40895176655523713
+    },
+    {
+      "seconds": 0.0019200999995518941,
+      "success": true,
+      "position_error_mm": 0.4188485759520233
+    },
+    {
+      "seconds": 0.0020275999995647,
+      "success": true,
+      "position_error_mm": 0.4352499725132275
+    },
+    {
+      "seconds": 0.0023542999988421798,
+      "success": true,
+      "position_error_mm": 0.4581485844137915
+    },
+    {
+      "seconds": 0.001990799999475712,
+      "success": true,
+      "position_error_mm": 0.4870713344594162
+    },
+    {
+      "seconds": 0.014784499999223044,
+      "success": true,
+      "position_error_mm": 0.3575172339493477
+    },
+    {
+      "seconds": 0.0038400000012188684,
+      "success": true,
+      "position_error_mm": 0.4952360838438078
+    },
+    {
+      "seconds": 0.013197299998864764,
+      "success": true,
+      "position_error_mm": 0.35555130197233115
+    },
+    {
+      "seconds": 0.014317200002551544,
+      "success": true,
+      "position_error_mm": 0.35751397006552915
+    },
+    {
+      "seconds": 0.0021683999984816182,
+      "success": true,
+      "position_error_mm": 0.4973423445360604
+    },
+    {
+      "seconds": 0.014048199998796917,
+      "success": true,
+      "position_error_mm": 0.35455510526688366
+    },
+    {
+      "seconds": 0.014670599997771205,
+      "success": true,
+      "position_error_mm": 0.3565351171711894
+    },
+    {
+      "seconds": 0.002369499998167157,
+      "success": true,
+      "position_error_mm": 0.4994750391126095
+    },
+    {
+      "seconds": 0.01460389999920153,
+      "success": true,
+      "position_error_mm": 0.3535526460747622
+    },
+    {
+      "seconds": 0.015065499999764143,
+      "success": true,
+      "position_error_mm": 0.3555465512082451
+    },
+    {
+      "seconds": 0.0135733999995864,
+      "success": true,
+      "position_error_mm": 0.35653419820368165
+    },
+    {
+      "seconds": 0.10310540000136825,
+      "success": false,
+      "position_error_mm": 0.5801910658990687
+    },
+    {
+      "seconds": 0.43073589999767137,
+      "success": false,
+      "position_error_mm": 32.69247216844491
+    },
+    {
+      "seconds": 0.40468630000032135,
+      "success": false,
+      "position_error_mm": 27.5942127043506
+    },
+    {
+      "seconds": 0.13688139999794657,
+      "success": false,
+      "position_error_mm": 24.62350508258135
+    },
+    {
+      "seconds": 0.3187477999999828,
+      "success": false,
+      "position_error_mm": 31.71348149239026
+    },
+    {
+      "seconds": 0.42811729999812087,
+      "success": false,
+      "position_error_mm": 23.4410333640634
+    },
+    {
+      "seconds": 0.45861109999896144,
+      "success": false,
+      "position_error_mm": 23.20631435655788
+    },
+    {
+      "seconds": 0.42815470000277855,
+      "success": false,
+      "position_error_mm": 35.60117192194009
+    },
+    {
+      "seconds": 0.4089370000001509,
+      "success": false,
+      "position_error_mm": 29.237757875453315
+    },
+    {
+      "seconds": 0.3607744000000821,
+      "success": false,
+      "position_error_mm": 35.894032374753614
+    },
+    {
+      "seconds": 0.4447245999981533,
+      "success": false,
+      "position_error_mm": 25.15531834504398
+    },
+    {
+      "seconds": 0.4638663000005181,
+      "success": false,
+      "position_error_mm": 27.241259829963763
+    },
+    {
+      "seconds": 0.3805460999974457,
+      "success": false,
+      "position_error_mm": 35.264742143098935
+    },
+    {
+      "seconds": 0.447618500002136,
+      "success": false,
+      "position_error_mm": 44.761879202503415
+    },
+    {
+      "seconds": 0.42792130000088946,
+      "success": false,
+      "position_error_mm": 89.79395093147029
+    },
+    {
+      "seconds": 0.39028999999936786,
+      "success": false,
+      "position_error_mm": 38.17657886753615
+    },
+    {
+      "seconds": 0.4701664999993227,
+      "success": false,
+      "position_error_mm": 28.432658592967467
+    },
+    {
+      "seconds": 0.48059510000166483,
+      "success": false,
+      "position_error_mm": 28.62885803233178
+    },
+    {
+      "seconds": 0.42699870000069495,
+      "success": false,
+      "position_error_mm": 30.948879028376165
+    },
+    {
+      "seconds": 0.5037443999972311,
+      "success": false,
+      "position_error_mm": 34.1569503243926
+    },
+    {
+      "seconds": 0.39205930000025546,
+      "success": false,
+      "position_error_mm": 39.54544442615254
+    },
+    {
+      "seconds": 0.5034630000009201,
+      "success": false,
+      "position_error_mm": 26.6561644438706
+    },
+    {
+      "seconds": 0.4478841999989527,
+      "success": false,
+      "position_error_mm": 43.32817513669327
+    },
+    {
+      "seconds": 0.4612489999999525,
+      "success": false,
+      "position_error_mm": 28.91738425818276
+    },
+    {
+      "seconds": 0.3775831000020844,
+      "success": false,
+      "position_error_mm": 42.939450469356935
+    },
+    {
+      "seconds": 0.40983670000059647,
+      "success": false,
+      "position_error_mm": 42.645235428100854
+    },
+    {
+      "seconds": 0.4676010999974096,
+      "success": false,
+      "position_error_mm": 31.418449342608014
+    },
+    {
+      "seconds": 0.37513490000128513,
+      "success": false,
+      "position_error_mm": 38.681796975330705
+    },
+    {
+      "seconds": 0.4196797000004153,
+      "success": false,
+      "position_error_mm": 175.73338724229478
+    },
+    {
+      "seconds": 0.4671625999981188,
+      "success": false,
+      "position_error_mm": 27.47350373700531
+    },
+    {
+      "seconds": 0.4753333000007842,
+      "success": false,
+      "position_error_mm": 18.58620097588366
+    },
+    {
+      "seconds": 0.17846360000112327,
+      "success": false,
+      "position_error_mm": 19.067502297867502
+    },
+    {
+      "seconds": 0.4483369000008679,
+      "success": false,
+      "position_error_mm": 22.360614732093683
+    },
+    {
+      "seconds": 0.431630099999893,
+      "success": false,
+      "position_error_mm": 21.27078047924775
+    },
+    {
+      "seconds": 0.44598360000236426,
+      "success": false,
+      "position_error_mm": 20.098106915547366
+    },
+    {
+      "seconds": 0.39436320000095293,
+      "success": false,
+      "position_error_mm": 28.257530239655818
+    },
+    {
+      "seconds": 0.44894230000136304,
+      "success": false,
+      "position_error_mm": 19.803338588230066
+    },
+    {
+      "seconds": 0.5173873999992793,
+      "success": false,
+      "position_error_mm": 17.895327022796444
+    },
+    {
+      "seconds": 0.39285470000322675,
+      "success": false,
+      "position_error_mm": 32.560675925032825
+    },
+    {
+      "seconds": 0.42596989999947255,
+      "success": false,
+      "position_error_mm": 21.847928006564324
+    },
+    {
+      "seconds": 0.4308242999977665,
+      "success": false,
+      "position_error_mm": 29.04754879104231
+    },
+    {
+      "seconds": 0.438040799999726,
+      "success": false,
+      "position_error_mm": 33.42279444433377
+    },
+    {
+      "seconds": 0.36067069999990053,
+      "success": false,
+      "position_error_mm": 215.39366585679156
+    },
+    {
+      "seconds": 0.4409920000034617,
+      "success": false,
+      "position_error_mm": 22.71214611108919
+    },
+    {
+      "seconds": 0.5643903000018327,
+      "success": false,
+      "position_error_mm": 16.53560440248661
+    },
+    {
+      "seconds": 0.41667679999955,
+      "success": false,
+      "position_error_mm": 19.97984161119665
+    },
+    {
+      "seconds": 0.20947720000185654,
+      "success": false,
+      "position_error_mm": 24.05165431836666
+    },
+    {
+      "seconds": 0.37905569999929867,
+      "success": false,
+      "position_error_mm": 19.737215490506095
+    },
+    {
+      "seconds": 0.4619726000019,
+      "success": false,
+      "position_error_mm": 21.5350299675499
+    },
+    {
+      "seconds": 0.7219250999987707,
+      "success": false,
+      "position_error_mm": 21.716279538841277
+    },
+    {
+      "seconds": 0.460205200000928,
+      "success": false,
+      "position_error_mm": 21.991657330738008
+    },
+    {
+      "seconds": 0.4180540999986988,
+      "success": false,
+      "position_error_mm": 19.68805466752677
+    },
+    {
+      "seconds": 0.7378110000026936,
+      "success": false,
+      "position_error_mm": 16.442966399025092
+    },
+    {
+      "seconds": 0.3828152999994927,
+      "success": false,
+      "position_error_mm": 24.182647925295974
+    },
+    {
+      "seconds": 0.4155812999997579,
+      "success": false,
+      "position_error_mm": 19.175327187624962
+    },
+    {
+      "seconds": 0.4959584000025643,
+      "success": false,
+      "position_error_mm": 18.827367251931804
+    },
+    {
+      "seconds": 0.44958690000203205,
+      "success": false,
+      "position_error_mm": 29.17727664725342
+    },
+    {
+      "seconds": 0.4022788000002038,
+      "success": false,
+      "position_error_mm": 38.38977465696876
+    },
+    {
+      "seconds": 0.4723567000000912,
+      "success": false,
+      "position_error_mm": 29.196157010774918
+    },
+    {
+      "seconds": 0.4737916000012774,
+      "success": false,
+      "position_error_mm": 27.237925592214665
+    },
+    {
+      "seconds": 0.5672751999991306,
+      "success": false,
+      "position_error_mm": 27.929317921831657
+    },
+    {
+      "seconds": 0.26819500000055996,
+      "success": false,
+      "position_error_mm": 31.314655777606845
+    },
+    {
+      "seconds": 0.4685666000004858,
+      "success": false,
+      "position_error_mm": 24.355906187999594
+    },
+    {
+      "seconds": 0.46029880000060075,
+      "success": false,
+      "position_error_mm": 26.945960939393743
+    },
+    {
+      "seconds": 0.5909939000011946,
+      "success": false,
+      "position_error_mm": 25.446637938958528
+    },
+    {
+      "seconds": 0.4139770999972825,
+      "success": false,
+      "position_error_mm": 29.674423773219974
+    },
+    {
+      "seconds": 0.46806329999890295,
+      "success": false,
+      "position_error_mm": 36.27246713483708
+    },
+    {
+      "seconds": 0.37997659999746247,
+      "success": false,
+      "position_error_mm": 32.21852198017425
+    },
+    {
+      "seconds": 0.4272525999986101,
+      "success": false,
+      "position_error_mm": 24.173898145431473
+    },
+    {
+      "seconds": 0.42200729999967734,
+      "success": false,
+      "position_error_mm": 35.83428441651183
+    },
+    {
+      "seconds": 0.6031393999983266,
+      "success": false,
+      "position_error_mm": 22.748080644251782
+    },
+    {
+      "seconds": 0.3867318000011437,
+      "success": false,
+      "position_error_mm": 39.83872123505615
+    },
+    {
+      "seconds": 0.4971478000006755,
+      "success": false,
+      "position_error_mm": 149.25448358266559
+    },
+    {
+      "seconds": 0.37636639999982435,
+      "success": false,
+      "position_error_mm": 17.236144552805218
+    },
+    {
+      "seconds": 0.23238729999866337,
+      "success": false,
+      "position_error_mm": 16.108858357534597
+    },
+    {
+      "seconds": 0.21385219999865512,
+      "success": false,
+      "position_error_mm": 14.553683938399221
+    },
+    {
+      "seconds": 0.6269275000013295,
+      "success": false,
+      "position_error_mm": 12.174995321490726
+    },
+    {
+      "seconds": 0.276230299998133,
+      "success": false,
+      "position_error_mm": 16.423328448087457
+    },
+    {
+      "seconds": 0.4111750000010943,
+      "success": false,
+      "position_error_mm": 14.990626090040573
+    },
+    {
+      "seconds": 0.4524018999982218,
+      "success": false,
+      "position_error_mm": 16.02161506460236
+    },
+    {
+      "seconds": 0.451834699997562,
+      "success": false,
+      "position_error_mm": 17.22639311801645
+    },
+    {
+      "seconds": 0.44378040000083274,
+      "success": false,
+      "position_error_mm": 14.031349485211969
+    },
+    {
+      "seconds": 0.5001602000011189,
+      "success": false,
+      "position_error_mm": 13.223159964346369
+    },
+    {
+      "seconds": 0.455915599999571,
+      "success": false,
+      "position_error_mm": 12.77246573858807
+    },
+    {
+      "seconds": 0.4161280000007537,
+      "success": false,
+      "position_error_mm": 14.539444724524797
+    },
+    {
+      "seconds": 0.44905430000289925,
+      "success": false,
+      "position_error_mm": 18.30895537088421
+    },
+    {
+      "seconds": 0.44953179999720305,
+      "success": false,
+      "position_error_mm": 22.167050540387088
+    },
+    {
+      "seconds": 0.3829383999982383,
+      "success": false,
+      "position_error_mm": 207.16688938658714
+    },
+    {
+      "seconds": 0.6129901999993308,
+      "success": false,
+      "position_error_mm": 2.7553905454651892
+    },
+    {
+      "seconds": 0.6022419000000809,
+      "success": false,
+      "position_error_mm": 2.7510386432444243
+    },
+    {
+      "seconds": 0.27321780000056606,
+      "success": false,
+      "position_error_mm": 2.771287743569935
+    },
+    {
+      "seconds": 0.7250682999983837,
+      "success": false,
+      "position_error_mm": 2.7127558265834093
+    },
+    {
+      "seconds": 0.5802826999970421,
+      "success": false,
+      "position_error_mm": 2.711907638734514
+    },
+    {
+      "seconds": 0.6264033000006748,
+      "success": false,
+      "position_error_mm": 2.751297775753162
+    },
+    {
+      "seconds": 0.747310100003233,
+      "success": false,
+      "position_error_mm": 2.755353605700829
+    },
+    {
+      "seconds": 0.686381600000459,
+      "success": false,
+      "position_error_mm": 2.7342631142773555
+    },
+    {
+      "seconds": 0.6013069000000542,
+      "success": false,
+      "position_error_mm": 2.7498885659705836
+    },
+    {
+      "seconds": 0.5820553000012296,
+      "success": false,
+      "position_error_mm": 2.7560589003643794
+    },
+    {
+      "seconds": 0.6236650000028021,
+      "success": false,
+      "position_error_mm": 2.7596876536757775
+    },
+    {
+      "seconds": 0.616027000000031,
+      "success": false,
+      "position_error_mm": 2.7522835659312945
+    },
+    {
+      "seconds": 0.6480443000000378,
+      "success": false,
+      "position_error_mm": 2.734722817310668
+    },
+    {
+      "seconds": 0.5104081999998016,
+      "success": false,
+      "position_error_mm": 2.785099247841971
+    },
+    {
+      "seconds": 0.4790519000016502,
+      "success": false,
+      "position_error_mm": 3.4208228654602926
+    },
+    {
+      "seconds": 0.47798210000109975,
+      "success": false,
+      "position_error_mm": 9.137737778044475
+    },
+    {
+      "seconds": 0.6402902000008908,
+      "success": false,
+      "position_error_mm": 8.814520942432894
+    },
+    {
+      "seconds": 0.4736663999974553,
+      "success": false,
+      "position_error_mm": 8.4629945364502
+    },
+    {
+      "seconds": 0.5255709000011848,
+      "success": false,
+      "position_error_mm": 8.69940557599618
+    },
+    {
+      "seconds": 0.6003965999989305,
+      "success": false,
+      "position_error_mm": 8.780888551399448
+    },
+    {
+      "seconds": 0.6252136000002793,
+      "success": false,
+      "position_error_mm": 8.814813881816452
+    },
+    {
+      "seconds": 0.6440536999980395,
+      "success": false,
+      "position_error_mm": 9.176006747513078
+    },
+    {
+      "seconds": 0.5614855999992869,
+      "success": false,
+      "position_error_mm": 8.963537810661334
+    },
+    {
+      "seconds": 0.5602957000010065,
+      "success": false,
+      "position_error_mm": 9.239637028583246
+    },
+    {
+      "seconds": 0.5310544999992999,
+      "success": false,
+      "position_error_mm": 8.835137269347964
+    },
+    {
+      "seconds": 0.3705171999972663,
+      "success": false,
+      "position_error_mm": 8.60043984101048
+    },
+    {
+      "seconds": 0.5172012000002724,
+      "success": false,
+      "position_error_mm": 9.19569388166998
+    },
+    {
+      "seconds": 0.5488460999986273,
+      "success": false,
+      "position_error_mm": 8.998336430701668
+    },
+    {
+      "seconds": 0.4212799000015366,
+      "success": false,
+      "position_error_mm": 10.164434018526473
+    },
+    {
+      "seconds": 0.3944761999991897,
+      "success": false,
+      "position_error_mm": 103.02382565447557
+    },
+    {
+      "seconds": 0.18020909999904688,
+      "success": true,
+      "position_error_mm": 0.3686547708519649
+    },
+    {
+      "seconds": 0.10914229999980307,
+      "success": true,
+      "position_error_mm": 0.1542178689239
+    },
+    {
+      "seconds": 0.1725737000015215,
+      "success": true,
+      "position_error_mm": 0.18210508194506972
+    },
+    {
+      "seconds": 0.14805219999834662,
+      "success": true,
+      "position_error_mm": 0.15479202464602637
+    },
+    {
+      "seconds": 0.1497589999999036,
+      "success": true,
+      "position_error_mm": 0.19868211954780535
+    },
+    {
+      "seconds": 0.0827915000008943,
+      "success": true,
+      "position_error_mm": 0.15417972291574236
+    },
+    {
+      "seconds": 0.05714090000037686,
+      "success": true,
+      "position_error_mm": 0.4545683054523715
+    },
+    {
+      "seconds": 0.07233300000007148,
+      "success": true,
+      "position_error_mm": 0.37213493682813775
+    },
+    {
+      "seconds": 0.13256669999827864,
+      "success": true,
+      "position_error_mm": 0.23033443220110753
+    },
+    {
+      "seconds": 0.09540629999901284,
+      "success": true,
+      "position_error_mm": 0.3416482078887255
+    },
+    {
+      "seconds": 0.10845980000158306,
+      "success": true,
+      "position_error_mm": 0.11840144609489979
+    },
+    {
+      "seconds": 0.14485650000278838,
+      "success": true,
+      "position_error_mm": 0.1386100468502464
+    },
+    {
+      "seconds": 0.07601579999754904,
+      "success": true,
+      "position_error_mm": 0.31563603739403534
+    },
+    {
+      "seconds": 0.2379382999970403,
+      "success": true,
+      "position_error_mm": 0.3456383989552881
+    },
+    {
+      "seconds": 0.2743470999994315,
+      "success": true,
+      "position_error_mm": 0.36848079090056546
+    },
+    {
+      "seconds": 0.0019577999992179684,
+      "success": true,
+      "position_error_mm": 0.34129544114908217
+    },
+    {
+      "seconds": 0.00195979999989504,
+      "success": true,
+      "position_error_mm": 0.3787660480162568
+    },
+    {
+      "seconds": 0.001932499999384163,
+      "success": true,
+      "position_error_mm": 0.42548037988244597
+    },
+    {
+      "seconds": 0.0019713000001502223,
+      "success": true,
+      "position_error_mm": 0.47927748360703215
+    },
+    {
+      "seconds": 0.006674699998256983,
+      "success": true,
+      "position_error_mm": 0.03469296635397425
+    },
+    {
+      "seconds": 0.002307000002474524,
+      "success": true,
+      "position_error_mm": 0.4937085669046629
+    },
+    {
+      "seconds": 0.0055868000017653685,
+      "success": true,
+      "position_error_mm": 0.034578747232435605
+    },
+    {
+      "seconds": 0.005440400000225054,
+      "success": true,
+      "position_error_mm": 0.03469203933901626
+    },
+    {
+      "seconds": 0.0020920000024489127,
+      "success": true,
+      "position_error_mm": 0.49738624421634803
+    },
+    {
+      "seconds": 0.005385500000556931,
+      "success": true,
+      "position_error_mm": 0.03452078740788478
+    },
+    {
+      "seconds": 0.0063106999987212475,
+      "success": true,
+      "position_error_mm": 0.03463372227360927
+    },
+    {
+      "seconds": 0.005753299999923911,
+      "success": true,
+      "position_error_mm": 0.034691827716895184
+    },
+    {
+      "seconds": 0.002304800000274554,
+      "success": true,
+      "position_error_mm": 0.36950152397026237
+    },
+    {
+      "seconds": 0.0020105000003241003,
+      "success": true,
+      "position_error_mm": 0.40443618358218164
+    },
+    {
+      "seconds": 0.002307399998244364,
+      "success": true,
+      "position_error_mm": 0.44830903961762764
+    },
+    {
+      "seconds": 0.001978599997528363,
+      "success": true,
+      "position_error_mm": 0.4992263981365557
+    },
+    {
+      "seconds": 0.006235999997443287,
+      "success": true,
+      "position_error_mm": 0.03885378123854412
+    },
+    {
+      "seconds": 0.005720700002711965,
+      "success": true,
+      "position_error_mm": 0.038976231865302274
+    },
+    {
+      "seconds": 0.00538839999717311,
+      "success": true,
+      "position_error_mm": 0.03903570733409008
+    },
+    {
+      "seconds": 0.005515600001672283,
+      "success": true,
+      "position_error_mm": 0.3263197134986487
+    },
+    {
+      "seconds": 0.008912600002076942,
+      "success": true,
+      "position_error_mm": 0.4642622270861238
+    },
+    {
+      "seconds": 0.10900159999800962,
+      "success": false,
+      "position_error_mm": 1.0839174033876393
+    }
+  ]
+}

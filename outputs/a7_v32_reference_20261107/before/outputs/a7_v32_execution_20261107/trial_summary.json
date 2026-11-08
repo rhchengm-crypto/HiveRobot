@@ -1,0 +1,135 @@
+{
+  "date_local": "2026-11-07",
+  "recorded_at_utc": "2026-11-08T04:48:55.937123+00:00",
+  "build": "seven-axis-board-grasp-v32-descent-gain-continuity",
+  "target_board_mm": [
+    17.5,
+    357.5,
+    50.2
+  ],
+  "piece": "white_knight",
+  "stage": "approach",
+  "claw_closed": false,
+  "same_common_model": true,
+  "home_performed_by_user_before_test": true,
+  "home_repeated_by_agent": false,
+  "operator_preflight": "在旁边、可以急停，通道已清空且未移动",
+  "execution_sequence": [
+    "existing Home",
+    "fixed ordinary Clearance",
+    "precomputed geometric approach",
+    "full descent",
+    "endpoint settle",
+    "same-serial Model Hold 5s"
+  ],
+  "precomputed_before_clearance": true,
+  "prepared_plan": "approach_a7_v32_height50_x17_20261107.json",
+  "plan_comparison": {
+    "same_waypoint_count": true,
+    "old_waypoints": 33,
+    "new_waypoints": 33,
+    "old_source_above": null,
+    "new_source_above": null,
+    "max_encoder_waypoint_change_deg": 1.3605415943609844,
+    "max_board_waypoint_change_mm": 7.598638759972049,
+    "contact_waypoints_and_orientation_identical": true,
+    "contact_geometric_fields_identical": true
+  },
+  "program_result": {
+    "action": "dynamics:board-grasp",
+    "ok": true,
+    "running": false,
+    "support_running": null,
+    "returncode": 0,
+    "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794113116885_55216.txt",
+    "duration_s": 103.873,
+    "post_move_model_hold": {
+      "enabled": true,
+      "state": "complete",
+      "same_serial_session": true,
+      "seconds": 5.0,
+      "joints": [
+        "shoulder_front",
+        "shoulder_side",
+        "shoulder_rotate",
+        "elbow",
+        "arm_roll",
+        "wrist_side",
+        "wrist"
+      ]
+    }
+  },
+  "controller_verification": {
+    "shoulder_rotate_descent_gain_pairs": [
+      [
+        36.0,
+        4.5
+      ]
+    ],
+    "shoulder_rotate_descent_peak_velocity_rad_s": 0.03663003817200661,
+    "confirmed_oscillation_events": 0,
+    "fault_support_frames": 0,
+    "normal_hold_ok": true,
+    "normal_hold_seconds": 5.015100002288818,
+    "normal_hold_max_error_deg": 0.021856605344040804
+  },
+  "trace": {
+    "total_records_without_footer": 5805,
+    "motor_frames": 4400,
+    "queue_dropped_frames": 0,
+    "capture_errors": 0,
+    "closed_normally": true
+  },
+  "evidence": {
+    "motion_issued_by_collector": false,
+    "arm_process_not_interrupted": true,
+    "trace_snapshot_not_final": false,
+    "archive_directory": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_v32_20261107_1794113244673056762",
+    "rgb_frames": 358,
+    "depth_frames": 358,
+    "run": {
+      "action": "dynamics:board-grasp",
+      "ok": true,
+      "running": false,
+      "support_running": null,
+      "returncode": 0,
+      "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794113116885_55216.txt",
+      "duration_s": 103.873,
+      "post_move_model_hold": {
+        "enabled": true,
+        "state": "complete",
+        "same_serial_session": true,
+        "seconds": 5.0,
+        "joints": [
+          "shoulder_front",
+          "shoulder_side",
+          "shoulder_rotate",
+          "elbow",
+          "arm_roll",
+          "wrist_side",
+          "wrist"
+        ]
+      }
+    },
+    "control": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_v32_20261107_1794113244673056762/control_evidence.zip",
+      "bytes": 1852528,
+      "sha256": "0288182a89126b31d2f1456014807a826823913075f1b81818d89fb056144683"
+    },
+    "rgbd": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_v32_20261107_1794113244673056762/rgbd_evidence.zip",
+      "bytes": 45278657,
+      "sha256": "0eaa7aab5e6ab0bf51d414f86039f99c38391f460bcea1c26aee96bc6ed9f100"
+    }
+  },
+  "source_and_models": "control_evidence/manifest.json",
+  "operator_feedback": "pending",
+  "accepted": false,
+  "fitting_eligible": false,
+  "failure_observed_by_operator": null,
+  "physical_xy_and_height_validated": false,
+  "recovery_branch_exercised": false,
+  "root_cause_uniquely_proven": false,
+  "no_further_motion_issued_after_completion": true,
+  "github_uploaded_this_turn": false
+}
