@@ -1,0 +1,44 @@
+{
+  "point": "A4",
+  "requested_board_mm": [
+    27.5,
+    192.5,
+    30.2
+  ],
+  "motion_issued": false,
+  "previously_physically_validated": false,
+  "audit_budget_s": 90.0,
+  "reference_attempt_budget_s": 15.0,
+  "runtime_candidate_sha256": "01beecbf3158975a3b2f5ec3d633c544ab58e4283f5bc943a71c8053cec0a67b",
+  "passed": true,
+  "selected_reference": "saved:white_bishop_place",
+  "reference_selection": {
+    "policy": "primary-then-nearest-validated-path",
+    "search_phase": "primary-common-model",
+    "reference_distance_mm": 201.72486985089594,
+    "distance_basis": "seed-FK-XYZ",
+    "reference_count": 11,
+    "failed_references": [],
+    "per_square_parameters": false,
+    "saved_angles_replayed": false
+  },
+  "waypoints": 24,
+  "orientation_acceptance": {
+    "constraint": "bounded-axis-with-fixed-terminal-frame",
+    "passed": true,
+    "max_axis_deviation_deg": 6.624595018708046,
+    "axis_cone_deg": 20.0,
+    "terminal_reference_error_deg": 0.015677142802383,
+    "terminal_reference_tolerance_deg": 0.2864788975654116,
+    "max_adjacent_rotation_deg": 1.1103702904852637,
+    "adjacent_rotation_limit_deg": 6.0,
+    "terminal_full_frame_max_error_deg": 0.020406983009982272,
+    "terminal_full_frame_tolerance_deg": 0.2864788975654116,
+    "terminal_lock_mm": 10.0,
+    "max_position_error_mm": 0.21349126523099984,
+    "position_tolerance_mm": 0.5,
+    "checked_task_samples": 10,
+    "physical_pose_verified": false
+  },
+  "planning_s": 6.982402699999511
+}

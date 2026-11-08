@@ -1,0 +1,425 @@
+{
+  "schema": 1,
+  "experiment_id": "20261107_v26_continuous_task_pose_development",
+  "build": "seven-axis-board-grasp-v26-endpoint-task-pose",
+  "status": "implemented and offline-tested; not promoted to active Web; A8 unresolved",
+  "method": [
+    "common continuous endpoint axis-cone search with free yaw",
+    "bounded global differential-evolution initial guesses",
+    "independent constrained IK and collision acceptance",
+    "reverse Cartesian branch validation from grasp point to above",
+    "full selected wrist orientation frozen over descent",
+    "swept Clearance transit validation",
+    "complete-branch comparison using existing nominal load/posture preference, joint travel and clearance"
+  ],
+  "no_per_square_angles_or_offsets": true,
+  "request_position_tolerance_mm": 1.084,
+  "axis_cone_deg_relative_to_piece_reference": 10.0,
+  "axis_cone_is_not_a_measured_physical_verticality_claim": true,
+  "additional_common_body_margin_mm": 5.0,
+  "shoulder_front_math_period_is_not_mechanical_limit": true,
+  "offline_candidate_model": "scripts/data/left_arm_board_workspace_continuous_candidate.json",
+  "offline_candidate_only": true,
+  "cases": [
+    {
+      "point": "A8",
+      "success": false,
+      "error": "continuous task-pose search found no complete approach",
+      "elapsed_s": 37.25622239999939,
+      "motion_issued": false,
+      "target_board_mm": [
+        27.5,
+        412.5,
+        30.2
+      ]
+    },
+    {
+      "point": "C6",
+      "success": true,
+      "waypoints": 31,
+      "orientation_acceptance": {
+        "constraint": "full-gripper-frame",
+        "checked_task_samples": 10,
+        "max_error_deg": 0.006659766033800848,
+        "tolerance_deg": 0.2864788975654116,
+        "free_transit_excluded": true,
+        "physical_pose_verified": false
+      },
+      "task_pose_search": {
+        "axis_cone_deg": 10.0,
+        "position_tolerance_mm": 1.084,
+        "selected_axis_deviation_deg": 9.960765779680496,
+        "axis_numerical_tolerance_deg": 0.0005729577951308233,
+        "endpoint_attempts": 44,
+        "feasible_endpoints": 38,
+        "global_initial_search": {
+          "generations": 180,
+          "evaluations": 7602,
+          "best_weighted_residual_m": 0.0032411200412716433,
+          "collision_acceptance": false,
+          "scope": "initial guesses only; full IK, axis, collision and whole-branch checks required"
+        },
+        "selected_above_height_mm": 100.0,
+        "per_square_parameters": false,
+        "preferred_axis_source": "piece reference frame; preference cone, not fixed full orientation",
+        "physical_orientation_verified": false,
+        "complete_branch_scores": [
+          20.878244555462786,
+          20.687408821939872,
+          21.11410077735247
+        ]
+      },
+      "posture_selection": {
+        "policy": "endpoint-first complete reverse branch and checked transit",
+        "score": 20.687408821939872,
+        "feasible_orientation_count": 38,
+        "waypoint_body_clearance_lower_bound_mm": 1.0471585377166779,
+        "posture_load_preference": {
+          "elbow_height_mean_mm": 171.77564628175008,
+          "elbow_height_peak_mm": 282.5912079744135,
+          "elbow_height_terminal_mm": 156.30761079824381,
+          "nominal_gravity_squared_mean_Nm2": 32.05734600513868,
+          "added_cost": 17.81871154827778,
+          "physical_load_independently_verified": false
+        },
+        "per_square_parameters": false
+      },
+      "elapsed_s": 26.677758300000278,
+      "motion_issued": false,
+      "target_board_mm": [
+        137.5,
+        302.5,
+        30.2
+      ]
+    },
+    {
+      "point": "A6",
+      "success": true,
+      "waypoints": 29,
+      "orientation_acceptance": {
+        "constraint": "full-gripper-frame",
+        "checked_task_samples": 10,
+        "max_error_deg": 0.013956031867773666,
+        "tolerance_deg": 0.2864788975654116,
+        "free_transit_excluded": true,
+        "physical_pose_verified": false
+      },
+      "task_pose_search": {
+        "axis_cone_deg": 10.0,
+        "position_tolerance_mm": 1.084,
+        "selected_axis_deviation_deg": 10.000090333769561,
+        "axis_numerical_tolerance_deg": 0.0005729577951308233,
+        "endpoint_attempts": 44,
+        "feasible_endpoints": 37,
+        "global_initial_search": {
+          "generations": 180,
+          "evaluations": 7602,
+          "best_weighted_residual_m": 0.0034985883559324983,
+          "collision_acceptance": false,
+          "scope": "initial guesses only; full IK, axis, collision and whole-branch checks required"
+        },
+        "selected_above_height_mm": 100.0,
+        "per_square_parameters": false,
+        "preferred_axis_source": "piece reference frame; preference cone, not fixed full orientation",
+        "physical_orientation_verified": false,
+        "complete_branch_scores": [
+          22.3509013927731,
+          22.031611100647304,
+          22.69353156394154
+        ]
+      },
+      "posture_selection": {
+        "policy": "endpoint-first complete reverse branch and checked transit",
+        "score": 22.031611100647304,
+        "feasible_orientation_count": 37,
+        "waypoint_body_clearance_lower_bound_mm": 3.157245150808544,
+        "posture_load_preference": {
+          "elbow_height_mean_mm": 186.08100675112166,
+          "elbow_height_peak_mm": 282.5912079744135,
+          "elbow_height_terminal_mm": 179.00901082202438,
+          "nominal_gravity_squared_mean_Nm2": 30.97764687029208,
+          "added_cost": 19.227653612518008,
+          "physical_load_independently_verified": false
+        },
+        "per_square_parameters": false
+      },
+      "elapsed_s": 11.582536199999595,
+      "motion_issued": false,
+      "target_board_mm": [
+        27.5,
+        302.5,
+        30.2
+      ]
+    },
+    {
+      "point": "B6",
+      "success": true,
+      "waypoints": 30,
+      "orientation_acceptance": {
+        "constraint": "full-gripper-frame",
+        "checked_task_samples": 10,
+        "max_error_deg": 0.00305828338585339,
+        "tolerance_deg": 0.2864788975654116,
+        "free_transit_excluded": true,
+        "physical_pose_verified": false
+      },
+      "task_pose_search": {
+        "axis_cone_deg": 10.0,
+        "position_tolerance_mm": 1.084,
+        "selected_axis_deviation_deg": 9.999914113799287,
+        "axis_numerical_tolerance_deg": 0.0005729577951308233,
+        "endpoint_attempts": 44,
+        "feasible_endpoints": 38,
+        "global_initial_search": {
+          "generations": 180,
+          "evaluations": 7602,
+          "best_weighted_residual_m": 0.0024344552216737023,
+          "collision_acceptance": false,
+          "scope": "initial guesses only; full IK, axis, collision and whole-branch checks required"
+        },
+        "selected_above_height_mm": 100.0,
+        "per_square_parameters": false,
+        "preferred_axis_source": "piece reference frame; preference cone, not fixed full orientation",
+        "physical_orientation_verified": false,
+        "complete_branch_scores": [
+          21.365832876204788,
+          21.14586716844572,
+          21.634308019492735
+        ]
+      },
+      "posture_selection": {
+        "policy": "endpoint-first complete reverse branch and checked transit",
+        "score": 21.14586716844572,
+        "feasible_orientation_count": 38,
+        "waypoint_body_clearance_lower_bound_mm": 6.20557623961992,
+        "posture_load_preference": {
+          "elbow_height_mean_mm": 178.1372782951914,
+          "elbow_height_peak_mm": 282.5912079744135,
+          "elbow_height_terminal_mm": 164.4598905533256,
+          "nominal_gravity_squared_mean_Nm2": 30.090694562038085,
+          "added_cost": 18.415541720759904,
+          "physical_load_independently_verified": false
+        },
+        "per_square_parameters": false
+      },
+      "elapsed_s": 23.804239000000962,
+      "motion_issued": false,
+      "target_board_mm": [
+        82.5,
+        302.5,
+        30.2
+      ]
+    },
+    {
+      "point": "B3",
+      "success": true,
+      "waypoints": 34,
+      "orientation_acceptance": {
+        "constraint": "full-gripper-frame",
+        "checked_task_samples": 13,
+        "max_error_deg": 0.15361974007926185,
+        "tolerance_deg": 0.2864788975654116,
+        "free_transit_excluded": true,
+        "physical_pose_verified": false
+      },
+      "task_pose_search": {
+        "axis_cone_deg": 10.0,
+        "position_tolerance_mm": 1.084,
+        "selected_axis_deviation_deg": 9.999999542828117,
+        "axis_numerical_tolerance_deg": 0.0005729577951308233,
+        "endpoint_attempts": 44,
+        "feasible_endpoints": 33,
+        "global_initial_search": {
+          "generations": 180,
+          "evaluations": 7602,
+          "best_weighted_residual_m": 0.0025563846275377918,
+          "collision_acceptance": false,
+          "scope": "initial guesses only; full IK, axis, collision and whole-branch checks required"
+        },
+        "selected_above_height_mm": 100.0,
+        "per_square_parameters": false,
+        "preferred_axis_source": "piece reference frame; preference cone, not fixed full orientation",
+        "physical_orientation_verified": false,
+        "complete_branch_scores": [
+          21.93920152301825
+        ]
+      },
+      "posture_selection": {
+        "policy": "endpoint-first complete reverse branch and checked transit",
+        "score": 21.93920152301825,
+        "feasible_orientation_count": 33,
+        "waypoint_body_clearance_lower_bound_mm": 1.9999984795664258,
+        "posture_load_preference": {
+          "elbow_height_mean_mm": 186.10113653849234,
+          "elbow_height_peak_mm": 282.5912079744135,
+          "elbow_height_terminal_mm": 143.2808637287722,
+          "nominal_gravity_squared_mean_Nm2": 18.60170550703451,
+          "added_cost": 18.98214776398992,
+          "physical_load_independently_verified": false
+        },
+        "per_square_parameters": false
+      },
+      "elapsed_s": 23.74489529999846,
+      "motion_issued": false,
+      "target_board_mm": [
+        82.5,
+        137.5,
+        20.2
+      ]
+    },
+    {
+      "point": "heldout_110_165",
+      "success": true,
+      "waypoints": 32,
+      "orientation_acceptance": {
+        "constraint": "full-gripper-frame",
+        "checked_task_samples": 11,
+        "max_error_deg": 0.020119683818192576,
+        "tolerance_deg": 0.2864788975654116,
+        "free_transit_excluded": true,
+        "physical_pose_verified": false
+      },
+      "task_pose_search": {
+        "axis_cone_deg": 10.0,
+        "position_tolerance_mm": 1.084,
+        "selected_axis_deviation_deg": 10.000067376366621,
+        "axis_numerical_tolerance_deg": 0.0005729577951308233,
+        "endpoint_attempts": 44,
+        "feasible_endpoints": 35,
+        "global_initial_search": {
+          "generations": 180,
+          "evaluations": 7602,
+          "best_weighted_residual_m": 0.002458536907904634,
+          "collision_acceptance": false,
+          "scope": "initial guesses only; full IK, axis, collision and whole-branch checks required"
+        },
+        "selected_above_height_mm": 100.0,
+        "per_square_parameters": false,
+        "preferred_axis_source": "piece reference frame; preference cone, not fixed full orientation",
+        "physical_orientation_verified": false,
+        "complete_branch_scores": [
+          21.6837960827599,
+          21.518004428658795,
+          21.950780701287073
+        ]
+      },
+      "posture_selection": {
+        "policy": "endpoint-first complete reverse branch and checked transit",
+        "score": 21.518004428658795,
+        "feasible_orientation_count": 35,
+        "waypoint_body_clearance_lower_bound_mm": 2.0210534222924617,
+        "posture_load_preference": {
+          "elbow_height_mean_mm": 185.26961197238404,
+          "elbow_height_peak_mm": 282.5912079744135,
+          "elbow_height_terminal_mm": 141.84953774143696,
+          "nominal_gravity_squared_mean_Nm2": 19.56780441983478,
+          "added_cost": 18.918317285635098,
+          "physical_load_independently_verified": false
+        },
+        "per_square_parameters": false
+      },
+      "elapsed_s": 14.930021700001816,
+      "motion_issued": false,
+      "target_board_mm": [
+        110.0,
+        165.0,
+        20.2
+      ]
+    }
+  ],
+  "local_checks": {
+    "board_regression_tests": 101,
+    "fault_support_tests": 19,
+    "home_tests": 15,
+    "motion_dynamics_tests": 12,
+    "latest_task_pose_checks": 8,
+    "compile_passed": true,
+    "diff_check_respects_existing_CRLF": true
+  },
+  "jetson_checks": {
+    "task_pose_tests": 8,
+    "elapsed_s": 61.902,
+    "returncode": 0,
+    "isolated_directory": "/home/nvidia/hive_robot/DM_Control_Python/data/offline_candidates/v26_task_pose_20261107_f63d2f67c0f5",
+    "serial_or_motion_commands_in_tests": false
+  },
+  "active_runtime_and_learning_files_unchanged": true,
+  "protected_runtime_hashes": {
+    "left_arm_board_grasp.py": "f97627d5112f8f288e4ec286a5eceb60f4d779736faaabc59ac7f63e49e0df25",
+    "data/left_arm_board_workspace_candidate.json": "d2b692b52065f66178f84dfa52bb211397da3da57a4a9e3c58e124b12d959e12",
+    "data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "data/left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+    "data/left_arm_v2_6_adaptive_target_bias.json": "c6ed63842f8a37a22fb70fe2f086631378af852ea3e3bf93d6b707dfce26e62e",
+    "data/left_arm_v2_6_adaptive_hold_target_bias.json": "935ee941d36abb37b5834c12485814ece3a97d250aca8a4c34e71957cb40e0bd",
+    "data/left_arm_v2_8_clearance_bias.json": "c3cdde542aa9fc3ab49f99093fe16622d6632778976baecf7a025df96006623e"
+  },
+  "same_serial_hold_and_adaptive_learning_and_clearance_skip_shoulder_rotate_preserved": true,
+  "physical_tests_of_new_algorithm": false,
+  "motion_issued": false,
+  "last_observed_feedback": {
+    "shoulder_front": {
+      "pos": 0.8184558153152466,
+      "vel": -0.0019536020699888468,
+      "tau": 1.292307734489441
+    },
+    "shoulder_side": {
+      "pos": -2.8379874229431152,
+      "vel": -0.0019536020699888468,
+      "tau": 0.047863248735666275
+    },
+    "shoulder_rotate": {
+      "pos": 2.341306209564209,
+      "vel": 0.007326007355004549,
+      "tau": -0.0317460335791111
+    },
+    "elbow": {
+      "pos": -1.27775239944458,
+      "vel": -0.0019536020699888468,
+      "tau": -1.2512820959091187
+    },
+    "arm_roll": {
+      "pos": -2.654879093170166,
+      "vel": -0.007326007355004549,
+      "tau": -0.0317460335791111
+    },
+    "wrist_side": {
+      "pos": 0.16346226632595062,
+      "vel": -0.007326007355004549,
+      "tau": -0.021978022530674934
+    },
+    "wrist": {
+      "pos": -2.0708401203155518,
+      "vel": -0.007326007355004549,
+      "tau": -0.026862027123570442
+    }
+  },
+  "code_model_hashes": {
+    "left_arm_board_grasp.py": "01cdf5e4f1c5d0faf1b47a6986a250e9751e037a0ac7896b29fcd16a5ee3c261",
+    "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "left_arm_board_task_pose.py": "a5414265f525e4286cbd0be2cc818c720b0d0db5ed5273f17239c64aaa7ac242",
+    "left_arm_board_collision.py": "f25023589d6f142416c2d4ae74b5af1ed35d1c58e892264f728ae9f8c3bc15a3",
+    "left_arm_board_transit.py": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f",
+    "left_arm_fault_support.py": "9376aab30c3aa10592df2845c3dc946a1e30abdce09f280e3160c0b68e072e0e",
+    "left_arm_board_home_handoff.py": "0a341c4f34dddd0176c5229f33095d3bbb534616dd673bf8b7f6fa9e87f1a472",
+    "left_arm_motion_trace.py": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+    "left_arm_v3_1_motion_dynamics.py": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "test_left_arm_board_task_pose.py": "eb9e0dd494b3fabb4fd01c64228afd1468ce3d5fade5a71c74c842580b92fc38",
+    "data/left_arm_board_workspace_continuous_candidate.json": "7ffa3580732eab69509df6954fd548a04230eef9ae92a543f128196cd51762b6",
+    "data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "data/left_arm_board_workspace_candidate.json": "d2b692b52065f66178f84dfa52bb211397da3da57a4a9e3c58e124b12d959e12",
+    "data/left_arm_v2_table_clearance.json": "dead14fe6a7bcdca9ccfd8235ed268b3c10c557b32d953de4f98d736cd59b2b1",
+    "data/left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+    "data/left_arm_board_grasp.json": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57"
+  },
+  "package": {
+    "sha256": "f63d2f67c0f54b8e989e459bd43c8777a9302b41b2d8987df674af605d47679e",
+    "bytes": 127654,
+    "local_archive": "C:\\Users\\rhche\\OneDrive\\\u6587\u6863\\HiveRobot\\outputs\\continuous_task_pose_20261107\\v26_offline_package.zip",
+    "remote_archive": "/home/nvidia/hive_robot/DM_Control_Python/data/v26_task_pose_20261107_f63d2f67c0f5.zip",
+    "remote_directory": "/home/nvidia/hive_robot/DM_Control_Python/data/offline_candidates/v26_task_pose_20261107_f63d2f67c0f5"
+  },
+  "evidence_directory": "outputs/continuous_task_pose_20261107",
+  "remaining_work": "A8 complete path still unsolved. Multiple independent unconstrained numerical diagnostics approach about13.4mm residual; this is NOT a proof of physical or global kinematic unreachability. Verify current geometry/board registration and grasp-orientation reach envelope rather than accepting a failed partial path or adding per-square offsets."
+}

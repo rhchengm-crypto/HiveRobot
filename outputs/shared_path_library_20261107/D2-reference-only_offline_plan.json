@@ -1,0 +1,917 @@
+{
+  "ok": true,
+  "build": "seven-axis-board-grasp-v28-approved-pose-bank",
+  "motion_issued": false,
+  "stage": "approach",
+  "piece": "white_knight",
+  "start_rad": {
+    "shoulder_front": 1.9357976913452148,
+    "shoulder_side": -2.7143893241882324,
+    "shoulder_rotate": 2.3661019802093506,
+    "elbow": 0.8165484070777893,
+    "arm_roll": -2.649538516998291,
+    "wrist_side": 0.3057526648044586,
+    "wrist": -1.0313191413879395
+  },
+  "target_board_mm": [
+    192.5,
+    82.5,
+    30.2
+  ],
+  "target_source": "requested-board-xyz",
+  "joint_target_source": "geometric-IK; common numerical seed bank",
+  "waypoints": [
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.17723743358345065,
+        0.08857326543498042,
+        0.004916961715173848
+      ],
+      "target_board_mm": [
+        28.075050412566956,
+        -47.10857114127998,
+        138.96868772587916
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.8868120188470339,
+        "shoulder_side": -2.700705309308572,
+        "shoulder_rotate": 2.371943101155734,
+        "elbow": 0.8137492055121052,
+        "arm_roll": -2.6680007219120143,
+        "wrist_side": 0.27920205191957953,
+        "wrist": -1.1114553539913812
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.19238599112474142,
+        0.08200043794069654,
+        -0.0003705434003811667
+      ],
+      "target_board_mm": [
+        32.55179996784613,
+        -31.8518448416442,
+        132.05279420184763
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.8378263463488531,
+        "shoulder_side": -2.687021294428912,
+        "shoulder_rotate": 2.377784222102117,
+        "elbow": 0.810950003946421,
+        "arm_roll": -2.6864629268257376,
+        "wrist_side": 0.2526514390347004,
+        "wrist": -1.191591566594823
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.2070051299077882,
+        0.07460722603095649,
+        -0.00483344084624758
+      ],
+      "target_board_mm": [
+        38.03975482789167,
+        -17.06769870499023,
+        125.75933496413211
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.7888406738506721,
+        "shoulder_side": -2.6733372795492514,
+        "shoulder_rotate": 2.3836253430485,
+        "elbow": 0.8081508023807369,
+        "arm_roll": -2.7049251317394605,
+        "wrist_side": 0.2261008261498213,
+        "wrist": -1.2717277791982649
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.22100732207962182,
+        0.06649106396311247,
+        -0.008476698699709906
+      ],
+      "target_board_mm": [
+        44.44709739836004,
+        -2.8476985912871555,
+        120.10740095299643
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.7398550013524914,
+        "shoulder_side": -2.659653264669591,
+        "shoulder_rotate": 2.3894664639948835,
+        "elbow": 0.8053516008150526,
+        "arm_roll": -2.7233873366531838,
+        "wrist_side": 0.1995502132649422,
+        "wrist": -1.3518639918017066
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.23430899583070897,
+        0.05776174176830639,
+        -0.011321504933774089
+      ],
+      "target_board_mm": [
+        51.666095005989476,
+        10.719591129067506,
+        115.10307919520903
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.6908693288543104,
+        "shoulder_side": -2.645969249789931,
+        "shoulder_rotate": 2.3953075849412664,
+        "elbow": 0.8025523992493685,
+        "arm_roll": -2.741849541566907,
+        "wrist_side": 0.1729996003800631,
+        "wrist": -1.4320002044051483
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.24683337522089344,
+        0.04853972102800429,
+        -0.013404555128791216
+      ],
+      "target_board_mm": [
+        59.57476922098793,
+        23.5515326286324,
+        110.73970970918529
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.6418836563561294,
+        "shoulder_side": -2.6322852349102703,
+        "shoulder_rotate": 2.4011487058876497,
+        "elbow": 0.7997531976836844,
+        "arm_roll": -2.76031174648063,
+        "wrist_side": 0.14644898749518398,
+        "wrist": -1.51213641700859
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.25851315498414307,
+        0.03895436231071654,
+        -0.014776768332154057
+      ],
+      "target_board_mm": [
+        68.03878982364664,
+        35.574194049726316,
+        106.99868127784562
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.5928979838579487,
+        "shoulder_side": -2.61860122003061,
+        "shoulder_rotate": 2.406989826834033,
+        "elbow": 0.7969539961180002,
+        "arm_roll": -2.7787739513943532,
+        "wrist_side": 0.11989837461030486,
+        "wrist": -1.5922726296120318
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.2692929090817807,
+        0.029142089100928713,
+        -0.01550147659059634
+      ],
+      "target_board_mm": [
+        76.91356352141312,
+        46.72487993714726,
+        103.85072923526086
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.5439123113597677,
+        "shoulder_side": -2.60491720515095,
+        "shoulder_rotate": 2.412830947780416,
+        "elbow": 0.7941547945523161,
+        "arm_roll": -2.7972361563080765,
+        "wrist_side": 0.09334776172542578,
+        "wrist": -1.6724088422154737
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.27913114197881284,
+        0.019244511924622273,
+        -0.01565215142148425
+      ],
+      "target_board_mm": [
+        86.04648407865227,
+        56.954319065507406,
+        101.25768071736096
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.494926638861587,
+        "shoulder_side": -2.5912331902712897,
+        "shoulder_rotate": 2.4186720687267993,
+        "elbow": 0.7913555929866318,
+        "arm_roll": -2.8156983612218,
+        "wrist_side": 0.06679714884054666,
+        "wrist": -1.7525450548189156
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.2880019047488925,
+        0.009406535077840526,
+        -0.015309745864800692
+      ],
+      "target_board_mm": [
+        95.27930764999473,
+        66.22842879991046,
+        99.17457734479257
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.445940966363406,
+        "shoulder_side": -2.5775491753916295,
+        "shoulder_rotate": 2.4245131896731826,
+        "elbow": 0.7885563914209477,
+        "arm_roll": -2.834160566135523,
+        "wrist_side": 0.04024653595566757,
+        "wrist": -1.8326812674223572
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.29589591367393453,
+        -0.0002255330376402312,
+        -0.014559743313753669
+      ],
+      "target_board_mm": [
+        104.45061487227791,
+        74.52959038632119,
+        97.55209250132667
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.3969552938652252,
+        "shoulder_side": -2.563865160511969,
+        "shoulder_rotate": 2.4303543106195655,
+        "elbow": 0.7857571898552635,
+        "arm_roll": -2.852622771049246,
+        "wrist_side": 0.01369592307078843,
+        "wrist": -1.912817480025799
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "entry_search",
+      "target_cad_m": [
+        0.30282112643172754,
+        -0.009505846416029702,
+        -0.013489013708484748
+      ],
+      "target_board_mm": [
+        113.39831971937679,
+        81.8573867783112,
+        96.33915060817816
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.3479696213670442,
+        "shoulder_side": -2.5501811456323087,
+        "shoulder_rotate": 2.436195431565949,
+        "elbow": 0.7829579882895794,
+        "arm_roll": -2.8710849759629693,
+        "wrist_side": -0.012854689814090658,
+        "wrist": -1.9929536926292406
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "source_above",
+      "target_cad_m": [
+        0.30712919009212114,
+        -0.021525696533763947,
+        -0.010562155610358356
+      ],
+      "target_board_mm": [
+        125.55631686838292,
+        86.73445221156167,
+        96.34591565951524
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.3007193943394175,
+        "shoulder_side": -2.5367459084195234,
+        "shoulder_rotate": 2.448796291987904,
+        "elbow": 0.7845736998528378,
+        "arm_roll": -2.8908826750544914,
+        "wrist_side": -0.0406153179973848,
+        "wrist": -2.0747718744474226
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "source_above",
+      "target_cad_m": [
+        0.31018671923330055,
+        -0.03298513928665675,
+        -0.007568143894216665
+      ],
+      "target_board_mm": [
+        137.2427533028219,
+        90.3412720534123,
+        96.56834071348024
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.2534691673117906,
+        "shoulder_side": -2.5233106712067377,
+        "shoulder_rotate": 2.461397152409859,
+        "elbow": 0.7861894114160961,
+        "arm_roll": -2.9106803741460134,
+        "wrist_side": -0.06837594618067891,
+        "wrist": -2.1565900562656046
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "source_above",
+      "target_cad_m": [
+        0.3120648002526817,
+        -0.043708263211105394,
+        -0.0046268227346886424
+      ],
+      "target_board_mm": [
+        148.25582823425114,
+        92.73834678893672,
+        96.92911549774988
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.2062189402841639,
+        "shoulder_side": -2.5098754339939524,
+        "shoulder_rotate": 2.473998012831814,
+        "elbow": 0.7878051229793545,
+        "arm_roll": -2.9304780732375355,
+        "wrist_side": -0.09613657436397303,
+        "wrist": -2.2384082380837866
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "source_above",
+      "target_cad_m": [
+        0.31285861612108823,
+        -0.05352748064600893,
+        -0.0018464126315950423
+      ],
+      "target_board_mm": [
+        158.40338309994917,
+        94.01090291038169,
+        97.35991263522175
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.158968713256537,
+        "shoulder_side": -2.496440196781167,
+        "shoulder_rotate": 2.486598873253769,
+        "elbow": 0.7894208345426128,
+        "arm_roll": -2.9502757723290576,
+        "wrist_side": -0.12389720254726715,
+        "wrist": -2.320226419901968
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "source_above",
+      "target_cad_m": [
+        0.3126850626826375,
+        -0.062285859282269374,
+        0.000680884546497243
+      ],
+      "target_board_mm": [
+        167.50628647897264,
+        94.26672763691637,
+        97.80516755091705
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.1117184862289102,
+        "shoulder_side": -2.4830049595683814,
+        "shoulder_rotate": 2.499199733675724,
+        "elbow": 0.7910365461058712,
+        "arm_roll": -2.9700734714205796,
+        "wrist_side": -0.15165783073056127,
+        "wrist": -2.40204460172015
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "source_above",
+      "target_cad_m": [
+        0.3116795750457001,
+        -0.06983928292285208,
+        0.0028827844137941927
+      ],
+      "target_board_mm": [
+        175.4015757847876,
+        93.63319416156088,
+        98.22542844707341
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.0644682592012833,
+        "shoulder_side": -2.469569722355596,
+        "shoulder_rotate": 2.511800594097679,
+        "elbow": 0.7926522576691295,
+        "arm_roll": -2.9898711705121017,
+        "wrist_side": -0.17941845891385538,
+        "wrist": -2.4838627835383322
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "source_above",
+      "target_cad_m": [
+        0.30999226782442246,
+        -0.07605841824863598,
+        0.004710179867910169
+      ],
+      "target_board_mm": [
+        181.94529559445473,
+        92.25357621441377,
+        98.60014084023857
+      ],
+      "encoder_rad": {
+        "shoulder_front": 1.0172180321736566,
+        "shoulder_side": -2.4561344851428104,
+        "shoulder_rotate": 2.524401454519634,
+        "elbow": 0.7942679692323878,
+        "arm_roll": -3.009668869603624,
+        "wrist_side": -0.20717908709714952,
+        "wrist": -2.565680965356514
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "source_above",
+      "target_cad_m": [
+        0.307783516870159,
+        -0.08083046658513401,
+        0.006139641940513786
+      ],
+      "target_board_mm": [
+        187.01497879164899,
+        90.28277529964461,
+        98.92975266538576
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.9699678051460296,
+        "shoulder_side": -2.442699247930025,
+        "shoulder_rotate": 2.537002314941589,
+        "elbow": 0.7958836807956462,
+        "arm_roll": -3.029466568695146,
+        "wrist_side": -0.2349397152804436,
+        "wrist": -2.647499147174696
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "source_above",
+      "target_cad_m": [
+        0.3052191291703481,
+        -0.08406068191133684,
+        0.007175068721833364
+      ],
+      "target_board_mm": [
+        190.51172417602416,
+        87.8826038036592,
+        99.23705130638633
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.9227175781184029,
+        "shoulder_side": -2.42926401071724,
+        "shoulder_rotate": 2.5496031753635444,
+        "elbow": 0.7974993923589045,
+        "arm_roll": -3.049264267786668,
+        "wrist_side": -0.2627003434637377,
+        "wrist": -2.7293173289928774
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "source_above",
+      "target_cad_m": [
+        0.3024652612175279,
+        -0.08567363867642029,
+        0.007848419158145312
+      ],
+      "target_board_mm": [
+        192.36183264742706,
+        85.21678168617034,
+        99.56767211581969
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.8754673510907761,
+        "shoulder_side": -2.415828773504454,
+        "shoulder_rotate": 2.5622040357854994,
+        "elbow": 0.7991151039221629,
+        "arm_roll": -3.06906196687819,
+        "wrist_side": -0.2904609716470319,
+        "wrist": -2.8111355108110594
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "source_above",
+      "target_cad_m": [
+        0.29968325399993784,
+        -0.08561423542794307,
+        0.008219500050751269
+      ],
+      "target_board_mm": [
+        192.5179733093545,
+        82.44581326325105,
+        99.98974796965081
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.8282171240631493,
+        "shoulder_side": -2.402393536291669,
+        "shoulder_rotate": 2.5748048962074543,
+        "elbow": 0.8007308154854212,
+        "arm_roll": -3.088859665969712,
+        "wrist_side": -0.31822159983032594,
+        "wrist": -2.8929536926292414
+      },
+      "position_error_mm": 0.0,
+      "rotation_error_deg": null
+    },
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.2998367349652406,
+        -0.08693214080501661,
+        0.0025835431839241196
+      ],
+      "target_board_mm": [
+        192.5,
+        82.5,
+        94.2
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.8283714436957135,
+        "shoulder_side": -2.4074159997341664,
+        "shoulder_rotate": 2.5811379193866055,
+        "elbow": 0.786317406518357,
+        "arm_roll": -3.0852501222058315,
+        "wrist_side": -0.3160045656230844,
+        "wrist": -2.891892616807299
+      },
+      "position_error_mm": 0.11151976925043515,
+      "rotation_error_deg": 7.582379434533413
+    },
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.2999728762804982,
+        -0.0887742248643567,
+        -0.005200298532131359
+      ],
+      "target_board_mm": [
+        192.5,
+        82.5,
+        86.2
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.8282309204816057,
+        "shoulder_side": -2.41473315488026,
+        "shoulder_rotate": 2.589714765507587,
+        "elbow": 0.7659740576528588,
+        "arm_roll": -3.080111791512462,
+        "wrist_side": -0.31262219683232817,
+        "wrist": -2.8902522463843963
+      },
+      "position_error_mm": 0.11223589073420082,
+      "rotation_error_deg": 6.488935559554257
+    },
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.30010901759575576,
+        -0.09061630892369675,
+        -0.012984140248186796
+      ],
+      "target_board_mm": [
+        192.5,
+        82.5,
+        78.2
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.827805883804267,
+        "shoulder_side": -2.422383931249456,
+        "shoulder_rotate": 2.5981402880006588,
+        "elbow": 0.7452414985333264,
+        "arm_roll": -3.07484634423057,
+        "wrist_side": -0.30896236598195265,
+        "wrist": -2.888462862315705
+      },
+      "position_error_mm": 0.11292692435617234,
+      "rotation_error_deg": 5.39936497199089
+    },
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.30024515891101333,
+        -0.0924583929830368,
+        -0.02076798196424226
+      ],
+      "target_board_mm": [
+        192.5,
+        82.5,
+        70.2
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.8270963596485101,
+        "shoulder_side": -2.4303595279212424,
+        "shoulder_rotate": 2.606406315429629,
+        "elbow": 0.7241185499276569,
+        "arm_roll": -3.0694570393187637,
+        "wrist_side": -0.3050255550362194,
+        "wrist": -2.886522667504919
+      },
+      "position_error_mm": 0.11360090107186938,
+      "rotation_error_deg": 4.313629818544598
+    },
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.30038130022627085,
+        -0.09430047704237686,
+        -0.028551823680297697
+      ],
+      "target_board_mm": [
+        192.5,
+        82.5,
+        62.2
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.8261019209820609,
+        "shoulder_side": -2.438651646700042,
+        "shoulder_rotate": 2.614505555215942,
+        "elbow": 0.7026028457741951,
+        "arm_roll": -3.063947090887155,
+        "wrist_side": -0.3008120670187975,
+        "wrist": -2.8844289312543823
+      },
+      "position_error_mm": 0.11426635595086757,
+      "rotation_error_deg": 3.2316850094636047
+    },
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.30051744154152843,
+        -0.09614256110171694,
+        -0.03633566539635315
+      ],
+      "target_board_mm": [
+        192.5,
+        82.5,
+        54.2
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.8248216804097379,
+        "shoulder_side": -2.4472524914589875,
+        "shoulder_rotate": 2.622431480275908,
+        "elbow": 0.6806908181301853,
+        "arm_roll": -3.058319654393869,
+        "wrist_side": -0.2963219760665648,
+        "wrist": -2.882177999930965
+      },
+      "position_error_mm": 0.11491319831388225,
+      "rotation_error_deg": 2.1534800035477413
+    },
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.300653582856786,
+        -0.097984645161057,
+        -0.0441195071124086
+      ],
+      "target_board_mm": [
+        192.5,
+        82.5,
+        46.2
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.8232551345940938,
+        "shoulder_side": -2.4561521581752945,
+        "shoulder_rotate": 2.630176223696005,
+        "elbow": 0.6583795805468647,
+        "arm_roll": -3.0525780246300314,
+        "wrist_side": -0.2915552542093871,
+        "wrist": -2.8797662708358502
+      },
+      "position_error_mm": 0.11496344071520136,
+      "rotation_error_deg": 1.0789870102672356
+    },
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.3007897241720435,
+        -0.09982672922039708,
+        -0.05190334882846405
+      ],
+      "target_board_mm": [
+        192.5,
+        82.5,
+        38.2
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.8215013419048902,
+        "shoulder_side": -2.4651981973310195,
+        "shoulder_rotate": 2.6376748514228368,
+        "elbow": 0.6357720145662171,
+        "arm_roll": -3.0467484932917794,
+        "wrist_side": -0.28655182861874917,
+        "wrist": -2.877254856208471
+      },
+      "position_error_mm": 0.1403801208886723,
+      "rotation_error_deg": 0.015105814865304752
+    },
+    {
+      "stage": "contact",
+      "target_cad_m": [
+        0.3009258654873011,
+        -0.10166881327973713,
+        -0.059687190544519514
+      ],
+      "target_board_mm": [
+        192.5,
+        82.5,
+        30.2
+      ],
+      "encoder_rad": {
+        "shoulder_front": 0.8231858139238727,
+        "shoulder_side": -2.466877342125917,
+        "shoulder_rotate": 2.6451552128334668,
+        "elbow": 0.6124413963006617,
+        "arm_roll": -3.0302546393163774,
+        "wrist_side": -0.2883607779675373,
+        "wrist": -2.84918929514629
+      },
+      "position_error_mm": 0.0008350630319400725,
+      "rotation_error_deg": 0.0
+    }
+  ],
+  "endpoint_settle_enabled": true,
+  "selected_wrist_rotation_in_board": [
+    [
+      0.4888468491269765,
+      0.5711873316713157,
+      -0.6593737864343935
+    ],
+    [
+      0.4004792308960322,
+      0.5245533576295661,
+      0.75130563728783
+    ],
+    [
+      0.7750129958391341,
+      -0.6313389003837406,
+      0.027677592790904697
+    ]
+  ],
+  "orientation_policy": "bounded axis during upper descent; fixed full wrist frame final10mm",
+  "tool_orientation_constraint": "full-wrist",
+  "task_pose_search": {
+    "axis_cone_deg": 10.0,
+    "position_tolerance_mm": 0.5,
+    "descent_axis_cone_deg": 20.0,
+    "terminal_full_frame_lock_mm": 10.0,
+    "preferred_wrist_rotation_in_board": [
+      [
+        0.48884504787959815,
+        0.5711876048491213,
+        -0.6593748851983304
+      ],
+      [
+        0.4004788951306873,
+        0.5245549917847463,
+        0.7513046753139562
+      ],
+      [
+        0.7750143054928047,
+        -0.631337295477168,
+        0.027677529172178347
+      ]
+    ],
+    "selected_axis_deviation_deg": 0.00012963590635672696,
+    "axis_numerical_tolerance_deg": 0.0005729577951308233,
+    "endpoint_attempts": 50,
+    "feasible_endpoints": 1,
+    "global_initial_search": {
+      "generations": 180,
+      "evaluations": 7602,
+      "best_weighted_residual_m": 0.0016888621571022526,
+      "collision_acceptance": false,
+      "scope": "initial guesses only; full IK, axis, collision and whole-branch checks required"
+    },
+    "selected_above_height_mm": 100.0,
+    "per_square_parameters": false,
+    "preferred_axis_source": "piece reference frame; preference cone, not fixed full orientation",
+    "physical_orientation_verified": false,
+    "complete_branch_scores": [
+      23.45219273074631,
+      23.353637587009082,
+      23.88369378226337
+    ]
+  },
+  "posture_selection": {
+    "policy": "endpoint-first complete reverse branch and checked transit",
+    "score": 23.353637587009082,
+    "feasible_orientation_count": 1,
+    "waypoint_body_clearance_lower_bound_mm": 1.3212316800793549,
+    "posture_load_preference": {
+      "elbow_height_mean_mm": 204.3997707077911,
+      "elbow_height_peak_mm": 281.73189139741146,
+      "elbow_height_terminal_mm": 171.2481564198618,
+      "nominal_gravity_squared_mean_Nm2": 18.72046065828547,
+      "added_cost": 20.81438628394482,
+      "physical_load_independently_verified": false
+    },
+    "per_square_parameters": false
+  },
+  "registration_status": "optical lateral/normal registration plus user-confirmed fingertip touch plane datum; pending empty-load validation",
+  "fit_errors_mm": {},
+  "tcp_datum": "gripper mount centreline intersecting distal finger-tip plane",
+  "joint_bound_source": "observed saved-pose/reference envelope plus 10deg; NOT mechanical limits; elbow upper provisionally restricted to accepted full-pose observations; NOT a measured mechanical limit",
+  "entry_route": [
+    "entry_search",
+    "source_above"
+  ],
+  "collision_scope": "configured body/board envelopes and swept joint intervals; other pieces and incomplete self collisions excluded",
+  "body_collision_physically_validated": false,
+  "workflow": "precomputed fixed Clearance entry / complete approach and descent; no claw command",
+  "approved_task_pose_reference": "validated:20261107_d1_v28_height30",
+  "reference_selection": {
+    "policy": "primary-then-nearest-validated-path",
+    "search_phase": "nearest-validated-path",
+    "reference_distance_mm": 55.0,
+    "distance_basis": "requested-board-XY",
+    "reference_count": 9,
+    "failed_references": [],
+    "per_square_parameters": false,
+    "saved_angles_replayed": false
+  },
+  "orientation_acceptance": {
+    "constraint": "bounded-axis-with-fixed-terminal-frame",
+    "passed": true,
+    "max_axis_deviation_deg": 5.920252662326677,
+    "axis_cone_deg": 20.0,
+    "terminal_reference_error_deg": 0.00014341100912462618,
+    "terminal_reference_tolerance_deg": 0.2864788975654116,
+    "max_adjacent_rotation_deg": 1.0958098010214279,
+    "adjacent_rotation_limit_deg": 6.0,
+    "terminal_full_frame_max_error_deg": 0.015105814865304733,
+    "terminal_full_frame_tolerance_deg": 0.2864788975654116,
+    "terminal_lock_mm": 10.0,
+    "max_position_error_mm": 0.14038012088868834,
+    "position_tolerance_mm": 0.5,
+    "checked_task_samples": 10,
+    "physical_pose_verified": false
+  },
+  "validation_trial": {
+    "approach_contact": true,
+    "above_only": false,
+    "touch_only": false,
+    "claw_commanded": false,
+    "body_physically_validated": false
+  }
+}

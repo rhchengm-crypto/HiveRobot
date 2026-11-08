@@ -1,0 +1,44 @@
+{
+  "archives_sha256_verified": true,
+  "rgbd_originals_downloaded": true,
+  "motion_issued": false,
+  "record": {
+    "motion_issued_by_collector": false,
+    "archive_directory": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/c1_v27_20261107_1794097997072187414",
+    "control": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/c1_v27_20261107_1794097997072187414/control_evidence.zip",
+      "bytes": 1380476,
+      "sha256": "47fa530bd8e5250076225178a2f88f0f96ba3763b2ffe857aa21141f851814b3"
+    },
+    "rgbd": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/c1_v27_20261107_1794097997072187414/rgbd_evidence.zip",
+      "bytes": 32579105,
+      "sha256": "931542c2218e983ab43178276f4c9c4f73b4d624f8ddd9214c9b4b7282200f66"
+    },
+    "rgb_frames": 259,
+    "depth_frames": 259,
+    "run": {
+      "ok": true,
+      "running": false,
+      "returncode": 0,
+      "action": "dynamics:board-grasp",
+      "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794097920930_22441.txt",
+      "duration_s": 62.234,
+      "post_move_model_hold": {
+        "enabled": true,
+        "state": "complete",
+        "same_serial_session": true,
+        "seconds": 5.0,
+        "joints": [
+          "shoulder_front",
+          "shoulder_side",
+          "shoulder_rotate",
+          "elbow",
+          "arm_roll",
+          "wrist_side",
+          "wrist"
+        ]
+      }
+    }
+  }
+}

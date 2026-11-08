@@ -1,0 +1,18 @@
+...E......
+======================================================================
+ERROR: test_common_reference_bank_orders_by_fk_and_passes_requested_xyz (test_left_arm_board_task_pose.TaskPoseTests.test_common_reference_bank_orders_by_fk_and_passes_requested_xyz)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\rhche\OneDrive\文档\HiveRobot\scripts\test_left_arm_board_task_pose.py", line 138, in test_common_reference_bank_orders_by_fk_and_passes_requested_xyz
+    result = plan_from_approved_references(self.model,cfg,{},*xyz[:2],'white_knight',xyz[2],board)
+  File "C:\Users\rhche\OneDrive\文档\HiveRobot\scripts\left_arm_board_task_pose.py", line 413, in plan_from_approved_references
+    target, _ = planner.validate_request(x_mm, y_mm, piece, 'approach', height_mm, cfg)
+                ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rhche\OneDrive\文档\HiveRobot\scripts\left_arm_board_grasp.py", line 91, in validate_request
+    raise ValueError('XY must be in [0,440]mm and grip height in [10,150]mm')
+ValueError: XY must be in [0,440]mm and grip height in [10,150]mm
+
+----------------------------------------------------------------------
+Ran 10 tests in 18.656s
+
+FAILED (errors=1)

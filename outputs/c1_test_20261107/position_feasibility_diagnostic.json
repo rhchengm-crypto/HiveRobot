@@ -1,0 +1,190 @@
+{
+  "motion_issued": false,
+  "operating_bounds_modified": false,
+  "diagnostics": [
+    {
+      "height_mm": 140.0,
+      "orientation": "position-only diagnostic; not an executable grasp",
+      "body_constraints": false,
+      "best": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": 1.4387995863923118,
+          "shoulder_side": -2.3775054575914263,
+          "shoulder_rotate": 2.8076696467188578,
+          "elbow": 0.8327182640115428,
+          "arm_roll": -3.165974388878162,
+          "wrist_side": 0.2658394563462788,
+          "wrist": -1.4478725812161133
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.012396169539372929,
+        "rotation_error_deg": 0.0,
+        "tool_axis_deviation_deg": null,
+        "tool_axis_cone_deg": 0.0,
+        "iterations": 4,
+        "orientation_constrained": false,
+        "orientation_constraint": "position-only",
+        "body_constraints_checked": false,
+        "minimum_body_clearance_lower_bound_mm": null,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {}
+    },
+    {
+      "height_mm": 140.0,
+      "orientation": "position-only diagnostic; not an executable grasp",
+      "body_constraints": true,
+      "best": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": 1.129208643946621,
+          "shoulder_side": -2.1807163757180033,
+          "shoulder_rotate": 2.0981865310243584,
+          "elbow": 0.8385555631647229,
+          "arm_roll": -3.4205941848130537,
+          "wrist_side": -0.7183605705194543,
+          "wrist": -2.6705341219556513
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.0007079814912582383,
+        "rotation_error_deg": 0.0,
+        "tool_axis_deviation_deg": null,
+        "tool_axis_cone_deg": 0.0,
+        "iterations": 12,
+        "orientation_constrained": false,
+        "orientation_constraint": "position-only",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 48.68283515380837,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {
+        "shoulder_side": {
+          "encoder": -2.1807163757180033,
+          "lower": -3.122766768049164,
+          "upper": -2.1797434934864803
+        },
+        "elbow": {
+          "encoder": 0.8385555631647229,
+          "lower": -1.4702146402110297,
+          "upper": 0.838674008846283
+        },
+        "arm_roll": {
+          "encoder": -3.4205941848130537,
+          "lower": -3.421080624174042,
+          "upper": -2.3483554968128963
+        },
+        "wrist_side": {
+          "encoder": -0.7183605705194543,
+          "lower": -0.718707775186463,
+          "upper": 0.5848098746051031
+        }
+      }
+    },
+    {
+      "height_mm": 30.2,
+      "orientation": "position-only diagnostic; not an executable grasp",
+      "body_constraints": false,
+      "best": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": 1.356754603493932,
+          "shoulder_side": -2.418846783099619,
+          "shoulder_rotate": 2.8430342336184853,
+          "elbow": 0.6184784961949661,
+          "arm_roll": -3.2250254624421593,
+          "wrist_side": 0.28753664847855753,
+          "wrist": -1.6129341895358642
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.00036468339162027525,
+        "rotation_error_deg": 0.0,
+        "tool_axis_deviation_deg": null,
+        "tool_axis_cone_deg": 0.0,
+        "iterations": 4,
+        "orientation_constrained": false,
+        "orientation_constraint": "position-only",
+        "body_constraints_checked": false,
+        "minimum_body_clearance_lower_bound_mm": null,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {}
+    },
+    {
+      "height_mm": 30.2,
+      "orientation": "position-only diagnostic; not an executable grasp",
+      "body_constraints": true,
+      "best": {
+        "success": true,
+        "encoder_rad": {
+          "shoulder_front": 1.3615202286709818,
+          "shoulder_side": -2.926047884285737,
+          "shoulder_rotate": 2.271935191182848,
+          "elbow": 0.18025940454430456,
+          "arm_roll": -3.4208462666713677,
+          "wrist_side": -0.7183008008844481,
+          "wrist": -1.8410377480356839
+        },
+        "seed_projection_delta_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.0,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        },
+        "position_error_mm": 0.0003844593323087129,
+        "rotation_error_deg": 0.0,
+        "tool_axis_deviation_deg": null,
+        "tool_axis_cone_deg": 0.0,
+        "iterations": 15,
+        "orientation_constrained": false,
+        "orientation_constraint": "position-only",
+        "body_constraints_checked": true,
+        "minimum_body_clearance_lower_bound_mm": 1.9999583262881915,
+        "motion_issued": false,
+        "collision_checked": false
+      },
+      "active_bounds": {
+        "arm_roll": {
+          "encoder": -3.4208462666713677,
+          "lower": -3.421080624174042,
+          "upper": -2.3483554968128963
+        },
+        "wrist_side": {
+          "encoder": -0.7183008008844481,
+          "lower": -0.718707775186463,
+          "upper": 0.5848098746051031
+        }
+      }
+    }
+  ]
+}

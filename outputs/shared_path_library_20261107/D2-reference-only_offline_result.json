@@ -1,0 +1,45 @@
+{
+  "point": "D2-reference-only",
+  "requested_board_mm": [
+    192.5,
+    82.5,
+    30.2
+  ],
+  "motion_issued": false,
+  "nearest_reference_solver_diagnostic_only": true,
+  "previously_physically_validated": false,
+  "audit_budget_s": 90.0,
+  "reference_attempt_budget_s": 15.0,
+  "runtime_candidate_sha256": "01beecbf3158975a3b2f5ec3d633c544ab58e4283f5bc943a71c8053cec0a67b",
+  "passed": true,
+  "selected_reference": "validated:20261107_d1_v28_height30",
+  "reference_selection": {
+    "policy": "primary-then-nearest-validated-path",
+    "search_phase": "nearest-validated-path",
+    "reference_distance_mm": 55.0,
+    "distance_basis": "requested-board-XY",
+    "reference_count": 9,
+    "failed_references": [],
+    "per_square_parameters": false,
+    "saved_angles_replayed": false
+  },
+  "waypoints": 32,
+  "orientation_acceptance": {
+    "constraint": "bounded-axis-with-fixed-terminal-frame",
+    "passed": true,
+    "max_axis_deviation_deg": 5.920252662326677,
+    "axis_cone_deg": 20.0,
+    "terminal_reference_error_deg": 0.00014341100912462618,
+    "terminal_reference_tolerance_deg": 0.2864788975654116,
+    "max_adjacent_rotation_deg": 1.0958098010214279,
+    "adjacent_rotation_limit_deg": 6.0,
+    "terminal_full_frame_max_error_deg": 0.015105814865304733,
+    "terminal_full_frame_tolerance_deg": 0.2864788975654116,
+    "terminal_lock_mm": 10.0,
+    "max_position_error_mm": 0.14038012088868834,
+    "position_tolerance_mm": 0.5,
+    "checked_task_samples": 10,
+    "physical_pose_verified": false
+  },
+  "planning_s": 7.726969899998949
+}

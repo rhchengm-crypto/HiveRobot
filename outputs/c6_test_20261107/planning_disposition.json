@@ -1,0 +1,405 @@
+{
+  "target": {
+    "square": "C6",
+    "x_mm": 137.5,
+    "y_mm": 302.5,
+    "grip_height_mm": 30.2
+  },
+  "purpose": "Prospective shared-model lateral generalization from B6, same row and requested height",
+  "previous_trial": "validation_20261107_b6_v25_height30.json",
+  "no_per_square_parameters": true,
+  "same_runtime_model": true,
+  "operator_confirmed_target_cleared": true,
+  "claw_closure": false,
+  "planned_workflow": [
+    "Home",
+    "full precomputation",
+    "ordinary fixed Clearance",
+    "geometric approach",
+    "full descent",
+    "5s same-serial Model Hold"
+  ],
+  "preparation_plan": "approach_eaa5c6d5a462f77f.json",
+  "test_motion_started": false,
+  "disposition": "Not executed: narrow nominal torso gap in unverified body model",
+  "closest_envelope_gap_before_margin_mm": 5.458547113593726,
+  "remaining_gap_after_margin_mm": 0.4585471135937257,
+  "clearance_execution_started": false,
+  "build": "seven-axis-board-grasp-v25-consistent-dynamics-origin",
+  "source_hashes": {
+    "rigid_model": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "board_model": "d2b692b52065f66178f84dfa52bb211397da3da57a4a9e3c58e124b12d959e12",
+    "planner": "f97627d5112f8f288e4ec286a5eceb60f4d779736faaabc59ac7f63e49e0df25",
+    "controller": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "motion_adapter": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "fault_support": "9376aab30c3aa10592df2845c3dc946a1e30abdce09f280e3160c0b68e072e0e",
+    "kinematics": "03dd8362418be37dabe7f49a0bdde91a819d6514c62a28650950f93c58c9b39b",
+    "collision": "f25023589d6f142416c2d4ae74b5af1ed35d1c58e892264f728ae9f8c3bc15a3",
+    "trace": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461"
+  },
+  "plan_sha256": "aa9abc9755609c278b492b946fbaf5aa8953f47637dfc12701f94bb730def2d0",
+  "body_model_physically_validated": false,
+  "clearance_witness": [
+    {
+      "index": 0,
+      "stage": "source_above",
+      "capsule": "wrist-to-tcp",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 9.682983703274157,
+      "centerline_fraction": 0.43783222638070274,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 1,
+      "stage": "source_above",
+      "capsule": "wrist_side-to-wrist",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 11.842676743915012,
+      "centerline_fraction": 0.5569137276975287,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 2,
+      "stage": "source_above",
+      "capsule": "wrist_side-to-wrist",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 12.295037136140257,
+      "centerline_fraction": 0.4883829836494496,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 3,
+      "stage": "source_above",
+      "capsule": "wrist_side-to-wrist",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 12.620171855361686,
+      "centerline_fraction": 0.42871710557027803,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 4,
+      "stage": "source_above",
+      "capsule": "wrist_side-to-wrist",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 12.765486888626487,
+      "centerline_fraction": 0.3789926162375216,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 5,
+      "stage": "source_above",
+      "capsule": "wrist_side-to-wrist",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 12.667278212119745,
+      "centerline_fraction": 0.3403853968414247,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 6,
+      "stage": "source_above",
+      "capsule": "wrist_side-to-wrist",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 12.248441696646347,
+      "centerline_fraction": 0.3141818625255675,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 7,
+      "stage": "source_above",
+      "capsule": "wrist_side-to-wrist",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 11.41590483664048,
+      "centerline_fraction": 0.30179243847867476,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 8,
+      "stage": "source_above",
+      "capsule": "wrist_side-to-wrist",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 10.057768092757591,
+      "centerline_fraction": 0.30476715521891184,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 9,
+      "stage": "source_above",
+      "capsule": "wrist_side-to-wrist",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 12.342785447997908,
+      "centerline_fraction": 0.16067477818606238,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 10,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 13.226089873677964,
+      "centerline_fraction": 1.0,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 11,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 10.595109131325279,
+      "centerline_fraction": 1.0,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 12,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 7.85137551744958,
+      "centerline_fraction": 1.0,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 13,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 4.9917422835872625,
+      "centerline_fraction": 1.0,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 14,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 2.013385161467461,
+      "centerline_fraction": 1.0,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 15,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 0.4585471135937257,
+      "centerline_fraction": 0.9438707454823336,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 16,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 1.3198598298647712,
+      "centerline_fraction": 0.7916415924212551,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 17,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 1.9208641804361577,
+      "centerline_fraction": 0.6403476485358183,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 18,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 2.3101750866336537,
+      "centerline_fraction": 0.49025681100122953,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 19,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 2.536938393601436,
+      "centerline_fraction": 0.3416555529402911,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 20,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 2.6502700686488163,
+      "centerline_fraction": 0.19484588620108415,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 21,
+      "stage": "source_above",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 2.6986602247317224,
+      "centerline_fraction": 0.05014201803737674,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 22,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 3.1051777722193075,
+      "centerline_fraction": 0.0698558687600891,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 23,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 3.55366780696757,
+      "centerline_fraction": 0.08770103873381269,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 24,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 4.026466759478296,
+      "centerline_fraction": 0.10421310414666496,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 25,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 4.52364581013948,
+      "centerline_fraction": 0.1193967715172382,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 26,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 5.045241612536206,
+      "centerline_fraction": 0.13324718280903697,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 27,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 5.59156222063224,
+      "centerline_fraction": 0.1457573250533833,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 28,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 6.163202911269147,
+      "centerline_fraction": 0.15691726408435783,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 29,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 6.761072221249072,
+      "centerline_fraction": 0.16671343639390454,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 30,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 7.38642462694571,
+      "centerline_fraction": 0.17512783277249822,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 31,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 8.040901758237764,
+      "centerline_fraction": 0.1821370343654839,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 32,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 8.726584866564695,
+      "centerline_fraction": 0.18771105142321873,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 33,
+      "stage": "contact",
+      "capsule": "elbow-to-arm_roll",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 9.446062258096045,
+      "centerline_fraction": 0.19181189680297742,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 34,
+      "stage": "contact",
+      "capsule": "shoulder_rotate-to-elbow",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 10.175063901505968,
+      "centerline_fraction": 0.0,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    },
+    {
+      "index": 35,
+      "stage": "contact",
+      "capsule": "shoulder_rotate-to-elbow",
+      "obstacle": "torso_mesh_obb",
+      "clearance_lower_bound_mm": 10.36961535460815,
+      "centerline_fraction": 0.0,
+      "radius_mm": 30.0,
+      "margin_mm": 5.0
+    }
+  ],
+  "interpretation": "Nominal IK/path solved. Not physically tested; not evidence of physical unreachability. Remaining gap after configured margin judged insufficient given observed tracking and unverified torso registration."
+}
