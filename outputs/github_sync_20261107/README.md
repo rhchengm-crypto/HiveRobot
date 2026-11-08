@@ -1,0 +1,98 @@
+# November 7 experiment publication and November 6 RGB-D backfill
+
+The repository contains current code, model JSON, validation registries, frozen per-run code/models, full text control evidence and the daily handoff. GitHub Release assets preserve original binary archives; this manifest maps each original path to its checksum and canonical download URL.
+
+Payloads are lossless. No near-duplicate RGB/depth frames were removed. The private Mac migration ZIP and full personal chat export are not public experiment assets.
+
+## Components
+
+| Component | Count | Location |
+|---|---:|---|
+| Current controller/model/reference code | 54 files in initial publication | core_manifest.json and core_receipt.json |
+| New text control evidence, frozen source/model snapshots, traces and diagnostics | 961 files | text_evidence_receipt.json; ordinary repository files |
+| November 7 original RGB-D | 12 ZIPs; 5,100 RGB/depth pairs | Release group nov7-rgbd |
+| November 7 original control/preparation/repair ZIPs | 28 ZIPs | Release group nov7-control-and-preparation |
+| November 6 missing original RGB-D, retrieved now | 15 ZIPs; 10,360 RGB/depth pairs | Release group nov6-rgbd-backfill |
+| Auxiliary images/arrays | 24 original files in 1 ZIP | nov7_auxiliary_media.zip |
+| Final Jetson code/models/learning and complete run logs | 79 files in 1 ZIP | final_runtime_snapshot_20261107.zip |
+
+The final Jetson archive includes the Home and subsequent hold after A7 acceptance, plus complete model/motion run logs. Some legacy adapters, historical local log copies and the local Clearance learning cache differ from installed files; final_snapshot_verification.json records these differences. The current installed version is frozen in the release; do not overwrite Jetson with an entire historical data directory.
+
+The approved revised STEP is source_geometry/approved_arm_reference.step in the repository, SHA256 f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718. Per-trial model/code SHA and operator observations are recorded in HANDOFF_20261107.md and the trial registries; physical acceptance does not turn requested XYZ or encoder FK into external measured TCP labels.
+
+## Download and verify
+
+Run from a repository clone, with Python 3:
+
+```bash
+# List all payloads without downloading.
+python outputs/github_sync_20261107/restore_publication_data.py
+# Download and verify only November 7 RGB/depth.
+python outputs/github_sync_20261107/restore_publication_data.py --group nov7-rgbd --download
+# Download every payload, preserving original ZIP bytes.
+python outputs/github_sync_20261107/restore_publication_data.py --group all --download
+```
+
+Extract each archive into its own evidence directory. Original source directories are retained on Jetson; local originals also remain. This script performs file transfer/checksums only and does not access robot control.
+
+## Exact asset index
+
+| Group | Asset | Bytes | SHA256 |
+|---|---|---:|---|
+| nov7-control-and-preparation | [a1_test_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a1_test_20261107__control_evidence.zip) | 1658965 | `3ae3a9f6b68c9b13d99e88dc41260fe6eb2b07bcb5eeb57ce15f238554ce04ff` |
+| nov7-rgbd | [a1_test_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a1_test_20261107__rgbd_evidence.zip) | 45491113 | `65205d5088fae707a75b719963316117570dc2554cfe398dd22ca7e3260c9306` |
+| nov7-control-and-preparation | [a6_test_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a6_test_20261107__control_evidence.zip) | 2412514 | `9bb0ae32c52faef9665df35aee05ec9ba7011530c72a69050cde48cb11ef5db6` |
+| nov7-rgbd | [a6_test_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a6_test_20261107__rgbd_evidence.zip) | 43607716 | `67bbb6c74c9eed5df769e815d803111675f965dd906bbfca8474b2d799ade51b` |
+| nov7-control-and-preparation | [a7_clearance_fix_20261107__a7_clearance_fix_staging.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_clearance_fix_20261107__a7_clearance_fix_staging.zip) | 173536 | `5485d3e06d3bffaaa3e04ae377333fe37308f7d04400d5157b0727f9fdf68ddb` |
+| nov7-control-and-preparation | [a7_execution_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_execution_20261107__control_evidence.zip) | 2554123 | `4ce684a6a5e72e4edb7501cb3d94ee10d3b7ecf2829613b397232fd31f4adcb8` |
+| nov7-rgbd | [a7_execution_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_execution_20261107__rgbd_evidence.zip) | 43208977 | `44f2b1b5d798f9304e0b4cf0f484ba9e8ce87eb13804e7fac411c20c9bae1d6a` |
+| nov7-control-and-preparation | [a7_v29_execution_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v29_execution_20261107__control_evidence.zip) | 2675664 | `4c7b947d1191a947cf799671ba687d20be905cb8a4c108730445789501f871a3` |
+| nov7-control-and-preparation | [a7_v29_execution_20261107__control_final.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v29_execution_20261107__control_final.zip) | 4603613 | `4f42d1bf55024db4730e59b01ce0b47ca31ee809e4b76e34dd5d528578b31f6c` |
+| nov7-rgbd | [a7_v29_execution_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v29_execution_20261107__rgbd_evidence.zip) | 55678802 | `a73aa9d7c6c0e3492d52c6797aeb5f5f7e51c28f862bad6b33d2a9938fea1ca5` |
+| nov7-control-and-preparation | [a7_v30_execution_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v30_execution_20261107__control_evidence.zip) | 1922034 | `5f025719671de634698d5bf39b8089d722a885dc29cf04ffb9c57fcdf69c56d3` |
+| nov7-rgbd | [a7_v30_execution_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v30_execution_20261107__rgbd_evidence.zip) | 53562938 | `d28627c8287a630767ddb97708a442ef0e54d64eee3b1f5a04b807664053f9dc` |
+| nov7-control-and-preparation | [a7_v30_execution_20261107__staging.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v30_execution_20261107__staging.zip) | 64395 | `33303349a4367c3c20576d1e5ae076efa4ba418a80df7160a4cffc396f94db5d` |
+| nov7-control-and-preparation | [a7_v31_execution_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v31_execution_20261107__control_evidence.zip) | 1768870 | `19eb9341bffb23d6af2625ffd34f52d85507a316a6bdb775525cfb973c470a71` |
+| nov7-rgbd | [a7_v31_execution_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v31_execution_20261107__rgbd_evidence.zip) | 64651354 | `0305a48f1f9baceebdac174ec736ea7a22281c4b54e82783ed51101584c36300` |
+| nov7-control-and-preparation | [a7_v31_execution_20261107__staging.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v31_execution_20261107__staging.zip) | 97356 | `a755cd1a2a77ae14075ea91a4ae308253c719a0a04d08ea436945bd66e40d5fb` |
+| nov7-control-and-preparation | [a7_v32_execution_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v32_execution_20261107__control_evidence.zip) | 1852528 | `0288182a89126b31d2f1456014807a826823913075f1b81818d89fb056144683` |
+| nov7-control-and-preparation | [a7_v32_execution_20261107__plan_staging.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v32_execution_20261107__plan_staging.zip) | 25466 | `f8dd6c17dc09528d572a324fd6660619bc2c51d5a185813a1030308c78449bb4` |
+| nov7-rgbd | [a7_v32_execution_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v32_execution_20261107__rgbd_evidence.zip) | 45278657 | `0eaa7aab5e6ab0bf51d414f86039f99c38391f460bcea1c26aee96bc6ed9f100` |
+| nov7-control-and-preparation | [a7_v32_reference_20261107__reference_update.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v32_reference_20261107__reference_update.zip) | 57588 | `5e3b8d25995868ce4203ba120979a52e80f326af21b0788a478902a43d2275dc` |
+| nov7-control-and-preparation | [a7_v32_repair_20261107__a7_v32_repair_bundle.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/a7_v32_repair_20261107__a7_v32_repair_bundle.zip) | 72099 | `d6021caa71b86e8afacc4b48826ae006631197c8cfe27b90603b47d77d2b678b` |
+| nov7-control-and-preparation | [approved_pose_bank_release_20261107__v28_package.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/approved_pose_bank_release_20261107__v28_package.zip) | 149455 | `920299f97a608588248fb7ef2f27d2444e6e830b6249063822abe7692ca4cb8a` |
+| nov7-control-and-preparation | [approved_pose_bank_release_20261107__v28b_package.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/approved_pose_bank_release_20261107__v28b_package.zip) | 149484 | `99649d1a6e697179bcf0b48c46ecb068fec3652b6f8b41cbc5b8edb37593f2c6` |
+| nov7-control-and-preparation | [b6_height30_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/b6_height30_20261107__control_evidence.zip) | 2199589 | `7a5c33341abbb63ae9abcacf8f352ba2a46b852e1725cdb5839181894c2376e8` |
+| nov7-rgbd | [b6_height30_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/b6_height30_20261107__rgbd_evidence.zip) | 44664248 | `dc35d72db901f1515dd4cf8275a79ae71265dc6d74fec22349f72654b9aa6c5b` |
+| nov7-control-and-preparation | [b6_test_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/b6_test_20261107__control_evidence.zip) | 2219838 | `801d34d6abc17e8199dd9af811fff25e86958d7d59202defea85b6d60e23553c` |
+| nov7-rgbd | [b6_test_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/b6_test_20261107__rgbd_evidence.zip) | 47134431 | `7326fc106804693c1a9336f6dbcc502f8b3bbef6d5ed724d018cadb26bb19644` |
+| nov6-rgbd-backfill | [backfill_nov6__c5_20261106_1794006813313826582.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__c5_20261106_1794006813313826582.zip) | 105131360 | `47b5cde6684719ad882f0b1f9c38e9a93ec325ff1527cd9963c91573089adacc` |
+| nov6-rgbd-backfill | [backfill_nov6__c5_20261106_1794007905873584013.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__c5_20261106_1794007905873584013.zip) | 85590862 | `f1d34acb970ae719eba283878660a9714f6c77b76626d2ae43a68dca6db8c85f` |
+| nov6-rgbd-backfill | [backfill_nov6__c5_20261106_1794008324402414850.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__c5_20261106_1794008324402414850.zip) | 68727904 | `8149b4bdb8c0d92ddf99dab51a372535f96e8ecbd45f1c3161ae3ee27e9ed78e` |
+| nov6-rgbd-backfill | [backfill_nov6__c5_20261106_1794008671446745165.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__c5_20261106_1794008671446745165.zip) | 44270290 | `cb25d99d237c166b48bc87796c6c14641283f1bd71d248f74d5b2bcb93af154a` |
+| nov6-rgbd-backfill | [backfill_nov6__c5_20261106_1794009136239327224.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__c5_20261106_1794009136239327224.zip) | 50031666 | `6a9b0073c1c2fd24bd8efc3e665d757ccb6f4a9a1456d648215f2857cdde8a39` |
+| nov6-rgbd-backfill | [backfill_nov6__workspace_b3_full_approach_1794025628022155886.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__workspace_b3_full_approach_1794025628022155886.zip) | 103160369 | `d14d3dd4fde21ff206b36c5d88017a8ad191ee589d5342ce1e9d83bbfd34a512` |
+| nov6-rgbd-backfill | [backfill_nov6__workspace_b3_homefix_above_1794024621498148178.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__workspace_b3_homefix_above_1794024621498148178.zip) | 53266284 | `501384f185e8d562af28d664db2881ced0baa14c9dc68d74a5d8d5d3720397ff` |
+| nov6-rgbd-backfill | [backfill_nov6__workspace_b3_homefix_touch_1794024996994207881.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__workspace_b3_homefix_touch_1794024996994207881.zip) | 54531197 | `a87d2b175f5238631ebcefff37155f9249deef5fca968fe1104ba7a38a62dd43` |
+| nov6-rgbd-backfill | [backfill_nov6__workspace_b3_preplanned_1794027383658707332.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__workspace_b3_preplanned_1794027383658707332.zip) | 105217361 | `523f05d26b229c3c7d1162aace94d8ac13f986ccaad3e33e40959d4dbfe9b5e3` |
+| nov6-rgbd-backfill | [backfill_nov6__workspace_b3_preplanned_1794028436344495167.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__workspace_b3_preplanned_1794028436344495167.zip) | 105901124 | `a2175e71f297f0a853276d74ce3d33ba133d0f48b4d0f333ca4dda55f174587f` |
+| nov6-rgbd-backfill | [backfill_nov6__workspace_b3_preplanned_1794030303175762226.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__workspace_b3_preplanned_1794030303175762226.zip) | 108742430 | `afbf60b55fb75d2d51cb250334e1c2ee47badc404d8eed45be4805db84a767b7` |
+| nov6-rgbd-backfill | [backfill_nov6__workspace_b3_preplanned_1794030837704929731.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__workspace_b3_preplanned_1794030837704929731.zip) | 108905120 | `d156cc7cd8043d6f8071dd7f6ecb502900f28e0596b085faaa0c4dfc43b65465` |
+| nov6-rgbd-backfill | [backfill_nov6__workspace_b3_v4_1_above_1794016286145338047.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__workspace_b3_v4_1_above_1794016286145338047.zip) | 53294083 | `a30c9612473fb9bf372010c3bab7b7671927879fbd11bbcdc0e8e045171f7a42` |
+| nov6-rgbd-backfill | [backfill_nov6__workspace_b3_v4_above_1794015760748836648.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__workspace_b3_v4_above_1794015760748836648.zip) | 52823937 | `b2de40f961cb2e7e1a1843aa7d442341905596e82816b212115cda5f08786d61` |
+| nov6-rgbd-backfill | [backfill_nov6__workspace_b3_v5_above_1794017183125319440.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/backfill_nov6__workspace_b3_v5_above_1794017183125319440.zip) | 52801461 | `64b71773e910175d0f59e28d84e135ea259430ce9f75a58e3f81783c07e2e4ee` |
+| nov7-control-and-preparation | [bishop_pose_reference_20261107__offline_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/bishop_pose_reference_20261107__offline_evidence.zip) | 36450 | `459267959bcaf5f3452a9f24e7d4d696c792650cffa8cab0f14bcfcabd41e233` |
+| nov7-control-and-preparation | [bounded_pose_release_20261107__v27_package.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/bounded_pose_release_20261107__v27_package.zip) | 147389 | `4fa2566a212bba61b91440de2e59064931b34aeb33837e8f96b7d783399eec66` |
+| nov7-control-and-preparation | [bounded_pose_release_20261107__v27b_package.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/bounded_pose_release_20261107__v27b_package.zip) | 147989 | `6404eca87a58eeafccf81fba036eb2f78e3176b1a83540c993112e698a6807ac` |
+| nov7-control-and-preparation | [c1_v27_test_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/c1_v27_test_20261107__control_evidence.zip) | 1380476 | `47fa530bd8e5250076225178a2f88f0f96ba3763b2ffe857aa21141f851814b3` |
+| nov7-rgbd | [c1_v27_test_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/c1_v27_test_20261107__rgbd_evidence.zip) | 32579105 | `931542c2218e983ab43178276f4c9c4f73b4d624f8ddd9214c9b4b7282200f66` |
+| nov7-control-and-preparation | [continuous_task_pose_20261107__v26_offline_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/continuous_task_pose_20261107__v26_offline_evidence.zip) | 228242 | `2a41e52830e90d1f7590a6eabb32c04aef463586e3afd92459b351ccd290b325` |
+| nov7-control-and-preparation | [continuous_task_pose_20261107__v26_offline_package.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/continuous_task_pose_20261107__v26_offline_package.zip) | 127654 | `f63d2f67c0f54b8e989e459bd43c8777a9302b41b2d8987df674af605d47679e` |
+| nov7-control-and-preparation | [d1_v27_test_20261107__queen_reference_offline_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/d1_v27_test_20261107__queen_reference_offline_evidence.zip) | 37404 | `7b89c02b9157c281c30666627b77bb98b0a1cad9e4bb15586370b5d838e3938a` |
+| nov7-control-and-preparation | [d1_v28_test_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/d1_v28_test_20261107__control_evidence.zip) | 2027489 | `37b68c789d7479c70e42c58e25b13148033f246fcea376974ce17ee0f81cb083` |
+| nov7-rgbd | [d1_v28_test_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/d1_v28_test_20261107__rgbd_evidence.zip) | 99244250 | `89259ae6f925313eace7b33aeaaa7138a9c2baff63e21189b9c49f676b2be5a9` |
+| final-runtime | [final_runtime_snapshot_20261107.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/final_runtime_snapshot_20261107.zip) | 39432063 | `87fa3c1c532b41a3998c52c9ac98a5ec8861ca564c652120cdf014acd7301edd` |
+| auxiliary-media | [nov7_auxiliary_media.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/nov7_auxiliary_media.zip) | 1593400 | `da1254ed107b565e347e2b38d274206d8206ea00d7944e1305ee81e3ad17d3e2` |
+| nov7-control-and-preparation | [shared_path_library_20261107__shared_library_release.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/shared_path_library_20261107__shared_library_release.zip) | 96703 | `2952105fea8041fb789c96c3f8082ae0b3b0aec6ce082be78a21ccec905515fd` |
+| nov7-control-and-preparation | [target_110_165_20261107__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/target_110_165_20261107__control_evidence.zip) | 2500668 | `8ed8580585112a6a9f298607d36bdd6068c788c8a8e8e7b3e069a131037510dc` |
+| nov7-rgbd | [target_110_165_20261107__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-07/target_110_165_20261107__rgbd_evidence.zip) | 67130662 | `58a4042100b304f1a234eaf80dda73752ee2f7f0e421481d4f46d47d9a8ce2c8` |
