@@ -1,0 +1,429 @@
+{
+  "motion_issued": false,
+  "final_trace_closed": {
+    "event": "trace_closed",
+    "frames_written": 20010,
+    "queue_dropped_frames": 0
+  },
+  "stages": {
+    "entry_search": {
+      "frames": 2171,
+      "last_target_board_mm": [
+        -45.234855994942095,
+        293.5172870606895,
+        193.88986720493935
+      ],
+      "joints": {
+        "shoulder_front": {
+          "last_tracking_error_deg": 2.293641456818405,
+          "last_command_q_rad": 0.4556958841761347,
+          "last_feedback_q_rad": 0.4957274794578552,
+          "last_tau_ff_Nm": -4.8,
+          "last_PD_position_tau_Nm": -3.602843575354846,
+          "last_PD_velocity_tau_Nm": 0.023443223908543587,
+          "last_reconstructed_total_tau_Nm": -8.379400351446302,
+          "last_measured_tau_Nm": -8.430768966674805,
+          "min_measured_tau_Nm": -9.018803596496582,
+          "max_measured_tau_Nm": 2.1401710510253906
+        },
+        "shoulder_side": {
+          "last_tracking_error_deg": -2.2432516644810443,
+          "last_command_q_rad": -2.5684240043246414,
+          "last_feedback_q_rad": -2.6075761318206787,
+          "last_tau_ff_Nm": 1.0,
+          "last_PD_position_tau_Nm": 2.740648924722615,
+          "last_PD_velocity_tau_Nm": 0.00586080620996654,
+          "last_reconstructed_total_tau_Nm": 3.7465097309325817,
+          "last_measured_tau_Nm": 3.6854701042175293,
+          "min_measured_tau_Nm": 0.6222222447395325,
+          "max_measured_tau_Nm": 3.740170955657959
+        },
+        "shoulder_rotate": {
+          "last_tracking_error_deg": 0.9147576910428814,
+          "last_command_q_rad": 2.127354788470104,
+          "last_feedback_q_rad": 2.143320322036743,
+          "last_tau_ff_Nm": -1.0,
+          "last_PD_position_tau_Nm": -0.38317280559934375,
+          "last_PD_velocity_tau_Nm": -0.03296703309752047,
+          "last_reconstructed_total_tau_Nm": -1.4161398386968642,
+          "last_measured_tau_Nm": -1.42368745803833,
+          "min_measured_tau_Nm": -1.6678876876831055,
+          "max_measured_tau_Nm": -0.14896215498447418
+        },
+        "elbow": {
+          "last_tracking_error_deg": 0.7988655067136483,
+          "last_command_q_rad": 0.07017252283412789,
+          "last_feedback_q_rad": 0.08411535620689392,
+          "last_tau_ff_Nm": 4.7786839965939265,
+          "last_PD_position_tau_Nm": -0.975998336093622,
+          "last_PD_velocity_tau_Nm": 0.00586080620996654,
+          "last_reconstructed_total_tau_Nm": 3.808546466710271,
+          "last_measured_tau_Nm": 3.7264957427978516,
+          "min_measured_tau_Nm": 2.741880416870117,
+          "max_measured_tau_Nm": 4.259829044342041
+        },
+        "arm_roll": {
+          "last_tracking_error_deg": 0.5921773623978419,
+          "last_command_q_rad": -2.521779774945072,
+          "last_feedback_q_rad": -2.511444330215454,
+          "last_tau_ff_Nm": -0.23502102621235393,
+          "last_PD_position_tau_Nm": -0.18603800513312407,
+          "last_PD_velocity_tau_Nm": 0.007326007355004549,
+          "last_reconstructed_total_tau_Nm": -0.41373302399047346,
+          "last_measured_tau_Nm": -0.43711844086647034,
+          "min_measured_tau_Nm": -0.5006105303764343,
+          "max_measured_tau_Nm": 0.21245421469211578
+        },
+        "wrist_side": {
+          "last_tracking_error_deg": 0.36568648035220713,
+          "last_command_q_rad": -0.22210685663989316,
+          "last_feedback_q_rad": -0.2157244235277176,
+          "last_tau_ff_Nm": 0.34825648869085946,
+          "last_PD_position_tau_Nm": -0.10211892979480908,
+          "last_PD_velocity_tau_Nm": 0.01611721618101001,
+          "last_reconstructed_total_tau_Nm": 0.2622547750770604,
+          "last_measured_tau_Nm": 0.2173382192850113,
+          "min_measured_tau_Nm": -0.1538461595773697,
+          "max_measured_tau_Nm": 0.3443223536014557
+        },
+        "wrist": {
+          "last_tracking_error_deg": 0.6429928439737819,
+          "last_command_q_rad": -1.8363921439061408,
+          "last_feedback_q_rad": -1.8251698017120361,
+          "last_tau_ff_Nm": 0.7318859734765086,
+          "last_PD_position_tau_Nm": -0.2468915282703028,
+          "last_PD_velocity_tau_Nm": 0.010256410297006368,
+          "last_reconstructed_total_tau_Nm": 0.4952508555032122,
+          "last_measured_tau_Nm": 0.4615384638309479,
+          "min_measured_tau_Nm": 0.32967033982276917,
+          "max_measured_tau_Nm": 0.7350427508354187
+        }
+      }
+    },
+    "source_above": {
+      "frames": 900,
+      "last_target_board_mm": [
+        27.506235521330478,
+        357.4799787948668,
+        180.0038305823135
+      ],
+      "joints": {
+        "shoulder_front": {
+          "last_tracking_error_deg": 4.464413226160051,
+          "last_command_q_rad": -0.10137945577753754,
+          "last_feedback_q_rad": -0.023460745811462402,
+          "last_tau_ff_Nm": -4.8,
+          "last_PD_position_tau_Nm": -7.012683896946762,
+          "last_PD_velocity_tau_Nm": 0.007814408279955387,
+          "last_reconstructed_total_tau_Nm": -11.804869488666807,
+          "last_measured_tau_Nm": -11.89059829711914,
+          "min_measured_tau_Nm": -12.369231224060059,
+          "max_measured_tau_Nm": -8.034188270568848
+        },
+        "shoulder_side": {
+          "last_tracking_error_deg": -0.07918278555320854,
+          "last_command_q_rad": -2.666467301973066,
+          "last_feedback_q_rad": -2.66784930229187,
+          "last_tau_ff_Nm": 0.4039758819935637,
+          "last_PD_position_tau_Nm": 0.0967400223162862,
+          "last_PD_velocity_tau_Nm": 0.00586080620996654,
+          "last_reconstructed_total_tau_Nm": 0.5065767105198165,
+          "last_measured_tau_Nm": 0.47179487347602844,
+          "min_measured_tau_Nm": 0.23931623995304108,
+          "max_measured_tau_Nm": 3.6854701042175293
+        },
+        "shoulder_rotate": {
+          "last_tracking_error_deg": 0.8329371857319987,
+          "last_command_q_rad": 1.8640387823332045,
+          "last_feedback_q_rad": 1.8785762786865234,
+          "last_tau_ff_Nm": 0.01400601696166448,
+          "last_PD_position_tau_Nm": -0.5233498687194809,
+          "last_PD_velocity_tau_Nm": 0.03296703309752047,
+          "last_reconstructed_total_tau_Nm": -0.4763768186602959,
+          "last_measured_tau_Nm": -0.5738705992698669,
+          "min_measured_tau_Nm": -1.5897436141967773,
+          "max_measured_tau_Nm": -0.5103785395622253
+        },
+        "elbow": {
+          "last_tracking_error_deg": 1.3355759293093128,
+          "last_command_q_rad": -0.4690643677946162,
+          "last_feedback_q_rad": -0.44575417041778564,
+          "last_tau_ff_Nm": 4.633882733605976,
+          "last_PD_position_tau_Nm": -1.631713816378138,
+          "last_PD_velocity_tau_Nm": 0.01758241793140769,
+          "last_reconstructed_total_tau_Nm": 3.0197513351592455,
+          "last_measured_tau_Nm": 2.960683822631836,
+          "min_measured_tau_Nm": 2.6598291397094727,
+          "max_measured_tau_Nm": 4.287179470062256
+        },
+        "arm_roll": {
+          "last_tracking_error_deg": 2.069617386117492,
+          "last_command_q_rad": -2.46860054236839,
+          "last_feedback_q_rad": -2.432478904724121,
+          "last_tau_ff_Nm": -0.3624975500618325,
+          "last_PD_position_tau_Nm": -0.6501894775968422,
+          "last_PD_velocity_tau_Nm": 0.021978022530674934,
+          "last_reconstructed_total_tau_Nm": -0.9907090051279998,
+          "last_measured_tau_Nm": -1.0329670906066895,
+          "min_measured_tau_Nm": -1.106227159500122,
+          "max_measured_tau_Nm": -0.4175824224948883
+        },
+        "wrist_side": {
+          "last_tracking_error_deg": 1.7242552344360524,
+          "last_command_q_rad": -0.789039515282836,
+          "last_feedback_q_rad": -0.7589455842971802,
+          "last_tau_ff_Nm": 0.2062914153566333,
+          "last_PD_position_tau_Nm": -0.4815028957704932,
+          "last_PD_velocity_tau_Nm": 0.04835164956748486,
+          "last_reconstructed_total_tau_Nm": -0.22685983084637507,
+          "last_measured_tau_Nm": -0.3003663122653961,
+          "min_measured_tau_Nm": -0.3345543444156647,
+          "max_measured_tau_Nm": 0.32478633522987366
+        },
+        "wrist": {
+          "last_tracking_error_deg": 0.7554552306401583,
+          "last_command_q_rad": -2.3201586384625097,
+          "last_feedback_q_rad": -2.306973457336426,
+          "last_tau_ff_Nm": 0.7318859734765086,
+          "last_PD_position_tau_Nm": -0.29007398477384605,
+          "last_PD_velocity_tau_Nm": 0.010256410297006368,
+          "last_reconstructed_total_tau_Nm": 0.45206839899966894,
+          "last_measured_tau_Nm": 0.4175824224948883,
+          "min_measured_tau_Nm": 0.2857142984867096,
+          "max_measured_tau_Nm": 0.622710645198822
+        }
+      }
+    },
+    "contact": {
+      "frames": 2432,
+      "last_target_board_mm": [
+        27.5,
+        357.5,
+        40.2
+      ],
+      "joints": {
+        "shoulder_front": {
+          "last_tracking_error_deg": 3.6244904484412905,
+          "last_command_q_rad": -0.10922709443774366,
+          "last_feedback_q_rad": -0.04596780240535736,
+          "last_tau_ff_Nm": -4.8,
+          "last_PD_position_tau_Nm": -5.693336282914767,
+          "last_PD_velocity_tau_Nm": 0.007814408279955387,
+          "last_reconstructed_total_tau_Nm": -10.485521874634811,
+          "last_measured_tau_Nm": -10.564102172851562,
+          "min_measured_tau_Nm": -12.724786758422852,
+          "max_measured_tau_Nm": -10.536751747131348
+        },
+        "shoulder_side": {
+          "last_tracking_error_deg": 0.9794104058307858,
+          "last_command_q_rad": -2.753227273330915,
+          "last_feedback_q_rad": -2.736133337020874,
+          "last_tau_ff_Nm": 0.9395839251109075,
+          "last_PD_position_tau_Nm": -1.1965755417028756,
+          "last_PD_velocity_tau_Nm": 0.00586080620996654,
+          "last_reconstructed_total_tau_Nm": -0.2511308103820016,
+          "last_measured_tau_Nm": -0.29401710629463196,
+          "min_measured_tau_Nm": -0.47179487347602844,
+          "max_measured_tau_Nm": 1.1282051801681519
+        },
+        "shoulder_rotate": {
+          "last_tracking_error_deg": -0.10694710012668067,
+          "last_command_q_rad": 1.8785355090763816,
+          "last_feedback_q_rad": 1.876668930053711,
+          "last_tau_ff_Nm": -0.08364392445321722,
+          "last_PD_position_tau_Nm": 0.04479789654409494,
+          "last_PD_velocity_tau_Nm": 0.03296703309752047,
+          "last_reconstructed_total_tau_Nm": -0.005878994811601812,
+          "last_measured_tau_Nm": -0.095238097012043,
+          "min_measured_tau_Nm": -0.6813187003135681,
+          "max_measured_tau_Nm": -0.08547008782625198
+        },
+        "elbow": {
+          "last_tracking_error_deg": 1.2308712837992555,
+          "last_command_q_rad": -0.7087109593903708,
+          "last_feedback_q_rad": -0.6872282028198242,
+          "last_tau_ff_Nm": 4.583982532367456,
+          "last_PD_position_tau_Nm": -1.5037929599382582,
+          "last_PD_velocity_tau_Nm": 0.01758241793140769,
+          "last_reconstructed_total_tau_Nm": 3.097771990360605,
+          "last_measured_tau_Nm": 3.0153846740722656,
+          "min_measured_tau_Nm": 2.386324882507324,
+          "max_measured_tau_Nm": 3.4393162727355957
+        },
+        "arm_roll": {
+          "last_tracking_error_deg": 1.3571631517722225,
+          "last_command_q_rad": -2.2917497954564823,
+          "last_feedback_q_rad": -2.2680628299713135,
+          "last_tau_ff_Nm": -0.2848679918915669,
+          "last_PD_position_tau_Nm": -0.42636537873303837,
+          "last_PD_velocity_tau_Nm": 0.021978022530674934,
+          "last_reconstructed_total_tau_Nm": -0.6892553480939303,
+          "last_measured_tau_Nm": -0.7301587462425232,
+          "min_measured_tau_Nm": -1.1501832008361816,
+          "max_measured_tau_Nm": -0.642246663570404
+        },
+        "wrist_side": {
+          "last_tracking_error_deg": 0.5381876830715003,
+          "last_command_q_rad": -0.50740947468283,
+          "last_feedback_q_rad": -0.4980163276195526,
+          "last_tau_ff_Nm": 0.17257258255683242,
+          "last_PD_position_tau_Nm": -0.15029035301243887,
+          "last_PD_velocity_tau_Nm": 0.01611721618101001,
+          "last_reconstructed_total_tau_Nm": 0.03839944572540355,
+          "last_measured_tau_Nm": -0.007326007355004549,
+          "min_measured_tau_Nm": -0.3052503168582916,
+          "max_measured_tau_Nm": 0.1636141687631607
+        },
+        "wrist": {
+          "last_tracking_error_deg": 0.6725238935309978,
+          "last_command_q_rad": -2.352662496078094,
+          "last_feedback_q_rad": -2.3409247398376465,
+          "last_tau_ff_Nm": 0.7239246469269509,
+          "last_PD_position_tau_Nm": -0.2582306372898495,
+          "last_PD_velocity_tau_Nm": 0.010256410297006368,
+          "last_reconstructed_total_tau_Nm": 0.47595041993410775,
+          "last_measured_tau_Nm": 0.44688645005226135,
+          "min_measured_tau_Nm": 0.31990233063697815,
+          "max_measured_tau_Nm": 0.5347985625267029
+        }
+      }
+    }
+  },
+  "baseline_clamping": {
+    "shoulder_front": {
+      "baseline_calls": 19,
+      "clamped_calls": 18,
+      "last": {
+        "anchor_tau": 2.1401710510253906,
+        "gravity_change_tau": -10.582434822969931,
+        "raw_tau": -8.44226377194454,
+        "applied_tau": -4.8,
+        "clamped": true,
+        "model_tau_limits": [
+          -4.8,
+          3.8
+        ],
+        "trajectory_tau_limits": [
+          -4.8,
+          3.8
+        ]
+      }
+    },
+    "shoulder_side": {
+      "baseline_calls": 19,
+      "clamped_calls": 18,
+      "last": {
+        "anchor_tau": 0.6769230961799622,
+        "gravity_change_tau": 1.0950739447370088,
+        "raw_tau": 1.771997040916971,
+        "applied_tau": 1.0,
+        "clamped": true,
+        "model_tau_limits": [
+          -1.0,
+          1.0
+        ],
+        "trajectory_tau_limits": [
+          -1.0,
+          1.0
+        ]
+      }
+    },
+    "shoulder_rotate": {
+      "baseline_calls": 19,
+      "clamped_calls": 1,
+      "last": {
+        "anchor_tau": -0.14896215498447418,
+        "gravity_change_tau": 0.06386548977638934,
+        "raw_tau": -0.08509666520808484,
+        "applied_tau": -0.08509666520808484,
+        "clamped": false,
+        "model_tau_limits": [
+          -1.0,
+          1.0
+        ],
+        "trajectory_tau_limits": [
+          -1.0,
+          1.0
+        ]
+      }
+    },
+    "elbow": {
+      "baseline_calls": 19,
+      "clamped_calls": 0,
+      "last": {
+        "anchor_tau": 4.027350425720215,
+        "gravity_change_tau": 0.5676217393072056,
+        "raw_tau": 4.59497216502742,
+        "applied_tau": 4.59497216502742,
+        "clamped": false,
+        "model_tau_limits": [
+          -5.4,
+          5.4
+        ],
+        "trajectory_tau_limits": [
+          -5.4,
+          5.4
+        ]
+      }
+    },
+    "arm_roll": {
+      "baseline_calls": 19,
+      "clamped_calls": 0,
+      "last": {
+        "anchor_tau": 0.05616605654358864,
+        "gravity_change_tau": -0.35187753509794695,
+        "raw_tau": -0.2957114785543583,
+        "applied_tau": -0.2957114785543583,
+        "clamped": false,
+        "model_tau_limits": [
+          -0.8,
+          0.8
+        ],
+        "trajectory_tau_limits": [
+          -0.8,
+          0.8
+        ]
+      }
+    },
+    "wrist_side": {
+      "baseline_calls": 19,
+      "clamped_calls": 0,
+      "last": {
+        "anchor_tau": 0.20757021009922028,
+        "gravity_change_tau": -0.03386001979768484,
+        "raw_tau": 0.17371019030153542,
+        "applied_tau": 0.17371019030153542,
+        "clamped": false,
+        "model_tau_limits": [
+          -0.45,
+          0.45
+        ],
+        "trajectory_tau_limits": [
+          -0.45,
+          0.45
+        ]
+      }
+    },
+    "wrist": {
+      "baseline_calls": 19,
+      "clamped_calls": 9,
+      "last": {
+        "anchor_tau": 0.7350427508354187,
+        "gravity_change_tau": -0.009684827016212955,
+        "raw_tau": 0.7253579238192057,
+        "applied_tau": 0.7253579238192057,
+        "clamped": false,
+        "model_tau_limits": [
+          -0.7,
+          0.7
+        ],
+        "trajectory_tau_limits": [
+          -0.7,
+          0.7350427508354187
+        ]
+      }
+    }
+  },
+  "interpretation": "Observed feed-forward clipping and tracking error. Model geometry attribution is not an external measurement or a proof that unclipping alone fixes the task.",
+  "changes_to_live_controller": false
+}

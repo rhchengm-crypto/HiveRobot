@@ -1,0 +1,137 @@
+{
+  "motion_completed": false,
+  "normal_five_second_hold_completed": false,
+  "support_process_active_at_snapshot": true,
+  "requested_board_mm": [
+    27.5,
+    357.5,
+    40.2
+  ],
+  "total_waypoints": 42,
+  "stopped_before_waypoint_index": 41,
+  "previous_nominal_waypoint": [
+    27.5,
+    357.5,
+    48.2
+  ],
+  "previous_nominal_geometry": {
+    "min_gripper_vertex_height_mm": 31.44378260021026,
+    "tcp_board_mm": [
+      27.360012677460045,
+      357.26638416973685,
+      48.220966430843454
+    ]
+  },
+  "unexecuted_final_nominal_geometry": {
+    "min_gripper_vertex_height_mm": 23.59220989202693,
+    "tcp_board_mm": [
+      27.35272411812801,
+      357.1285803854382,
+      40.37041126819693
+    ]
+  },
+  "first_support_feedback_geometry": {
+    "min_gripper_vertex_height_mm": 2.08073671737616,
+    "tcp_board_mm": [
+      7.574123062682612,
+      340.409536153845,
+      17.474763451707503
+    ]
+  },
+  "joint_tracking_attribution": {
+    "shoulder_front": {
+      "encoder_error_from_previous_nominal_deg": 3.6244904484412905,
+      "isolated_model_height_change_mm": -36.43949728059928
+    },
+    "shoulder_side": {
+      "encoder_error_from_previous_nominal_deg": 0.9794104058307858,
+      "isolated_model_height_change_mm": 0.7537362644747638
+    },
+    "shoulder_rotate": {
+      "encoder_error_from_previous_nominal_deg": -0.10694710012668067,
+      "isolated_model_height_change_mm": 0.14556453424147975
+    },
+    "elbow": {
+      "encoder_error_from_previous_nominal_deg": 1.2308712837992555,
+      "isolated_model_height_change_mm": 8.032864332345536
+    },
+    "arm_roll": {
+      "encoder_error_from_previous_nominal_deg": 1.3571631517722225,
+      "isolated_model_height_change_mm": -3.399171406033595
+    },
+    "wrist_side": {
+      "encoder_error_from_previous_nominal_deg": 0.5381876830715003,
+      "isolated_model_height_change_mm": 0.04988951013609011
+    },
+    "wrist": {
+      "encoder_error_from_previous_nominal_deg": 0.6725238935309978,
+      "isolated_model_height_change_mm": 1.6894410693471293
+    }
+  },
+  "attribution_caveat": "Isolated single-joint substitutions in the same model; not independent measured displacement and not additive.",
+  "oscillation_events": 0,
+  "motor_frames": 9475,
+  "max_dropped_frames": 0,
+  "trace_closed": false,
+  "stages": {
+    "entry_search": {
+      "frames": 2171,
+      "first_waypoint": 16,
+      "last_waypoint": 16,
+      "peak_velocity_rad_s": {
+        "shoulder_front": 0.16605617105960846,
+        "shoulder_side": 0.09963370114564896,
+        "shoulder_rotate": 0.06593406945466995,
+        "elbow": 0.11526251584291458,
+        "arm_roll": 0.12454212456941605,
+        "wrist_side": 0.12454212456941605,
+        "wrist": 0.1684981733560562
+      }
+    },
+    "source_above": {
+      "frames": 900,
+      "first_waypoint": 23,
+      "last_waypoint": 23,
+      "peak_velocity_rad_s": {
+        "shoulder_front": 0.1855921894311905,
+        "shoulder_side": 0.07228327542543411,
+        "shoulder_rotate": 0.095238097012043,
+        "elbow": 0.13870574533939362,
+        "arm_roll": 0.095238097012043,
+        "wrist_side": 0.1684981733560562,
+        "wrist": 0.18315018713474274
+      }
+    },
+    "contact": {
+      "frames": 2432,
+      "first_waypoint": 24,
+      "last_waypoint": 41,
+      "peak_velocity_rad_s": {
+        "shoulder_front": 0.09572649747133255,
+        "shoulder_side": 0.07619047909975052,
+        "shoulder_rotate": 0.03663003817200661,
+        "elbow": 0.08009768277406693,
+        "arm_roll": 0.1538461595773697,
+        "wrist_side": 0.10989011079072952,
+        "wrist": 0.095238097012043
+      }
+    },
+    "fault_support": {
+      "frames": 3972,
+      "first_waypoint": 41,
+      "last_waypoint": 41,
+      "peak_velocity_rad_s": {
+        "shoulder_front": 0.00976801011711359,
+        "shoulder_side": 0.05665445700287819,
+        "shoulder_rotate": 0.03663003817200661,
+        "elbow": 0.005860805977135897,
+        "arm_roll": 0.03663003817200661,
+        "wrist_side": 0.03663003817200661,
+        "wrist": 0.03663003817200661
+      }
+    }
+  },
+  "operator_validation": "pending",
+  "physical_contact": null,
+  "reference_library_promoted": false
+}
