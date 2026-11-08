@@ -1,0 +1,49 @@
+{
+  "motion_issued": false,
+  "build": "seven-axis-board-grasp-v29-full-gripper-clearance",
+  "all_edges_rechecked": true,
+  "gripper_clearance_acceptance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 41.99180890973574,
+      "task": 23.59220989202693
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "orientation_acceptance": {
+    "constraint": "bounded-axis-with-fixed-terminal-frame",
+    "passed": true,
+    "max_axis_deviation_deg": 18.106170951299713,
+    "axis_cone_deg": 20.0,
+    "terminal_reference_error_deg": 0.03423928443848927,
+    "terminal_reference_tolerance_deg": 0.2864788975654116,
+    "max_adjacent_rotation_deg": 1.6369371609208068,
+    "adjacent_rotation_limit_deg": 6.0,
+    "terminal_full_frame_max_error_deg": 0.019198797290729163,
+    "terminal_full_frame_tolerance_deg": 0.2864788975654116,
+    "terminal_lock_mm": 10.0,
+    "max_position_error_mm": 0.4343762375992438,
+    "position_tolerance_mm": 0.5,
+    "checked_task_samples": 19,
+    "physical_pose_verified": false
+  },
+  "planned_waypoints_inside_existing_operating_bounds": true,
+  "bounds_roundoff_tolerance_rad": 1e-12,
+  "tests_passed": 114,
+  "source_hashes": {
+    "left_arm_board_grasp.py": "108295b0793661b8af71c5960307d77df6fb7ce9ff2bc9c7dd3853d73d4c0789",
+    "left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "left_arm_board_task_pose.py": "48bf6adac3174a0851425c07f3a0dc1dab7c4a54c13ed9495671c2ba1d2d3671",
+    "left_arm_board_transit.py": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f",
+    "left_arm_rigid_body.py": "4ea8673a58ecde110e3bd2414eec4c7a6543dfd5546a54534734283e984f7cfd",
+    "left_arm_fault_support.py": "9376aab30c3aa10592df2845c3dc946a1e30abdce09f280e3160c0b68e072e0e"
+  },
+  "note": "Final code recheck after preserving repository line endings; no numerical changes after computation.",
+  "planning_only": true,
+  "physical_validation": false
+}

@@ -1,0 +1,64 @@
+{
+  "motion_issued": false,
+  "physical_validation": false,
+  "requested_board_mm": [
+    27.5,
+    357.5,
+    40.2
+  ],
+  "forecast_clearance": {
+    "shoulder_front": 1.9357976913452148,
+    "shoulder_side": -2.7143893241882324,
+    "shoulder_rotate": 2.341306209564209,
+    "elbow": 0.8165484070777893,
+    "arm_roll": -2.649538516998291,
+    "wrist_side": 0.3057526648044586,
+    "wrist": -1.0313191413879395
+  },
+  "cfg_sha256": "846829a77c93d4ad82812034f71dbf2369186d1a63bc829c185e626ad8677268",
+  "rigid_model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+  "passed": true,
+  "waypoints": 42,
+  "route": [
+    "entry_search",
+    "source_above"
+  ],
+  "selected_reference": "validated:20261107_a6_v25_height30",
+  "gripper_clearance_acceptance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 41.99180890973574,
+      "task": 23.59220989202693
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "max_task_position_error_mm": 0.434376237599184,
+  "dense_stage_minimums": {
+    "entry_search": {
+      "minimum_vertex_height_mm": 41.837290939160255,
+      "minimum_tcp_height_mm": 106.0758868792322,
+      "sample_count": 357
+    },
+    "source_above": {
+      "minimum_vertex_height_mm": 141.22704657512875,
+      "minimum_tcp_height_mm": 170.79872787173292,
+      "sample_count": 140
+    },
+    "contact": {
+      "minimum_vertex_height_mm": 23.59220989202693,
+      "minimum_tcp_height_mm": 40.37041126819693,
+      "sample_count": 119
+    }
+  },
+  "seconds": 55.0900443999999,
+  "source_hashes": {
+    "left_arm_board_grasp.py": "8509dad6e5066e7a3ea95677213128036a55cf02b8cf6477261baba2ddb493f8",
+    "left_arm_board_task_pose.py": "48bf6adac3174a0851425c07f3a0dc1dab7c4a54c13ed9495671c2ba1d2d3671",
+    "left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4"
+  }
+}

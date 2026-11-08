@@ -1,0 +1,44 @@
+{
+  "archives_sha256_verified": true,
+  "rgbd_originals_downloaded": true,
+  "motion_issued": false,
+  "record": {
+    "motion_issued_by_collector": false,
+    "archive_directory": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_20261107_1794101133132347511",
+    "rgb_frames": 344,
+    "depth_frames": 344,
+    "run": {
+      "action": "dynamics:board-grasp",
+      "ok": true,
+      "running": false,
+      "returncode": 0,
+      "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794101005121_29275.txt",
+      "duration_s": 114.021,
+      "post_move_model_hold": {
+        "enabled": true,
+        "state": "complete",
+        "same_serial_session": true,
+        "seconds": 5.0,
+        "joints": [
+          "shoulder_front",
+          "shoulder_side",
+          "shoulder_rotate",
+          "elbow",
+          "arm_roll",
+          "wrist_side",
+          "wrist"
+        ]
+      }
+    },
+    "control": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_20261107_1794101133132347511/control_evidence.zip",
+      "bytes": 2554123,
+      "sha256": "4ce684a6a5e72e4edb7501cb3d94ee10d3b7ecf2829613b397232fd31f4adcb8"
+    },
+    "rgbd": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_20261107_1794101133132347511/rgbd_evidence.zip",
+      "bytes": 43208977,
+      "sha256": "44f2b1b5d798f9304e0b4cf0f484ba9e8ce87eb13804e7fac411c20c9bae1d6a"
+    }
+  }
+}
