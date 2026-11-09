@@ -1,0 +1,109 @@
+{
+  "motion_issued": false,
+  "pre_motion_protected_files": {},
+  "learning": {
+    "left_arm_v2_8_clearance_bias.json": {
+      "before_sha256": "d03c511c373dd2812d4bf206990a7becf81dc8051fd7e3263b6342f87c396f38",
+      "after_sha256": "d03c511c373dd2812d4bf206990a7becf81dc8051fd7e3263b6342f87c396f38",
+      "changed_in_trial": false,
+      "before_and_after_preserved": true
+    },
+    "left_arm_v2_6_adaptive_target_bias.json": {
+      "before_sha256": "c6ed63842f8a37a22fb70fe2f086631378af852ea3e3bf93d6b707dfce26e62e",
+      "after_sha256": "c6ed63842f8a37a22fb70fe2f086631378af852ea3e3bf93d6b707dfce26e62e",
+      "changed_in_trial": false,
+      "before_and_after_preserved": true
+    },
+    "left_arm_v2_6_adaptive_hold_target_bias.json": {
+      "before_sha256": "935ee941d36abb37b5834c12485814ece3a97d250aca8a4c34e71957cb40e0bd",
+      "after_sha256": "935ee941d36abb37b5834c12485814ece3a97d250aca8a4c34e71957cb40e0bd",
+      "changed_in_trial": false,
+      "before_and_after_preserved": true
+    },
+    "left_arm_v2_6_adaptive_hold_tau.json": {
+      "before_sha256": "00443bac641b079a9895203bb5e02dbe2316f06950c2eb8aabececa46774d4fe",
+      "after_sha256": "00443bac641b079a9895203bb5e02dbe2316f06950c2eb8aabececa46774d4fe",
+      "changed_in_trial": false,
+      "before_and_after_preserved": true
+    },
+    "left_arm_v2_6_adaptive_active_tau.json": {
+      "before_sha256": "3c3dfd51bd7c0e6d17f2de5010a9816131b52355c40c2857d17e7f352af74e53",
+      "after_sha256": "3c3dfd51bd7c0e6d17f2de5010a9816131b52355c40c2857d17e7f352af74e53",
+      "changed_in_trial": false,
+      "before_and_after_preserved": true
+    }
+  },
+  "learning_before_provenance": "Previous v33 execution archive after-state; no immediate pre-Home five-file snapshot exists",
+  "physical_accepted": false,
+  "operator_feedback_after_collection_kept_separately": true,
+  "qualification": "Home evidence only; previous A8 execution height failure is not overridden by successful Home. Physical Home assessment remains the separate operator report.",
+  "home_source_count": 13,
+  "home_sources": {
+    "left_arm_v2_8.py": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/source/left_arm_v2_8.py",
+      "sha256": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+      "verified": true
+    },
+    "left_arm_v2_6.py": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/source/left_arm_v2_6.py",
+      "sha256": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+      "verified": true
+    },
+    "left_arm_general_motion.py": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/source/left_arm_general_motion.py",
+      "sha256": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+      "verified": true
+    },
+    "left_arm_v3_1_motion_dynamics.py": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/source/left_arm_v3_1_motion_dynamics.py",
+      "sha256": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+      "verified": true
+    },
+    "left_arm_v3_1_model_control.py": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/source/left_arm_v3_1_model_control.py",
+      "sha256": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996",
+      "verified": true
+    },
+    "chessboard_vision_v3_0_web_control.py": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/source/chessboard_vision_v3_0_web_control.py",
+      "sha256": "5f6cfb5dce9a3bb15141711972676a5807b580ef2af2a8821f6c879c901459a2",
+      "verified": true
+    },
+    "data/left_arm_v2_home.json": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/models/left_arm_v2_home.json",
+      "sha256": "b50735e9ae53e24cea91045c3ce2528e26ecd9dbb4990e8295e9a616c0d74d39",
+      "verified": true
+    },
+    "data/left_arm_v2_table_clearance.json": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/models/left_arm_v2_table_clearance.json",
+      "sha256": "dead14fe6a7bcdca9ccfd8235ed268b3c10c557b32d953de4f98d736cd59b2b1",
+      "verified": true
+    },
+    "data/left_arm_general_dynamics.json": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/models/left_arm_general_dynamics.json",
+      "sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+      "verified": true
+    },
+    "data/left_arm_v3_1_dynamics.json": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/models/left_arm_v3_1_dynamics.json",
+      "sha256": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+      "verified": true
+    },
+    "data/left_arm_board_workspace_candidate.json": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/models/left_arm_board_workspace_candidate.json",
+      "sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+      "verified": true
+    },
+    "left_arm_board_grasp.py": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/source/left_arm_board_grasp.py",
+      "sha256": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+      "verified": true
+    },
+    "left_arm_static_support.py": {
+      "path": "outputs/a8_v33_home_20261108/control_evidence/source/left_arm_static_support.py",
+      "sha256": "ce4d53088a9818a7c229f822c9d9d2bb5f826328982b2a859a284e04bbe3203d",
+      "verified": true
+    }
+  },
+  "source_fingerprint_scope": "Normal Home source/model snapshot plus board controller and static support; not the prepared board-approach source manifest"
+}

@@ -1,0 +1,42 @@
+{
+  "read_only": true,
+  "motion_issued": false,
+  "results": [
+    {
+      "url": "http://192.168.201.199:8090/",
+      "ok": false,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "seconds": 2.501
+    },
+    {
+      "url": "http://192.168.201.199:8100/",
+      "ok": false,
+      "error": "<urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>",
+      "seconds": 2.5
+    },
+    {
+      "url": "http://192.168.0.199:8090/",
+      "ok": false,
+      "error": "<urlopen error timed out>",
+      "seconds": 3.25
+    },
+    {
+      "url": "http://192.168.0.199:8100/",
+      "ok": false,
+      "error": "<urlopen error timed out>",
+      "seconds": 3.249
+    },
+    {
+      "url": "http://100.83.45.21:8090/",
+      "ok": false,
+      "error": "<urlopen error timed out>",
+      "seconds": 3.249
+    },
+    {
+      "url": "http://100.83.45.21:8100/",
+      "ok": false,
+      "error": "<urlopen error timed out>",
+      "seconds": 3.25
+    }
+  ]
+}
