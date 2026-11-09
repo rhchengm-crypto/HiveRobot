@@ -1,0 +1,63 @@
+# November 8 experiment data index
+
+[Handoff](../../HANDOFF_20261108.md) · [GitHub Release](https://github.com/rhchengm-crypto/HiveRobot/releases/tag/experiments-2026-11-08)
+
+All29 payloads are downloaded to this Windows host before GitHub upload. The31 final attachments include these payloads plus the manifest and restore helper. Publication completion is established by publication_receipt.json, not this pre-upload index.
+
+## Three corresponding parts
+
+| Part | Location |
+| --- | --- |
+| Code, models, tests and acceptance | `scripts/`, `HANDOFF_20261108.md`; per-run SHA mapping in the handoff. Core commit `473473731baa3f5d88c0e00eb329a207662aea17`. |
+| Control and research evidence | 959 Git text files, 114527893 raw bytes; original control packages and final runtime/gap snapshots below. |
+| RGB-D and auxiliary images | Seven original lossless RGB-D packages, 3,690 paired frames; four auxiliary images in their separate ZIP. |
+
+## Exact downloadable payloads
+
+| Group | Asset | Local original | Bytes | SHA256 |
+| --- | --- | --- | ---: | --- |
+| nov8-control-preparation-analysis | [a7_home_20261108__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a7_home_20261108__control_evidence.zip) | `outputs/a7_home_20261108/control_evidence.zip` | 189996 | `ab183e6d7dd7a67197290fb9859d37eea13eaa35d48397c11f822d2b7a0d139d` |
+| nov8-rgbd | [a7_home_20261108__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a7_home_20261108__rgbd_evidence.zip) | `outputs/a7_home_20261108/rgbd_evidence.zip` | 54647723 | `5a7f8cc1446f8106569bd47b304405147f47d082f2fc927236ab30a005ccf621` |
+| nov8-control-preparation-analysis | [a7_repeat_20261108__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a7_repeat_20261108__control_evidence.zip) | `outputs/a7_repeat_20261108/control_evidence.zip` | 43385635 | `253f123d481babf7fa685cdf2438a5dafedc407d1aaae03dbc79576777d08278` |
+| nov8-rgbd | [a7_repeat_20261108__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a7_repeat_20261108__rgbd_evidence.zip) | `outputs/a7_repeat_20261108/rgbd_evidence.zip` | 41543937 | `47de71003fcec61672f1e49129ced79344150e9857ef2cbdcf5b2ef365e1179b` |
+| nov8-control-preparation-analysis | [a8_accepted_reference_20261108__accepted_reference_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_accepted_reference_20261108__accepted_reference_evidence.zip) | `outputs/a8_accepted_reference_20261108/data_sync/accepted_reference_evidence.zip` | 313868 | `b923a26047fdb3b7e63a98d89ad09ca915bb5eeab7f6a18777546fa088474877` |
+| nov8-control-preparation-analysis | [a8_height_followup_20261108__a8_height_followup_bundle.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_height_followup_20261108__a8_height_followup_bundle.zip) | `outputs/a8_height_followup_20261108/deployment/a8_height_followup_bundle.zip` | 56704 | `eecd11b97c2b683a52c8ae41bd5fe77a107c57ba70c34a8fa1e939c03f24d66d` |
+| nov8-control-preparation-analysis | [a8_height_followup_20261108__analysis_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_height_followup_20261108__analysis_evidence.zip) | `outputs/a8_height_followup_20261108/deployment/analysis_evidence.zip` | 245122 | `509583220c2552b36815862792eb2a16713daf97cf85c4cb06922eac26a7fcc5` |
+| nov8-control-preparation-analysis | [a8_height_followup_20261108__deployment_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_height_followup_20261108__deployment_evidence.zip) | `outputs/a8_height_followup_20261108/deployment/deployment_evidence.zip` | 74170 | `82264df1f83dd227382052504f9684d2c9036a7f1f8f736a4f7434c46c04b844` |
+| nov8-control-preparation-analysis | [a8_lower25_execution_20261108__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_lower25_execution_20261108__control_evidence.zip) | `outputs/a8_lower25_execution_20261108/control_evidence.zip` | 4587329 | `d20c0877ac2b721db8a9c8405a2617cb34d0d5811d1d25651872417709d6696f` |
+| nov8-control-preparation-analysis | [a8_lower25_execution_20261108__analysis_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_lower25_execution_20261108__analysis_evidence.zip) | `outputs/a8_lower25_execution_20261108/post_analysis_sync/analysis_evidence.zip` | 546605 | `2624a5274ddad39c333b973209c7e93eceaf450ca7ea686de3a5848b23e0c47c` |
+| nov8-rgbd | [a8_lower25_execution_20261108__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_lower25_execution_20261108__rgbd_evidence.zip) | `outputs/a8_lower25_execution_20261108/rgbd_evidence.zip` | 85182854 | `84e97b5f18ab31606ff6545c230838d1314c55ede16d3d544198489d2c6aeb2a` |
+| nov8-control-preparation-analysis | [a8_reference_execution_20261108__analysis_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_reference_execution_20261108__analysis_evidence.zip) | `outputs/a8_reference_execution_20261108/analysis_evidence.zip` | 60398 | `8dafcd282b60b6c5027873c319f9b40e1fb7908b56a4192ce3eb58b41e58a1cb` |
+| nov8-control-preparation-analysis | [a8_reference_execution_20261108__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_reference_execution_20261108__control_evidence.zip) | `outputs/a8_reference_execution_20261108/control_evidence.zip` | 2995741 | `1bb9f48540b4d53a0cf72c9227aa3a3cae093210d86a20febae79cb6ff7abfcc` |
+| nov8-rgbd | [a8_reference_execution_20261108__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_reference_execution_20261108__rgbd_evidence.zip) | `outputs/a8_reference_execution_20261108/rgbd_evidence.zip` | 79122875 | `6d763847a531b8c93da80b3b0ffd58cd0e470e66502a66b3fe1450181094b402` |
+| nov8-control-preparation-analysis | [a8_reference_home_20261108__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_reference_home_20261108__control_evidence.zip) | `outputs/a8_reference_home_20261108/control_evidence.zip` | 376867 | `974af8b5d48ec32632edb559a7401cf3a239543b9dd0356d00b00c5b49962917` |
+| nov8-rgbd | [a8_reference_home_20261108__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_reference_home_20261108__rgbd_evidence.zip) | `outputs/a8_reference_home_20261108/rgbd_evidence.zip` | 60845460 | `058a71e50cecb71acf9b9f75803dfa25bcc456e2cdd9a88c11efa758a3e8ab39` |
+| nov8-control-preparation-analysis | [a8_remaining_height_20261108__analysis_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_remaining_height_20261108__analysis_evidence.zip) | `outputs/a8_remaining_height_20261108/data_sync/analysis_evidence.zip` | 155907 | `6e8355e933fdb4fd295686fbf644b5f0f2ced0a9a35d9deab28a63352583ce99` |
+| nov8-control-preparation-analysis | [a8_saved_reference_20261108__saved_reference_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_saved_reference_20261108__saved_reference_evidence.zip) | `outputs/a8_saved_reference_20261108/saved_reference_evidence.zip` | 91377 | `d2148fc865b56869c20a3e76b0651c0e59cd06bff1717584db1f68576bbec9ea` |
+| nov8-control-preparation-analysis | [a8_static_support_fix_20261108__a8_v33_static_support_bundle.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_static_support_fix_20261108__a8_v33_static_support_bundle.zip) | `outputs/a8_static_support_fix_20261108/a8_v33_static_support_bundle.zip` | 64181 | `0531d8d63722d4c64d82c91ff95647dc456f545be01cabe92e776d5c133789dc` |
+| nov8-control-preparation-analysis | [a8_test_20261108__offline_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_test_20261108__offline_evidence.zip) | `outputs/a8_test_20261108/offline_evidence.zip` | 525834 | `1dff56e1e6c99bbdb3ac21406158819ca2e34f1ad63e95d3bfd7496e4d2c39f7` |
+| nov8-control-preparation-analysis | [a8_test_20261108__orientation_retry_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_test_20261108__orientation_retry_evidence.zip) | `outputs/a8_test_20261108/orientation_retry_evidence.zip` | 566128 | `eeecfa7a8704ece92ce05e9c6b391a7890e4e0fc3c627176932070341994e242` |
+| nov8-control-preparation-analysis | [a8_v33_execution_20261108__analysis_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_v33_execution_20261108__analysis_evidence.zip) | `outputs/a8_v33_execution_20261108/analysis_evidence.zip` | 96795 | `c4d8914d6d5736f0741fc411ce25738dc4709523696ccd6afd7876cd1f39d8c2` |
+| nov8-control-preparation-analysis | [a8_v33_execution_20261108__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_v33_execution_20261108__control_evidence.zip) | `outputs/a8_v33_execution_20261108/control_evidence.zip` | 3834620 | `ed2da994819b12092abc1dd0c160fb11cba68e5dcd857b040c3905afed935f77` |
+| nov8-rgbd | [a8_v33_execution_20261108__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_v33_execution_20261108__rgbd_evidence.zip) | `outputs/a8_v33_execution_20261108/rgbd_evidence.zip` | 87788902 | `8183672a9a07584cd8dad56443412c7caaa3f9cc356b6bd5cbb1fcdbdc0a8a6b` |
+| nov8-control-preparation-analysis | [a8_v33_home_20261108__control_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_v33_home_20261108__control_evidence.zip) | `outputs/a8_v33_home_20261108/control_evidence.zip` | 470603 | `682552f6e66436c03e337f433e36e0835384d212d52a6a4e5778778ff248083b` |
+| nov8-rgbd | [a8_v33_home_20261108__rgbd_evidence.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/a8_v33_home_20261108__rgbd_evidence.zip) | `outputs/a8_v33_home_20261108/rgbd_evidence.zip` | 52843800 | `9f6cc256d306e10b1d66a4eced104a5e6991165a9dc0bb0f7aad67e3457d08b6` |
+| auxiliary-media | [auxiliary_media_20261108.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/auxiliary_media_20261108.zip) | `outputs/github_sync_20261108/auxiliary_media_20261108.zip` | 212482 | `98918dbd7eb9f0af941b2cfd52bf962c0d2352ef7f5898c3bc2d14272ac50af4` |
+| final-runtime | [final_runtime_snapshot_20261108.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/final_runtime_snapshot_20261108.zip) | `outputs/github_sync_20261108/final_runtime_snapshot_20261108.zip` | 50290144 | `54f449b2bb65e600a31d70ad6ccedeb70b376cb5870345b0acda7bf1ed60979f` |
+| remote-gap | [remote_gap_evidence_20261108.zip](https://github.com/rhchengm-crypto/HiveRobot/releases/download/experiments-2026-11-08/remote_gap_evidence_20261108.zip) | `outputs/github_sync_20261108/remote_gap_evidence_20261108.zip` | 732237 | `def9148a8b9abcf9dc24572fcf4b7ff0263705fa43fd59b98a5153ed56bca179` |
+
+## Restore
+
+```bash
+python outputs/github_sync_20261108/restore_publication_data.py
+python outputs/github_sync_20261108/restore_publication_data.py --group nov8-rgbd --download
+python outputs/github_sync_20261108/restore_publication_data.py --group all --download
+```
+
+The helper verifies original bytes and never extracts archives or controls the robot. Extract each trial into a separate evidence directory so historical same-named models remain distinct.
+
+A8 acceptance applies to the executed low-height non-pawn posture. The new1.5mm mathematical descent was not executed; no loaded grasp or true physical limit was measured. The four-group fit remains an offline candidate because grouped validation worsened.
+
+The138,752,252-byte rolling motion JSONL is retained in original control archives, not discarded. The final snapshot retains219 source/model/learning/log files and the last user Home/hold. Nine local historical/log files differ from the remote snapshot and are kept as distinct versions. The gap archive adds26 captured remote-only records; the active web log is an explicitly finite snapshot, not a sealed final log.
+
+Private Mac/chat archives, SSH keys, credential stores and generated Python caches are excluded.
