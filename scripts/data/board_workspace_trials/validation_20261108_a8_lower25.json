@@ -1,0 +1,430 @@
+{
+  "schema": 1,
+  "kind": "operator-observed-empty-load-validation",
+  "recorded_at_utc": "2026-11-09T04:37:49.381568+00:00",
+  "build": "seven-axis-board-grasp-v33-quasistatic-support",
+  "status": "operator-accepted complete A8 empty-load path and non-pawn grasp posture at current height",
+  "physical_validation_accepted": true,
+  "height_passed": true,
+  "fitting_eligible": true,
+  "successful_path_library_updated": true,
+  "motion_stability_accepted": true,
+  "user_request": "现在实测",
+  "request": {
+    "x_mm": 11.798050592563328,
+    "y_mm": 405.6006774366655,
+    "piece": "white_knight",
+    "stage": "approach",
+    "grip_height_mm": 59.622674457482844
+  },
+  "request_kind": "explicit lower-height/new-frame task, not nominal A8-centre registration validation",
+  "original_nominal_A8_XYZ_solved": false,
+  "operator_feedback": {
+    "recorded_at_utc": "2026-11-09T04:31:25.291395+00:00",
+    "verbatim": "夹持区域有改善，但还是偏高10mm",
+    "physical_observation": true,
+    "height_improved": true,
+    "height_acceptable": false,
+    "visual_gap_above_gripping_region_mm": 10.0,
+    "gap_is_approximate": true,
+    "calibrated_physical_TCP_or_board_plane_measurement": false,
+    "lateral_drift_mm": 0.0,
+    "jitter": false,
+    "contact": false,
+    "orientation_acceptable": true,
+    "hold_extra_movement": false,
+    "full_motion_accepted": false,
+    "fitting_eligible": false,
+    "successful_path_library_eligible": false,
+    "additional_motion_authorized_by_feedback": false,
+    "followup_verbatim": "无横移、抖动或接触，朝向和保持正常",
+    "lateral_drift_observed": false,
+    "lateral_drift_mm_source": "operator reported none; not instrumented metrology",
+    "motion_stability_accepted": true
+  },
+  "motion": {
+    "action": "dynamics:board-grasp",
+    "returncode": 0,
+    "duration_s": 124.782,
+    "clearance_log": "arm_run_1794198389715_49164.txt",
+    "clearance_hold_log": "arm_run_1794198415914_49291.txt",
+    "primary_log": "arm_run_1794198443568_49465.txt",
+    "trace": "trace_1794198451214228486.jsonl",
+    "ordinary_Clearance_executed": true,
+    "ordinary_Clearance_skip_shoulder_rotate_preserved": true,
+    "full_path_precomputed_before_Clearance": true,
+    "raw_waypoints": 47,
+    "execution_groups": 24,
+    "all_contact_points_executed": 21,
+    "no_claw": true,
+    "same_serial_Model_Hold": true,
+    "hold_duration_s": 5.032815456390381,
+    "motor_frames": 5622,
+    "event_records_including_close_footer": 7441,
+    "event_records_excluding_close_footer": 7440,
+    "dropped_frames": 0,
+    "confirmed_oscillations": 0,
+    "fault_support_frames": 0,
+    "static_windows_independently_reproduced": 22,
+    "endpoint_correction_retries": 0,
+    "all_descent_gains_frozen": true,
+    "shoulder_rotate_gains": [
+      36.0,
+      4.5
+    ],
+    "endpoint_max_joint_error_deg": 0.34658839867362196
+  },
+  "model_predictions_not_physical_measurements": {
+    "external_measurement": false,
+    "caveat": "All board positions and displacements below are FK predictions from encoders, not camera/physical displacement measurements.",
+    "board_mm": {
+      "planned_terminal": [
+        11.798050592563598,
+        405.60067743666485,
+        59.62267445748276
+      ],
+      "motion_endpoint_feedback": [
+        9.640104131252025,
+        406.651339853235,
+        62.17700188408598
+      ],
+      "after_inline_hold_feedback": [
+        9.639697000830376,
+        406.65055148807653,
+        62.17518852976162
+      ],
+      "saved_A8_take": [
+        11.798050592563378,
+        405.6006774366654,
+        84.62267445748301
+      ]
+    },
+    "hold_minus_motion_endpoint_mm": [
+      -0.0004071304216495264,
+      -0.0007883651584847939,
+      -0.0018133543243621375
+    ],
+    "requested_target_board_mm": [
+      11.798050592563328,
+      405.6006774366655,
+      59.622674457482844
+    ],
+    "motion_endpoint_minus_requested_mm": [
+      -2.157946461311303,
+      1.050662416569537,
+      2.5543274266031375
+    ],
+    "after_hold_minus_requested_mm": [
+      -2.1583535917329524,
+      1.0498740514110523,
+      2.5525140722787754
+    ],
+    "previous_v33_model_height_context": {
+      "scope": "Historical model-FK height comparison only; not physical height or XY measurement",
+      "source_v33_audit": "outputs/a8_v33_execution_20261108/execution_audit.json",
+      "source_v33_audit_sha256": "dc97f70cfb2d67cc6b2db05eedb0e189739c3e783d8022134316a0154abedce7",
+      "source_saved_pose": "outputs/a8_saved_reference_20261108/saved_pose_audit.json",
+      "source_saved_pose_sha256": "35baf40f6a56b131322752ba91c0b8933977382cb280e0a0d4f3b3c4adb25a22",
+      "saved_A8_take_pose": {
+        "shoulder_front": -0.19169145822525024,
+        "shoulder_side": -2.854390859603882,
+        "shoulder_rotate": 2.3832685947418213,
+        "elbow": -0.9409094452857971,
+        "arm_roll": -2.6552605628967285,
+        "wrist_side": 0.17795833945274353,
+        "wrist": -1.9357976913452148
+      },
+      "previous_v33_model_predictions": {
+        "external_measurement": false,
+        "caveat": "All board positions and displacements below are FK predictions from encoders, not camera/physical displacement measurements.",
+        "board_mm": {
+          "planned_terminal": [
+            11.798050592563378,
+            405.6006774366654,
+            84.62267445748301
+          ],
+          "motion_endpoint_feedback": [
+            13.56259744452408,
+            405.60837587173614,
+            84.44678453192702
+          ],
+          "after_inline_hold_feedback": [
+            13.641015227275284,
+            405.69932634886504,
+            84.89003864603085
+          ],
+          "saved_A8_take": [
+            11.798050592563378,
+            405.6006774366654,
+            84.62267445748301
+          ]
+        },
+        "hold_minus_motion_endpoint_mm": [
+          0.07841778275120426,
+          0.09095047712889937,
+          0.44325411410382287
+        ]
+      }
+    },
+    "motion_endpoint_minus_previous_v33_endpoint_mm": [
+      -3.9224933132720547,
+      1.0429639814988718,
+      -22.26978264784104
+    ],
+    "after_hold_minus_previous_v33_after_hold_mm": [
+      -4.0013182264449085,
+      0.9512251392114877,
+      -22.714850116269226
+    ],
+    "gripper_vertex_model": {
+      "external_measurement": false,
+      "opening_scope": "approved revised STEP gripper opening; not every possible finger opening",
+      "qualifier": "Frozen complete-CAD gripper opening only; not measured finger or calibrated clamp height.",
+      "pose_minima": {
+        "old_saved_reference_planned_pose": {
+          "minimum_vertex_height_mm": 58.14248963368527,
+          "vertex_index": 102
+        },
+        "new_planned_terminal": {
+          "minimum_vertex_height_mm": 39.76588920850673,
+          "vertex_index": 80
+        },
+        "motion_endpoint_feedback": {
+          "minimum_vertex_height_mm": 42.184498076604015,
+          "vertex_index": 80
+        },
+        "after_inline_hold_feedback": {
+          "minimum_vertex_height_mm": 42.183873071635006,
+          "vertex_index": 80
+        }
+      },
+      "new_plan_minus_old_reference_lowest_vertex_mm": -18.376600425178545,
+      "new_plan_minus_old_reference_TCP_height_mm": -25.000000000000256,
+      "new_orientation_relative_lowpoint_height_change_mm": 6.623399574821711
+    }
+  },
+  "exact_prepared_source_hashes": {
+    "rigid_model": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "board_model": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+    "planner": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+    "controller": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "motion_adapter": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "fault_support": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+    "kinematics": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "collision": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "trace": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "task_pose": "856e96adba0da0f16069fa9b83ef55bc4d5daf7f27c873a39c4e1ba97b557cae",
+    "static_support": "ce4d53088a9818a7c229f822c9d9d2bb5f826328982b2a859a284e04bbe3203d",
+    "trajectory_support": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "general_motion": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47"
+  },
+  "trial_board_model_sha256": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+  "restored_board_model_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+  "original_shared_configuration_restored": true,
+  "config_restore_changes_motor_commands": false,
+  "geometry_TCP_board_transform_or_per_square_offsets_changed": false,
+  "saved_angles_replayed": false,
+  "persistent_learning_preserved": true,
+  "next10_diagnostic": {
+    "report": "outputs/a8_lower25_execution_20261108/next10_diagnostic/diagnostic.json",
+    "target_basis": "previous requested target minus10mm; not an actual-held-pose relative descent",
+    "endpoint_passed": false,
+    "full_path_produced": false,
+    "motion_issued": false,
+    "target_board_mm": [
+      11.798050592563328,
+      405.6006774366655,
+      49.622674457482844
+    ],
+    "bounds_or_orientation_relaxed": false,
+    "finite_failure_is_physical_unreachability_proof": false
+  },
+  "feedback_relative10_diagnostic": {
+    "report": "outputs/a8_lower25_execution_20261108/feedback_relative10_diagnostic/diagnostic.json",
+    "target_basis": "actual final held encoder FK position/orientation; preserve model XY and lower model Z by10mm",
+    "target_board_mm": [
+      9.639697000830376,
+      406.65055148807653,
+      52.17518852976162
+    ],
+    "endpoint_passed": false,
+    "short_path_produced": false,
+    "motion_issued": false,
+    "bounds_or_orientation_relaxed": false,
+    "calibrated_physical_board_datum": false,
+    "finite_failure_is_physical_unreachability_proof": false
+  },
+  "independent_audit": {
+    "checks_passed": 23,
+    "total_checks": 23,
+    "path": "outputs/a8_lower25_execution_20261108/execution_audit.json",
+    "sha256": "0ff1999815a551579a4b2c0ed18b48166381a79146e83b26566a036b6d46b66e"
+  },
+  "evidence_directory": "outputs/a8_lower25_execution_20261108",
+  "documentation": "outputs/a8_lower25_execution_20261108/README.md",
+  "additional_motion_after_this_trial": false,
+  "GitHub_pushed_this_turn": false,
+  "experiment_id": "20261108_a8_v33_lower25_nonpawn",
+  "acceptance_updated_at_utc": "2026-11-09T04:56:46.530077+00:00",
+  "physical_validation_scope": "observed empty-load path, posture, height and same-serial hold only",
+  "accepted": true,
+  "fitting_roles": [
+    "qualitative-accepted-pose-and-branch",
+    "quasi-static-feedback-torque-proxy"
+  ],
+  "numeric_xyz_fitting_label_eligible": false,
+  "geometry_ground_truth": false,
+  "independent_tcp_measurement": false,
+  "actual_piece_grasp_validated": false,
+  "grasp_verified": false,
+  "reference_seed_eligible": true,
+  "operator_validation": {
+    "recorded_at_utc": "2026-11-09T04:56:46.530077+00:00",
+    "original_response": "好的，那么我认为可以把此次运行标记为通过，并纳入参考库进行拟合，因为现在这个位置目测已到机械臂的极限，可以夹取除兵以外的其他全部棋子。",
+    "accepted": true,
+    "motion_accepted": true,
+    "gripping_height_acceptable": true,
+    "height_acceptance_scope": "operator-approved current height for non-pawn pieces",
+    "applicable_pieces": [
+      "king",
+      "queen",
+      "bishop",
+      "knight",
+      "rook"
+    ],
+    "excluded_pieces": [
+      "pawn"
+    ],
+    "applicability_source": "operator visual assessment; each piece type has not been separately grasped",
+    "jitter": false,
+    "lateral_drift_observed": false,
+    "contact": false,
+    "orientation_acceptable": true,
+    "hold_normal": true,
+    "extra_motion_observed": false,
+    "qualitative_only": true,
+    "grasp_verified": false,
+    "claw_closure_tested": false,
+    "loaded_lift_tested": false,
+    "operator_estimates_near_mechanical_limit": true,
+    "mechanical_limit_independently_measured": false,
+    "additional_descent_executed": false,
+    "new_motion_authorized": false
+  },
+  "operator_feedback_history": [
+    {
+      "recorded_at_utc": "2026-11-09T04:31:25.291395+00:00",
+      "verbatim": "夹持区域有改善，但还是偏高10mm",
+      "physical_observation": true,
+      "height_improved": true,
+      "height_acceptable": false,
+      "visual_gap_above_gripping_region_mm": 10.0,
+      "gap_is_approximate": true,
+      "calibrated_physical_TCP_or_board_plane_measurement": false,
+      "lateral_drift_mm": 0.0,
+      "jitter": false,
+      "contact": false,
+      "orientation_acceptable": true,
+      "hold_extra_movement": false,
+      "full_motion_accepted": false,
+      "fitting_eligible": false,
+      "successful_path_library_eligible": false,
+      "additional_motion_authorized_by_feedback": false,
+      "followup_verbatim": "无横移、抖动或接触，朝向和保持正常",
+      "lateral_drift_observed": false,
+      "lateral_drift_mm_source": "operator reported none; not instrumented metrology",
+      "motion_stability_accepted": true
+    },
+    {
+      "recorded_at_utc": "2026-11-09T04:56:46.530077+00:00",
+      "original_response": "好的，那么我认为可以把此次运行标记为通过，并纳入参考库进行拟合，因为现在这个位置目测已到机械臂的极限，可以夹取除兵以外的其他全部棋子。",
+      "accepted": true,
+      "motion_accepted": true,
+      "gripping_height_acceptable": true,
+      "height_acceptance_scope": "operator-approved current height for non-pawn pieces",
+      "applicable_pieces": [
+        "king",
+        "queen",
+        "bishop",
+        "knight",
+        "rook"
+      ],
+      "excluded_pieces": [
+        "pawn"
+      ],
+      "applicability_source": "operator visual assessment; each piece type has not been separately grasped",
+      "jitter": false,
+      "lateral_drift_observed": false,
+      "contact": false,
+      "orientation_acceptable": true,
+      "hold_normal": true,
+      "extra_motion_observed": false,
+      "qualitative_only": true,
+      "grasp_verified": false,
+      "claw_closure_tested": false,
+      "loaded_lift_tested": false,
+      "operator_estimates_near_mechanical_limit": true,
+      "mechanical_limit_independently_measured": false,
+      "additional_descent_executed": false,
+      "new_motion_authorized": false
+    }
+  ],
+  "operator_feedback_is_original_preacceptance_observation": true,
+  "encoder_endpoint_rad": {
+    "shoulder_front": -0.3553444743156433,
+    "shoulder_side": -2.8593499660491943,
+    "shoulder_rotate": 2.319943428039551,
+    "elbow": -1.1556801795959473,
+    "arm_roll": -2.5907912254333496,
+    "wrist_side": 0.14057374000549316,
+    "wrist": -2.096017360687256
+  },
+  "acceptance_update_file": "outputs/a8_accepted_reference_20261108/operator_acceptance.json",
+  "acceptance_update_sha256": "ee15f0ca04c6574f3e5c07834bfad6c474607e58c03a48b1be17e945b4412a75",
+  "prior_registry_sha256": "a087dde587a297824c7d374cff9ae5170509e4b6a6e2851d8cdf3c88e0bde759",
+  "mechanical_limit_independently_measured": false,
+  "evidence": {
+    "directory": "outputs/a8_lower25_execution_20261108/control_evidence",
+    "control_log": "arm_run_1794198443568_49465.txt",
+    "trace": "trace_1794198451214228486.jsonl",
+    "manifest": {
+      "data/left_arm_v2_8_full_runs/arm_run_1794198443568_49465.txt": {
+        "bytes": 1017975,
+        "sha256": "abab93decd65f9f1a25cecab3c1e9b038dda4ed612f4c9d44cf55ca627855709"
+      },
+      "data/board_motion_traces/trace_1794198451214228486.jsonl": {
+        "bytes": 17194408,
+        "sha256": "271e30316bd53f824432c7da7a51afc30d29697ea8427691e0b694923b418582"
+      }
+    }
+  },
+  "sources": {
+    "left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+    "left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+    "left_arm_v3_1_motion_dynamics.py": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "left_arm_v3_1_model_control.py": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996",
+    "chessboard_vision_v3_0_web_control.py": "5f6cfb5dce9a3bb15141711972676a5807b580ef2af2a8821f6c879c901459a2",
+    "left_arm_board_grasp.py": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+    "left_arm_static_support.py": "ce4d53088a9818a7c229f822c9d9d2bb5f826328982b2a859a284e04bbe3203d",
+    "left_arm_fault_support.py": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+    "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "left_arm_motion_trace.py": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "left_arm_trajectory_support.py": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "DM_CAN.py": "b6bf4f053b397000c314bc58d49e0b6c5328a72880141d619d942809b81519fb",
+    "test_left_arm_static_support.py": "82805a80f24f56763aa2ef1f3b0fd7cb5b2c50153c7daf977c74ad3dde12b8fe",
+    "test_left_arm_board_static_support.py": "b403136a7d8769afdab97d2ef7ade3fc9f3b9fde68bb74e803032721e09ff98a",
+    "left_arm_board_task_pose.py": "856e96adba0da0f16069fa9b83ef55bc4d5daf7f27c873a39c4e1ba97b557cae",
+    "test_left_arm_board_task_pose.py": "5299506f22c435d513c9b4d97c1d73d009b4bbfc9f1103f40a5ad7c7222c9338"
+  },
+  "model_snapshots": {
+    "left_arm_board_workspace_candidate.json": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+    "left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f"
+  },
+  "path_library_reference_name": "validated:20261108_a8_v33_lower25_nonpawn",
+  "path_library_role": "shared IK full-pose and branch seed; every new target/path is re-solved",
+  "offline_fitting_evidence": "outputs/a8_accepted_reference_20261108/fitting/fit_summary.json",
+  "running_dynamics_model_replaced": false
+}

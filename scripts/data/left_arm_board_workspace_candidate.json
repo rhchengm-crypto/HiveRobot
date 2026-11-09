@@ -67,7 +67,7 @@
   ],
   "joint_limits_encoder_rad": [
     [
-      -0.15587999271661085,
+      -0.19169145822525024,
       2.1103306165446476
     ],
     [
@@ -95,7 +95,7 @@
       -0.8567862161885065
     ]
   ],
-  "joint_bound_source": "existing operating envelope union model-solved A7 path; physical travel not certified",
+  "joint_bound_source": "existing shared operating envelope union operator-demonstrated A8_take endpoint; physical travel not certified",
   "transit_references": [
     {
       "name": "raised-entry",
@@ -257,6 +257,15 @@
       "arm_roll": -2.859731435775757,
       "wrist_side": -0.3763256371021271,
       "wrist": -3.027580738067627
+    },
+    "A8_take": {
+      "shoulder_front": -0.19169145822525024,
+      "shoulder_side": -2.854390859603882,
+      "shoulder_rotate": 2.3832685947418213,
+      "elbow": -0.9409094452857971,
+      "arm_roll": -2.6552605628967285,
+      "wrist_side": 0.17795833945274353,
+      "wrist": -1.9357976913452148
     }
   },
   "profiles": {
@@ -447,6 +456,14 @@
       "upper_rad": 0.838674008846283,
       "source_model_sha256": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
       "reason": "provisional observed upper envelope after high-load uncontacted trial beyond observed poses",
+      "mechanical_limit_independently_measured": false,
+      "applies_to_all_xy": true
+    },
+    "shoulder_front_observed_extension_20261108": {
+      "old_lower_rad": -0.15587999271661085,
+      "lower_rad": -0.19169145822525024,
+      "reason": "include user-demonstrated A8_take encoder endpoint in shared observed envelope",
+      "extra_margin_rad": 0.0,
       "mechanical_limit_independently_measured": false,
       "applies_to_all_xy": true
     }
@@ -709,6 +726,43 @@
       ],
       "source": "left_arm_v2_6_saved_moves.json",
       "scope": "common reference available at any requested XYZ; IK seed and orientation preference only"
+    },
+    {
+      "name": "saved:A8_take",
+      "reference_kind": "operator_approved_saved_endpoint",
+      "reference_board_xy_mm": [
+        27.5,
+        412.5
+      ],
+      "seed_encoder_rad": {
+        "shoulder_front": -0.19169145822525024,
+        "shoulder_side": -2.854390859603882,
+        "shoulder_rotate": 2.3832685947418213,
+        "elbow": -0.9409094452857971,
+        "arm_roll": -2.6552605628967285,
+        "wrist_side": 0.17795833945274353,
+        "wrist": -1.9357976913452148
+      },
+      "wrist_rotation_in_board": [
+        [
+          0.15037298107425046,
+          0.00071148189032173,
+          -0.9886290812819348
+        ],
+        [
+          0.14843778758494036,
+          0.9886474769576761,
+          0.023289257654777934
+        ],
+        [
+          0.9774222167414296,
+          -0.1502519886681778,
+          0.14856025754395613
+        ]
+      ],
+      "path_seed_encoder_rad": [],
+      "source_saved_moves_sha256": "3d8f2d0fcf4bcb8a3cf8c49125f155c737813f89b833f906316b314fc0551ce7",
+      "qualification": "User-approved grasp endpoint; numerical seed/full frame for all XY; newly solve and check every path; no complete trajectory acceptance claim"
     },
     {
       "name": "validated:20261106_b3_v25_height20",
@@ -1447,6 +1501,201 @@
       "qualification": "approved pose/branch seed; re-solve and re-check every new path"
     },
     {
+      "name": "validated:20261108_a7_v32_repeat_height50_x17",
+      "reference_kind": "validated_path",
+      "reference_board_xy_mm": [
+        17.5,
+        357.5
+      ],
+      "seed_encoder_rad": {
+        "shoulder_front": -0.08030059933662415,
+        "shoulder_side": -2.7555885314941406,
+        "shoulder_rotate": 1.8427176475524902,
+        "elbow": -0.6757839322090149,
+        "arm_roll": -2.2528038024902344,
+        "wrist_side": -0.506027340888977,
+        "wrist": -2.3798351287841797
+      },
+      "wrist_rotation_in_board": [
+        [
+          0.1921995127299813,
+          0.27585389311403724,
+          -0.9417876496111988
+        ],
+        [
+          0.4593546349443541,
+          0.8227663984567952,
+          0.3347368711773095
+        ],
+        [
+          0.8672097016647687,
+          -0.49695078551529054,
+          0.031420536504620206
+        ]
+      ],
+      "path_seed_encoder_rad": [
+        {
+          "shoulder_front": 1.941519856452942,
+          "shoulder_side": -2.722400188446045,
+          "shoulder_rotate": 2.3523690700531006,
+          "elbow": 0.8161669373512268,
+          "arm_roll": -2.6522088050842285,
+          "wrist_side": 0.3061341345310211,
+          "wrist": -1.0263599157333374
+        },
+        {
+          "shoulder_front": 0.23403525352478027,
+          "shoulder_side": -2.653353214263916,
+          "shoulder_rotate": 2.0235371589660645,
+          "elbow": -0.086785688996315,
+          "arm_roll": -2.4176013469696045,
+          "wrist_side": -0.23746852576732635,
+          "wrist": -2.168116331100464
+        },
+        {
+          "shoulder_front": -0.04596780240535736,
+          "shoulder_side": -2.7605478763580322,
+          "shoulder_rotate": 1.8003737926483154,
+          "elbow": -0.46330204606056213,
+          "arm_roll": -2.32757306098938,
+          "wrist_side": -0.5640115737915039,
+          "wrist": -2.579728364944458
+        },
+        {
+          "shoulder_front": -0.04596780240535736,
+          "shoulder_side": -2.7601664066314697,
+          "shoulder_rotate": 1.800755262374878,
+          "elbow": -0.49343863129615784,
+          "arm_roll": -2.3104066848754883,
+          "wrist_side": -0.5636301040649414,
+          "wrist": -2.549973249435425
+        },
+        {
+          "shoulder_front": -0.04596780240535736,
+          "shoulder_side": -2.7601664066314697,
+          "shoulder_rotate": 1.8087663650512695,
+          "elbow": -0.5579079985618591,
+          "arm_roll": -2.286755084991455,
+          "wrist_side": -0.5476081371307373,
+          "wrist": -2.485503911972046
+        },
+        {
+          "shoulder_front": -0.06084534898400307,
+          "shoulder_side": -2.7594034671783447,
+          "shoulder_rotate": 1.8274586200714111,
+          "elbow": -0.6311513185501099,
+          "arm_roll": -2.264629602432251,
+          "wrist_side": -0.5209048390388489,
+          "wrist": -2.4168384075164795
+        }
+      ],
+      "source_log_sha256": "221ecad78b7e6f83cb23e66ce4310f467fb8b29e0391cc49f5a3c810dd6e48f5",
+      "qualification": "approved pose/branch seed; re-solve and re-check every new path"
+    },
+    {
+      "name": "validated:20261108_a8_v33_lower25_nonpawn",
+      "reference_kind": "validated_path",
+      "reference_board_xy_mm": [
+        11.798050592563328,
+        405.6006774366655
+      ],
+      "seed_encoder_rad": {
+        "shoulder_front": -0.3553444743156433,
+        "shoulder_side": -2.8593499660491943,
+        "shoulder_rotate": 2.319943428039551,
+        "elbow": -1.1556801795959473,
+        "arm_roll": -2.5907912254333496,
+        "wrist_side": 0.14057374000549316,
+        "wrist": -2.096017360687256
+      },
+      "wrist_rotation_in_board": [
+        [
+          0.15278452114860666,
+          -0.008424276162720987,
+          -0.9882236192626267
+        ],
+        [
+          0.3531968614011787,
+          0.9343856899510474,
+          0.04664074946935507
+        ],
+        [
+          0.9229890937566637,
+          -0.3561634652597604,
+          0.145735098107531
+        ]
+      ],
+      "path_seed_encoder_rad": [
+        {
+          "shoulder_front": 1.942282795906067,
+          "shoulder_side": -2.7197299003601074,
+          "shoulder_rotate": 2.377164840698242,
+          "elbow": 0.8176928162574768,
+          "arm_roll": -2.6544976234436035,
+          "wrist_side": 0.3091859221458435,
+          "wrist": -1.0290303230285645
+        },
+        {
+          "shoulder_front": -0.11310750246047974,
+          "shoulder_side": -2.819676399230957,
+          "shoulder_rotate": 2.3088808059692383,
+          "elbow": -0.5262455344200134,
+          "arm_roll": -2.6136796474456787,
+          "wrist_side": 0.10891126841306686,
+          "wrist": -2.505340576171875
+        },
+        {
+          "shoulder_front": -0.15812161564826965,
+          "shoulder_side": -2.8379874229431152,
+          "shoulder_rotate": 2.3119325637817383,
+          "elbow": -0.6132219433784485,
+          "arm_roll": -2.6136796474456787,
+          "wrist_side": 0.09403372555971146,
+          "wrist": -2.443922996520996
+        },
+        {
+          "shoulder_front": -0.15888457000255585,
+          "shoulder_side": -2.8448538780212402,
+          "shoulder_rotate": 2.3165102005004883,
+          "elbow": -0.6898985505104065,
+          "arm_roll": -2.608720541000366,
+          "wrist_side": 0.09479667246341705,
+          "wrist": -2.3805980682373047
+        },
+        {
+          "shoulder_front": -0.19130998849868774,
+          "shoulder_side": -2.8456168174743652,
+          "shoulder_rotate": 2.320706605911255,
+          "elbow": -0.8077744841575623,
+          "arm_roll": -2.6014723777770996,
+          "wrist_side": 0.11043716967105865,
+          "wrist": -2.286755084991455
+        },
+        {
+          "shoulder_front": -0.28324559330940247,
+          "shoulder_side": -2.858205556869507,
+          "shoulder_rotate": 2.3203251361846924,
+          "elbow": -1.030174732208252,
+          "arm_roll": -2.5976576805114746,
+          "wrist_side": 0.1333257108926773,
+          "wrist": -2.1623940467834473
+        }
+      ],
+      "source_log_sha256": "abab93decd65f9f1a25cecab3c1e9b038dda4ed612f4c9d44cf55ca627855709",
+      "qualification": "approved pose/branch seed; re-solve and re-check every new path",
+      "applicable_pieces": [
+        "king",
+        "queen",
+        "bishop",
+        "knight",
+        "rook"
+      ],
+      "excluded_pieces": [
+        "pawn"
+      ],
+      "grasp_verified": false
+    },
+    {
       "name": "validated:historical-C4",
       "reference_kind": "validated_path",
       "reference_board_xy_mm": [
@@ -1634,8 +1883,8 @@
   "validated_path_reference_policy": "primary-then-nearest-validated-path",
   "reference_attempt_budget_s": 45.0,
   "validated_path_library_provenance": {
-    "records": 11,
-    "eligible": 10,
+    "records": 13,
+    "eligible": 12,
     "primary_model_first": true,
     "path_replay": false,
     "per_square_parameters": false
@@ -2502,5 +2751,15 @@
     "reference_transform": "CAD-base vertices transformed by inverse nominal wrist FK",
     "constraint_scope": "global registered board-plane height of the complete CAD vertex hull; not measured ground truth",
     "travel_threshold_basis": "20 mm common CAD travel floor; accepted A6 nominal minimum was 20.997 mm"
+  },
+  "operator_approved_endpoint_reference_provenance": {
+    "record": "scripts/data/board_workspace_trials/reference_20261108_a8_take.json",
+    "record_sha256": "331728e1de9297925815d6358b8ae9ab0d0c3810ac1d940d634e93108e13991a",
+    "runtime_enabled": true,
+    "nominal_A8_XYZ_consistency_resolved": false,
+    "per_square_offset_added": false,
+    "angle_replay_added": false,
+    "full_inverse_path_physically_validated": false,
+    "execution_authorization": "2026-11-08 user: 现在实测; empty load, no claw; operator present and path cleared"
   }
 }

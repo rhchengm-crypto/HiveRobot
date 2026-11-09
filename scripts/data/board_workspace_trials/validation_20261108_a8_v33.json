@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "recorded_at_utc": "2026-11-09T01:41:07.857014+00:00",
+  "trial": "a8_v33_execution_20261108",
+  "build": "seven-axis-board-grasp-v33-quasistatic-support",
+  "status": "full empty-load motion completed; lateral drift resolved; gripping height failed",
+  "physical_validation_accepted": false,
+  "fitting_eligible": false,
+  "successful_path_library_updated": false,
+  "software_command_ok": true,
+  "request": {
+    "x_mm": 11.798050592563328,
+    "y_mm": 405.6006774366655,
+    "piece": "white_knight",
+    "stage": "approach",
+    "grip_height_mm": 84.62267445748284
+  },
+  "original_nominal_A8_XYZ_solved": false,
+  "request_scope": "New geometric inverse path constrained by approved A8_take endpoint; no saved trajectory replay",
+  "phases": "ordinary fixed Clearance -> full approach and descent -> 5s same-serial hold; no claw closure",
+  "home_executed_as_part_of_this_trial": false,
+  "antecedent_Home_confirmed_stable": true,
+  "operator_feedback": {
+    "recorded_at_utc": "2026-11-09T01:32:09.888627+00:00",
+    "original_response": "本轮横移问题解决，但是最终高度比上轮还要高",
+    "physical_observation": true,
+    "lateral_drift_resolved": true,
+    "lateral_drift_mm": null,
+    "height_acceptable": false,
+    "height_relative_to_previous_trial": "higher",
+    "height_error_mm": null,
+    "jitter": null,
+    "contact": null,
+    "post_hold_extra_movement": null,
+    "full_motion_accepted": false,
+    "successful_path_library_eligible": false,
+    "full_pose_fitting_eligible": false,
+    "additional_descent_authorized_by_feedback": false,
+    "height_error_visual_lower_bound_mm": 25.0,
+    "height_followup_response": "至少25mm",
+    "height_followup_is_approximate": true,
+    "height_followup_is_calibrated_board_datum": false
+  },
+  "controller_checks": {
+    "plan_digest_matches": true,
+    "request_matches_actual_command": true,
+    "plan_target_matches_command_xyz": true,
+    "all_source_bytes_match": true,
+    "all_source_bytes_archived": true,
+    "trace_runtime_sources_match_prepared": true,
+    "runtime_metadata_matches_prepared": true,
+    "runtime_precomputed_before_motion": true,
+    "runtime_waypoint_geometry_unchanged": true,
+    "runtime_no_feedback_descent_replan": true,
+    "actual_execution_complete_precomputed": true,
+    "planned_gravity_geometry_hash_matches": true,
+    "planned_terminal_equals_saved_A8_take": true,
+    "all_seven_contacts_observed": true,
+    "contact_shoulder_rotate_gain_frozen": true,
+    "contact_shoulder_rotate_Kp_at_most_36": true,
+    "contact_shoulder_rotate_Kd_4_5": true,
+    "same_session_inline_hold_completed": true
+  },
+  "motor_frames": 4471,
+  "confirmed_oscillation_events": 0,
+  "fault_support_frames": 0,
+  "baseline_observations_accepted": 11,
+  "all_accepted_fresh_windows_reproduced": true,
+  "endpoint_max_joint_error_deg": 0.4589955424140269,
+  "previous_v32_endpoint_max_joint_error_deg": 2.5791187041845425,
+  "endpoint_joint_errors_deg": {
+    "shoulder_front": 0.04371321068808161,
+    "shoulder_side": 0.021856605344040804,
+    "shoulder_rotate": -0.08744008175450324,
+    "elbow": 0.13114304715882982,
+    "arm_roll": -0.17485284275232643,
+    "wrist_side": -0.4589955424140269,
+    "wrist": -0.1311396320642448
+  },
+  "same_serial_hold_seconds": 5.021821737289429,
+  "source_files": {
+    "rigid_model": {
+      "expected_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\models\\left_arm_general_dynamics.json",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+    },
+    "board_model": {
+      "expected_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\models\\left_arm_board_workspace_candidate.json",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d"
+    },
+    "planner": {
+      "expected_sha256": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\source\\left_arm_board_grasp.py",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77"
+    },
+    "controller": {
+      "expected_sha256": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\source\\left_arm_v2_6.py",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9"
+    },
+    "motion_adapter": {
+      "expected_sha256": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\source\\left_arm_v3_1_motion_dynamics.py",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c"
+    },
+    "fault_support": {
+      "expected_sha256": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\source\\left_arm_fault_support.py",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd"
+    },
+    "kinematics": {
+      "expected_sha256": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\source\\left_arm_board_kinematics.py",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4"
+    },
+    "collision": {
+      "expected_sha256": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\source\\left_arm_board_collision.py",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb"
+    },
+    "trace": {
+      "expected_sha256": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\source\\left_arm_motion_trace.py",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461"
+    },
+    "task_pose": {
+      "expected_sha256": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\source\\left_arm_board_task_pose.py",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271"
+    },
+    "static_support": {
+      "expected_sha256": "ce4d53088a9818a7c229f822c9d9d2bb5f826328982b2a859a284e04bbe3203d",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\source\\left_arm_static_support.py",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "ce4d53088a9818a7c229f822c9d9d2bb5f826328982b2a859a284e04bbe3203d"
+    },
+    "trajectory_support": {
+      "expected_sha256": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\source\\left_arm_trajectory_support.py",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98"
+    },
+    "general_motion": {
+      "expected_sha256": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+      "path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a8_v33_execution_20261108\\control_evidence\\source\\left_arm_general_motion.py",
+      "archived_source": true,
+      "match": true,
+      "actual_sha256": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47"
+    }
+  },
+  "archives": {
+    "control": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a8_v33_execution_20261108_1794187848023689996/control_evidence.zip",
+      "bytes": 3834620,
+      "sha256": "ed2da994819b12092abc1dd0c160fb11cba68e5dcd857b040c3905afed935f77",
+      "zip_crc_verified": true,
+      "local_path": "outputs/a8_v33_execution_20261108/control_evidence.zip",
+      "local_sha256": "ed2da994819b12092abc1dd0c160fb11cba68e5dcd857b040c3905afed935f77",
+      "byte_count_verified": true,
+      "every_member_sha256_verified": true,
+      "manifest_files": 104,
+      "extracted": true
+    },
+    "rgbd": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a8_v33_execution_20261108_1794187848023689996/rgbd_evidence.zip",
+      "bytes": 87788902,
+      "sha256": "8183672a9a07584cd8dad56443412c7caaa3f9cc356b6bd5cbb1fcdbdc0a8a6b",
+      "zip_crc_verified": true,
+      "local_path": "outputs/a8_v33_execution_20261108/rgbd_evidence.zip",
+      "local_sha256": "8183672a9a07584cd8dad56443412c7caaa3f9cc356b6bd5cbb1fcdbdc0a8a6b",
+      "byte_count_verified": true,
+      "every_member_sha256_verified": true,
+      "manifest_files": 1406,
+      "extracted": false
+    }
+  },
+  "RGBD_pairs": 702,
+  "next_sync_expected_learning_sha256": {
+    "left_arm_v2_8_clearance_bias.json": "d03c511c373dd2812d4bf206990a7becf81dc8051fd7e3263b6342f87c396f38",
+    "left_arm_v2_6_adaptive_target_bias.json": "c6ed63842f8a37a22fb70fe2f086631378af852ea3e3bf93d6b707dfce26e62e",
+    "left_arm_v2_6_adaptive_hold_target_bias.json": "935ee941d36abb37b5834c12485814ece3a97d250aca8a4c34e71957cb40e0bd",
+    "left_arm_v2_6_adaptive_hold_tau.json": "00443bac641b079a9895203bb5e02dbe2316f06950c2eb8aabececa46774d4fe",
+    "left_arm_v2_6_adaptive_active_tau.json": "3c3dfd51bd7c0e6d17f2de5010a9816131b52355c40c2857d17e7f352af74e53"
+  },
+  "height_diagnosis_path": "outputs/a8_v33_execution_20261108/height_diagnosis.json",
+  "lower25_diagnostic_path": "outputs/a8_v33_execution_20261108/lower25_endpoint_diagnostic.json",
+  "orientation_and_bound_diagnostics_path": "outputs/a8_v33_execution_20261108/height_followup_feasibility.json",
+  "lower25_height_is_proposed_task_request_not_a_calibration_offset": true,
+  "additional_motion_after_operator_feedback": false,
+  "next_step": "Continue offline common-model search for a lower viable task pose; no unverified path execution",
+  "evidence_directory": "outputs/a8_v33_execution_20261108"
+}

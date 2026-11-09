@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "experiment_id": "20261108_a8_take_approved_endpoint",
+  "recorded_at_utc": "2026-11-09T00:41:46.498215+00:00",
+  "reference_kind": "operator_approved_saved_endpoint",
+  "physical_board_square": "A8",
+  "nominal_physical_board_xy_mm": [
+    27.5,
+    412.5
+  ],
+  "piece": "white_knight",
+  "physical_tcp_height_mm": null,
+  "external_TCP_measurement": false,
+  "operator_validation": {
+    "grasp_endpoint_accepted": true,
+    "original_request": "参考saved moves里A8_take, 实测可以抓取，以此为答案反算路径",
+    "confirmation": "白马，基本对准 A8 中心",
+    "qualitative_only": true
+  },
+  "saved_move": {
+    "name": "A8_take",
+    "type": "left_arm_v2_6_saved_move",
+    "created_at": "2026-11-08 16:32:15",
+    "note": "web-control-1.2",
+    "pose": {
+      "shoulder_front": -0.19169145822525024,
+      "shoulder_side": -2.854390859603882,
+      "shoulder_rotate": 2.3832685947418213,
+      "elbow": -0.9409094452857971,
+      "arm_roll": -2.6552605628967285,
+      "wrist_side": 0.17795833945274353,
+      "wrist": -1.9357976913452148
+    },
+    "replay_requires_table_clearance": true,
+    "replay_order": [
+      "shoulder_front",
+      "shoulder_side",
+      "shoulder_rotate",
+      "elbow",
+      "arm_roll",
+      "wrist_side"
+    ],
+    "replay_final_joint": "wrist"
+  },
+  "saved_moves_source_sha256": "3d8f2d0fcf4bcb8a3cf8c49125f155c737813f89b833f906316b314fc0551ce7",
+  "capture_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794184334719_27716.txt",
+  "encoder_endpoint_rad": {
+    "shoulder_front": -0.19169145822525024,
+    "shoulder_side": -2.854390859603882,
+    "shoulder_rotate": 2.3832685947418213,
+    "elbow": -0.9409094452857971,
+    "arm_roll": -2.6552605628967285,
+    "wrist_side": 0.17795833945274353,
+    "wrist": -1.9357976913452148
+  },
+  "current_model_fk_board_mm": [
+    11.798050592563328,
+    405.6006774366655,
+    84.62267445748284
+  ],
+  "current_model_wrist_rotation_in_board": [
+    [
+      0.15037298107425046,
+      0.00071148189032173,
+      -0.9886290812819348
+    ],
+    [
+      0.14843778758494036,
+      0.9886474769576761,
+      0.023289257654777934
+    ],
+    [
+      0.9774222167414296,
+      -0.1502519886681778,
+      0.14856025754395613
+    ]
+  ],
+  "requested_height_50_2_was_not_measured": true,
+  "complete_path_physically_validated": false,
+  "model_geometry_ground_truth": false,
+  "motion_issued": false,
+  "execution_eligible": false,
+  "runtime_model_modified": false,
+  "inverse_geometry_path": {
+    "found": true,
+    "waypoints": 33,
+    "file": "outputs/a8_saved_reference_20261108/reference_inverse_plan_hover140.0.json",
+    "nominal_request_solved": false,
+    "endpoint_boundary": "operator-approved saved configuration",
+    "intermediate_angles": "new Cartesian IK and geometric transit",
+    "saved_angles_replayed_as_trajectory": false
+  },
+  "source_models": {
+    "data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "data/left_arm_board_workspace_candidate.json": "669ef83ccdd28d086e187760ebc95a2c1d02bb1fba1175888bd02d3b9978e074"
+  },
+  "common_fit_deployed": false,
+  "evidence_directory": "outputs/a8_saved_reference_20261108"
+}

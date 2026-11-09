@@ -24,9 +24,11 @@ from left_arm_board_kinematics import (board_point_to_cad, rotation, rotation_er
 from left_arm_rigid_body import RigidBodyModel, axis_rotation, vector
 from left_arm_board_collision import collision_scene, board_prism_clearances
 from left_arm_fault_support import FaultSupport, BoardWatchdog, MotionStop, segment_timing
+from left_arm_static_support import (install_feedback_clocks, feedback_clock_fields,
+    stable_support_observation, bounded_support_update, slew_duration)
 
 HERE = Path(__file__).resolve().parent
-PLANNER_BUILD = 'seven-axis-board-grasp-v32-descent-gain-continuity'
+PLANNER_BUILD = 'seven-axis-board-grasp-v33-quasistatic-support'
 BOARD_EXECUTION_SUSPENDED = False
 SUPPORTED_EXECUTION_STAGES = ('above', 'touch', 'approach', 'cartesian-check')
 BOARD_EXECUTION_SUSPENSION_REASON = (
@@ -884,6 +886,17 @@ def motion_timing(delta, max_velocity):
     return result
 
 
+def support_baseline_timing(timing, delta, baseline, previous):
+    """Bound a continued full-segment static FF ramp, including unloading."""
+    start = {n:float(previous[n]['tau_ff']) for n in baseline}
+    end = {n:float(row['end_tau']) for n,row in baseline.items()}
+    seconds = slew_duration(start,end,timing['seconds'],rate=1.)
+    return dict(timing,seconds=seconds,support_baseline_slew_limit_Nm_s=1.,
+        slew_scope='support-baseline smoothstep only; runtime gravity and ID retain their own slew',
+        reference_peak_velocity_rad_s=1.875*delta/seconds,
+        reference_peak_acceleration_rad_s2=(10./math.sqrt(3))*delta/seconds**2)
+
+
 def board_motion_gains(legacy, geometry, positions):
     """Bound shoulder swivel compliance using the current modeled TCP lever.
 
@@ -1068,13 +1081,16 @@ def candidate_touch_trial(model, trajectory, cfg):
 
 
 class TrajectorySupportBaseline:
-    """One entry load anchor, never recycle later PD torque as new gravity."""
+    """Immutable entry anchor with separately observed, bounded static support."""
     def __init__(self, model, positions, measured_tau, status, gains, limits, hardware_limits=None,
                  planned_envelope=None, trajectory=None):
         self.model = model
         self.names = list(positions)
         self.initial_gravity = self.gravity(positions)
         self.anchor = {n:float(measured_tau[n]) for n in self.names}
+        self.static_bias = dict.fromkeys(self.names, 0.)
+        self.last_static_observation = float('-inf')
+        self.hardware_limits = None if hardware_limits is None else dict(hardware_limits)
         self.model_limits = {n:tuple(map(float, limits[n])) for n in self.names}
         self.limits = {}
         for n in self.names:
@@ -1105,6 +1121,57 @@ class TrajectorySupportBaseline:
                                      self.initial_gravity, self.model_limits, hardware_limits)
             self.limits = {n:(min(self.limits[n][0],planned[n][0]),
                               max(self.limits[n][1],planned[n][1])) for n in self.names}
+        self.base_limits = dict(self.limits)
+
+    def observe_static_support(self, observation, gains):
+        """Estimate a separate session bias from a verified stationary window.
+
+        The original entry anchor remains immutable. Moving feedback and
+        repeated observations cannot become new load anchors.
+        """
+        if not observation.get('accepted'):
+            return dict(updated=False, reason=observation.get('reason', 'not-stationary'))
+        if self.hardware_limits is None:
+            return dict(updated=False, reason='hardware-torque-bounds-unavailable')
+        stamp = float(observation['window_end_s'])
+        if not math.isfinite(stamp):
+            return dict(updated=False, reason='nonfinite-observation-time')
+        if stamp <= self.last_static_observation:
+            return dict(updated=False, reason='observation-already-consumed')
+        if any(not math.isfinite(float(observation['torques'][n])) or
+               abs(float(observation['torques'][n])) > self.hardware_limits[n] for n in self.names):
+            return dict(updated=False, reason='observed-load-outside-hardware-range')
+        gravity = self.gravity(observation['positions'])
+        residual = {n:float(observation['torques'][n])-
+            (self.anchor[n]+gravity[n]-self.initial_gravity[n]) for n in self.names}
+        learned = bounded_support_update(self.static_bias, residual, gains, self.hardware_limits)
+        previous = dict(self.static_bias)
+        self.static_bias = dict(learned['bias'])
+        self.last_static_observation = stamp
+        # Enlarge only the independent load-support range established by an
+        # accepted observation. The dynamic ID residual cap stays unchanged.
+        for n in self.names:
+            low, high = self.base_limits[n]
+            maximum = self.hardware_limits[n]
+            # Retain headroom over the WHOLE prepared support envelope, not
+            # just this pose. Clip the estimate itself to prevent windup.
+            proposed = self.static_bias[n]
+            shift = min(maximum-high, max(-maximum-low, proposed))
+            self.static_bias[n] = shift
+            learned['audit'][n].update(bias_Nm=shift, change_Nm=shift-previous[n],
+                hardware_envelope_headroom_clamped=shift!=proposed)
+            learned['audit'][n]['saturated'] |= shift!=proposed
+            # Never shrink a live range around a still-sent terminal command.
+            old_low, old_high = self.limits[n]
+            self.limits[n] = (max(-maximum, min(old_low,low+shift)),
+                              min(maximum, max(old_high,high+shift)))
+        return dict(updated=previous!=self.static_bias, reason='quasistatic-load-observation',
+            previous_bias_tau=previous, bias_tau=dict(self.static_bias),
+            observed_residual_tau=residual, joints=learned['audit'],
+            window_end_s=stamp, trajectory_tau_limits=dict(self.limits),
+            entry_anchor_replaced=False, applied_to_motor=False,
+            application='pending next segment torque-continuous support-baseline ramp',
+            persistent_learning_files_written=False)
 
     def gravity(self, positions):
         q = self.model.encoder_to_model([positions[n] for n in self.model.names])
@@ -1116,11 +1183,12 @@ class TrajectorySupportBaseline:
         result, audit = {}, {}
         for n in self.names:
             low,high = self.limits[n]
-            raw = self.anchor[n]+gravity[n]-self.initial_gravity[n]
+            raw = self.anchor[n]+gravity[n]-self.initial_gravity[n]+self.static_bias[n]
             baseline = min(high,max(low,raw))
             start = min(high,max(low,baseline+gains[n]['kd']*float(status[n]['vel'])))
             result[n] = dict(start_tau=start,end_tau=baseline,ramp_fraction=.25,ramp='smoothstep')
             audit[n] = dict(anchor_tau=self.anchor[n],gravity_change_tau=gravity[n]-self.initial_gravity[n],
+                            quasistatic_bias_tau=self.static_bias[n],
                             raw_tau=raw,applied_tau=baseline,clamped=baseline!=raw,
                             model_tau_limits=self.model_limits[n],trajectory_tau_limits=self.limits[n],
                             support_range_source=('precomputed-path-gravity-plus-single-entry-load'
@@ -1148,6 +1216,8 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
     from left_arm_v2_8_move_library import (claw_home_while_holding_arm,
                                            close_claw_while_holding_arm)
     names = list(trajectory['waypoints'][0]['encoder_rad'])
+    feedback_clocks = install_feedback_clocks({n:arm.motors[n] for n in names})
+    print('board feedback receive clocks= '+json.dumps(feedback_clocks),flush=True)
     arm.board_gravity_feedforward = True
     gains = {n: dict(legacy.HOME_GAINS[n]) for n in names}
     supervisor = FaultSupport(arm, names, gains)
@@ -1166,6 +1236,7 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
     motor_names = {id(arm.motors[n]): n for n in names}
     trace = None; trace_context={'stage':'initializing'}; frame_seen=set(); completed={}; trace_previous=None
     oscillation_samples=deque(maxlen=24)
+    stationary_samples=deque(maxlen=128)
     last_gripper_check = None
     if all(callable(getattr(arm.motors[n],method,None)) for n in names
            for method in ('getPosition','getVelocity','getTorque')):
@@ -1199,10 +1270,12 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
                         if getattr(supervisor,'home_active',False):context['stage']='explicit_home_handoff'
                         row=capture_frame({n:arm.motors[n] for n in names},
                             supervisor.last_commands,context,completed,trace_previous)
+                        row.update(feedback_clock_fields({n:arm.motors[n] for n in names},row['monotonic_s']))
                         row['queue_dropped_frames_before_submit']=trace.dropped
                         row['writer_error']=trace.error
                         trace_previous=row['monotonic_s'];trace.submit(row)
                         supervisor.record_control_frame(row)
+                        stationary_samples.append(row)
                     except Exception as exc:
                         trace.capture_errors+=1
                         trace.submit({'event':'capture_error','error':str(exc),'wall_s':time.time()})
@@ -1231,6 +1304,7 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
     arm.ctrl.controlMIT = observed_control
     claw_target = None
     support_anchor = None
+    applied_static_bias = dict.fromkeys(names, 0.)
 
     def entry_feedforward(positions, tau, status, gains):
         nonlocal support_anchor
@@ -1242,7 +1316,8 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
                 if all(n in supervisor.last_commands for n in names) else positions )
             command,audit = support_anchor.command(reference_pose,status,gains)
             print('board support baseline= '+json.dumps({'policy':'single-entry-gravity-anchor',
-                'later_measured_pd_torque_reused':False,
+                'entry_anchor_replaced':False,
+                'static_residual_learning':'separate bounded fresh-stationary observations only',
                 'gravity_origin':'continued-command-reference',
                 'reference_pose_rad':reference_pose,'joints':audit}),flush=True)
             return command
@@ -1302,6 +1377,23 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
         return {'move_tau_ff_initializer':initialize,'move_reference_starts':references,
                 'move_boundary_keepalive':refresh_terminal_commands}
 
+    def update_static_support(target, stage):
+        if support_anchor is None or stage not in ('source_above','contact','endpoint_settle'):
+            return
+        observation = stable_support_observation(stationary_samples, names, target, time.monotonic())
+        result = support_anchor.observe_static_support(observation, gains)
+        arm.board_gravity_limits = dict(support_anchor.limits)
+        diagnostic = dict(stage=stage,observation=observation,**result)
+        print('board quasistatic support= '+json.dumps(diagnostic),flush=True)
+        if trace is not None:
+            trace.submit({'event':'quasistatic_support_observation','diagnostics':diagnostic,
+                          'wall_s':time.time(),'context':dict(trace_context)})
+
+    def static_slew_timing(timing, delta, baseline):
+        if (support_anchor is None or not all(n in supervisor.last_commands for n in names)):
+            return timing
+        return support_baseline_timing(timing,delta,baseline,supervisor.last_commands)
+
     # Arm the support branch BEFORE issuing enable frames. No re-enable or
     # disable commands are issued by the support branch itself.
     initial_status = arm.read_status(names)
@@ -1322,7 +1414,8 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
         print('board planned load support= '+json.dumps({'entry_load_tau':support_anchor.anchor,
             'initial_gravity_tau':support_anchor.initial_gravity,
             'model_tau_limits':support_anchor.model_limits,'motion_tau_limits':support_anchor.limits,
-            'planned_envelope':envelope,'later_measured_pd_torque_reused':False}),flush=True)
+            'planned_envelope':envelope,'entry_anchor_replaced':False,
+            'static_residual_learning':'separate bounded fresh-stationary observations only'}),flush=True)
     supervisor.activate(initial_status)
     arm.enable(names)
     if trajectory['stage'] == 'grasp':
@@ -1413,8 +1506,9 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
             timing.update(seconds=max(6., timing['seconds']))
             timing['reference_peak_velocity_rad_s'] = 1.875*delta/timing['seconds']
             timing['reference_peak_acceleration_rad_s2'] = (10./math.sqrt(3))*delta/timing['seconds']**2
-        duration = timing['seconds']
         entry_tau = entry_feedforward(positions, tau, status, gains)
+        if row['stage']=='contact':timing=static_slew_timing(timing,delta,entry_tau)
+        duration = timing['seconds']
         holds = {} if claw_target is None else {'claw': claw_target}
         hold_gains = {} if claw_target is None else {'claw': {'kp': legacy.CLAW_KP_HOLD, 'kd': legacy.CLAW_KD_HOLD}}
         print('board waypoint=', json.dumps({'index': index, 'stage': row['stage'],
@@ -1430,6 +1524,8 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
             watchdog=motion_watchdog(arm, supervisor, max_velocity, max_error_deg,
                                   {'waypoint_index': index, 'stage': row['stage'], 'timing': timing}),
             **continuation_kwargs(entry_tau))
+        if support_anchor is not None:applied_static_bias=dict(support_anchor.static_bias)
+        update_static_support(target,row['stage'])
     # Restore the former measured-load endpoint re-anchor on explicit operator
     # request. This tracks the last model-generated goal, not a D/XYZ offset.
     # Keep isolated-axis probes isolated; they are diagnostic motions only.
@@ -1458,6 +1554,7 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
                 trace_boundary('collision_check_complete')
             timing = motion_timing(error, max_velocity)
             entry_tau = entry_feedforward(positions, tau, status, gains)
+            timing = static_slew_timing(timing,error,entry_tau)
             print('board endpoint settle= '+json.dumps({
                 'attempt': attempt+1, 'max_error_deg': math.degrees(error),
                 'entry_feedback': status, 'target_rad': target,
@@ -1473,6 +1570,8 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
                     context={'stage':'endpoint_settle','attempt':attempt+1},record_only=True),
                 **continuation_kwargs(entry_tau))
             settle_attempts += 1
+            if support_anchor is not None:applied_static_bias=dict(support_anchor.static_bias)
+            update_static_support(target,'endpoint_settle')
     final = arm.read_status(names)
     supervisor.observe(final)
     target = rows[-1]['encoder_rad']
@@ -1490,6 +1589,13 @@ def execute(arm, legacy, trajectory, max_velocity=.2, max_error_deg=5., geometry
                 'physical_board_target_verified': False,
                 'completion_scope': 'trajectory-and-endpoint-settle-complete; measured-pose-handoff'
                                     if settle_enabled else 'planned-trajectory-complete; measured-pose-handoff'}
+    if support_anchor is not None:
+        endpoint['quasistatic_support'] = dict(
+            estimated_bias_tau=dict(support_anchor.static_bias),
+            last_completed_segment_bias_tau=applied_static_bias,
+            pending_unapplied_bias_tau={n:support_anchor.static_bias[n]-applied_static_bias[n] for n in names},
+            entry_anchor_replaced=False, persistent_learning_files_written=False,
+            physical_tracking_improvement_verified=False)
     # Carry the actual final MIT command, not a reconstructed feedback torque.
     # Omit the extension in test/legacy callers without complete command capture.
     if all(n in supervisor.last_commands for n in names):
@@ -1570,6 +1676,7 @@ def prepared_source_hashes(args):
            'kinematics':HERE/'left_arm_board_kinematics.py',
            'collision':HERE/'left_arm_board_collision.py','trace':HERE/'left_arm_motion_trace.py',
            'task_pose':HERE/'left_arm_board_task_pose.py',
+           'static_support':HERE/'left_arm_static_support.py',
            'trajectory_support':HERE/'left_arm_trajectory_support.py',
            'general_motion':HERE/'left_arm_general_motion.py'}
     return {n:hashlib.sha256(p.read_bytes()).hexdigest() for n,p in files.items()}

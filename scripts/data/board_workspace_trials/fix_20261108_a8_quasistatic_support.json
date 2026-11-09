@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "kind": "common-motion-controller-fix",
+  "recorded_at_utc": "2026-11-09T01:21:46.993374+00:00",
+  "build": "seven-axis-board-grasp-v33-quasistatic-support",
+  "status": "deployed; physical retest pending",
+  "physical_validation_complete": false,
+  "fitting_eligible": false,
+  "successful_path_library_updated": false,
+  "Home_return": {
+    "completed": true,
+    "operator_confirmation": "全程正常，目前稳定",
+    "evidence": "outputs/a8_reference_home_20261108"
+  },
+  "local_regression": {
+    "passed": true,
+    "tests": 150,
+    "duration_s": 14.459,
+    "log": "outputs/a8_static_support_fix_20261108/regression_tests.log"
+  },
+  "Jetson_hardware_free_regression": {
+    "ok": true,
+    "tests_run": 35,
+    "failures": 0,
+    "errors": 0,
+    "guard_violations": [],
+    "serial_opened": false,
+    "sdk_constructed": false,
+    "motion_issued": false,
+    "modules": [
+      "test_left_arm_static_support",
+      "test_left_arm_board_static_support"
+    ],
+    "dependency_root": "/home/nvidia/hive_robot/DM_Control_Python",
+    "staged_source_root": "/home/nvidia/hive_robot/DM_Control_Python/data/deployment_staging/a8_v33_20261109T012102Z"
+  },
+  "deployed_source_sha256": {
+    "left_arm_static_support.py": "ce4d53088a9818a7c229f822c9d9d2bb5f826328982b2a859a284e04bbe3203d",
+    "left_arm_board_grasp.py": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+    "test_left_arm_static_support.py": "82805a80f24f56763aa2ef1f3b0fd7cb5b2c50153c7daf977c74ad3dde12b8fe",
+    "test_left_arm_board_static_support.py": "b403136a7d8769afdab97d2ef7ade3fc9f3b9fde68bb74e803032721e09ff98a"
+  },
+  "deployment_report": "outputs/a8_static_support_fix_20261108/deployment_report.json",
+  "recorded_failure_audit": "outputs/a8_static_support_fix_20261108/recorded_window_audit.json",
+  "fix_documentation": "outputs/a8_static_support_fix_20261108/README.md",
+  "model_geometry_or_XYZ_offset_changed": false,
+  "Kp_Kd_changed": false,
+  "persistent_learning_files_changed_by_fix": false,
+  "same_serial_model_hold_preserved": true,
+  "ordinary_Clearance_skip_shoulder_rotate_preserved": true,
+  "next_test_scope": "fixed ordinary Clearance; full geometric approach and descent to the requested gripping position; 5 second same-serial hold; empty gripper; no closure",
+  "further_motion_after_confirmed_Home": false
+}

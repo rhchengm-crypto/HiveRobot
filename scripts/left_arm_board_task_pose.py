@@ -38,7 +38,8 @@ def batch_tool_frames(model, encoder, tcp):
     return frames
 
 
-def global_task_seeds(model, cfg, target, preferred, axis, cone_rad, check_budget):
+def global_task_seeds(model, cfg, target, preferred, axis, cone_rad, check_budget,
+                      full_frame=False):
     """Bounded differential evolution proposes seeds; it never accepts a path.
 
     Proposals need not be collision-free. Each is subsequently polished with
@@ -48,7 +49,8 @@ def global_task_seeds(model, cfg, target, preferred, axis, cone_rad, check_budge
     if not 0 <= generations <= 600:
         raise ValueError('global initial-guess generations must be in 0..600')
     if not generations:
-        return [], dict(generations=0, evaluations=0, collision_acceptance=False)
+        return [], dict(generations=0, evaluations=0, collision_acceptance=False,
+            orientation_objective='full-wrist' if full_frame else 'tool-axis-cone')
     bounds = np.asarray(cfg['joint_limits_encoder_rad'])
     rng = np.random.default_rng(1729)
     size = max(32, 6*model.n)
@@ -59,6 +61,13 @@ def global_task_seeds(model, cfg, target, preferred, axis, cone_rad, check_budge
     def scores(values):
         frames = batch_tool_frames(model, values, tcp)
         position = np.linalg.norm(frames[:, :3, 3]-target, axis=1)
+        if full_frame:
+            # tr(preferred.T @ actual) is the SO(3) distance to the complete
+            # requested frame. An axis-cone objective alone can favour a
+            # different wrist yaw which the terminal full-frame gate rejects.
+            trace = np.einsum('ij,nij->n', preferred, frames[:, :3, :3])
+            angle = np.arccos(np.clip((trace-1.)/2., -1., 1.))
+            return position+.15*angle
         actual_axis = np.einsum('nij,j->ni', frames[:, :3, :3], axis)
         angle = np.arccos(np.clip(actual_axis@desired_axis, -1., 1.))
         return position+.15*np.maximum(angle-cone_rad, 0.)
@@ -80,6 +89,7 @@ def global_task_seeds(model, cfg, target, preferred, axis, cone_rad, check_budge
     return [population[index].copy() for index in np.argsort(values)[:6]], dict(
         generations=generations, evaluations=size*(generations+1),
         best_weighted_residual_m=float(values.min()), collision_acceptance=False,
+        orientation_objective='full-wrist' if full_frame else 'tool-axis-cone',
         scope='initial guesses only; full IK, axis, collision and whole-branch checks required')
 
 
@@ -125,6 +135,32 @@ def task_settings(cfg):
     return cone, tolerance, count, branches
 
 
+def polish_endpoint_frame(model, cfg, target, candidate, preferred, scene, check_budget):
+    """Polish a reduced-task candidate against its actual terminal frame gate.
+
+    An axis-cone solution is an additional numerical seed, not evidence that
+    the full wrist orientation matches. Keep the same XYZ, bounds and scene.
+    """
+    settings = cfg.get('continuous_grasp_search', {})
+    limit = float(settings.get('terminal_reference_tolerance_deg', 180.))
+    if not math.isfinite(limit) or not 0. < limit <= 180.:
+        raise ValueError('terminal reference tolerance must be in 0..180 degrees')
+    q = np.array([candidate['encoder_rad'][n] for n in model.names])
+    pose = tcp_pose(model, q, cfg['tcp_in_wrist_frame_m'])
+    before = math.degrees(float(np.linalg.norm(rotation_error(preferred, pose[:3, :3]))))
+    if limit == 180. or before <= limit:
+        return candidate, None
+    check_budget(cfg)
+    answer = solve_ik(model, target, q, cfg['tcp_in_wrist_frame_m'],
+        cfg['joint_limits_encoder_rad'], preferred, max_iterations=150,
+        position_tolerance_m=float(settings.get('position_tolerance_mm', .5))/1000,
+        rotation_tolerance_rad=min(.005, math.radians(limit)), clearance_function=scene)
+    return answer, dict(search_task='full-wrist-from-axis-candidate',
+        success=answer['success'], before_full_frame_error_deg=before,
+        position_error_mm=answer['position_error_mm'],
+        rotation_error_deg=answer['rotation_error_deg'], encoder_rad=answer['encoder_rad'])
+
+
 def plan_continuous_approach(model, cfg, start, x_mm, y_mm, piece, height_mm, planner):
     """Choose an endpoint pose, then prove its whole vertical branch backwards.
 
@@ -156,7 +192,7 @@ def plan_continuous_approach(model, cfg, start, x_mm, y_mm, piece, height_mm, pl
         raise ValueError('terminal reference tolerance must be in 0..180 degrees')
     scene = collision_scene(model, cfg)
     target = rotation@(contact/1000)+translation
-    attempts, endpoints, failures = [], [], []
+    attempts, endpoints, failures, full_frame_attempts = [], [], [], []
     if descent_cone or terminal_reference_tolerance < 180.:
         # Try the operator-approved full frame at the requested XYZ first;
         # saved joint angles are only an IK seed, never the commanded target.
@@ -165,29 +201,65 @@ def plan_continuous_approach(model, cfg, start, x_mm, y_mm, piece, height_mm, pl
         exact_seed = np.array([profile['seed_encoder_rad'][n] for n in model.names])
         exact = solve_ik(model, target, exact_seed, tcp, bounds, preferred,
             max_iterations=150, position_tolerance_m=tolerance_mm/1000,
-            rotation_tolerance_rad=.005, clearance_function=scene)
+            rotation_tolerance_rad=min(.005, math.radians(terminal_reference_tolerance)),
+            clearance_function=scene)
+        full_frame_attempts.append(dict(search_task='full-wrist-profile-seed',
+            success=exact['success'],
+            position_error_mm=exact.get('position_error_mm'),
+            rotation_error_deg=exact.get('rotation_error_deg'),
+            encoder_rad=exact.get('encoder_rad')))
         if exact['success']:
             exact_q = np.array([exact['encoder_rad'][n] for n in model.names])
+            exact_frame = tcp_pose(model, exact_q, tcp)[:3, :3]
+            exact_error = math.degrees(float(np.linalg.norm(rotation_error(preferred, exact_frame))))
+            exact_axis_error = math.degrees(math.acos(float(np.clip(
+                (exact_frame@axis)@(preferred@axis), -1., 1.))))
             try:
                 planner.check_board_intersection(model, exact_q, cfg)
-                endpoints.append(exact_q)
+                if (exact_error <= terminal_reference_tolerance
+                        and exact_axis_error <= cone_deg+math.degrees(1e-5)):
+                    endpoints.append(exact_q)
             except planner.BoardPlanningError as exc:
                 failures.append(dict(stage='preferred_endpoint_collision', details=exc.diagnostics))
+    full_reference = terminal_reference_tolerance < 180.
     global_seeds, global_audit = global_task_seeds(model, cfg, target, preferred,
-        axis, math.radians(cone_deg), planner.check_planning_budget)
+        axis, math.radians(cone_deg), planner.check_planning_budget,
+        full_frame=full_reference)
     for seed in global_seeds+endpoint_seeds(model, cfg, q0, seed_count):
         planner.check_planning_budget(cfg)
-        answer = solve_ik(model, target, seed, tcp, bounds, preferred,
-            max_iterations=150, position_tolerance_m=tolerance_mm/1000,
-            rotation_tolerance_rad=1e-5, clearance_function=scene,
-            tool_axis_local=axis, tool_axis_cone_rad=math.radians(cone_deg))
+        # Every numerical seed must get the same full-frame task when that
+        # task is required for acceptance. Previously only the one profile
+        # seed was polished against it; the other candidates optimised an
+        # axis cone and were simply discarded for their unrelated wrist yaw.
+        answer = None
+        if full_reference:
+            answer = solve_ik(model, target, seed, tcp, bounds, preferred,
+                max_iterations=150, position_tolerance_m=tolerance_mm/1000,
+                rotation_tolerance_rad=min(.005, math.radians(terminal_reference_tolerance)),
+                clearance_function=scene)
+            full_frame_attempts.append(dict(search_task='full-wrist', success=answer['success'],
+                position_error_mm=answer['position_error_mm'],
+                rotation_error_deg=answer['rotation_error_deg'],
+                encoder_rad=answer['encoder_rad']))
+        if answer is None or not answer['success']:
+            planner.check_planning_budget(cfg)
+            answer = solve_ik(model, target, seed, tcp, bounds, preferred,
+                max_iterations=150, position_tolerance_m=tolerance_mm/1000,
+                rotation_tolerance_rad=1e-5, clearance_function=scene,
+                tool_axis_local=axis, tool_axis_cone_rad=math.radians(cone_deg))
+            if full_reference:
+                answer, polish = polish_endpoint_frame(model, cfg, target, answer,
+                    preferred, scene, planner.check_planning_budget)
+                if polish is not None:
+                    full_frame_attempts.append(polish)
         q = np.array([answer['encoder_rad'][n] for n in model.names])
         pose = tcp_pose(model, q, tcp)
         deviation = math.degrees(math.acos(float(np.clip(
             (pose[:3, :3]@axis)@(preferred@axis), -1., 1.))))
         jv, jw = model.point_jacobian(model.encoder_to_model(q), model.n-1, tcp)
         singular_values = np.linalg.svd(np.vstack([jv, .15*jw]), compute_uv=False)
-        attempts.append(dict(position_error_mm=answer['position_error_mm'],
+        attempts.append(dict(search_task=answer['orientation_constraint'],
+            position_error_mm=answer['position_error_mm'],
             axis_deviation_deg=deviation, success=answer['success'],
             encoder_rad=answer['encoder_rad'],
             active_operating_bounds=[n for j, n in enumerate(model.names)
@@ -302,6 +374,8 @@ def plan_continuous_approach(model, cfg, start, x_mm, y_mm, piece, height_mm, pl
                             (desired@axis)@(preferred@axis), -1., 1.)))),
                         axis_numerical_tolerance_deg=math.degrees(1e-5),
                         endpoint_attempts=len(attempts), feasible_endpoints=len(endpoints),
+                        full_frame_polish_attempts=len(full_frame_attempts),
+                        full_frame_polish_successes=sum(row['success'] for row in full_frame_attempts),
                         global_initial_search=global_audit,
                         selected_above_height_mm=above_height, per_square_parameters=False,
                         preferred_axis_source='piece reference frame; preference cone, not fixed full orientation',
@@ -329,6 +403,7 @@ def plan_continuous_approach(model, cfg, start, x_mm, y_mm, piece, height_mm, pl
         return select_complete()
     raise planner.BoardPlanningError('continuous task-pose search found no complete approach',
         dict(code='no_complete_task_pose_branch', endpoint_attempts=attempts,
+             full_frame_polish_attempts=full_frame_attempts,
              global_initial_search=global_audit,
              feasible_endpoints=len(endpoints), branch_failures=failures,
              physical_unreachable_proven=False))
@@ -391,6 +466,40 @@ def audit_bounded_descent_orientation(model, cfg, result):
     return audit
 
 
+def reference_piece_scope(reference):
+    """Return explicit applicability without inferring a successful grasp."""
+    import copy
+    scope = {}
+    for field in ('applicable_pieces', 'excluded_pieces'):
+        if field not in reference:
+            continue
+        values = reference[field]
+        if (not isinstance(values, list)
+                or any(not isinstance(value, str) or not value.strip() for value in values)):
+            raise ValueError(field+' must be a list of nonempty piece names')
+        scope[field] = copy.deepcopy(values)
+    if 'grasp_verified' in reference:
+        if not isinstance(reference['grasp_verified'], bool):
+            raise ValueError('grasp_verified must be a boolean')
+        scope['grasp_verified'] = reference['grasp_verified']
+    return scope
+
+
+def reference_applies_to_piece(reference, piece):
+    """Uncolored types cover both colors; exclusions take precedence."""
+    scope = reference_piece_scope(reference)
+    normalized = piece.strip().lower().replace('-', '_').replace(' ', '_')
+    kind = normalized.split('_', 1)[1] if normalized.startswith(('white_', 'black_')) else normalized
+
+    def matches(values):
+        return any(value.strip().lower().replace('-', '_').replace(' ', '_')
+                   in (normalized, kind) for value in values)
+
+    if matches(scope.get('excluded_pieces', [])):
+        return False
+    return 'applicable_pieces' not in scope or matches(scope['applicable_pieces'])
+
+
 def approved_profile(cfg, piece, name=None):
     """Resolve only registered references; no arbitrary frame in a plan claim."""
     if name is None:
@@ -398,6 +507,8 @@ def approved_profile(cfg, piece, name=None):
     rows = [r for r in cfg.get('approved_task_pose_references', []) if r.get('name')==name]
     if len(rows)!=1:
         raise ValueError('unknown or duplicate approved task pose reference')
+    if not reference_applies_to_piece(rows[0], piece):
+        raise ValueError('approved task pose reference is not applicable to this piece')
     return rows[0]
 
 
@@ -409,14 +520,15 @@ def plan_from_approved_references(model, cfg, start, x_mm, y_mm, piece, height_m
     Proximity selects numerical references, never accepts or replays a path.
     """
     import copy
-    references = cfg.get('approved_task_pose_references', [])
+    all_references = cfg.get('approved_task_pose_references', [])
+    names = [r.get('name') for r in all_references]
+    if any(not isinstance(n, str) or not n for n in names) or len(set(names))!=len(names):
+        raise ValueError('unique approved task reference names required')
+    references = [ref for ref in all_references if reference_applies_to_piece(ref, piece)]
     if not references:
         result = plan_continuous_approach(model, cfg, start, x_mm, y_mm, piece, height_mm, planner)
         result['orientation_acceptance'] = planner.check_planned_tool_orientation(model, cfg, result)
         return result
-    names = [r.get('name') for r in references]
-    if any(not isinstance(n, str) or not n for n in names) or len(set(names))!=len(names):
-        raise ValueError('unique approved task reference names required')
     target, _ = planner.validate_request(x_mm, y_mm, piece, 'approach', height_mm, cfg)
     R, t = np.asarray(cfg['board_to_cad_rotation']), np.asarray(cfg['board_to_cad_translation_m'])
     scores = []
@@ -457,6 +569,8 @@ def plan_from_approved_references(model, cfg, start, x_mm, y_mm, piece, height_m
                 search_phase='nearest-validated-path' if phase else 'primary-common-model',
                 reference_distance_mm=distance, distance_basis='requested-board-XY' if phase else 'seed-FK-XYZ',
                 reference_count=len(references),
+                excluded_by_piece_scope=len(all_references)-len(references),
+                piece_scope=reference_piece_scope(ref),
                 failed_references=failures, per_square_parameters=False, saved_angles_replayed=False)
             result['orientation_acceptance'] = planner.check_planned_tool_orientation(model, cfg, result)
             return result

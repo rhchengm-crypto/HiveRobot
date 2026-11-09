@@ -1368,7 +1368,7 @@
       },
       "source_log": "outputs/a7_v32_execution_20261107/control_evidence/data/left_arm_v2_8_full_runs/arm_run_1794113116885_55216.txt",
       "source_log_sha256": "b903e5f1fa96b8cfaacf35123aff9e7caf71f14efc6388e6164ba80c29278e79",
-      "frozen_board_model": "outputs/a7_v32_reference_20261107/before/scripts/data/left_arm_board_workspace_candidate.json",
+      "frozen_board_model": "outputs/mac_handoff_20261107/HiveRobot_Mac_20261107/HiveRobot/outputs/a7_v32_reference_20261107/before/scripts/data/left_arm_board_workspace_candidate.json",
       "frozen_board_model_sha256": "7ef5d7b8fdb1edd84a5869a7dae7ec1c24ff0040a656aaa5a4a7eea713ec5abb",
       "evidence_directory": "outputs/a7_v32_execution_20261107",
       "frame_compatible": true,
@@ -2246,7 +2246,7 @@
       },
       "source_log": "outputs/c1_v27_test_20261107/control_evidence/data/left_arm_v2_8_full_runs/arm_run_1794097920930_22441.txt",
       "source_log_sha256": "a90c8edfefa6db5d5d6894bb4d154c2f4ac7a5f98f14d98a5512be65997a48d5",
-      "frozen_board_model": "outputs/c1_v27_test_20261107/control_evidence/models/left_arm_board_workspace_candidate.json",
+      "frozen_board_model": "outputs/mac_handoff_20261107/HiveRobot_Mac_20261107/HiveRobot/outputs/c1_v27_test_20261107/control_evidence/models/left_arm_board_workspace_candidate.json",
       "frozen_board_model_sha256": "707c0fb3302b0603499058a93e2456556744e88ab8ef780f69831db23794fc36",
       "evidence_directory": "outputs/c1_v27_test_20261107",
       "frame_compatible": true,
@@ -2520,7 +2520,7 @@
       },
       "source_log": "outputs/d1_v28_test_20261107/control_evidence/data/left_arm_v2_8_full_runs/arm_run_1794099062498_25382.txt",
       "source_log_sha256": "62d895910f209fd5fd0d9123a6ab750942deefd72bc746651e89526db8028a14",
-      "frozen_board_model": "outputs/d1_v28_test_20261107/control_evidence/models/left_arm_board_workspace_candidate.json",
+      "frozen_board_model": "outputs/mac_handoff_20261107/HiveRobot_Mac_20261107/HiveRobot/outputs/d1_v28_test_20261107/control_evidence/models/left_arm_board_workspace_candidate.json",
       "frozen_board_model_sha256": "d93703104dd93217d6358dfef7ea962a00bf18df3309ed22eb15227f6d446443",
       "evidence_directory": "outputs/d1_v28_test_20261107",
       "frame_compatible": true,
@@ -2745,6 +2745,759 @@
           "arm_roll": -2.9982070922851562,
           "wrist_side": -0.2508201599121094,
           "wrist": -2.831120729446411
+        }
+      ]
+    },
+    {
+      "name": "validated:20261108_a7_v32_repeat_height50_x17",
+      "reference_kind": "validated_path",
+      "reference_board_xy_mm": [
+        17.5,
+        357.5
+      ],
+      "requested_height_mm": 50.2,
+      "seed_encoder_rad": {
+        "shoulder_front": -0.08030059933662415,
+        "shoulder_side": -2.7555885314941406,
+        "shoulder_rotate": 1.8427176475524902,
+        "elbow": -0.6757839322090149,
+        "arm_roll": -2.2528038024902344,
+        "wrist_side": -0.506027340888977,
+        "wrist": -2.3798351287841797
+      },
+      "operator_validation": {
+        "accepted": true,
+        "motion_accepted": true,
+        "original_response": "无抖动、横移或接触，高度合适，保持正常",
+        "jitter": false,
+        "lateral_drift_observed": false,
+        "contact": false,
+        "gripping_height_acceptable": true,
+        "hold_normal": true,
+        "extra_motion_observed": false,
+        "qualitative_only": true
+      },
+      "registry": "scripts/data/board_workspace_trials/validation_20261108_a7_repeat.json",
+      "registry_sha256": "387fbb7184fea4f97fbc13e742326d713539a7d06be9f1a42d3a8d348b29d39e",
+      "source_code_sha256": {
+        "build_left_arm_path_reference_library.py": "e5a09a67e86773e7a0f8211ce7394ad2e40538021a4bf95c2e49ee5a548d9b16",
+        "chessboard_vision_v3_0_web_control.py": "5f6cfb5dce9a3bb15141711972676a5807b580ef2af2a8821f6c879c901459a2",
+        "left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+        "left_arm_board_grasp.py": "b0a4b9a1353e4198a112712e492139b96450ad7be89e17f7b7e4d4efccc4d7ac",
+        "left_arm_board_home_handoff.py": "0a341c4f34dddd0176c5229f33095d3bbb534616dd673bf8b7f6fa9e87f1a472",
+        "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+        "left_arm_board_task_pose.py": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+        "left_arm_board_transit.py": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f",
+        "left_arm_fault_support.py": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+        "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+        "left_arm_motion_trace.py": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+        "left_arm_rigid_body.py": "4ea8673a58ecde110e3bd2414eec4c7a6543dfd5546a54534734283e984f7cfd",
+        "left_arm_trajectory_support.py": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+        "left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+        "left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+        "left_arm_v3_1_model_control.py": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996",
+        "left_arm_v3_1_motion_dynamics.py": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+        "record_left_arm_rgbd_audit.py": "3a4026d107bbadb86f5cf844085ccd252ece58934e2ddf3de69394e969358d14"
+      },
+      "source_models": {
+        "left_arm_board_workspace_candidate.json": "669ef83ccdd28d086e187760ebc95a2c1d02bb1fba1175888bd02d3b9978e074",
+        "left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+        "left_arm_v2_6_adaptive_hold_target_bias.json": "935ee941d36abb37b5834c12485814ece3a97d250aca8a4c34e71957cb40e0bd",
+        "left_arm_v2_6_adaptive_target_bias.json": "c6ed63842f8a37a22fb70fe2f086631378af852ea3e3bf93d6b707dfce26e62e",
+        "left_arm_v2_8_clearance_bias.json": "3a0b8a887dd2a884878242944860b26635a466d2209ca5beb3cc2d0135fadb04",
+        "left_arm_v2_home.json": "b50735e9ae53e24cea91045c3ce2528e26ecd9dbb4990e8295e9a616c0d74d39",
+        "left_arm_v2_table_clearance.json": "dead14fe6a7bcdca9ccfd8235ed268b3c10c557b32d953de4f98d736cd59b2b1",
+        "left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+        "left_arm_validated_path_library.json": "379a81f7f977ace5341d03831f080d26612fce41ffd9a27716809ae325d346a2"
+      },
+      "source_log": "outputs/a7_repeat_20261108/control_evidence/data/left_arm_v2_8_full_runs/arm_run_1794170440235_6314.txt",
+      "source_log_sha256": "221ecad78b7e6f83cb23e66ce4310f467fb8b29e0391cc49f5a3c810dd6e48f5",
+      "frozen_board_model": "outputs/mac_handoff_20261107/HiveRobot_Mac_20261107/HiveRobot/scripts/data/left_arm_board_workspace_candidate.json",
+      "frozen_board_model_sha256": "669ef83ccdd28d086e187760ebc95a2c1d02bb1fba1175888bd02d3b9978e074",
+      "evidence_directory": "outputs/a7_repeat_20261108/control_evidence",
+      "frame_compatible": true,
+      "physical_registration_unchanged_independently_verified": false,
+      "historical_path_samples": [
+        {
+          "stage": "entry_search",
+          "waypoint_index": 19,
+          "encoder_rad": {
+            "shoulder_front": 1.941519856452942,
+            "shoulder_side": -2.722400188446045,
+            "shoulder_rotate": 2.3523690700531006,
+            "elbow": 0.8161669373512268,
+            "arm_roll": -2.6522088050842285,
+            "wrist_side": 0.3061341345310211,
+            "wrist": -1.0263599157333374
+          }
+        },
+        {
+          "stage": "source_above",
+          "waypoint_index": 24,
+          "encoder_rad": {
+            "shoulder_front": 0.23403525352478027,
+            "shoulder_side": -2.653353214263916,
+            "shoulder_rotate": 2.0235371589660645,
+            "elbow": -0.086785688996315,
+            "arm_roll": -2.4176013469696045,
+            "wrist_side": -0.23746852576732635,
+            "wrist": -2.168116331100464
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 25,
+          "encoder_rad": {
+            "shoulder_front": -0.04596780240535736,
+            "shoulder_side": -2.7605478763580322,
+            "shoulder_rotate": 1.8003737926483154,
+            "elbow": -0.45872434973716736,
+            "arm_roll": -2.328336000442505,
+            "wrist_side": -0.5640115737915039,
+            "wrist": -2.5801098346710205
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 26,
+          "encoder_rad": {
+            "shoulder_front": -0.04596780240535736,
+            "shoulder_side": -2.7605478763580322,
+            "shoulder_rotate": 1.8003737926483154,
+            "elbow": -0.46330204606056213,
+            "arm_roll": -2.32757306098938,
+            "wrist_side": -0.5640115737915039,
+            "wrist": -2.579728364944458
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 27,
+          "encoder_rad": {
+            "shoulder_front": -0.04596780240535736,
+            "shoulder_side": -2.7601664066314697,
+            "shoulder_rotate": 1.800755262374878,
+            "elbow": -0.49343863129615784,
+            "arm_roll": -2.3104066848754883,
+            "wrist_side": -0.5636301040649414,
+            "wrist": -2.549973249435425
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 28,
+          "encoder_rad": {
+            "shoulder_front": -0.04596780240535736,
+            "shoulder_side": -2.7601664066314697,
+            "shoulder_rotate": 1.8038071393966675,
+            "elbow": -0.5270084738731384,
+            "arm_roll": -2.298199415206909,
+            "wrist_side": -0.5624856948852539,
+            "wrist": -2.5232698917388916
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 29,
+          "encoder_rad": {
+            "shoulder_front": -0.04596780240535736,
+            "shoulder_side": -2.7601664066314697,
+            "shoulder_rotate": 1.8087663650512695,
+            "elbow": -0.5579079985618591,
+            "arm_roll": -2.286755084991455,
+            "wrist_side": -0.5476081371307373,
+            "wrist": -2.485503911972046
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 30,
+          "encoder_rad": {
+            "shoulder_front": -0.06084534898400307,
+            "shoulder_side": -2.7594034671783447,
+            "shoulder_rotate": 1.817921757698059,
+            "elbow": -0.5926222801208496,
+            "arm_roll": -2.276073932647705,
+            "wrist_side": -0.5395971536636353,
+            "wrist": -2.451552629470825
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 31,
+          "encoder_rad": {
+            "shoulder_front": -0.06084534898400307,
+            "shoulder_side": -2.7594034671783447,
+            "shoulder_rotate": 1.8274586200714111,
+            "elbow": -0.6311513185501099,
+            "arm_roll": -2.264629602432251,
+            "wrist_side": -0.5209048390388489,
+            "wrist": -2.4168384075164795
+          }
+        }
+      ],
+      "path_sample_kind": "logged measured waypoint-entry poses; full raw log retained",
+      "geometry_ground_truth": false,
+      "reference_eligible": true,
+      "qualification": "approved pose/branch seed; re-solve and re-check every new path",
+      "wrist_rotation_in_board": [
+        [
+          0.1921995127299813,
+          0.27585389311403724,
+          -0.9417876496111988
+        ],
+        [
+          0.4593546349443541,
+          0.8227663984567952,
+          0.3347368711773095
+        ],
+        [
+          0.8672097016647687,
+          -0.49695078551529054,
+          0.031420536504620206
+        ]
+      ],
+      "path_seed_encoder_rad": [
+        {
+          "shoulder_front": 1.941519856452942,
+          "shoulder_side": -2.722400188446045,
+          "shoulder_rotate": 2.3523690700531006,
+          "elbow": 0.8161669373512268,
+          "arm_roll": -2.6522088050842285,
+          "wrist_side": 0.3061341345310211,
+          "wrist": -1.0263599157333374
+        },
+        {
+          "shoulder_front": 0.23403525352478027,
+          "shoulder_side": -2.653353214263916,
+          "shoulder_rotate": 2.0235371589660645,
+          "elbow": -0.086785688996315,
+          "arm_roll": -2.4176013469696045,
+          "wrist_side": -0.23746852576732635,
+          "wrist": -2.168116331100464
+        },
+        {
+          "shoulder_front": -0.04596780240535736,
+          "shoulder_side": -2.7605478763580322,
+          "shoulder_rotate": 1.8003737926483154,
+          "elbow": -0.46330204606056213,
+          "arm_roll": -2.32757306098938,
+          "wrist_side": -0.5640115737915039,
+          "wrist": -2.579728364944458
+        },
+        {
+          "shoulder_front": -0.04596780240535736,
+          "shoulder_side": -2.7601664066314697,
+          "shoulder_rotate": 1.800755262374878,
+          "elbow": -0.49343863129615784,
+          "arm_roll": -2.3104066848754883,
+          "wrist_side": -0.5636301040649414,
+          "wrist": -2.549973249435425
+        },
+        {
+          "shoulder_front": -0.04596780240535736,
+          "shoulder_side": -2.7601664066314697,
+          "shoulder_rotate": 1.8087663650512695,
+          "elbow": -0.5579079985618591,
+          "arm_roll": -2.286755084991455,
+          "wrist_side": -0.5476081371307373,
+          "wrist": -2.485503911972046
+        },
+        {
+          "shoulder_front": -0.06084534898400307,
+          "shoulder_side": -2.7594034671783447,
+          "shoulder_rotate": 1.8274586200714111,
+          "elbow": -0.6311513185501099,
+          "arm_roll": -2.264629602432251,
+          "wrist_side": -0.5209048390388489,
+          "wrist": -2.4168384075164795
+        }
+      ]
+    },
+    {
+      "name": "validated:20261108_a8_v33_lower25_nonpawn",
+      "reference_kind": "validated_path",
+      "reference_board_xy_mm": [
+        11.798050592563328,
+        405.6006774366655
+      ],
+      "requested_height_mm": 59.622674457482844,
+      "seed_encoder_rad": {
+        "shoulder_front": -0.3553444743156433,
+        "shoulder_side": -2.8593499660491943,
+        "shoulder_rotate": 2.319943428039551,
+        "elbow": -1.1556801795959473,
+        "arm_roll": -2.5907912254333496,
+        "wrist_side": 0.14057374000549316,
+        "wrist": -2.096017360687256
+      },
+      "operator_validation": {
+        "recorded_at_utc": "2026-11-09T04:56:46.530077+00:00",
+        "original_response": "好的，那么我认为可以把此次运行标记为通过，并纳入参考库进行拟合，因为现在这个位置目测已到机械臂的极限，可以夹取除兵以外的其他全部棋子。",
+        "accepted": true,
+        "motion_accepted": true,
+        "gripping_height_acceptable": true,
+        "height_acceptance_scope": "operator-approved current height for non-pawn pieces",
+        "applicable_pieces": [
+          "king",
+          "queen",
+          "bishop",
+          "knight",
+          "rook"
+        ],
+        "excluded_pieces": [
+          "pawn"
+        ],
+        "applicability_source": "operator visual assessment; each piece type has not been separately grasped",
+        "jitter": false,
+        "lateral_drift_observed": false,
+        "contact": false,
+        "orientation_acceptable": true,
+        "hold_normal": true,
+        "extra_motion_observed": false,
+        "qualitative_only": true,
+        "grasp_verified": false,
+        "claw_closure_tested": false,
+        "loaded_lift_tested": false,
+        "operator_estimates_near_mechanical_limit": true,
+        "mechanical_limit_independently_measured": false,
+        "additional_descent_executed": false,
+        "new_motion_authorized": false
+      },
+      "registry": "scripts/data/board_workspace_trials/validation_20261108_a8_lower25.json",
+      "registry_sha256": "95caad54ff562b0e51cd5819fcaa578dd5abf3657c1f7b2d9020edd6417c74ba",
+      "source_code_sha256": {
+        "left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+        "left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+        "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+        "left_arm_v3_1_motion_dynamics.py": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+        "left_arm_v3_1_model_control.py": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996",
+        "chessboard_vision_v3_0_web_control.py": "5f6cfb5dce9a3bb15141711972676a5807b580ef2af2a8821f6c879c901459a2",
+        "left_arm_board_grasp.py": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+        "left_arm_static_support.py": "ce4d53088a9818a7c229f822c9d9d2bb5f826328982b2a859a284e04bbe3203d",
+        "left_arm_fault_support.py": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+        "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+        "left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+        "left_arm_motion_trace.py": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+        "left_arm_trajectory_support.py": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+        "DM_CAN.py": "b6bf4f053b397000c314bc58d49e0b6c5328a72880141d619d942809b81519fb",
+        "test_left_arm_static_support.py": "82805a80f24f56763aa2ef1f3b0fd7cb5b2c50153c7daf977c74ad3dde12b8fe",
+        "test_left_arm_board_static_support.py": "b403136a7d8769afdab97d2ef7ade3fc9f3b9fde68bb74e803032721e09ff98a",
+        "left_arm_board_task_pose.py": "856e96adba0da0f16069fa9b83ef55bc4d5daf7f27c873a39c4e1ba97b557cae",
+        "test_left_arm_board_task_pose.py": "5299506f22c435d513c9b4d97c1d73d009b4bbfc9f1103f40a5ad7c7222c9338"
+      },
+      "source_models": {
+        "left_arm_board_workspace_candidate.json": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+        "left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+        "left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f"
+      },
+      "source_log": "outputs/a8_lower25_execution_20261108/control_evidence/data/left_arm_v2_8_full_runs/arm_run_1794198443568_49465.txt",
+      "source_log_sha256": "abab93decd65f9f1a25cecab3c1e9b038dda4ed612f4c9d44cf55ca627855709",
+      "frozen_board_model": "outputs/a8_lower25_execution_20261108/control_evidence/models/left_arm_board_workspace_candidate.json",
+      "frozen_board_model_sha256": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+      "evidence_directory": "outputs/a8_lower25_execution_20261108/control_evidence",
+      "applicable_pieces": [
+        "king",
+        "queen",
+        "bishop",
+        "knight",
+        "rook"
+      ],
+      "excluded_pieces": [
+        "pawn"
+      ],
+      "grasp_verified": false,
+      "frame_compatible": true,
+      "physical_registration_unchanged_independently_verified": false,
+      "historical_path_samples": [
+        {
+          "stage": "entry_search",
+          "waypoint_index": 0,
+          "encoder_rad": {
+            "shoulder_front": 1.942282795906067,
+            "shoulder_side": -2.7197299003601074,
+            "shoulder_rotate": 2.377164840698242,
+            "elbow": 0.8176928162574768,
+            "arm_roll": -2.6544976234436035,
+            "wrist_side": 0.3091859221458435,
+            "wrist": -1.0290303230285645
+          }
+        },
+        {
+          "stage": "entry_search",
+          "waypoint_index": 19,
+          "encoder_rad": {
+            "shoulder_front": 1.8503471612930298,
+            "shoulder_side": -2.7159152030944824,
+            "shoulder_rotate": 2.374113082885742,
+            "elbow": 0.7837415337562561,
+            "arm_roll": -2.653353214263916,
+            "wrist_side": 0.3065156042575836,
+            "wrist": -1.0683223009109497
+          }
+        },
+        {
+          "stage": "source_above",
+          "waypoint_index": 25,
+          "encoder_rad": {
+            "shoulder_front": 0.25349050760269165,
+            "shoulder_side": -2.6544976234436035,
+            "shoulder_rotate": 2.3493170738220215,
+            "elbow": -0.028038453310728073,
+            "arm_roll": -2.5976576805114746,
+            "wrist_side": 0.19550621509552002,
+            "wrist": -2.007896661758423
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 26,
+          "encoder_rad": {
+            "shoulder_front": -0.10166323184967041,
+            "shoulder_side": -2.8063249588012695,
+            "shoulder_rotate": 2.310025215148926,
+            "elbow": -0.5251010656356812,
+            "arm_roll": -2.6098649501800537,
+            "wrist_side": 0.1203555315732956,
+            "wrist": -2.491607427597046
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 27,
+          "encoder_rad": {
+            "shoulder_front": -0.11310750246047974,
+            "shoulder_side": -2.819676399230957,
+            "shoulder_rotate": 2.3088808059692383,
+            "elbow": -0.5262455344200134,
+            "arm_roll": -2.6136796474456787,
+            "wrist_side": 0.10891126841306686,
+            "wrist": -2.505340576171875
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 28,
+          "encoder_rad": {
+            "shoulder_front": -0.1356145590543747,
+            "shoulder_side": -2.825780153274536,
+            "shoulder_rotate": 2.3088808059692383,
+            "elbow": -0.5437933802604675,
+            "arm_roll": -2.6136796474456787,
+            "wrist_side": 0.10013733059167862,
+            "wrist": -2.5019073486328125
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 29,
+          "encoder_rad": {
+            "shoulder_front": -0.14095520973205566,
+            "shoulder_side": -2.832646608352661,
+            "shoulder_rotate": 2.309262275695801,
+            "elbow": -0.5586709380149841,
+            "arm_roll": -2.6136796474456787,
+            "wrist_side": 0.09403372555971146,
+            "wrist": -2.486266851425171
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 30,
+          "encoder_rad": {
+            "shoulder_front": -0.14133669435977936,
+            "shoulder_side": -2.8379874229431152,
+            "shoulder_rotate": 2.3096437454223633,
+            "elbow": -0.577744722366333,
+            "arm_roll": -2.6136796474456787,
+            "wrist_side": 0.09403372555971146,
+            "wrist": -2.4713892936706543
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 31,
+          "encoder_rad": {
+            "shoulder_front": -0.15812161564826965,
+            "shoulder_side": -2.8379874229431152,
+            "shoulder_rotate": 2.310788154602051,
+            "elbow": -0.5983443856239319,
+            "arm_roll": -2.6136796474456787,
+            "wrist_side": 0.09403372555971146,
+            "wrist": -2.4557487964630127
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 32,
+          "encoder_rad": {
+            "shoulder_front": -0.15812161564826965,
+            "shoulder_side": -2.8379874229431152,
+            "shoulder_rotate": 2.3119325637817383,
+            "elbow": -0.6132219433784485,
+            "arm_roll": -2.6136796474456787,
+            "wrist_side": 0.09403372555971146,
+            "wrist": -2.443922996520996
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 33,
+          "encoder_rad": {
+            "shoulder_front": -0.15812161564826965,
+            "shoulder_side": -2.8379874229431152,
+            "shoulder_rotate": 2.3126955032348633,
+            "elbow": -0.6288624405860901,
+            "arm_roll": -2.613298177719116,
+            "wrist_side": 0.09403372555971146,
+            "wrist": -2.425612211227417
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 34,
+          "encoder_rad": {
+            "shoulder_front": -0.15812161564826965,
+            "shoulder_side": -2.8379874229431152,
+            "shoulder_rotate": 2.313839912414551,
+            "elbow": -0.6448844075202942,
+            "arm_roll": -2.613298177719116,
+            "wrist_side": 0.09441519528627396,
+            "wrist": -2.4107346534729004
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 35,
+          "encoder_rad": {
+            "shoulder_front": -0.15812161564826965,
+            "shoulder_side": -2.8383688926696777,
+            "shoulder_rotate": 2.3142213821411133,
+            "elbow": -0.6746395230293274,
+            "arm_roll": -2.612535238265991,
+            "wrist_side": 0.09441519528627396,
+            "wrist": -2.3924238681793213
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 36,
+          "encoder_rad": {
+            "shoulder_front": -0.15888457000255585,
+            "shoulder_side": -2.8448538780212402,
+            "shoulder_rotate": 2.3165102005004883,
+            "elbow": -0.6898985505104065,
+            "arm_roll": -2.608720541000366,
+            "wrist_side": 0.09479667246341705,
+            "wrist": -2.3805980682373047
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 37,
+          "encoder_rad": {
+            "shoulder_front": -0.17299915850162506,
+            "shoulder_side": -2.8448538780212402,
+            "shoulder_rotate": 2.3172731399536133,
+            "elbow": -0.7085908055305481,
+            "arm_roll": -2.605668783187866,
+            "wrist_side": 0.09784847497940063,
+            "wrist": -2.3653390407562256
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 38,
+          "encoder_rad": {
+            "shoulder_front": -0.17452506721019745,
+            "shoulder_side": -2.8452353477478027,
+            "shoulder_rotate": 2.3172731399536133,
+            "elbow": -0.7318608164787292,
+            "arm_roll": -2.6052873134613037,
+            "wrist_side": 0.09822995215654373,
+            "wrist": -2.3432135581970215
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 39,
+          "encoder_rad": {
+            "shoulder_front": -0.1802472025156021,
+            "shoulder_side": -2.8456168174743652,
+            "shoulder_rotate": 2.317654609680176,
+            "elbow": -0.7574197053909302,
+            "arm_roll": -2.601854085922241,
+            "wrist_side": 0.09861142933368683,
+            "wrist": -2.3271915912628174
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 40,
+          "encoder_rad": {
+            "shoulder_front": -0.18978407979011536,
+            "shoulder_side": -2.8456168174743652,
+            "shoulder_rotate": 2.3203251361846924,
+            "elbow": -0.7871748208999634,
+            "arm_roll": -2.6014723777770996,
+            "wrist_side": 0.1035706102848053,
+            "wrist": -2.3119325637817383
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 41,
+          "encoder_rad": {
+            "shoulder_front": -0.19130998849868774,
+            "shoulder_side": -2.8456168174743652,
+            "shoulder_rotate": 2.320706605911255,
+            "elbow": -0.8077744841575623,
+            "arm_roll": -2.6014723777770996,
+            "wrist_side": 0.11043716967105865,
+            "wrist": -2.286755084991455
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 42,
+          "encoder_rad": {
+            "shoulder_front": -0.22526131570339203,
+            "shoulder_side": -2.8532464504241943,
+            "shoulder_rotate": 2.320706605911255,
+            "elbow": -0.8447775840759277,
+            "arm_roll": -2.601090908050537,
+            "wrist_side": 0.1184481605887413,
+            "wrist": -2.2672998905181885
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 43,
+          "encoder_rad": {
+            "shoulder_front": -0.22526131570339203,
+            "shoulder_side": -2.8540093898773193,
+            "shoulder_rotate": 2.320706605911255,
+            "elbow": -0.8852140307426453,
+            "arm_roll": -2.5984206199645996,
+            "wrist_side": 0.12226291000843048,
+            "wrist": -2.2489891052246094
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 44,
+          "encoder_rad": {
+            "shoulder_front": -0.2439536154270172,
+            "shoulder_side": -2.8540093898773193,
+            "shoulder_rotate": 2.3203251361846924,
+            "elbow": -0.9210727214813232,
+            "arm_roll": -2.5984206199645996,
+            "wrist_side": 0.12569619715213776,
+            "wrist": -2.2226672172546387
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 45,
+          "encoder_rad": {
+            "shoulder_front": -0.25539788603782654,
+            "shoulder_side": -2.855153799057007,
+            "shoulder_rotate": 2.3203251361846924,
+            "elbow": -0.9683756828308105,
+            "arm_roll": -2.598039150238037,
+            "wrist_side": 0.12951095402240753,
+            "wrist": -2.192530632019043
+          }
+        },
+        {
+          "stage": "contact",
+          "waypoint_index": 46,
+          "encoder_rad": {
+            "shoulder_front": -0.28324559330940247,
+            "shoulder_side": -2.858205556869507,
+            "shoulder_rotate": 2.3203251361846924,
+            "elbow": -1.030174732208252,
+            "arm_roll": -2.5976576805114746,
+            "wrist_side": 0.1333257108926773,
+            "wrist": -2.1623940467834473
+          }
+        }
+      ],
+      "path_sample_kind": "logged measured waypoint-entry poses; full raw log retained",
+      "geometry_ground_truth": false,
+      "reference_eligible": true,
+      "qualification": "approved pose/branch seed; re-solve and re-check every new path",
+      "wrist_rotation_in_board": [
+        [
+          0.15278452114860666,
+          -0.008424276162720987,
+          -0.9882236192626267
+        ],
+        [
+          0.3531968614011787,
+          0.9343856899510474,
+          0.04664074946935507
+        ],
+        [
+          0.9229890937566637,
+          -0.3561634652597604,
+          0.145735098107531
+        ]
+      ],
+      "path_seed_encoder_rad": [
+        {
+          "shoulder_front": 1.942282795906067,
+          "shoulder_side": -2.7197299003601074,
+          "shoulder_rotate": 2.377164840698242,
+          "elbow": 0.8176928162574768,
+          "arm_roll": -2.6544976234436035,
+          "wrist_side": 0.3091859221458435,
+          "wrist": -1.0290303230285645
+        },
+        {
+          "shoulder_front": -0.11310750246047974,
+          "shoulder_side": -2.819676399230957,
+          "shoulder_rotate": 2.3088808059692383,
+          "elbow": -0.5262455344200134,
+          "arm_roll": -2.6136796474456787,
+          "wrist_side": 0.10891126841306686,
+          "wrist": -2.505340576171875
+        },
+        {
+          "shoulder_front": -0.15812161564826965,
+          "shoulder_side": -2.8379874229431152,
+          "shoulder_rotate": 2.3119325637817383,
+          "elbow": -0.6132219433784485,
+          "arm_roll": -2.6136796474456787,
+          "wrist_side": 0.09403372555971146,
+          "wrist": -2.443922996520996
+        },
+        {
+          "shoulder_front": -0.15888457000255585,
+          "shoulder_side": -2.8448538780212402,
+          "shoulder_rotate": 2.3165102005004883,
+          "elbow": -0.6898985505104065,
+          "arm_roll": -2.608720541000366,
+          "wrist_side": 0.09479667246341705,
+          "wrist": -2.3805980682373047
+        },
+        {
+          "shoulder_front": -0.19130998849868774,
+          "shoulder_side": -2.8456168174743652,
+          "shoulder_rotate": 2.320706605911255,
+          "elbow": -0.8077744841575623,
+          "arm_roll": -2.6014723777770996,
+          "wrist_side": 0.11043716967105865,
+          "wrist": -2.286755084991455
+        },
+        {
+          "shoulder_front": -0.28324559330940247,
+          "shoulder_side": -2.858205556869507,
+          "shoulder_rotate": 2.3203251361846924,
+          "elbow": -1.030174732208252,
+          "arm_roll": -2.5976576805114746,
+          "wrist_side": 0.1333257108926773,
+          "wrist": -2.1623940467834473
         }
       ]
     },
@@ -3803,12 +4556,12 @@
       ]
     }
   ],
-  "eligible_reference_count": 10,
+  "eligible_reference_count": 12,
   "limitations": [
     "Accepted request XYZ is not external TCP ground truth",
     "Historical physical board placement not independently certified",
     "Empty-load acceptance does not certify claw closure or loaded lifting"
   ],
   "common_model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
-  "active_board_model_sha256": "7ef5d7b8fdb1edd84a5869a7dae7ec1c24ff0040a656aaa5a4a7eea713ec5abb"
+  "active_board_model_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d"
 }

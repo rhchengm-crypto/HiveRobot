@@ -11,6 +11,7 @@ from pathlib import Path
 
 import numpy as np
 from left_arm_board_kinematics import tcp_pose
+from left_arm_board_task_pose import reference_piece_scope
 from left_arm_rigid_body import RigidBodyModel
 
 
@@ -32,6 +33,15 @@ def frame_compatible(a, b):
 def tagged(text, tag):
     return [json.loads(s.split('=', 1)[1]) for s in text.splitlines()
             if s.startswith(tag+'=')]
+
+
+def registry_piece_scope(record):
+    """Operator qualification overrides optional top-level scope metadata."""
+    validation = record.get('operator_validation', {})
+    fields = ('applicable_pieces', 'excluded_pieces', 'grasp_verified')
+    return reference_piece_scope({field: copy.deepcopy(
+        validation[field] if field in validation else record[field])
+        for field in fields if field in validation or field in record})
 
 
 def build(root, active_path):
@@ -78,7 +88,7 @@ def build(root, active_path):
             source_log=log.relative_to(root).as_posix(),source_log_sha256=sha(log),
             frozen_board_model=frozen.relative_to(root).as_posix() if frozen else None,
             frozen_board_model_sha256=model_sha,_text=text,_frozen=read(frozen) if frozen else None,
-            evidence_directory=directory.relative_to(root).as_posix()))
+            evidence_directory=directory.relative_to(root).as_posix(), **registry_piece_scope(r)))
     # Earlier C4/C5 evidence predates the validation registry schema.
     historical=read(outputs/'common_calibration_20261106/common_calibration_audit.json')['trials']
     for r in historical:
@@ -92,7 +102,8 @@ def build(root, active_path):
             source_log=r['log'],source_log_sha256=sha(log),
             frozen_board_model=r['board_model'],frozen_board_model_sha256=sha(frozen),
             _text=log.read_text(encoding='utf-8'),_frozen=read(frozen),
-            evidence_directory=log.parent.as_posix(),source_code_sha256={},source_models={}))
+            evidence_directory=log.parent.as_posix(),source_code_sha256={},source_models={},
+            **registry_piece_scope(r)))
     references=[]
     for r in records:
         text=r.pop('_text');frozen=r.pop('_frozen')
@@ -122,7 +133,8 @@ def build(root, active_path):
         # Runtime bank contains only initial guesses, frame and provenance.
         references.append({k:copy.deepcopy(r[k]) for k in ('name','reference_kind',
             'reference_board_xy_mm','seed_encoder_rad','wrist_rotation_in_board','path_seed_encoder_rad',
-            'source_log_sha256','qualification')})
+            'source_log_sha256','qualification','applicable_pieces','excluded_pieces','grasp_verified')
+            if k in r})
     library=dict(schema=1,motion_issued=False,selection_policy='primary-then-nearest-validated-path',
         distance='Euclidean board XY in mm; same rule for all targets',
         records=records,eligible_reference_count=len(references),

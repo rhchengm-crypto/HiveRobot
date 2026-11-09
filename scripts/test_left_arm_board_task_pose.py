@@ -10,7 +10,11 @@ import numpy as np
 
 import left_arm_board_grasp as board
 from left_arm_board_kinematics import solve_ik, tcp_pose, rotation_error
-from left_arm_board_task_pose import batch_tool_frames, endpoint_seeds, global_task_seeds, task_settings
+from left_arm_board_task_pose import (
+    batch_tool_frames, endpoint_seeds, global_task_seeds,
+    polish_endpoint_frame, task_settings,
+)
+from left_arm_board_collision import collision_scene
 from left_arm_rigid_body import axis_rotation
 
 
@@ -232,6 +236,136 @@ class TaskPoseTests(unittest.TestCase):
             with self.assertRaises(board.PlanningBudgetExceeded):
                 plan_from_approved_references(self.model,cfg,{},110.,165.,'white_knight',30.2,board)
             solve.assert_not_called()
+
+
+class FullFrameEndpointRegressionTests(unittest.TestCase):
+    """Real seven-axis FK task whose axis solution fails the terminal gate."""
+
+    @classmethod
+    def setUpClass(cls):
+        here = Path(__file__).parent
+        cls.model = board.RigidBodyModel.load(here/'data/left_arm_general_dynamics.json')
+        cls.cfg = board.load_board_config(
+            here/'data/left_arm_board_workspace_candidate.json', cls.model)
+        # A reachable pose inside the existing shared operating envelope.
+        # The requested XYZ and rotation come from FK, not a mocked IK answer.
+        cls.goal_q = np.array([
+            -.18169145822525024, -2.8643908596038816, 2.4032685947418213,
+            -.9309094452857971, -2.6552605628967285, .18795833945274354,
+            -1.9357976913452148,
+        ])
+        cls.clearance_q = np.array([
+            1.9357976913452148, -2.7143893241882324, 2.366483449935913,
+            .8165484070777893, -2.649538516998291, .3057526648044586,
+            -1.0313191413879395,
+        ])
+        cls.tcp = np.asarray(cls.cfg['tcp_in_wrist_frame_m'])
+        cls.pose = tcp_pose(cls.model, cls.goal_q, cls.tcp)
+        cls.axis = np.asarray(cls.cfg['tool_axis_in_wrist_frame'], dtype=float)
+        cls.axis /= np.linalg.norm(cls.axis)
+        cls.scene = collision_scene(cls.model, cls.cfg)
+        cls.axis_candidate = solve_ik(
+            cls.model, cls.pose[:3, 3], cls.clearance_q, cls.tcp,
+            cls.cfg['joint_limits_encoder_rad'], cls.pose[:3, :3],
+            max_iterations=150, position_tolerance_m=.0005,
+            rotation_tolerance_rad=1e-5, clearance_function=cls.scene,
+            tool_axis_local=cls.axis, tool_axis_cone_rad=math.radians(10),
+        )
+
+    def full_error_deg(self, answer):
+        q = np.array([answer['encoder_rad'][name] for name in self.model.names])
+        actual = tcp_pose(self.model, q, self.tcp)
+        return math.degrees(np.linalg.norm(rotation_error(
+            self.pose[:3, :3], actual[:3, :3])))
+
+    def assert_original_constraints(self, answer, cfg):
+        q = np.array([answer['encoder_rad'][name] for name in self.model.names])
+        bounds = np.asarray(cfg['joint_limits_encoder_rad'])
+        self.assertTrue(np.all(q >= bounds[:, 0]))
+        self.assertTrue(np.all(q <= bounds[:, 1]))
+        self.assertGreaterEqual(float(np.min(self.scene(q))), 0.)
+        self.assertLessEqual(np.linalg.norm(
+            tcp_pose(self.model, q, self.tcp)[:3, 3]-self.pose[:3, 3]), .0005)
+
+    def test_real_axis_candidate_is_polished_instead_of_lost_to_full_frame_filter(self):
+        cfg = copy.deepcopy(self.cfg)
+        original_cfg = copy.deepcopy(cfg)
+        original_candidate = copy.deepcopy(self.axis_candidate)
+        self.assertTrue(self.axis_candidate['success'])
+        self.assertLess(self.axis_candidate['position_error_mm'], .5)
+        # The old axis task succeeds, but its wrist yaw fails the unchanged
+        # complete-frame acceptance tolerance by more than thirtyfold.
+        self.assertGreater(self.full_error_deg(self.axis_candidate), 10.)
+        limit = cfg['continuous_grasp_search']['terminal_reference_tolerance_deg']
+        self.assertGreater(self.full_error_deg(self.axis_candidate), limit)
+        checked = []
+        answer, audit = polish_endpoint_frame(
+            self.model, cfg, self.pose[:3, 3], self.axis_candidate,
+            self.pose[:3, :3], self.scene, lambda value: checked.append(value),
+        )
+        self.assertEqual(len(checked), 1)
+        self.assertTrue(answer['success'])
+        self.assertEqual(audit['search_task'], 'full-wrist-from-axis-candidate')
+        self.assertGreater(audit['before_full_frame_error_deg'], 10.)
+        self.assertLessEqual(self.full_error_deg(answer), limit)
+        self.assert_original_constraints(answer, cfg)
+        # IK found another valid solution; the known FK angles are not replayed.
+        result_q = np.array([answer['encoder_rad'][name] for name in self.model.names])
+        self.assertGreater(np.linalg.norm(result_q-self.goal_q), .01)
+        self.assertEqual(cfg, original_cfg)
+        self.assertEqual(self.axis_candidate, original_candidate)
+
+    def test_real_full_frame_polish_obeys_a_tighter_configured_tolerance(self):
+        cfg = copy.deepcopy(self.cfg)
+        cfg['continuous_grasp_search']['terminal_reference_tolerance_deg'] = .0001
+        answer, audit = polish_endpoint_frame(
+            self.model, cfg, self.pose[:3, 3], self.axis_candidate,
+            self.pose[:3, :3], self.scene, lambda _: None,
+        )
+        self.assertTrue(answer['success'])
+        self.assertTrue(audit['success'])
+        self.assertLessEqual(self.full_error_deg(answer), .0001)
+        self.assert_original_constraints(answer, cfg)
+        self.assertEqual(cfg['joint_limits_encoder_rad'], self.cfg['joint_limits_encoder_rad'])
+
+    def test_loose_frame_policy_keeps_the_successful_axis_candidate(self):
+        cfg = copy.deepcopy(self.cfg)
+        cfg['continuous_grasp_search']['terminal_reference_tolerance_deg'] = 180.
+        checked = []
+        answer, audit = polish_endpoint_frame(
+            self.model, cfg, self.pose[:3, 3], self.axis_candidate,
+            self.pose[:3, :3], self.scene, lambda value: checked.append(value),
+        )
+        self.assertIs(answer, self.axis_candidate)
+        self.assertIsNone(audit)
+        self.assertEqual(checked, [])
+
+    def test_full_frame_global_seeds_score_real_fk_and_default_axis_search_is_unchanged(self):
+        cfg = copy.deepcopy(self.cfg)
+        cfg['continuous_grasp_search']['global_seed_generations'] = 3
+        original = copy.deepcopy(cfg)
+        args = (self.model, cfg, self.pose[:3, 3], self.pose[:3, :3],
+                self.axis, math.radians(10), lambda _: None)
+        seeds, audit = global_task_seeds(*args, full_frame=True)
+        repeated, repeated_audit = global_task_seeds(*args, full_frame=True)
+        np.testing.assert_array_equal(seeds, repeated)
+        self.assertEqual(audit, repeated_audit)
+        # Use scalar FK and SO(3) error independently of the vectorized search
+        # score. This detects silently retaining only the axis-cone objective.
+        actual_scores = []
+        for q in seeds:
+            pose = tcp_pose(self.model, q, self.tcp)
+            actual_scores.append(float(np.linalg.norm(pose[:3, 3]-self.pose[:3, 3])
+                + .15*np.linalg.norm(rotation_error(self.pose[:3, :3], pose[:3, :3]))))
+        self.assertAlmostEqual(audit['best_weighted_residual_m'], min(actual_scores), places=12)
+        self.assertEqual(audit['orientation_objective'], 'full-wrist')
+        self.assertFalse(audit['collision_acceptance'])
+        default, default_audit = global_task_seeds(*args)
+        explicit_axis, explicit_axis_audit = global_task_seeds(*args, full_frame=False)
+        np.testing.assert_array_equal(default, explicit_axis)
+        self.assertEqual(default_audit, explicit_axis_audit)
+        self.assertEqual(default_audit['orientation_objective'], 'tool-axis-cone')
+        self.assertEqual(cfg, original)
 
 
 class CompleteTaskBranchTests(unittest.TestCase):
