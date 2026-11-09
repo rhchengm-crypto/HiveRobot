@@ -1,0 +1,79 @@
+{
+  "motion_issued": false,
+  "network_accessed": false,
+  "runtime_eligible": false,
+  "prepared_execution_stamped": false,
+  "build": "seven-axis-board-grasp-v32-descent-gain-continuity",
+  "duration_s": 44.827064700002666,
+  "openblas_num_threads": "1",
+  "request_board_mm": [
+    17.5,
+    357.5,
+    50.2
+  ],
+  "forecast_clearance": {
+    "shoulder_front": 1.9357976913452148,
+    "shoulder_side": -2.7143893241882324,
+    "shoulder_rotate": 2.3416876792907715,
+    "elbow": 0.8165484070777893,
+    "arm_roll": -2.649538516998291,
+    "wrist_side": 0.3057526648044586,
+    "wrist": -1.0313191413879395
+  },
+  "plan_path": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\outputs\\a7_repeat_20261108\\local_plan.json",
+  "plan_sha256": "92b20a93129e7ac0207ff519a5205d8e7176489c22c7516a87f5d5a638fdef05",
+  "model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+  "board_config_sha256": "669ef83ccdd28d086e187760ebc95a2c1d02bb1fba1175888bd02d3b9978e074",
+  "source_hashes": {
+    "left_arm_board_grasp.py": "b0a4b9a1353e4198a112712e492139b96450ad7be89e17f7b7e4d4efccc4d7ac",
+    "left_arm_board_task_pose.py": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+    "left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "left_arm_trajectory_support.py": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "left_arm_rigid_body.py": "4ea8673a58ecde110e3bd2414eec4c7a6543dfd5546a54534734283e984f7cfd"
+  },
+  "stage_counts": {
+    "entry_search": 20,
+    "source_above": 5,
+    "contact": 7
+  },
+  "reference": "validated:20261107_a7_v32_height50_x17",
+  "reference_phase": "nearest-validated-path",
+  "failed_reference_count": 2,
+  "orientation": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 30,
+    "max_error_deg": 0.017076577945949818,
+    "tolerance_deg": 0.2864788975654116,
+    "checked_task_edge_samples": 22,
+    "max_joint_sample_step_deg": 0.5,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "gripper_clearance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 33.99505399759466,
+      "task": 34.05807539756905
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "gravity_envelope_samples": 311,
+  "comparison_to_accepted_v32": {
+    "accepted_reference": "validated:20261107_a6_v25_height30",
+    "current_reference": "validated:20261107_a7_v32_height50_x17",
+    "accepted_waypoints": 33,
+    "current_waypoints": 32,
+    "accepted_contact_waypoints": 7,
+    "current_contact_waypoints": 7,
+    "selected_orientation_change_deg": 1.336487074851342,
+    "accepted_start_rotate": 2.365720510482788,
+    "current_start_rotate": 2.3416876792907715,
+    "max_contact_encoder_change_deg": 2.1344986751416797,
+    "max_contact_board_sample_change_mm": 0.0
+  }
+}

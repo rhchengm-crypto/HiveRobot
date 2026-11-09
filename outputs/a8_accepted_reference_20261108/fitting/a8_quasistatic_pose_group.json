@@ -1,0 +1,176 @@
+{
+  "id": "A8_lower25_20261108",
+  "independent_fitting_pose_count": 1,
+  "encoder_pose_rad": {
+    "shoulder_front": -0.3553444743156433,
+    "shoulder_side": -2.859731435775757,
+    "shoulder_rotate": 2.319943428039551,
+    "elbow": -1.1556801795959473,
+    "arm_roll": -2.591172695159912,
+    "wrist_side": 0.14057374000549316,
+    "wrist": -2.096017360687256
+  },
+  "measured_torque_Nm": {
+    "shoulder_front": -13.79145336151123,
+    "shoulder_side": -1.5931624174118042,
+    "shoulder_rotate": -0.017094017937779427,
+    "elbow": 3.4393162727355957,
+    "arm_roll": 0.041514042764902115,
+    "wrist_side": 0.23199023306369781,
+    "wrist": 0.5885226130485535
+  },
+  "feedback_median": {
+    "shoulder_front": {
+      "pos": -0.3553444743156433,
+      "vel": -0.0019536020699888468,
+      "tau": -13.79145336151123
+    },
+    "shoulder_side": {
+      "pos": -2.859731435775757,
+      "vel": -0.0019536020699888468,
+      "tau": -1.5931624174118042
+    },
+    "shoulder_rotate": {
+      "pos": 2.319943428039551,
+      "vel": -0.007326007355004549,
+      "tau": -0.017094017937779427
+    },
+    "elbow": {
+      "pos": -1.1556801795959473,
+      "vel": -0.0019536020699888468,
+      "tau": 3.4393162727355957
+    },
+    "arm_roll": {
+      "pos": -2.591172695159912,
+      "vel": -0.007326007355004549,
+      "tau": 0.041514042764902115
+    },
+    "wrist_side": {
+      "pos": 0.14057374000549316,
+      "vel": -0.007326007355004549,
+      "tau": 0.23199023306369781
+    },
+    "wrist": {
+      "pos": -2.096017360687256,
+      "vel": -0.007326007355004549,
+      "tau": 0.5885226130485535
+    }
+  },
+  "per_axis_stability": {
+    "shoulder_front": {
+      "unique_feedback_packets": 108,
+      "duplicate_cached_rows_excluded": 0,
+      "peak_abs_velocity_rad_s": 0.005860805977135897,
+      "position_span_deg": 0.0,
+      "position_mad_deg": 0.0,
+      "torque_span_Nm": 0.027350425720214844,
+      "torque_mad_Nm": 0.0,
+      "torque_std_Nm": 0.005611404576739881,
+      "max_feedback_age_s": 0.00735029499992379,
+      "sequence_start": 6263,
+      "sequence_end": 6477
+    },
+    "shoulder_side": {
+      "unique_feedback_packets": 108,
+      "duplicate_cached_rows_excluded": 0,
+      "peak_abs_velocity_rad_s": 0.005860805977135897,
+      "position_span_deg": 0.021856605344040804,
+      "position_mad_deg": 0.0,
+      "torque_span_Nm": 0.027350425720214844,
+      "torque_mad_Nm": 0.0,
+      "torque_std_Nm": 0.003183236300286868,
+      "max_feedback_age_s": 0.00630878800075152,
+      "sequence_start": 6263,
+      "sequence_end": 6477
+    },
+    "shoulder_rotate": {
+      "unique_feedback_packets": 108,
+      "duplicate_cached_rows_excluded": 0,
+      "peak_abs_velocity_rad_s": 0.021978022530674934,
+      "position_span_deg": 0.02187026572238083,
+      "position_mad_deg": 0.0,
+      "torque_span_Nm": 0.014652015175670385,
+      "torque_mad_Nm": 0.004884004592895508,
+      "torque_std_Nm": 0.0036836029944348433,
+      "max_feedback_age_s": 0.004887204002443468,
+      "sequence_start": 6263,
+      "sequence_end": 6477
+    },
+    "elbow": {
+      "unique_feedback_packets": 108,
+      "duplicate_cached_rows_excluded": 0,
+      "peak_abs_velocity_rad_s": 0.005860805977135897,
+      "position_span_deg": 0.0,
+      "position_mad_deg": 0.0,
+      "torque_span_Nm": 0.027350425720214844,
+      "torque_mad_Nm": 0.0,
+      "torque_std_Nm": 0.005628644367486783,
+      "max_feedback_age_s": 0.0033340959998895414,
+      "sequence_start": 6263,
+      "sequence_end": 6477
+    },
+    "arm_roll": {
+      "unique_feedback_packets": 108,
+      "duplicate_cached_rows_excluded": 0,
+      "peak_abs_velocity_rad_s": 0.021978022530674934,
+      "position_span_deg": 0.021856605344040804,
+      "position_mad_deg": 0.0,
+      "torque_span_Nm": 0.004884004592895508,
+      "torque_mad_Nm": 0.0,
+      "torque_std_Nm": 0.001735026902712028,
+      "max_feedback_age_s": 0.0031883949995972216,
+      "sequence_start": 6263,
+      "sequence_end": 6477
+    },
+    "wrist_side": {
+      "unique_feedback_packets": 108,
+      "duplicate_cached_rows_excluded": 0,
+      "peak_abs_velocity_rad_s": 0.021978022530674934,
+      "position_span_deg": 0.021856605344040804,
+      "position_mad_deg": 0.0,
+      "torque_span_Nm": 0.009768009185791016,
+      "torque_mad_Nm": 0.0,
+      "torque_std_Nm": 0.002421397862317045,
+      "max_feedback_age_s": 0.0001180200015369337,
+      "sequence_start": 6263,
+      "sequence_end": 6477
+    },
+    "wrist": {
+      "unique_feedback_packets": 108,
+      "duplicate_cached_rows_excluded": 0,
+      "peak_abs_velocity_rad_s": 0.021978022530674934,
+      "position_span_deg": 0.0,
+      "position_mad_deg": 0.0,
+      "torque_span_Nm": 0.009768009185791016,
+      "torque_mad_Nm": 0.0,
+      "torque_std_Nm": 0.00249789059043333,
+      "max_feedback_age_s": 0.010830155999428825,
+      "sequence_start": 6262,
+      "sequence_end": 6476
+    }
+  },
+  "stable_hold": {
+    "source": "last same-serial Model Hold; first 0.75 s excluded",
+    "raw_model_hold_frames": 126,
+    "retained_complete_frames": 108,
+    "retained_duration_s": 4.394845357997838,
+    "max_feedback_age_limit_s": 0.1,
+    "peak_abs_velocity_limit_rad_s": 0.05,
+    "position_span_limit_deg": 0.25
+  },
+  "operator_validation": {
+    "accepted": true,
+    "original_response": "好的，那么我认为可以把此次运行标记为通过，并纳入参考库进行拟合，因为现在这个位置目测已到机械臂的极限，可以夹取除兵以外的其他全部棋子。",
+    "scope": "operator-approved empty-load motion/reference; grasping of non-pawn pieces considered feasible by visual observation",
+    "closed_gripper_loaded_grasp_verified": false,
+    "mechanical_limit_status": "operator visual estimate; not a measured hard limit"
+  },
+  "fitting_qualification": {
+    "geometry_target_labels": false,
+    "quasi_static_torque_proxy": true,
+    "calibrated_gravity_measurement": false,
+    "new_inertia_measurement": false,
+    "physical_TCP_measurement": false,
+    "nominal_requested_XYZ_not_used_as_ground_truth": true
+  }
+}

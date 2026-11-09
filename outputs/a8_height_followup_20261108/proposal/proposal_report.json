@@ -1,0 +1,577 @@
+{
+  "schema": 1,
+  "status": "complete-inactive-geometric-proposal",
+  "motion_issued": false,
+  "hardware_accessed": false,
+  "network_accessed": false,
+  "executable": false,
+  "approved_reference": false,
+  "active_configuration_modified": false,
+  "physical_acceptance": null,
+  "mechanical_qualification_pending": true,
+  "full_model_pose_proposal_only": true,
+  "nominal_A8_geometry_consistency_resolved": false,
+  "measured_physical_contact_datum_mm": null,
+  "source_sha256": {
+    "outputs/a8_v33_execution_20261108/source_snapshot/scripts/data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "outputs/a8_v33_execution_20261108/source_snapshot/scripts/data/left_arm_board_workspace_candidate.json": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+    "outputs/a8_v33_execution_20261108/source_snapshot/scripts/left_arm_board_grasp.py": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+    "outputs/a8_v33_execution_20261108/source_snapshot/scripts/left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "outputs/a8_v33_execution_20261108/source_snapshot/scripts/left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "outputs/a8_v33_execution_20261108/source_snapshot/scripts/left_arm_trajectory_support.py": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "outputs/a8_height_followup_20261108/proposal/prepare_offline_lower25_proposal.py": "ffa73c7ddbfe5907c2f110fd45b6844ee5343eb84c2afc79a5f91e2f03583256"
+  },
+  "candidate_policy": {
+    "front_lower_software_extension_deg": 12.0,
+    "other_six_bounds_unchanged": true,
+    "requested_new_full_frame_selection_max_deg": 15.0,
+    "requested_new_tool_axis_selection_max_deg": 15.0,
+    "strict_descent_full_frame_tolerance_rad": 0.005,
+    "position_tolerance_mm": 0.5,
+    "body_board_gripper_geometry_unchanged": true,
+    "planning_only_runtime_guard": true
+  },
+  "source_active_config_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+  "target_board_mm": [
+    11.798050592563328,
+    405.6006774366655,
+    59.622674457482844
+  ],
+  "selected_endpoint_encoder_rad": {
+    "shoulder_front": -0.35579286197115423,
+    "shoulder_side": -2.8620925482592705,
+    "shoulder_rotate": 2.316930279016732,
+    "elbow": -1.1617292883020167,
+    "arm_roll": -2.590239564637296,
+    "wrist_side": 0.13921462220956504,
+    "wrist": -2.095460243054684
+  },
+  "selected_new_wrist_rotation_in_cad": [
+    [
+      0.3347135876647453,
+      0.937737955314098,
+      0.0928134763702542
+    ],
+    [
+      0.05186549560408257,
+      -0.1166784833688457,
+      0.9918145501476027
+    ],
+    [
+      0.9408914839652541,
+      -0.3271599894273183,
+      -0.08769011757079252
+    ]
+  ],
+  "selected_new_wrist_rotation_in_board": [
+    [
+      0.14980265851771227,
+      -0.00498939641118881,
+      -0.9887033273052526
+    ],
+    [
+      0.35777089659809447,
+      0.9324964198784331,
+      0.04950164099605751
+    ],
+    [
+      0.9217153297241076,
+      -0.36114475330171797,
+      0.14147550358355257
+    ]
+  ],
+  "new_full_frame_deviation_from_old_deg": 12.533472641134429,
+  "new_tool_axis_deviation_from_old_deg": 12.529580422603429,
+  "requested_frame": {
+    "source": "explicit NEW offline proposal frame; not an approved reference",
+    "wrist_rotation_in_cad": [
+      [
+        0.3347135876647453,
+        0.937737955314098,
+        0.0928134763702542
+      ],
+      [
+        0.05186549560408257,
+        -0.1166784833688457,
+        0.9918145501476027
+      ],
+      [
+        0.9408914839652541,
+        -0.3271599894273183,
+        -0.08769011757079252
+      ]
+    ],
+    "wrist_rotation_in_board": [
+      [
+        0.14980265851771227,
+        -0.00498939641118881,
+        -0.9887033273052526
+      ],
+      [
+        0.35777089659809447,
+        0.9324964198784331,
+        0.04950164099605751
+      ],
+      [
+        0.9217153297241076,
+        -0.36114475330171797,
+        0.14147550358355257
+      ]
+    ],
+    "original_frame_deviation_deg": 12.533472641134429,
+    "original_tool_axis_deviation_deg": 12.529580422603429,
+    "historical_global_selection_policy_passed": false,
+    "historical_axis_cone_deg": 10.0,
+    "historical_terminal_reference_tolerance_deg": 0.2864788975654116,
+    "historical_tolerance_unchanged_in_candidate_config": true,
+    "strict_descent_tracking_tolerance_rad": 0.005
+  },
+  "front_additional_lower_travel_deg": 9.402317846812617,
+  "forecast_clearance": {
+    "shoulder_front": 1.9357976913452148,
+    "shoulder_side": -2.7143893241882324,
+    "shoulder_rotate": 2.366483449935913,
+    "elbow": 0.8165484070777893,
+    "arm_roll": -2.649538516998291,
+    "wrist_side": 0.3057526648044586,
+    "wrist": -1.0313191413879395
+  },
+  "ordinary_clearance_executed_for_proposal": false,
+  "forecast_rotate_source": {
+    "file": "outputs/a8_v33_home_20261108/control_evidence/data/left_arm_v2_8_full_runs/arm_run_1794188707909_37371.txt",
+    "sha256": "80a753f0cdefb5bd1fc8d6fa3c92798d4503de13cd41603d77a72f346c1ae5bf",
+    "field": "final.shoulder_rotate.pos",
+    "actual_final_encoder_rad": 2.366483449935913,
+    "hold_finished_at": "2026-11-08 17:45:14"
+  },
+  "reverse_vertical_ik_calls": [
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        63.622674457482844
+      ],
+      "success": true,
+      "iterations": 2,
+      "position_error_mm": 0.1286156020994316,
+      "rotation_error_deg": 0.005030134416088759,
+      "maximum_joint_step_deg": 7.468921491679444,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        67.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.2680800129365878,
+      "rotation_error_deg": 0.009316185245893427,
+      "maximum_joint_step_deg": 3.8542359590602846,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        71.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.11907381743956658,
+      "rotation_error_deg": 0.004871951455871092,
+      "maximum_joint_step_deg": 2.5113648646964744,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        75.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.10487083863238561,
+      "rotation_error_deg": 0.004348359413224308,
+      "maximum_joint_step_deg": 2.3216005874431374,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        79.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.08262497889987189,
+      "rotation_error_deg": 0.003601344449574996,
+      "maximum_joint_step_deg": 2.022145374517073,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        83.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.0696571332340102,
+      "rotation_error_deg": 0.003142986293739747,
+      "maximum_joint_step_deg": 1.8232029492142714,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        87.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.060221996817026634,
+      "rotation_error_deg": 0.0027974289796053762,
+      "maximum_joint_step_deg": 1.6632379815884335,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        91.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.053227998523094545,
+      "rotation_error_deg": 0.002531253202539333,
+      "maximum_joint_step_deg": 1.5331303834555197,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        95.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.04784702481495417,
+      "rotation_error_deg": 0.002318559329960433,
+      "maximum_joint_step_deg": 1.4241406478746663,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        99.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.04359438394746433,
+      "rotation_error_deg": 0.002144003722332946,
+      "maximum_joint_step_deg": 1.330891460304853,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        103.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.04015883125467571,
+      "rotation_error_deg": 0.0019975913625860653,
+      "maximum_joint_step_deg": 1.2497088295318928,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        107.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.0373326816723698,
+      "rotation_error_deg": 0.0018725595212496081,
+      "maximum_joint_step_deg": 1.1780064188525194,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        111.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.03497225650753423,
+      "rotation_error_deg": 0.0017641656718741087,
+      "maximum_joint_step_deg": 1.1139053246564579,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        115.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.03297513019578365,
+      "rotation_error_deg": 0.0016689841067169615,
+      "maximum_joint_step_deg": 1.056004545581172,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        119.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.03126639825643152,
+      "rotation_error_deg": 0.0015844773826061032,
+      "maximum_joint_step_deg": 1.0032358363899243,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        123.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.029790070782938927,
+      "rotation_error_deg": 0.001508725175455438,
+      "maximum_joint_step_deg": 0.9547688122993561,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        127.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.02850349728047708,
+      "rotation_error_deg": 0.0014402469960446977,
+      "maximum_joint_step_deg": 0.9099470438341702,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        131.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.027373649635756624,
+      "rotation_error_deg": 0.0013778829163463688,
+      "maximum_joint_step_deg": 0.8682438937100162,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        135.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.02637458031245342,
+      "rotation_error_deg": 0.0013207112891881086,
+      "maximum_joint_step_deg": 0.8292312925695173,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        139.62267445748284
+      ],
+      "success": true,
+      "iterations": 1,
+      "position_error_mm": 0.025485644761449384,
+      "rotation_error_deg": 0.0012679907176676801,
+      "maximum_joint_step_deg": 0.7925572112209716,
+      "continuity_passed": true
+    },
+    {
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        140.0
+      ],
+      "success": true,
+      "iterations": 0,
+      "position_error_mm": 0.37830582699021265,
+      "rotation_error_deg": 0.0012679907176676801,
+      "maximum_joint_step_deg": 0.0,
+      "continuity_passed": true
+    }
+  ],
+  "reverse_vertical_branch_completed": true,
+  "hover_height_mm": 140.0,
+  "transit_blocked_attempts": [
+    {
+      "route": "direct",
+      "code": "gripper_surface_clearance",
+      "worst_pair": {
+        "code": "gripper_surface_clearance",
+        "capsule": "complete-CAD-gripper-envelope",
+        "obstacle": "global-board-height-halfspace",
+        "clearance_lower_bound_mm": -27.85053198063125,
+        "lowest_vertex_height_mm": -7.850531980631249,
+        "minimum_height_mm": 20.0,
+        "vertex_index": 100
+      },
+      "scene_registration_status": "nominal-old-chassis-registration; offline-only",
+      "physical_validation_complete": false
+    },
+    {
+      "route": "raised-entry",
+      "leg": "reference_to_goal",
+      "code": "gripper_surface_clearance",
+      "worst_pair": {
+        "code": "gripper_surface_clearance",
+        "capsule": "complete-CAD-gripper-envelope",
+        "obstacle": "global-board-height-halfspace",
+        "clearance_lower_bound_mm": -27.85053198063125,
+        "lowest_vertex_height_mm": -7.850531980631249,
+        "minimum_height_mm": 20.0,
+        "vertex_index": 100
+      },
+      "scene_registration_status": "nominal-old-chassis-registration; offline-only",
+      "physical_validation_complete": false
+    }
+  ],
+  "grouped_orientation": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 84,
+    "max_error_deg": 0.009316185245893989,
+    "tolerance_deg": 0.2864788975654116,
+    "checked_task_edge_samples": 62,
+    "max_joint_sample_step_deg": 0.5,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "grouped_gripper_clearance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 119.76565241419992,
+      "task": 39.76588920850675
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "dense_task_audit": {
+    "samples": 393,
+    "maximum_lateral_error_mm": 0.2465782327667226,
+    "maximum_strict_new_frame_error_deg": 0.009316185245893427,
+    "strict_tolerance_deg": 0.2864788975654116,
+    "minimum_height_mm": 59.622674457482766,
+    "maximum_height_mm": 139.62255358624603,
+    "descent_monotonic": true,
+    "maximum_joint_edge_step_deg": 7.468921491679444,
+    "fk_poe_max_matrix_error": 1.7763568394002505e-15
+  },
+  "posture_cost": 21.123261981294586,
+  "posture_metrics": {
+    "elbow_height_mean_mm": 200.4048111821718,
+    "elbow_height_peak_mm": 281.71863222376004,
+    "elbow_height_terminal_mm": 266.7264660623339,
+    "nominal_gravity_squared_mean_Nm2": 54.139043153870084,
+    "added_cost": 21.123261981294586,
+    "physical_load_independently_verified": false
+  },
+  "gravity_envelope": {
+    "version": 1,
+    "path_sha256": "24310133c320f267da2f7aed597a0b414586d7b3754e1ad99e0a10d84759273d",
+    "samples": 390,
+    "max_sample_step_deg": 0.5,
+    "headroom_Nm": 0.5,
+    "gravity_encoder_Nm": {
+      "shoulder_front": [
+        -9.1028642351558,
+        2.13733545919984
+      ],
+      "shoulder_side": [
+        -0.014435088335400983,
+        1.2346324083244162
+      ],
+      "shoulder_rotate": [
+        -0.7682939849778584,
+        0.11306120406283895
+      ],
+      "elbow": [
+        3.171546117815438,
+        4.041119416069444
+      ],
+      "arm_roll": [
+        -0.09352176517029658,
+        0.00821905483980003
+      ],
+      "wrist_side": [
+        0.01579088580204457,
+        0.13108307808713449
+      ],
+      "wrist": [
+        0.18427933229885787,
+        0.19717416806870944
+      ]
+    },
+    "physical_torque_rating_verified": false,
+    "scope": "sampled gravity range plus bounded residual headroom; runtime clipping retained"
+  },
+  "waypoints": 47,
+  "execution_groups": 23,
+  "transit_geometric_edges": 2,
+  "all_raw_and_grouped_edges_checked": true,
+  "maximum_raw_waypoint_joint_step_deg": 7.468921491679444,
+  "orientation": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 84,
+    "max_error_deg": 0.009316185245893989,
+    "tolerance_deg": 0.2864788975654116,
+    "checked_task_edge_samples": 62,
+    "max_joint_sample_step_deg": 0.5,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "gripper_clearance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 41.161131293980645,
+      "task": 39.76588920850675
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "complete_geometry_computed": true,
+  "proposal_plan_sha256": "e523271641c3460497332a6912f54892fc802a9905a37fc0e9a12503637423dc",
+  "proposal_config_sha256": "5d4fff6c3e818d2ea589306fdb794e7638a442d95cc1d553e9016c512267b364",
+  "failure": null,
+  "elapsed_s": 4.612622800006648,
+  "active_configuration_unchanged_at_finish": true,
+  "limitations": [
+    "Counterfactual software domain is not verified mechanical travel or execution permission.",
+    "No calibrated contact height, physical clearance, orientation suitability, or gripping success is established.",
+    "No prepared execution stamp; standard ordinary Clearance has only been forecast, not executed.",
+    "Fresh actual entry, current sources, load anchoring, support bounds, and separate movement authorization remain required."
+  ]
+}

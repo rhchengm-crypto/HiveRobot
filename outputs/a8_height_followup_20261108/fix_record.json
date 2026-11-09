@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "kind": "common-geometric-search-fix-and-inactive-height-proposal",
+  "recorded_at_utc": "2026-11-09T02:00:24.441090+00:00",
+  "status": "search fix deployed; lower-height new-frame proposal inactive and physically unvalidated",
+  "physical_validation_complete": false,
+  "fitting_eligible": false,
+  "successful_path_library_updated": false,
+  "Home": {
+    "completed": true,
+    "motion_log": "arm_run_1794188641610_37144.txt",
+    "hold_log": "arm_run_1794188707909_37371.txt",
+    "returncode": 0,
+    "following_hold_seconds": 5,
+    "operator_feedback": null,
+    "physical_vibration_free_claimed": false,
+    "evidence": "outputs/a8_v33_home_20261108/download_verification.json"
+  },
+  "fixed_defect": "axis-only seed objective did not match strict complete-wrist terminal constraint; full-frame seed search and candidate refinement added",
+  "numerical_acceptance_tolerances_relaxed": false,
+  "geometry_TCP_or_board_transform_changed": false,
+  "per_square_offset_added": false,
+  "stored_joint_trajectory_replayed": false,
+  "Kp_Kd_changed": false,
+  "persistent_learning_changed_by_fix": false,
+  "same_serial_Model_Hold_preserved": true,
+  "v33_quasistatic_support_preserved": true,
+  "ordinary_Clearance_skip_shoulder_rotate_preserved": true,
+  "local_regression": {
+    "passed": true,
+    "tests": 157,
+    "duration_s": 34.797,
+    "log": "outputs/a8_height_followup_20261108/regression_tests.log"
+  },
+  "Jetson_hardware_free_regression": {
+    "ok": true,
+    "tests_run": 27,
+    "failures": 0,
+    "errors": 0,
+    "guard_violations": [],
+    "serial_opened": false,
+    "sdk_constructed": false,
+    "motion_issued": false,
+    "modules": [
+      "test_left_arm_board_task_pose",
+      "test_left_arm_board_kinematics"
+    ],
+    "dependency_root": "/home/nvidia/hive_robot/DM_Control_Python",
+    "staged_source_root": "/home/nvidia/hive_robot/DM_Control_Python/data/deployment_staging/a8_height_followup_20261109T015644Z"
+  },
+  "deployed_source_sha256": {
+    "left_arm_board_task_pose.py": "856e96adba0da0f16069fa9b83ef55bc4d5daf7f27c873a39c4e1ba97b557cae",
+    "test_left_arm_board_task_pose.py": "5299506f22c435d513c9b4d97c1d73d009b4bbfc9f1103f40a5ad7c7222c9338"
+  },
+  "deployment_receipt": "outputs/a8_height_followup_20261108/deployment/deployment_receipt.json",
+  "height_diagnosis": {
+    "operator_gap_approximate_lower_bound_mm": 25,
+    "old_reference_endpoint_board_mm": [
+      11.798050592563328,
+      405.6006774366655,
+      84.62267445748284
+    ],
+    "explicit_lower_height_target_board_mm": [
+      11.798050592563328,
+      405.6006774366655,
+      59.622674457482844
+    ],
+    "previous_motion_to_new_motion_predicted_height_change_mm": 18.89253544,
+    "subsequent_same_serial_hold_predicted_height_change_mm": 0.443254,
+    "calibrated_physical_height_known": false,
+    "nominal_A8_XYZ_geometry_consistency_resolved": false,
+    "current_policy_lower_height_path_solved": false,
+    "mathematical_infeasibility_proven": false
+  },
+  "inactive_proposal": {
+    "report": "outputs/a8_height_followup_20261108/proposal/proposal_report.json",
+    "executable": false,
+    "deployed": false,
+    "executed": false,
+    "requested_new_full_frame_change_deg": 12.533472641134429,
+    "requested_new_tool_axis_change_deg": 12.529580422603429,
+    "proposed_common_front_lower_extension_deg": 12.0,
+    "other_six_bounds_unchanged": true,
+    "active_configuration_changed": false,
+    "mechanical_qualification_pending": true,
+    "same_geometry_and_strict_tracking_tolerances": true,
+    "independently_physically_validated": false
+  },
+  "further_robot_motion_after_Home": false,
+  "GitHub_pushed_this_turn": false,
+  "documentation": "outputs/a8_height_followup_20261108/README.md"
+}

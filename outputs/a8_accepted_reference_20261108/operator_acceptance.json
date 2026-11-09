@@ -1,0 +1,33 @@
+{
+  "recorded_at_utc": "2026-11-09T04:56:46.530077+00:00",
+  "original_response": "好的，那么我认为可以把此次运行标记为通过，并纳入参考库进行拟合，因为现在这个位置目测已到机械臂的极限，可以夹取除兵以外的其他全部棋子。",
+  "accepted": true,
+  "motion_accepted": true,
+  "gripping_height_acceptable": true,
+  "height_acceptance_scope": "operator-approved current height for non-pawn pieces",
+  "applicable_pieces": [
+    "king",
+    "queen",
+    "bishop",
+    "knight",
+    "rook"
+  ],
+  "excluded_pieces": [
+    "pawn"
+  ],
+  "applicability_source": "operator visual assessment; each piece type has not been separately grasped",
+  "jitter": false,
+  "lateral_drift_observed": false,
+  "contact": false,
+  "orientation_acceptable": true,
+  "hold_normal": true,
+  "extra_motion_observed": false,
+  "qualitative_only": true,
+  "grasp_verified": false,
+  "claw_closure_tested": false,
+  "loaded_lift_tested": false,
+  "operator_estimates_near_mechanical_limit": true,
+  "mechanical_limit_independently_measured": false,
+  "additional_descent_executed": false,
+  "new_motion_authorized": false
+}

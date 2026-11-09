@@ -1,0 +1,1234 @@
+{
+  "schema": 1,
+  "motion_issued": false,
+  "runtime_files_replaced": false,
+  "shared_model_only": true,
+  "per_square_fitting": false,
+  "trials": [
+    {
+      "id": "C4",
+      "log": "outputs/board_drift_20261102/motion_control_logs/data/left_arm_v2_8_full_runs/arm_run_1793681494917_16715.txt",
+      "log_sha256": "8df2ff3918c205728eafc2d019ba9ba24909a070931b5fb7bd9cc755149572a8",
+      "board_model": "outputs/board_drift_20261102/jetson_snapshot_v24_accepted/left_arm_board_grasp.json",
+      "board_model_sha256": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57",
+      "step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
+      "rigid_model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+      "tcp_in_wrist_frame_m": [
+        -0.010215463300623721,
+        0.1997668918780468,
+        0.021904245034910876
+      ],
+      "board_to_cad_rotation": [
+        [
+          -0.046302754020737025,
+          0.9987824858637735,
+          -0.017017664407195186
+        ],
+        [
+          -0.9722586014676807,
+          -0.04114985535744376,
+          0.230260507417508
+        ],
+        [
+          0.2292798875658347,
+          0.02720726623242941,
+          0.9729802145069314
+        ]
+      ],
+      "board_to_cad_translation_m": [
+        0.22795352401762897,
+        0.08193196324577177,
+        -0.13545217084322744
+      ],
+      "tcp_equal": true,
+      "board_transform_equal": true,
+      "requested_board_mm": [
+        113.8,
+        190.3,
+        50.2
+      ],
+      "encoder_pose_rad": {
+        "shoulder_front": 0.7211795449256897,
+        "shoulder_side": -2.903219699859619,
+        "shoulder_rotate": 2.5263218879699707,
+        "elbow": 0.47550925612449646,
+        "arm_roll": -2.650301456451416,
+        "wrist_side": 0.1997024416923523,
+        "wrist": -2.967689037322998
+      },
+      "measured_torque_Nm": {
+        "shoulder_front": -5.340170860290527,
+        "shoulder_side": -0.7589743733406067,
+        "shoulder_rotate": 0.17338217794895172,
+        "elbow": 5.982905864715576,
+        "arm_roll": 0.09035409241914749,
+        "wrist_side": -0.05616605654358864,
+        "wrist": 0.4908424913883209
+      },
+      "operator_acceptance": "operator accepted ~2mm B drift and visible board gap; exact grasp height was not measured",
+      "independent_fitting_pose_count": 1,
+      "own_frame_encoder_FK_mm": [
+        113.0224928203304,
+        188.17644580636085,
+        44.08149898194568
+      ],
+      "common_frame_encoder_FK_mm": [
+        113.0224928203304,
+        188.17644580636085,
+        44.08149898194568
+      ],
+      "model_FK_minus_request_mm": [
+        -0.7775071796695983,
+        -2.1235541936391655,
+        -6.1185010180543244
+      ],
+      "external_TCP_measurement": false,
+      "nominal_joint_error_deg": 0.5405221400089851,
+      "stable_hold": {
+        "duration_s": 5.035646438598633,
+        "max_velocity_rad_s": 0.03663003817200661,
+        "source": "hold-result-final-feedback",
+        "complete_frames": 1,
+        "position_span_deg": null,
+        "torque_mad_Nm": null
+      },
+      "fitting_qualification": {
+        "geometry_target_labels": false,
+        "quasi_static_torque_proxy": true,
+        "calibrated_gravity_measurement": false,
+        "new_inertia_measurement": false,
+        "limitations": [
+          "motor feedback torque is not external force measurement",
+          "stiction/history not independently removed",
+          "C4/C5 have summary endpoint only; no dense final-window variability",
+          "matching stored board transforms does not establish absence of physical board movement"
+        ]
+      },
+      "body_policy": null,
+      "joint_limits": [
+        [
+          0.10718675940139713,
+          2.1103306165446476
+        ],
+        [
+          -3.122766768049164,
+          -2.1797434934864803
+        ],
+        [
+          1.6994657167683405,
+          2.9232550016154484
+        ],
+        [
+          -1.4702146402110297,
+          1.0170216909159857
+        ],
+        [
+          -3.421080624174042,
+          -2.3483554968128963
+        ],
+        [
+          -0.718707775186463,
+          0.5848098746051031
+        ],
+        [
+          -3.4836426130046085,
+          -0.8567862161885065
+        ]
+      ]
+    },
+    {
+      "id": "C5",
+      "log": "outputs/c5_test_20261106/accepted_jetson_raw/data/left_arm_v2_8_full_runs/arm_run_1794009150847_13024.txt",
+      "log_sha256": "45f702138b243ab118586842a64172d47ca6523c5725bfe02544dfe4ab532b6b",
+      "board_model": "outputs/c5_test_20261106/accepted_jetson_raw/data/left_arm_board_grasp.json",
+      "board_model_sha256": "d8c7a069414937aceef9f83222822a6891701e263b35ef4af44aa603cc91146a",
+      "step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
+      "rigid_model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+      "tcp_in_wrist_frame_m": [
+        -0.010215463300623721,
+        0.1997668918780468,
+        0.021904245034910876
+      ],
+      "board_to_cad_rotation": [
+        [
+          -0.046302754020737025,
+          0.9987824858637735,
+          -0.017017664407195186
+        ],
+        [
+          -0.9722586014676807,
+          -0.04114985535744376,
+          0.230260507417508
+        ],
+        [
+          0.2292798875658347,
+          0.02720726623242941,
+          0.9729802145069314
+        ]
+      ],
+      "board_to_cad_translation_m": [
+        0.22795352401762897,
+        0.08193196324577177,
+        -0.13545217084322744
+      ],
+      "tcp_equal": true,
+      "board_transform_equal": true,
+      "requested_board_mm": [
+        137.5,
+        247.5,
+        30.2
+      ],
+      "encoder_pose_rad": {
+        "shoulder_front": 0.5510414242744446,
+        "shoulder_side": -2.907034397125244,
+        "shoulder_rotate": 2.4214160442352295,
+        "elbow": 0.13942931592464447,
+        "arm_roll": -2.6575493812561035,
+        "wrist_side": -0.048256658017635345,
+        "wrist": -2.600327968597412
+      },
+      "measured_torque_Nm": {
+        "shoulder_front": -5.203418731689453,
+        "shoulder_side": -0.7589743733406067,
+        "shoulder_rotate": 0.14896215498447418,
+        "elbow": 3.9589743614196777,
+        "arm_roll": -0.26129427552223206,
+        "wrist_side": -0.26617828011512756,
+        "wrist": 0.5982906222343445
+      },
+      "operator_acceptance": "间隙足够，无横移，无抖动，夹持区域离板高度正好，这组很完美",
+      "independent_fitting_pose_count": 1,
+      "own_frame_encoder_FK_mm": [
+        136.6811244782572,
+        247.18518658275622,
+        29.04023475724032
+      ],
+      "common_frame_encoder_FK_mm": [
+        136.6811244782572,
+        247.18518658275622,
+        29.04023475724032
+      ],
+      "model_FK_minus_request_mm": [
+        -0.8188755217427968,
+        -0.31481341724378353,
+        -1.1597652427596792
+      ],
+      "external_TCP_measurement": false,
+      "nominal_joint_error_deg": 0.1952226742833689,
+      "stable_hold": {
+        "duration_s": 5.019359827041626,
+        "max_velocity_rad_s": 0.03663003817200661,
+        "source": "hold-result-final-feedback",
+        "complete_frames": 1,
+        "position_span_deg": null,
+        "torque_mad_Nm": null
+      },
+      "fitting_qualification": {
+        "geometry_target_labels": false,
+        "quasi_static_torque_proxy": true,
+        "calibrated_gravity_measurement": false,
+        "new_inertia_measurement": false,
+        "limitations": [
+          "motor feedback torque is not external force measurement",
+          "stiction/history not independently removed",
+          "C4/C5 have summary endpoint only; no dense final-window variability",
+          "matching stored board transforms does not establish absence of physical board movement"
+        ]
+      },
+      "body_policy": null,
+      "joint_limits": [
+        [
+          0.10718675940139713,
+          2.1103306165446476
+        ],
+        [
+          -2.97684,
+          -2.1797434934864803
+        ],
+        [
+          1.6994657167683405,
+          2.42638
+        ],
+        [
+          -1.4702146402110297,
+          1.0170216909159857
+        ],
+        [
+          -3.421080624174042,
+          -2.3483554968128963
+        ],
+        [
+          -0.718707775186463,
+          0.5848098746051031
+        ],
+        [
+          -3.4836426130046085,
+          -0.8567862161885065
+        ]
+      ]
+    },
+    {
+      "id": "B3",
+      "log": "outputs/board_workspace_20261106/height20_trial_evidence/arm_run_1794030889770_57622.txt",
+      "log_sha256": "5668e694f6358f82563ce0009f73b62a2486f6035a8d0e6c6e1cd0e302174167",
+      "board_model": "scripts/data/left_arm_board_workspace_candidate.json",
+      "board_model_sha256": "d2b692b52065f66178f84dfa52bb211397da3da57a4a9e3c58e124b12d959e12",
+      "step_sha256": "f7729567ef511d1d9dc38b250dcd276ab09b7aa84fff98f49c0e068971ef9718",
+      "rigid_model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+      "tcp_in_wrist_frame_m": [
+        -0.010215463300623721,
+        0.1997668918780468,
+        0.021904245034910876
+      ],
+      "board_to_cad_rotation": [
+        [
+          -0.046302754020737025,
+          0.9987824858637735,
+          -0.017017664407195186
+        ],
+        [
+          -0.9722586014676807,
+          -0.04114985535744376,
+          0.230260507417508
+        ],
+        [
+          0.2292798875658347,
+          0.02720726623242941,
+          0.9729802145069314
+        ]
+      ],
+      "board_to_cad_translation_m": [
+        0.22795352401762897,
+        0.08193196324577177,
+        -0.13545217084322744
+      ],
+      "tcp_equal": true,
+      "board_transform_equal": true,
+      "requested_board_mm": [
+        82.5,
+        137.5,
+        20.2
+      ],
+      "encoder_pose_rad": {
+        "shoulder_front": 0.7719157934188843,
+        "shoulder_side": -2.790684461593628,
+        "shoulder_rotate": 2.015526056289673,
+        "elbow": 0.4247730076313019,
+        "arm_roll": -2.8177690505981445,
+        "wrist_side": -0.7017242908477783,
+        "wrist": -2.9112305641174316
+      },
+      "measured_torque_Nm": {
+        "shoulder_front": -3.5213675498962402,
+        "shoulder_side": 1.8940171003341675,
+        "shoulder_rotate": -0.10989011079072952,
+        "elbow": 3.548717975616455,
+        "arm_roll": -0.9890109896659851,
+        "wrist_side": -0.08058608323335648,
+        "wrist": 0.5250305533409119
+      },
+      "operator_acceptance": "无抖动，无触碰，无横移 一切正常，可以记录验证参与数据拟合",
+      "independent_fitting_pose_count": 1,
+      "own_frame_encoder_FK_mm": [
+        75.48818428444983,
+        142.91394433633252,
+        22.86010981342597
+      ],
+      "common_frame_encoder_FK_mm": [
+        75.48818428444983,
+        142.91394433633252,
+        22.86010981342597
+      ],
+      "model_FK_minus_request_mm": [
+        -7.011815715550171,
+        5.41394433633252,
+        2.660109813425972
+      ],
+      "external_TCP_measurement": false,
+      "nominal_joint_error_deg": 2.1857280249507336,
+      "stable_hold": {
+        "duration_s": 5.025837421417236,
+        "max_velocity_rad_s": 0.03663003817200661,
+        "source": "median of final stable same-serial hold; first .75s excluded",
+        "complete_frames": 103,
+        "position_span_deg": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.021856605344040804,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.021856605344040804,
+          "wrist": 0.021856605344040804
+        },
+        "torque_mad_Nm": {
+          "shoulder_front": 0.0,
+          "shoulder_side": 0.0,
+          "shoulder_rotate": 0.004884004592895508,
+          "elbow": 0.0,
+          "arm_roll": 0.0,
+          "wrist_side": 0.0,
+          "wrist": 0.0
+        }
+      },
+      "fitting_qualification": {
+        "geometry_target_labels": false,
+        "quasi_static_torque_proxy": true,
+        "calibrated_gravity_measurement": false,
+        "new_inertia_measurement": false,
+        "limitations": [
+          "motor feedback torque is not external force measurement",
+          "stiction/history not independently removed",
+          "C4/C5 have summary endpoint only; no dense final-window variability",
+          "matching stored board transforms does not establish absence of physical board movement"
+        ]
+      },
+      "body_policy": {
+        "schema": 1,
+        "enabled": true,
+        "frame": "cad_base",
+        "physically_validated": false,
+        "registration_status": "nominal-old-chassis-registration; offline-only",
+        "provenance": {
+          "source_files": {
+            "scripts\\data\\left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+            "scripts\\data\\left_arm_board_grasp.json": "ab04a41a1d3aa84389a6bda6bb4313fb12f5018ce714f3d398651cfb7963dd57",
+            "roboparty_rpo_hardware\\rpo_hardware-main\\V2.0\\roboto_origin_mechanic\\03_URDF\\urdf\\roboto_origin.urdf": "310e74493a6fc29d07b58286d6891f1cd3c0b82107c53e7a20d071efa9ea0ab9",
+            "roboparty_rpo_hardware\\rpo_hardware-main\\V2.0\\roboto_origin_mechanic\\03_URDF\\meshes\\torso_link.STL": "c0aef7f4c5eff6c469f868764dd5c0f5e037e3c44c86bffae7acf76cf6183d19"
+          },
+          "method": "align first shoulder axis line and nominal up; fit free axial translation to second shoulder axis line; mesh AABB becomes OBB",
+          "frame_registration_physically_verified": false,
+          "pitch_axis_nominal_up_dot_abs": 1.067229243015807e-17,
+          "initial_coordinate_origin_difference_mm": [
+            3.5468531000009667,
+            -9.011916575576318,
+            3.496135092273617
+          ],
+          "initial_coordinate_origin_difference_norm_mm": 10.296492988467515,
+          "origin_difference_is_not_physical_mounting_error": true,
+          "first_axis_free_axial_translation_mm": -9.354360304454561,
+          "second_axis_line_residual_mm": [
+            0.037829363576197254,
+            0.33797503528912776,
+            1.9167516694196631
+          ],
+          "second_axis_line_residual_norm_mm": 1.9466882512231722,
+          "second_axis_direction_disagreement_deg": 2.36312393623472,
+          "mesh_bounds_in_torso_frame_m": [
+            [
+              -0.10869999974966049,
+              -0.125,
+              -0.01599999889731407
+            ],
+            [
+              0.08243308961391449,
+              0.125,
+              0.24167586863040924
+            ]
+          ],
+          "torso_to_cad_rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              -0.0,
+              0.9848077529548818,
+              0.17364817799204443
+            ],
+            [
+              0.0,
+              -0.17364817799204443,
+              0.9848077529548817
+            ]
+          ],
+          "torso_to_cad_translation_m": [
+            -0.038,
+            -0.06875355129412734,
+            0.05117534518241521
+          ],
+          "limitations": [
+            "old five-axis chassis mesh is not the approved seven-axis assembly",
+            "chassis mounting registration requires verification before hardware use",
+            "30mm link-axis capsules are simplified; motors, wires, supports and finger sweep are incomplete",
+            "no new exact Cartesian measurements were inferred from qualitative C4/C5 observations"
+          ]
+        },
+        "obstacles": [
+          {
+            "name": "torso_mesh_obb",
+            "center_m": [
+              -0.051133455067873,
+              -0.04915944949616637,
+              0.16229901826640925
+            ],
+            "axes_in_cad": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.0,
+                0.9848077529548818,
+                0.17364817799204443
+              ],
+              [
+                0.0,
+                -0.17364817799204443,
+                0.9848077529548817
+              ]
+            ],
+            "half_extents_m": [
+              0.09556654468178749,
+              0.125,
+              0.12883793376386166
+            ]
+          }
+        ],
+        "capsules": [
+          {
+            "name": "shoulder_rotate-to-elbow",
+            "start_index": 2,
+            "end_index": 3,
+            "radius_m": 0.03,
+            "margin_m": 0.005
+          },
+          {
+            "name": "elbow-to-arm_roll",
+            "start_index": 3,
+            "end_index": 4,
+            "radius_m": 0.03,
+            "margin_m": 0.005
+          },
+          {
+            "name": "arm_roll-to-wrist_side",
+            "start_index": 4,
+            "end_index": 5,
+            "radius_m": 0.03,
+            "margin_m": 0.005
+          },
+          {
+            "name": "wrist_side-to-wrist",
+            "start_index": 5,
+            "end_index": 6,
+            "radius_m": 0.03,
+            "margin_m": 0.005
+          },
+          {
+            "name": "wrist-to-tcp",
+            "start_index": 6,
+            "end_index": 7,
+            "radius_m": 0.03,
+            "margin_m": 0.005
+          }
+        ]
+      },
+      "joint_limits": [
+        [
+          0.10718675940139713,
+          2.1103306165446476
+        ],
+        [
+          -3.122766768049164,
+          -2.1797434934864803
+        ],
+        [
+          1.6994657167683405,
+          2.9232550016154484
+        ],
+        [
+          -1.4702146402110297,
+          0.838674008846283
+        ],
+        [
+          -3.421080624174042,
+          -2.3483554968128963
+        ],
+        [
+          -0.718707775186463,
+          0.5848098746051031
+        ],
+        [
+          -3.4836426130046085,
+          -0.8567862161885065
+        ]
+      ]
+    }
+  ],
+  "baseline_fit_reproduction_tensor_max_error": 0.0,
+  "baseline_training": {
+    "gravity_records_used": 73,
+    "unique_inertia_records_used": 29,
+    "inertia_records": [
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:22:43",
+        "label": "shoulder_front_home_step_positive",
+        "effective_inertia": 0.16079633681167171
+      },
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:23:45",
+        "label": "shoulder_front_home_step_positive_repeat2",
+        "effective_inertia": 0.18472564713038625
+      },
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:31:52",
+        "label": "shoulder_front_clearance_step_positive",
+        "effective_inertia": 0.2800788630107806
+      },
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:32:39",
+        "label": "shoulder_front_clearance_step_positive_repeat2",
+        "effective_inertia": 0.261309267008994
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:15:46",
+        "label": "shoulder_side_home_step_positive_repeat2",
+        "effective_inertia": 0.4246522923264835
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:17:11",
+        "label": "shoulder_side_home_step_positive_repeat3",
+        "effective_inertia": 0.4101764398651533
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:18:58",
+        "label": "shoulder_side_clearance_step_positive",
+        "effective_inertia": 0.15002050657557808
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:20:06",
+        "label": "shoulder_side_clearance_step_positive_repeat2",
+        "effective_inertia": 0.1723461846799389
+      },
+      {
+        "joint": "shoulder_rotate",
+        "captured_at": "2026-10-15 13:54:34",
+        "label": "shoulder_rotate_home_step_positive_kp18",
+        "effective_inertia": 0.009687070682629648
+      },
+      {
+        "joint": "shoulder_rotate",
+        "captured_at": "2026-10-15 13:56:37",
+        "label": "shoulder_rotate_home_step_negative_kp18",
+        "effective_inertia": 0.00903788780178258
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-13 17:32:38",
+        "label": "elbow_home_step_reprocessed",
+        "effective_inertia": 0.04776166937253475
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-13 17:56:44",
+        "label": "elbow_clearance_step_positive_reprocessed",
+        "effective_inertia": 0.21221605780551
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-13 18:00:16",
+        "label": "elbow_clearance_step_positive",
+        "effective_inertia": 0.18472564713038625
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-14 13:46:40",
+        "label": "elbow_d4_grasp_step_positive",
+        "effective_inertia": 0.2899633417483065
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-14 13:50:38",
+        "label": "elbow_d4_grasp_step_positive_repeat2",
+        "effective_inertia": 0.2899633417483065
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:08:00",
+        "label": "arm_roll_home_step_positive_kp12",
+        "effective_inertia": 0.009687070682629648
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:10:09",
+        "label": "arm_roll_home_step_positive_kp12_repeat2",
+        "effective_inertia": 0.010382883752081379
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:11:05",
+        "label": "arm_roll_home_step_negative_kp12",
+        "effective_inertia": 0.007867122262756333
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:13:38",
+        "label": "arm_roll_clearance_step_positive_kp12",
+        "effective_inertia": 0.00903788780178258
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:14:25",
+        "label": "arm_roll_clearance_step_positive_kp12_repeat2",
+        "effective_inertia": 0.00903788780178258
+      },
+      {
+        "joint": "wrist_side",
+        "captured_at": "2026-10-15 14:28:01",
+        "label": "wrist_side_home_step_positive_kp8",
+        "effective_inertia": 0.020068294251632784
+      },
+      {
+        "joint": "wrist_side",
+        "captured_at": "2026-10-15 14:32:48",
+        "label": "wrist_side_home_step_positive_kp8_repeat2_rehome",
+        "effective_inertia": 0.01938419181774353
+      },
+      {
+        "joint": "wrist_side",
+        "captured_at": "2026-10-16 13:40:54",
+        "label": "wrist_side_clearance_step_negative_kp16_kd1",
+        "effective_inertia": 0.029390084641925343
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 20:58:28",
+        "label": "wrist_home_step_positive_kp10",
+        "effective_inertia": 0.01746865284734181
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:01:28",
+        "label": "wrist_home_step_positive_kp10_repeat3_reprocessed",
+        "effective_inertia": 0.016297984153833715
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:04:03",
+        "label": "wrist_home_step_negative_kp10",
+        "effective_inertia": 0.020068294251632784
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:13:30",
+        "label": "wrist_clearance_step_positive_kp10",
+        "effective_inertia": 0.021509780731846884
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:14:08",
+        "label": "wrist_clearance_step_positive_kp10_repeat2",
+        "effective_inertia": 0.021509780731846884
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:18:02",
+        "label": "wrist_d4_step_positive_kp10_reprocessed",
+        "effective_inertia": 0.022268898960217446
+      }
+    ],
+    "fit_columns": 28,
+    "fit_design_rank": 20,
+    "iterations": 11,
+    "gravity_training_rmse_with_nuisance_Nm": 0.3900828094729635,
+    "effective_inertia_training_rmse_kg_m2": 0.09824524835861957,
+    "effective_inertia_median_relative_error": 0.14307073266770487,
+    "total_nominal_mass_kg": 3.6362952290668407,
+    "nominal_shape_radius_m": 0.0285,
+    "claw_CAD_bbox_center_m": [
+      -0.065849089745,
+      0.031821266443,
+      -0.420545278977
+    ],
+    "assumptions": [
+      "scalar closed-loop effective inertia approximates M_ii as a soft constraint",
+      "CAD segments use nonnegative cylinder mixtures at 20/50/80 percent",
+      "claw bounding-box centre defines only a nominal mass distribution, not a measured COM or TCP",
+      "diagonal residual inertias are fitted nuisance drive/shape priors, not measured rotor inertias",
+      "static offset and approach nuisance terms are not deployed feedforward",
+      "rank deficiency is regularized; the inferred masses are not uniquely identified"
+    ],
+    "physical_parameters_independently_verified": false,
+    "link_mass_interpretation": "effective lumped bodies; near-zero fitted mass does not mean the physical link is absent",
+    "fit_is_not_hardware_validation": true
+  },
+  "augmented_training": {
+    "gravity_records_used": 94,
+    "unique_inertia_records_used": 29,
+    "inertia_records": [
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:22:43",
+        "label": "shoulder_front_home_step_positive",
+        "effective_inertia": 0.16079633681167171
+      },
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:23:45",
+        "label": "shoulder_front_home_step_positive_repeat2",
+        "effective_inertia": 0.18472564713038625
+      },
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:31:52",
+        "label": "shoulder_front_clearance_step_positive",
+        "effective_inertia": 0.2800788630107806
+      },
+      {
+        "joint": "shoulder_front",
+        "captured_at": "2026-10-14 14:32:39",
+        "label": "shoulder_front_clearance_step_positive_repeat2",
+        "effective_inertia": 0.261309267008994
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:15:46",
+        "label": "shoulder_side_home_step_positive_repeat2",
+        "effective_inertia": 0.4246522923264835
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:17:11",
+        "label": "shoulder_side_home_step_positive_repeat3",
+        "effective_inertia": 0.4101764398651533
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:18:58",
+        "label": "shoulder_side_clearance_step_positive",
+        "effective_inertia": 0.15002050657557808
+      },
+      {
+        "joint": "shoulder_side",
+        "captured_at": "2026-10-15 13:20:06",
+        "label": "shoulder_side_clearance_step_positive_repeat2",
+        "effective_inertia": 0.1723461846799389
+      },
+      {
+        "joint": "shoulder_rotate",
+        "captured_at": "2026-10-15 13:54:34",
+        "label": "shoulder_rotate_home_step_positive_kp18",
+        "effective_inertia": 0.009687070682629648
+      },
+      {
+        "joint": "shoulder_rotate",
+        "captured_at": "2026-10-15 13:56:37",
+        "label": "shoulder_rotate_home_step_negative_kp18",
+        "effective_inertia": 0.00903788780178258
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-13 17:32:38",
+        "label": "elbow_home_step_reprocessed",
+        "effective_inertia": 0.04776166937253475
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-13 17:56:44",
+        "label": "elbow_clearance_step_positive_reprocessed",
+        "effective_inertia": 0.21221605780551
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-13 18:00:16",
+        "label": "elbow_clearance_step_positive",
+        "effective_inertia": 0.18472564713038625
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-14 13:46:40",
+        "label": "elbow_d4_grasp_step_positive",
+        "effective_inertia": 0.2899633417483065
+      },
+      {
+        "joint": "elbow",
+        "captured_at": "2026-10-14 13:50:38",
+        "label": "elbow_d4_grasp_step_positive_repeat2",
+        "effective_inertia": 0.2899633417483065
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:08:00",
+        "label": "arm_roll_home_step_positive_kp12",
+        "effective_inertia": 0.009687070682629648
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:10:09",
+        "label": "arm_roll_home_step_positive_kp12_repeat2",
+        "effective_inertia": 0.010382883752081379
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:11:05",
+        "label": "arm_roll_home_step_negative_kp12",
+        "effective_inertia": 0.007867122262756333
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:13:38",
+        "label": "arm_roll_clearance_step_positive_kp12",
+        "effective_inertia": 0.00903788780178258
+      },
+      {
+        "joint": "arm_roll",
+        "captured_at": "2026-10-15 14:14:25",
+        "label": "arm_roll_clearance_step_positive_kp12_repeat2",
+        "effective_inertia": 0.00903788780178258
+      },
+      {
+        "joint": "wrist_side",
+        "captured_at": "2026-10-15 14:28:01",
+        "label": "wrist_side_home_step_positive_kp8",
+        "effective_inertia": 0.020068294251632784
+      },
+      {
+        "joint": "wrist_side",
+        "captured_at": "2026-10-15 14:32:48",
+        "label": "wrist_side_home_step_positive_kp8_repeat2_rehome",
+        "effective_inertia": 0.01938419181774353
+      },
+      {
+        "joint": "wrist_side",
+        "captured_at": "2026-10-16 13:40:54",
+        "label": "wrist_side_clearance_step_negative_kp16_kd1",
+        "effective_inertia": 0.029390084641925343
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 20:58:28",
+        "label": "wrist_home_step_positive_kp10",
+        "effective_inertia": 0.01746865284734181
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:01:28",
+        "label": "wrist_home_step_positive_kp10_repeat3_reprocessed",
+        "effective_inertia": 0.016297984153833715
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:04:03",
+        "label": "wrist_home_step_negative_kp10",
+        "effective_inertia": 0.020068294251632784
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:13:30",
+        "label": "wrist_clearance_step_positive_kp10",
+        "effective_inertia": 0.021509780731846884
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:14:08",
+        "label": "wrist_clearance_step_positive_kp10_repeat2",
+        "effective_inertia": 0.021509780731846884
+      },
+      {
+        "joint": "wrist",
+        "captured_at": "2026-10-15 21:18:02",
+        "label": "wrist_d4_step_positive_kp10_reprocessed",
+        "effective_inertia": 0.022268898960217446
+      }
+    ],
+    "fit_columns": 28,
+    "fit_design_rank": 20,
+    "iterations": 12,
+    "gravity_training_rmse_with_nuisance_Nm": 0.4160150062789563,
+    "effective_inertia_training_rmse_kg_m2": 0.09903848319202126,
+    "effective_inertia_median_relative_error": 0.14962889400467158,
+    "total_nominal_mass_kg": 3.7731242281382498,
+    "nominal_shape_radius_m": 0.0285,
+    "claw_CAD_bbox_center_m": [
+      -0.065849089745,
+      0.031821266443,
+      -0.420545278977
+    ],
+    "assumptions": [
+      "scalar closed-loop effective inertia approximates M_ii as a soft constraint",
+      "CAD segments use nonnegative cylinder mixtures at 20/50/80 percent",
+      "claw bounding-box centre defines only a nominal mass distribution, not a measured COM or TCP",
+      "diagonal residual inertias are fitted nuisance drive/shape priors, not measured rotor inertias",
+      "static offset and approach nuisance terms are not deployed feedforward",
+      "rank deficiency is regularized; the inferred masses are not uniquely identified"
+    ],
+    "physical_parameters_independently_verified": false,
+    "link_mass_interpretation": "effective lumped bodies; near-zero fitted mass does not mean the physical link is absent",
+    "fit_is_not_hardware_validation": true,
+    "added_hold_proxy_records": 21,
+    "added_independent_pose_groups": 3,
+    "hold_proxy_experiments": [
+      "C4",
+      "C5",
+      "B3"
+    ],
+    "do_not_treat_as_measured_mass_properties": true
+  },
+  "grouped_cross_validation": [
+    {
+      "heldout_experiment": "C4",
+      "included_experiments": [
+        "C5",
+        "B3"
+      ],
+      "exclusion_rule": "exclude full experiment plus all historical seven-axis poses within 5deg max-axis distance",
+      "removed_history": {
+        "shoulder_front": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "shoulder_side": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "shoulder_rotate": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "elbow": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "arm_roll": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "wrist_side": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "wrist": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        }
+      },
+      "baseline": {
+        "residual_Nm": {
+          "shoulder_front": 1.2130107544655813,
+          "shoulder_side": -0.15231620071596375,
+          "shoulder_rotate": -0.10344264945095549,
+          "elbow": -1.6423655008317306,
+          "arm_roll": -0.2025202620969321,
+          "wrist_side": 0.0709774321618349,
+          "wrist": -0.20063430740683363
+        },
+        "rmse_Nm": 0.7827576265305441,
+        "train_only_nuisance_offset_Nm": {
+          "shoulder_front": 0.108051895768527,
+          "shoulder_side": 0.26408768272769795,
+          "shoulder_rotate": -0.12552919139533214,
+          "elbow": 0.40698357429740484,
+          "arm_roll": -0.07829245032852454,
+          "wrist_side": 0.027670273167259944,
+          "wrist": 0.13645957674717676
+        }
+      },
+      "augmented": {
+        "residual_Nm": {
+          "shoulder_front": 1.3098796787480618,
+          "shoulder_side": -0.08096891960062091,
+          "shoulder_rotate": -0.0718032535189144,
+          "elbow": -1.7839936668312557,
+          "arm_roll": -0.25850036312769453,
+          "wrist_side": 0.0269533252879063,
+          "wrist": -0.1474795517159166
+        },
+        "rmse_Nm": 0.8451059939358326,
+        "train_only_nuisance_offset_Nm": {
+          "shoulder_front": 0.2616201627608641,
+          "shoulder_side": 0.3223708443373088,
+          "shoulder_rotate": -0.09226054651142443,
+          "elbow": 0.3138728671754212,
+          "arm_roll": -0.13594390412299198,
+          "wrist_side": -0.014497234629184334,
+          "wrist": 0.1637078856414321
+        }
+      }
+    },
+    {
+      "heldout_experiment": "C5",
+      "included_experiments": [
+        "C4",
+        "B3"
+      ],
+      "exclusion_rule": "exclude full experiment plus all historical seven-axis poses within 5deg max-axis distance",
+      "removed_history": {
+        "shoulder_front": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "shoulder_side": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "shoulder_rotate": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "elbow": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "arm_roll": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "wrist_side": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "wrist": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        }
+      },
+      "baseline": {
+        "residual_Nm": {
+          "shoulder_front": -0.03508280515153572,
+          "shoulder_side": 0.09221097118882748,
+          "shoulder_rotate": -0.16833913266625256,
+          "elbow": 0.4669494811657886,
+          "arm_roll": 0.044579310861786736,
+          "wrist_side": 0.28429393005570813,
+          "wrist": -0.2852569625883127
+        },
+        "rmse_Nm": 0.2450351101085179,
+        "train_only_nuisance_offset_Nm": {
+          "shoulder_front": 0.108051895768527,
+          "shoulder_side": 0.26408768272769795,
+          "shoulder_rotate": -0.12552919139533214,
+          "elbow": 0.40698357429740484,
+          "arm_roll": -0.07829245032852454,
+          "wrist_side": 0.027670273167259944,
+          "wrist": 0.13645957674717676
+        }
+      },
+      "augmented": {
+        "residual_Nm": {
+          "shoulder_front": -0.2949216965338035,
+          "shoulder_side": 0.12310047254345347,
+          "shoulder_rotate": -0.15366865772461583,
+          "elbow": 0.6408408899297742,
+          "arm_roll": -0.023820486137179964,
+          "wrist_side": 0.28017657377601535,
+          "wrist": -0.2504430446141224
+        },
+        "rmse_Nm": 0.3112673822221335,
+        "train_only_nuisance_offset_Nm": {
+          "shoulder_front": 0.006537263469076267,
+          "shoulder_side": 0.3830480424359573,
+          "shoulder_rotate": -0.10123942103537589,
+          "elbow": 0.45157577543678024,
+          "arm_roll": -0.08364700307906246,
+          "wrist_side": 0.026776210797020864,
+          "wrist": 0.17421682108700762
+        }
+      }
+    },
+    {
+      "heldout_experiment": "B3",
+      "included_experiments": [
+        "C4",
+        "C5"
+      ],
+      "exclusion_rule": "exclude full experiment plus all historical seven-axis poses within 5deg max-axis distance",
+      "removed_history": {
+        "shoulder_front": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "shoulder_side": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "shoulder_rotate": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "elbow": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "arm_roll": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "wrist_side": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        },
+        "wrist": {
+          "gravity_samples": 0,
+          "inertia_samples": 0
+        }
+      },
+      "baseline": {
+        "residual_Nm": {
+          "shoulder_front": -0.3108406686906733,
+          "shoulder_side": -0.608087061557887,
+          "shoulder_rotate": -0.1876277206869117,
+          "elbow": 0.6887081896959728,
+          "arm_roll": 0.5718169133006334,
+          "wrist_side": 0.10941826296441688,
+          "wrist": -0.23382864540025416
+        },
+        "rmse_Nm": 0.44232142512740547,
+        "train_only_nuisance_offset_Nm": {
+          "shoulder_front": 0.108051895768527,
+          "shoulder_side": 0.26408768272769795,
+          "shoulder_rotate": -0.12552919139533214,
+          "elbow": 0.40698357429740484,
+          "arm_roll": -0.07829245032852454,
+          "wrist_side": 0.027670273167259944,
+          "wrist": 0.13645957674717676
+        }
+      },
+      "augmented": {
+        "residual_Nm": {
+          "shoulder_front": -0.5218029970337703,
+          "shoulder_side": -0.6287952685986884,
+          "shoulder_rotate": -0.16453956478956272,
+          "elbow": 0.8367010288983945,
+          "arm_roll": 0.5185479407190157,
+          "wrist_side": 0.08410204334636089,
+          "wrist": -0.19118623375274701
+        },
+        "rmse_Nm": 0.49386537120986684,
+        "train_only_nuisance_offset_Nm": {
+          "shoulder_front": -0.07526338075984342,
+          "shoulder_side": 0.28765006841763596,
+          "shoulder_rotate": -0.09827481587348362,
+          "elbow": 0.4672356873327721,
+          "arm_roll": -0.05197690166835453,
+          "wrist_side": 0.0006109810905321707,
+          "wrist": 0.17353624164390946
+        }
+      }
+    }
+  ],
+  "baseline_heldout_rmse_Nm": 0.5380210498373843,
+  "augmented_heldout_rmse_Nm": 0.593013358225583,
+  "decision": {
+    "runtime_model_promoted": false,
+    "reason": "Augmented fit worsens every held-out experiment. Only 3 grouped pose summaries; uncalibrated torque proxies and no independent XYZ labels.",
+    "geometry_refitted": false,
+    "geometry_reason": "No new externally measured TCP correspondences",
+    "next_motion_requires_operator_notification": true
+  },
+  "protected_runtime_sha256": {
+    "scripts/data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "scripts/data/left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+    "scripts/data/left_arm_board_workspace_candidate.json": "d2b692b52065f66178f84dfa52bb211397da3da57a4a9e3c58e124b12d959e12"
+  },
+  "heldout_rmse_change_percent": 10.221218743173699,
+  "every_heldout_fold_worse": true
+}

@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "record_kind": "completed_test_command_receipt",
+  "motion_issued": false,
+  "network_used": false,
+  "working_directory": "C:\\Users\\rhche\\OneDrive\\文档\\HiveRobot\\scripts",
+  "shell": "powershell",
+  "exact_command": "$env:OPENBLAS_NUM_THREADS='1'; $env:OMP_NUM_THREADS='1'; $env:MKL_NUM_THREADS='1'; python -m unittest test_left_arm_path_reference_scope test_left_arm_board_task_pose.TaskPoseTests.test_common_reference_bank_orders_by_fk_and_passes_requested_xyz test_left_arm_board_task_pose.TaskPoseTests.test_failed_primary_uses_nearest_validated_xy_and_resolves_new_target test_left_arm_board_task_pose.TaskPoseTests.test_reference_timeout_continues_but_total_deadline_still_stops",
+  "exit_code": 0,
+  "test_count": 9,
+  "new_scope_test_count": 6,
+  "existing_regression_test_count": 3,
+  "reported_unittest_duration_s": 0.514,
+  "reported_tool_wall_time_s": 1.7317898,
+  "captured_output": ".........\n----------------------------------------------------------------------\nRan 9 tests in 0.514s\n\nOK\n",
+  "provenance": "Recorded from the actual completed exec_command result in this task; tests were not rerun for this receipt.",
+  "source_sha256": {
+    "scripts/left_arm_board_task_pose.py": "15a91851e117b91d9a071bd907b6393c2537afb52e78f33a5f64964c5cc7a715",
+    "scripts/build_left_arm_path_reference_library.py": "4a66b445f7252706360bf31f5d22f8ef3da8eda30cfef6e62f21d2256498d8e8",
+    "scripts/test_left_arm_path_reference_scope.py": "57e246d1e66150b9ca57259c4ededb42d07be9c5b089c26d1dd97e4e1cb0bfb6"
+  },
+  "source_hash_timing": "Hashes read when recording the completed test receipt. The only subsequent edit to the new test file after this test command removed an unused hashlib import; task_pose and builder were unchanged by this agent after testing."
+}
