@@ -1,0 +1,47 @@
+{
+  "scope": "Historical model-FK height comparison only; not physical height or XY measurement",
+  "source_v33_audit": "outputs/a8_v33_execution_20261108/execution_audit.json",
+  "source_v33_audit_sha256": "dc97f70cfb2d67cc6b2db05eedb0e189739c3e783d8022134316a0154abedce7",
+  "source_saved_pose": "outputs/a8_saved_reference_20261108/saved_pose_audit.json",
+  "source_saved_pose_sha256": "35baf40f6a56b131322752ba91c0b8933977382cb280e0a0d4f3b3c4adb25a22",
+  "saved_A8_take_pose": {
+    "shoulder_front": -0.19169145822525024,
+    "shoulder_side": -2.854390859603882,
+    "shoulder_rotate": 2.3832685947418213,
+    "elbow": -0.9409094452857971,
+    "arm_roll": -2.6552605628967285,
+    "wrist_side": 0.17795833945274353,
+    "wrist": -1.9357976913452148
+  },
+  "previous_v33_model_predictions": {
+    "external_measurement": false,
+    "caveat": "All board positions and displacements below are FK predictions from encoders, not camera/physical displacement measurements.",
+    "board_mm": {
+      "planned_terminal": [
+        11.798050592563378,
+        405.6006774366654,
+        84.62267445748301
+      ],
+      "motion_endpoint_feedback": [
+        13.56259744452408,
+        405.60837587173614,
+        84.44678453192702
+      ],
+      "after_inline_hold_feedback": [
+        13.641015227275284,
+        405.69932634886504,
+        84.89003864603085
+      ],
+      "saved_A8_take": [
+        11.798050592563378,
+        405.6006774366654,
+        84.62267445748301
+      ]
+    },
+    "hold_minus_motion_endpoint_mm": [
+      0.07841778275120426,
+      0.09095047712889937,
+      0.44325411410382287
+    ]
+  }
+}

@@ -1,0 +1,238 @@
+{
+  "schema": 1,
+  "motion_issued": false,
+  "hardware_accessed": false,
+  "network_accessed": false,
+  "active_configuration_modified": false,
+  "source_active_board_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+  "cross_version_geometry_and_auditors": {
+    "left_arm_rigid_body.py": {
+      "frozen_sha256": "4ea8673a58ecde110e3bd2414eec4c7a6543dfd5546a54534734283e984f7cfd",
+      "current_sha256": "4ea8673a58ecde110e3bd2414eec4c7a6543dfd5546a54534734283e984f7cfd",
+      "same_bytes": true
+    },
+    "left_arm_board_kinematics.py": {
+      "frozen_sha256": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+      "current_sha256": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+      "same_bytes": true
+    },
+    "left_arm_board_collision.py": {
+      "frozen_sha256": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+      "current_sha256": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+      "same_bytes": true
+    },
+    "left_arm_board_grasp.py": {
+      "frozen_sha256": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+      "current_sha256": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+      "same_bytes": true
+    },
+    "left_arm_board_transit.py": {
+      "frozen_sha256": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f",
+      "current_sha256": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f",
+      "same_bytes": true
+    },
+    "left_arm_trajectory_support.py": {
+      "frozen_sha256": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+      "current_sha256": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+      "same_bytes": true
+    },
+    "data/left_arm_general_dynamics.json": {
+      "frozen_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+      "current_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+      "same_bytes": true
+    },
+    "data/left_arm_board_workspace_candidate.json": {
+      "frozen_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+      "current_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+      "same_bytes": true
+    }
+  },
+  "task_pose_batch_FK_AST_identical": true,
+  "old_task_pose_sha256": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+  "current_task_pose_sha256": "856e96adba0da0f16069fa9b83ef55bc4d5daf7f27c873a39c4e1ba97b557cae",
+  "task_pose_search_not_rerun": true,
+  "chosen_new_frame_explicit": true,
+  "strict_tracking_rotation_tolerance_rad": 0.005,
+  "trial_config_path": "outputs/a8_lower25_execution_20261108/common_trial_config.json",
+  "trial_config_sha256": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+  "main_configuration_not_replaced": true,
+  "planning_only_disabled_only_in_scoped_trial_copy": true,
+  "physical_validation_complete": false,
+  "physical_acceptance": null,
+  "approved_reference": false,
+  "source_proposal_plan_sha256": "e523271641c3460497332a6912f54892fc802a9905a37fc0e9a12503637423dc",
+  "source_proposal_config_sha256": "5d4fff6c3e818d2ea589306fdb794e7638a442d95cc1d553e9016c512267b364",
+  "status": "scoped-trial-preparation-complete-no-stamp",
+  "final_plan_produced": true,
+  "request": {
+    "x_mm": 11.798050592563328,
+    "y_mm": 405.6006774366655,
+    "piece": "white_knight",
+    "stage": "approach",
+    "grip_height_mm": 59.622674457482844
+  },
+  "target_board_mm": [
+    11.798050592563328,
+    405.6006774366655,
+    59.622674457482844
+  ],
+  "forecast_clearance": {
+    "shoulder_front": 1.9357976913452148,
+    "shoulder_side": -2.7143893241882324,
+    "shoulder_rotate": 2.3661019802093506,
+    "elbow": 0.8165484070777893,
+    "arm_roll": -2.649538516998291,
+    "wrist_side": 0.3057526648044586,
+    "wrist": -1.0313191413879395
+  },
+  "fresh_preflight_sha256": "77c987ea056f0b1cb2df88157f377e1886d9c03e58534f5f9359a74852f734fa",
+  "fresh_preflight_captured_wall_s": 1794198162.5795712,
+  "forecast_rotate_source": "fresh preflight feedback; ordinary Clearance preserves shoulder_rotate",
+  "forecast_differs_from_inactive_proposal_deg": {
+    "shoulder_front": 0.0,
+    "shoulder_side": 0.0,
+    "shoulder_rotate": -0.021856605344040804,
+    "elbow": 0.0,
+    "arm_roll": 0.0,
+    "wrist_side": 0.0,
+    "wrist": 0.0
+  },
+  "raw_waypoint_geometry_identical_to_proposal": true,
+  "raw_waypoints": 47,
+  "execution_groups": 24,
+  "new_requested_full_frame_deviation_deg": 12.533472641134425,
+  "new_requested_tool_axis_deviation_deg": 12.529580422603544,
+  "historical_global_selection_policy_passed": false,
+  "explicit_trial_frame_policy_passed": true,
+  "strict_full_frame_orientation": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 84,
+    "max_error_deg": 0.009316185245893989,
+    "tolerance_deg": 0.2864788975654116,
+    "checked_task_edge_samples": 62,
+    "max_joint_sample_step_deg": 0.5,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "gripper_clearance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 41.161131293980645,
+      "task": 39.76588920850675
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "grouped_orientation": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 84,
+    "max_error_deg": 0.009316185245893989,
+    "tolerance_deg": 0.2864788975654116,
+    "checked_task_edge_samples": 62,
+    "max_joint_sample_step_deg": 0.5,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "grouped_gripper_clearance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 65.02919368068103,
+      "task": 39.76588920850675
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "maximum_raw_joint_step_deg": 7.468921491679444,
+  "all_raw_and_grouped_swept_edges_checked": true,
+  "independent_FK_PoE_matrix_max_error": 1.5543122344752192e-15,
+  "planned_gravity_envelope": {
+    "version": 1,
+    "path_sha256": "1bc1266f7c548327d62f014212c5f69b297b083f1b5c1594ea3b58004625198d",
+    "samples": 390,
+    "max_sample_step_deg": 0.5,
+    "headroom_Nm": 0.5,
+    "gravity_encoder_Nm": {
+      "shoulder_front": [
+        -9.1028642351558,
+        2.137150710866298
+      ],
+      "shoulder_side": [
+        -0.013967895721517987,
+        1.2346324083244162
+      ],
+      "shoulder_rotate": [
+        -0.7682939849778584,
+        0.1119195009693089
+      ],
+      "elbow": [
+        3.1715721309804987,
+        4.041119416069444
+      ],
+      "arm_roll": [
+        -0.09352176517029658,
+        0.008094164567463289
+      ],
+      "wrist_side": [
+        0.01591663035357883,
+        0.13108307808713449
+      ],
+      "wrist": [
+        0.18427933229885787,
+        0.19717416806870944
+      ]
+    },
+    "physical_torque_rating_verified": false,
+    "scope": "sampled gravity range plus bounded residual headroom; runtime clipping retained"
+  },
+  "planned_gravity_independent_recomputation_equal": true,
+  "old_and_new_path_digest_equal": false,
+  "available_protected_sources_match_fresh_preflight": 29,
+  "absent_local_protected_sources": {
+    "DM_CAN.py": "b6bf4f053b397000c314bc58d49e0b6c5328a72880141d619d942809b81519fb"
+  },
+  "prepared_source_hashes": {
+    "rigid_model": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "board_model": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+    "planner": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+    "controller": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "motion_adapter": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "fault_support": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+    "kinematics": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "collision": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "trace": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "task_pose": "856e96adba0da0f16069fa9b83ef55bc4d5daf7f27c873a39c4e1ba97b557cae",
+    "static_support": "ce4d53088a9818a7c229f822c9d9d2bb5f826328982b2a859a284e04bbe3203d",
+    "trajectory_support": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "general_motion": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47"
+  },
+  "prepared_source_count": 13,
+  "base_prepared_sources_all_match_fresh_preflight": true,
+  "scoped_board_is_only_prepared_hash_difference_from_active_preflight": true,
+  "runtime_prepared_source_verification_after_upload_required": true,
+  "additional_local_only_frozen_dependencies": {
+    "left_arm_rigid_body.py": "4ea8673a58ecde110e3bd2414eec4c7a6543dfd5546a54534734283e984f7cfd",
+    "left_arm_board_transit.py": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f",
+    "left_arm_board_home_handoff.py": "0a341c4f34dddd0176c5229f33095d3bbb534616dd673bf8b7f6fa9e87f1a472"
+  },
+  "local_plan_sha256": "14aed8811d838fa3f56c5b27bbe1f72cc5cc676065eb4a595b0849341df326ed",
+  "board_model_sha256": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+  "prepared_execution_stamp_present": false,
+  "hardware_or_network_accessed": false,
+  "active_configuration_unchanged_at_finish": true,
+  "candidate_approach_trial_passed": true,
+  "claw_commanded": false,
+  "full_descent_included": true,
+  "remaining_runtime_checks": [
+    "root uploads scoped config/path and verifies bytes/current prepared13",
+    "root creates fresh stamp without changing chosen frame or raw path",
+    "actual ordinary Clearance, fresh entry load/stationary clocks and MIT-bounded support qualification",
+    "root authorized execution; record physical result separately from mathematical checks"
+  ],
+  "elapsed_s": 6.256238500005566
+}

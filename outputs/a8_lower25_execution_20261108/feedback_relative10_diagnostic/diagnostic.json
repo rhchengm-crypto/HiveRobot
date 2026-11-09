@@ -1,0 +1,919 @@
+{
+  "schema": 1,
+  "motion_issued": false,
+  "hardware_accessed": false,
+  "network_accessed": false,
+  "executable": false,
+  "active_config_or_source_modified": false,
+  "execution_stamp_produced": false,
+  "physical_acceptance": null,
+  "target_definition": "FK(actual final inline-hold feedback).boardXYZ + [0,0,-10]mm; complete frame frozen from the SAME actual feedback",
+  "actual_held_encoder_rad": {
+    "shoulder_front": -0.3553444743156433,
+    "shoulder_side": -2.8593499660491943,
+    "shoulder_rotate": 2.319943428039551,
+    "elbow": -1.1556801795959473,
+    "arm_roll": -2.5907912254333496,
+    "wrist_side": 0.14057374000549316,
+    "wrist": -2.096017360687256
+  },
+  "actual_held_model_board_mm": [
+    9.639697000830372,
+    406.65055148807676,
+    62.175188529761634
+  ],
+  "target_board_mm": [
+    9.639697000830372,
+    406.65055148807676,
+    52.175188529761634
+  ],
+  "desired_wrist_rotation_in_cad": [
+    [
+      0.3299853764795794,
+      0.9396991996777042,
+      0.08986136786580846
+    ],
+    [
+      0.04944787245201993,
+      -0.11226964126349667,
+      0.9924466915459677
+    ],
+    [
+      0.9426900653022711,
+      -0.3230494416891165,
+      -0.08351346600849084
+    ]
+  ],
+  "orientation_source": "actual inline_hold.final feedback FK, not previous requested frame",
+  "XY_held_model_coordinates_preserved": true,
+  "requested_model_vertical_change_mm": -10.0,
+  "calibrated_physical_contact_datum_mm": null,
+  "model_target_is_not_measured_board_datum": true,
+  "operator_gap_is_approximate_visual_observation": true,
+  "joint_limits_encoder_rad": {
+    "shoulder_front": [
+      -0.4011309684645698,
+      2.1103306165446476
+    ],
+    "shoulder_side": [
+      -3.122766768049164,
+      -2.1797434934864803
+    ],
+    "shoulder_rotate": [
+      1.6994657167683405,
+      2.9232550016154484
+    ],
+    "elbow": [
+      -1.4702146402110297,
+      0.838674008846283
+    ],
+    "arm_roll": [
+      -3.421080624174042,
+      -2.2558554503019352
+    ],
+    "wrist_side": [
+      -0.7890395152828359,
+      0.5848098746051031
+    ],
+    "wrist": [
+      -3.4836426130046085,
+      -0.8567862161885065
+    ]
+  },
+  "bounds_orientation_geometry_or_gains_relaxed": false,
+  "position_tolerance_mm": 0.5,
+  "full_frame_tolerance_rad": 0.005,
+  "attempts": [
+    {
+      "passed": false,
+      "position_error_mm": 4.094359290018949,
+      "strict_frame_error_rad": 0.0014685112909625395,
+      "strict_frame_error_deg": 0.08413949913946155,
+      "predicted_board_mm": [
+        9.797475260097668,
+        402.97527999701987,
+        53.97276008152026
+      ],
+      "residual_board_mm": [
+        0.15777825926729605,
+        -3.6752714910568898,
+        1.7975715517586295
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3618960373198703,
+        "shoulder_side": -2.855610696124039,
+        "shoulder_rotate": 1.9867701847700872,
+        "elbow": -1.1971023435309514,
+        "arm_roll": -2.25711378053674,
+        "wrist_side": 0.13184989255001153,
+        "wrist": -2.0606576074272622
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.198680367559593,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 2.247995964077669,
+          "to_upper": 141.6481532661867
+        },
+        "shoulder_side": {
+          "to_lower": 15.306915392603145,
+          "to_upper": 38.72433822244528
+        },
+        "shoulder_rotate": {
+          "to_lower": 16.461333451751493,
+          "to_upper": 53.6566275833211
+        },
+        "elbow": {
+          "to_lower": 15.648181932893293,
+          "to_upper": 116.641393023753
+        },
+        "arm_roll": {
+          "to_lower": 66.69038763358122,
+          "to_upper": 0.07209701168802186
+        },
+        "wrist_side": {
+          "to_lower": 52.763076467123774,
+          "to_upper": 25.952695260078254
+        },
+        "wrist": {
+          "to_lower": 81.53103512998186,
+          "to_upper": 68.97674979452341
+        }
+      },
+      "seed_index": 0,
+      "solver_success": false,
+      "iterations": 168
+    },
+    {
+      "passed": false,
+      "position_error_mm": 4.094240305422122,
+      "strict_frame_error_rad": 0.0014674631945309944,
+      "strict_frame_error_deg": 0.08407944763741129,
+      "predicted_board_mm": [
+        9.797498587577879,
+        402.9747301674588,
+        53.97136222867101
+      ],
+      "residual_board_mm": [
+        0.15780158674750666,
+        -3.675821320617956,
+        1.796173698909378
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3618676327633676,
+        "shoulder_side": -2.855604557890051,
+        "shoulder_rotate": 1.9861188070890639,
+        "elbow": -1.1970589785644952,
+        "arm_roll": -2.256461364460155,
+        "wrist_side": 0.13181653679476352,
+        "wrist": -2.0606619428026653
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.198987615945132,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 2.249623425284216,
+          "to_upper": 141.64652580498017
+        },
+        "shoulder_side": {
+          "to_lower": 15.307267087504307,
+          "to_upper": 38.72398652754412
+        },
+        "shoulder_rotate": {
+          "to_lower": 16.42401225975984,
+          "to_upper": 53.693948775312755
+        },
+        "elbow": {
+          "to_lower": 15.650666562449958,
+          "to_upper": 116.63890839419635
+        },
+        "arm_roll": {
+          "to_lower": 66.72776832125602,
+          "to_upper": 0.034716324013226725
+        },
+        "wrist_side": {
+          "to_lower": 52.76116532312559,
+          "to_upper": 25.954606404076436
+        },
+        "wrist": {
+          "to_lower": 81.53078673126865,
+          "to_upper": 68.97699819323662
+        }
+      },
+      "seed_index": 1,
+      "solver_success": false,
+      "iterations": 158
+    },
+    {
+      "passed": false,
+      "position_error_mm": 4.094108728058606,
+      "strict_frame_error_rad": 0.0014680634199913808,
+      "strict_frame_error_deg": 0.08411383802304773,
+      "predicted_board_mm": [
+        9.797398820015914,
+        402.9755162365802,
+        53.972679089861785
+      ],
+      "residual_board_mm": [
+        0.15770181918554194,
+        -3.675035251496581,
+        1.797490560100151
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.36186177711735307,
+        "shoulder_side": -2.8555943952627767,
+        "shoulder_rotate": 1.9854867926450819,
+        "elbow": -1.197046576412097,
+        "arm_roll": -2.2558554503019352,
+        "wrist_side": 0.13178877901416117,
+        "wrist": -2.060662189305287
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.199496304814604,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 2.24995892908717,
+          "to_upper": 141.6461903011772
+        },
+        "shoulder_side": {
+          "to_lower": 15.307849363155894,
+          "to_upper": 38.72340425189253
+        },
+        "shoulder_rotate": {
+          "to_lower": 16.387800499528364,
+          "to_upper": 53.73016053554423
+        },
+        "elbow": {
+          "to_lower": 15.65137715343925,
+          "to_upper": 116.63819780320705
+        },
+        "arm_roll": {
+          "to_lower": 66.76248464526925,
+          "to_upper": 0.0
+        },
+        "wrist_side": {
+          "to_lower": 52.759574919448426,
+          "to_upper": 25.9561968077536
+        },
+        "wrist": {
+          "to_lower": 81.53077260770878,
+          "to_upper": 68.97701231679649
+        }
+      },
+      "seed_index": 2,
+      "solver_success": false,
+      "iterations": 160
+    },
+    {
+      "passed": false,
+      "position_error_mm": 4.094606112477252,
+      "strict_frame_error_rad": 0.0014682726948005466,
+      "strict_frame_error_deg": 0.08412582858637133,
+      "predicted_board_mm": [
+        9.797323534996025,
+        402.9750788723807,
+        53.97292436779003
+      ],
+      "residual_board_mm": [
+        0.15762653416565264,
+        -3.6754726156960373,
+        1.7977358380283945
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3619129021223593,
+        "shoulder_side": -2.855629146111672,
+        "shoulder_rotate": 1.987961916504131,
+        "elbow": -1.197126554930297,
+        "arm_roll": -2.258304905597518,
+        "wrist_side": 0.13190064097333562,
+        "wrist": -2.0606637328472335
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.197756856400463,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 2.2470296820727267,
+          "to_upper": 141.64911954819163
+        },
+        "shoulder_side": {
+          "to_lower": 15.305858286179692,
+          "to_upper": 38.725395328868736
+        },
+        "shoulder_rotate": {
+          "to_lower": 16.52961465042401,
+          "to_upper": 53.58834638464859
+        },
+        "elbow": {
+          "to_lower": 15.646794721894683,
+          "to_upper": 116.64278023475163
+        },
+        "arm_roll": {
+          "to_lower": 66.62214119472638,
+          "to_upper": 0.1403434505428718
+        },
+        "wrist_side": {
+          "to_lower": 52.76598413759719,
+          "to_upper": 25.94978758960484
+        },
+        "wrist": {
+          "to_lower": 81.53068416926976,
+          "to_upper": 68.97710075523551
+        }
+      },
+      "seed_index": 3,
+      "solver_success": false,
+      "iterations": 148
+    },
+    {
+      "passed": false,
+      "position_error_mm": 4.0944600352147065,
+      "strict_frame_error_rad": 0.0014672564745103847,
+      "strict_frame_error_deg": 0.08406760345268949,
+      "predicted_board_mm": [
+        9.803017668404813,
+        402.97561839480204,
+        53.97318633272697
+      ],
+      "residual_board_mm": [
+        0.16332066757444075,
+        -3.674933093274717,
+        1.7979978029653338
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.36452733141024135,
+        "shoulder_side": -2.854971537768938,
+        "shoulder_rotate": 1.985724902332194,
+        "elbow": -1.202067497311471,
+        "arm_roll": -2.25605513468224,
+        "wrist_side": 0.13285994647529065,
+        "wrist": -2.0586551099209918
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.230673534387124,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 2.097233918041693,
+          "to_upper": 141.79891531222268
+        },
+        "shoulder_side": {
+          "to_lower": 15.343536468790935,
+          "to_upper": 38.68771714625749
+        },
+        "shoulder_rotate": {
+          "to_lower": 16.401443179661065,
+          "to_upper": 53.71651785541153
+        },
+        "elbow": {
+          "to_lower": 15.363699576636098,
+          "to_upper": 116.92587538001018
+        },
+        "arm_roll": {
+          "to_lower": 66.7510435730431,
+          "to_upper": 0.011441072226145137
+        },
+        "wrist_side": {
+          "to_lower": 52.820948294122886,
+          "to_upper": 25.89482343307914
+        },
+        "wrist": {
+          "to_lower": 81.64576978557662,
+          "to_upper": 68.86201513892864
+        }
+      },
+      "seed_index": 4,
+      "solver_success": false,
+      "iterations": 147
+    },
+    {
+      "passed": false,
+      "position_error_mm": 4.095525355804835,
+      "strict_frame_error_rad": 0.0014693241039215215,
+      "strict_frame_error_deg": 0.08418606989154476,
+      "predicted_board_mm": [
+        9.797494135213354,
+        402.9740868583915,
+        53.97297489946591
+      ],
+      "residual_board_mm": [
+        0.1577971343829816,
+        -3.676464629685256,
+        1.7977863697042764
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.36195189480379664,
+        "shoulder_side": -2.8557047868783165,
+        "shoulder_rotate": 1.9924211298428174,
+        "elbow": -1.1971726066270132,
+        "arm_roll": -2.262762107181278,
+        "wrist_side": 0.13208050035145505,
+        "wrist": -2.0607054015690545
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.193970673411584,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 2.2447955659944703,
+          "to_upper": 141.65135366426992
+        },
+        "shoulder_side": {
+          "to_lower": 15.301524389491831,
+          "to_upper": 38.729729225556596
+        },
+        "shoulder_rotate": {
+          "to_lower": 16.785108754679182,
+          "to_upper": 53.33285228039341
+        },
+        "elbow": {
+          "to_lower": 15.644156154033427,
+          "to_upper": 116.64541880261287
+        },
+        "arm_roll": {
+          "to_lower": 66.36676235553792,
+          "to_upper": 0.39572228973133694
+        },
+        "wrist_side": {
+          "to_lower": 52.776289320869274,
+          "to_upper": 25.93948240633275
+        },
+        "wrist": {
+          "to_lower": 81.52829672737171,
+          "to_upper": 68.97948819713356
+        }
+      },
+      "seed_index": 5,
+      "solver_success": false,
+      "iterations": 180
+    },
+    {
+      "passed": false,
+      "position_error_mm": 4.148638344993015,
+      "strict_frame_error_rad": 0.0013930179756223458,
+      "strict_frame_error_deg": 0.07981405078901821,
+      "predicted_board_mm": [
+        9.735822601782834,
+        402.91515912341396,
+        53.97763238974929
+      ],
+      "residual_board_mm": [
+        0.09612560095246181,
+        -3.7353923646628004,
+        1.8024438599876547
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3667590763294223,
+        "shoulder_side": -2.861535526707053,
+        "shoulder_rotate": 2.2984874522093968,
+        "elbow": -1.205049539288198,
+        "arm_roll": -2.568665374444777,
+        "wrist_side": 0.14471817742290646,
+        "wrist": -2.0596529800169767
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 11.902132354552379,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 1.9693643532228606,
+          "to_upper": 141.9267848770415
+        },
+        "shoulder_side": {
+          "to_lower": 14.967447605866397,
+          "to_upper": 39.06380600918203
+        },
+        "shoulder_rotate": {
+          "to_lower": 34.32141727737469,
+          "to_upper": 35.7965437576979
+        },
+        "elbow": {
+          "to_lower": 15.192841157038789,
+          "to_upper": 117.0967337996075
+        },
+        "arm_roll": {
+          "to_lower": 48.83979620207697,
+          "to_upper": 17.92268844319228
+        },
+        "wrist_side": {
+          "to_lower": 53.50037487991269,
+          "to_upper": 25.215396847289334
+        },
+        "wrist": {
+          "to_lower": 81.58859604057437,
+          "to_upper": 68.9191888839309
+        }
+      },
+      "seed_index": 6,
+      "solver_success": false,
+      "iterations": 54
+    },
+    {
+      "passed": false,
+      "position_error_mm": 4.103894298378226,
+      "strict_frame_error_rad": 0.001473223194668785,
+      "strict_frame_error_deg": 0.08440947133530147,
+      "predicted_board_mm": [
+        9.797833475957596,
+        402.9662307507595,
+        53.975944474377734
+      ],
+      "residual_board_mm": [
+        0.15813647512722362,
+        -3.6843207373172504,
+        1.8007559446160997
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3623271112873025,
+        "shoulder_side": -2.8564163409208536,
+        "shoulder_rotate": 2.0337940045661234,
+        "elbow": -1.1976335790416672,
+        "arm_roll": -2.304112331998095,
+        "wrist_side": 0.13376217339075794,
+        "wrist": -2.0610423685946713
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.158354253901502,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 2.2232972450858446,
+          "to_upper": 141.67285198517854
+        },
+        "shoulder_side": {
+          "to_lower": 15.260755345958984,
+          "to_upper": 38.770498269089444
+        },
+        "shoulder_rotate": {
+          "to_lower": 19.1555998626481,
+          "to_upper": 50.962361172424494
+        },
+        "elbow": {
+          "to_lower": 15.617744380201795,
+          "to_upper": 116.67183057644449
+        },
+        "arm_roll": {
+          "to_lower": 63.99756899161717,
+          "to_upper": 2.764915653652078
+        },
+        "wrist_side": {
+          "to_lower": 52.872642088542264,
+          "to_upper": 25.843129638659757
+        },
+        "wrist": {
+          "to_lower": 81.5089899389688,
+          "to_upper": 68.99879498553648
+        }
+      },
+      "seed_index": 7,
+      "solver_success": false,
+      "iterations": 180
+    },
+    {
+      "passed": false,
+      "position_error_mm": 4.0945852962946505,
+      "strict_frame_error_rad": 0.0014687107234102417,
+      "strict_frame_error_deg": 0.08415092577701284,
+      "predicted_board_mm": [
+        9.797538204583498,
+        402.97501430090136,
+        53.97272609229587
+      ],
+      "residual_board_mm": [
+        0.15784120375312582,
+        -3.6755371871753937,
+        1.797537562534238
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.36191297752079044,
+        "shoulder_side": -2.8556277345567533,
+        "shoulder_rotate": 1.9878782851250867,
+        "elbow": -1.197127621090477,
+        "arm_roll": -2.2582212823156316,
+        "wrist_side": 0.13189750798792932,
+        "wrist": -2.0606623523342917
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.19782751154306,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 2.247025362060842,
+          "to_upper": 141.64912386820353
+        },
+        "shoulder_side": {
+          "to_lower": 15.305939162319087,
+          "to_upper": 38.72531445272934
+        },
+        "shoulder_rotate": {
+          "to_lower": 16.524822925369914,
+          "to_upper": 53.59313810970268
+        },
+        "elbow": {
+          "to_lower": 15.646733635416076,
+          "to_upper": 116.64284132123021
+        },
+        "arm_roll": {
+          "to_lower": 66.62693245584751,
+          "to_upper": 0.13555218942173672
+        },
+        "wrist_side": {
+          "to_lower": 52.76580463075613,
+          "to_upper": 25.9499670964459
+        },
+        "wrist": {
+          "to_lower": 81.53076326683488,
+          "to_upper": 68.97702165767039
+        }
+      },
+      "seed_index": 8,
+      "solver_success": false,
+      "iterations": 154
+    },
+    {
+      "passed": false,
+      "position_error_mm": 4.097196755722301,
+      "strict_frame_error_rad": 0.001259481640488336,
+      "strict_frame_error_deg": 0.07216298237419491,
+      "predicted_board_mm": [
+        9.77765772783335,
+        402.9257463286082,
+        53.8763101059293
+      ],
+      "residual_board_mm": [
+        0.13796072700297835,
+        -3.7248051594685307,
+        1.7011215761676652
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.36383081038051013,
+        "shoulder_side": -2.855065228593498,
+        "shoulder_rotate": 1.9856281872938515,
+        "elbow": -1.2012938070710937,
+        "arm_roll": -2.2558554503019352,
+        "wrist_side": 0.13280471429628443,
+        "wrist": -2.0584780419797206
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.225983802312637,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 2.1371416333873983,
+          "to_upper": 141.75900759687698
+        },
+        "shoulder_side": {
+          "to_lower": 15.338168379964554,
+          "to_upper": 38.69308523508388
+        },
+        "shoulder_rotate": {
+          "to_lower": 16.395901816148598,
+          "to_upper": 53.722059218923995
+        },
+        "elbow": {
+          "to_lower": 15.408028762060173,
+          "to_upper": 116.88154619458612
+        },
+        "arm_roll": {
+          "to_lower": 66.76248464526925,
+          "to_upper": 0.0
+        },
+        "wrist_side": {
+          "to_lower": 52.817783723372514,
+          "to_upper": 25.897988003829507
+        },
+        "wrist": {
+          "to_lower": 81.65591503129853,
+          "to_upper": 68.85186989320674
+        }
+      },
+      "seed_index": 9,
+      "solver_success": false,
+      "iterations": 131
+    },
+    {
+      "passed": false,
+      "position_error_mm": 4.107421334451409,
+      "strict_frame_error_rad": 0.0014741727248852301,
+      "strict_frame_error_deg": 0.08446387540922391,
+      "predicted_board_mm": [
+        9.803832559625631,
+        402.9632248009827,
+        53.977296029243675
+      ],
+      "residual_board_mm": [
+        0.16413555879525887,
+        -3.687326687094071,
+        1.802107499482041
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.36517214680315385,
+        "shoulder_side": -2.8562291676743583,
+        "shoulder_rotate": 2.0501176876454226,
+        "elbow": -1.2028017875158175,
+        "arm_roll": -2.3204197604356684,
+        "wrist_side": 0.13532390616638423,
+        "wrist": -2.0591098713140723
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.167723052715942,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 2.060288717462737,
+          "to_upper": 141.83586051280164
+        },
+        "shoulder_side": {
+          "to_lower": 15.271479583020927,
+          "to_upper": 38.7597740320275
+        },
+        "shoulder_rotate": {
+          "to_lower": 20.09087800920106,
+          "to_upper": 50.02708302587153
+        },
+        "elbow": {
+          "to_lower": 15.32162784698924,
+          "to_upper": 116.96794710965705
+        },
+        "arm_roll": {
+          "to_lower": 63.063222167432606,
+          "to_upper": 3.6992624778366445
+        },
+        "wrist_side": {
+          "to_lower": 52.96212278531291,
+          "to_upper": 25.753648941889118
+        },
+        "wrist": {
+          "to_lower": 81.61971387706762,
+          "to_upper": 68.88807104743765
+        }
+      },
+      "seed_index": 10,
+      "solver_success": false,
+      "iterations": 180
+    },
+    {
+      "passed": false,
+      "position_error_mm": 4.160800152468119,
+      "strict_frame_error_rad": 0.0014315136070217796,
+      "strict_frame_error_deg": 0.08201968799789705,
+      "predicted_board_mm": [
+        9.7917462856538,
+        402.8998845118871,
+        53.97008021381506
+      ],
+      "residual_board_mm": [
+        0.15204928482342694,
+        -3.7506669761896774,
+        1.7948916840534253
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3650335812888418,
+        "shoulder_side": -2.864015228705161,
+        "shoulder_rotate": 2.4111207450209258,
+        "elbow": -1.202229120929565,
+        "arm_roll": -2.6811054176627245,
+        "wrist_side": 0.1489963941515674,
+        "wrist": -2.0610331959321835
+      },
+      "bounds_passed": true,
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 11.778031415196269,
+      "nearest_limit_margin_deg": {
+        "shoulder_front": {
+          "to_lower": 2.0682279366188783,
+          "to_upper": 141.82792129364552
+        },
+        "shoulder_side": {
+          "to_lower": 14.825371146924665,
+          "to_upper": 39.20588246812376
+        },
+        "shoulder_rotate": {
+          "to_lower": 40.7748295881365,
+          "to_upper": 29.343131446936095
+        },
+        "elbow": {
+          "to_lower": 15.354439225449669,
+          "to_upper": 116.93513573119662
+        },
+        "arm_roll": {
+          "to_lower": 42.39745627742001,
+          "to_upper": 24.365028367849234
+        },
+        "wrist_side": {
+          "to_lower": 53.74549864230723,
+          "to_upper": 24.970273084894796
+        },
+        "wrist": {
+          "to_lower": 81.50951549381624,
+          "to_upper": 68.99826943068904
+        }
+      },
+      "seed_index": 11,
+      "solver_success": false,
+      "iterations": 110
+    }
+  ],
+  "best": {
+    "passed": false,
+    "position_error_mm": 4.094108728058606,
+    "strict_frame_error_rad": 0.0014680634199913808,
+    "strict_frame_error_deg": 0.08411383802304773,
+    "predicted_board_mm": [
+      9.797398820015914,
+      402.9755162365802,
+      53.972679089861785
+    ],
+    "residual_board_mm": [
+      0.15770181918554194,
+      -3.675035251496581,
+      1.797490560100151
+    ],
+    "encoder_rad": {
+      "shoulder_front": -0.36186177711735307,
+      "shoulder_side": -2.8555943952627767,
+      "shoulder_rotate": 1.9854867926450819,
+      "elbow": -1.197046576412097,
+      "arm_roll": -2.2558554503019352,
+      "wrist_side": 0.13178877901416117,
+      "wrist": -2.060662189305287
+    },
+    "bounds_passed": true,
+    "common_scene_and_gripper_passed": true,
+    "scene_failure": null,
+    "minimum_scene_margin_mm": 12.199496304814604,
+    "nearest_limit_margin_deg": {
+      "shoulder_front": {
+        "to_lower": 2.24995892908717,
+        "to_upper": 141.6461903011772
+      },
+      "shoulder_side": {
+        "to_lower": 15.307849363155894,
+        "to_upper": 38.72340425189253
+      },
+      "shoulder_rotate": {
+        "to_lower": 16.387800499528364,
+        "to_upper": 53.73016053554423
+      },
+      "elbow": {
+        "to_lower": 15.65137715343925,
+        "to_upper": 116.63819780320705
+      },
+      "arm_roll": {
+        "to_lower": 66.76248464526925,
+        "to_upper": 0.0
+      },
+      "wrist_side": {
+        "to_lower": 52.759574919448426,
+        "to_upper": 25.9561968077536
+      },
+      "wrist": {
+        "to_lower": 81.53077260770878,
+        "to_upper": 68.97701231679649
+      }
+    },
+    "seed_index": 2,
+    "solver_success": false,
+    "iterations": 160
+  },
+  "endpoint_passed": false,
+  "short_vertical_path_attempted": false,
+  "previous_request_relative_diagnostic_unchanged": true,
+  "previous_request_relative_target_board_mm": [
+    11.798050592563328,
+    405.6006774366655,
+    49.622674457482844
+  ],
+  "source_sha256": {
+    "outputs/a8_lower25_execution_20261108/execution_audit.json": "0ff1999815a551579a4b2c0ed18b48166381a79146e83b26566a036b6d46b66e",
+    "outputs/a8_lower25_execution_20261108/common_trial_config.json": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+    "outputs/a8_lower25_execution_20261108/source_snapshot/scripts/data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "outputs/a8_lower25_execution_20261108/source_snapshot/scripts/left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "outputs/a8_lower25_execution_20261108/source_snapshot/scripts/left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "outputs/a8_lower25_execution_20261108/source_snapshot/scripts/left_arm_board_grasp.py": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+    "outputs/a8_lower25_execution_20261108/feedback_relative10_diagnostic/diagnose_feedback_relative10.py": "b8b82506854b3e3c6c8f36df34fdb56715e657f9ad58d2cee0663dbe2dc76519"
+  },
+  "limitations": [
+    "Finite12-start local IK diagnostic is not a global infeasibility proof or physical reachability result.",
+    "Encoder FK height and feedback-relative target are model predictions, not measured board/contact datum.",
+    "No new movement is authorized or prepared by this diagnostic. No runtime activation, stamp or hardware interface is used."
+  ],
+  "status": "held-relative-endpoint-failed-no-path",
+  "failure_reason": "No bounded start met BOTH0.5mm position and0.005rad actual-held full-frame tolerance with the unchanged trial scene.",
+  "elapsed_s": 11.390511699995841
+}

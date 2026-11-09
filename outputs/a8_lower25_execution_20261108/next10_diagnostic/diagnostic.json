@@ -1,0 +1,475 @@
+{
+  "schema": 1,
+  "motion_issued": false,
+  "network_accessed": false,
+  "hardware_accessed": false,
+  "active_config_or_sources_modified": false,
+  "executable": false,
+  "prepared_stamp_produced": false,
+  "target_board_mm": [
+    11.798050592563328,
+    405.6006774366655,
+    49.622674457482844
+  ],
+  "previous_test_target_board_mm": [
+    11.798050592563328,
+    405.6006774366655,
+    59.622674457482844
+  ],
+  "next_requested_height_change_mm": -10.0,
+  "XY_unchanged": true,
+  "measured_physical_gap_is_approximate": true,
+  "calibrated_contact_datum_mm": null,
+  "new_trial_frame_frozen": true,
+  "desired_wrist_rotation_in_cad": [
+    [
+      0.3347135876647456,
+      0.9377379553140976,
+      0.09281347637025392
+    ],
+    [
+      0.05186549560408269,
+      -0.1166784833688457,
+      0.9918145501475999
+    ],
+    [
+      0.9408914839652528,
+      -0.32715998942731733,
+      -0.087690117570792
+    ]
+  ],
+  "position_tolerance_mm": 0.5,
+  "strict_full_frame_tolerance_rad": 0.005,
+  "joint_limits_encoder_rad": {
+    "shoulder_front": [
+      -0.4011309684645698,
+      2.1103306165446476
+    ],
+    "shoulder_side": [
+      -3.122766768049164,
+      -2.1797434934864803
+    ],
+    "shoulder_rotate": [
+      1.6994657167683405,
+      2.9232550016154484
+    ],
+    "elbow": [
+      -1.4702146402110297,
+      0.838674008846283
+    ],
+    "arm_roll": [
+      -3.421080624174042,
+      -2.2558554503019352
+    ],
+    "wrist_side": [
+      -0.7890395152828359,
+      0.5848098746051031
+    ],
+    "wrist": [
+      -3.4836426130046085,
+      -0.8567862161885065
+    ]
+  },
+  "bounds_or_orientation_relaxed": false,
+  "attempts": [
+    {
+      "seed_index": 0,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 136,
+      "position_error_mm": 4.159310460757499,
+      "strict_frame_error_rad": 0.001404162289734267,
+      "strict_frame_error_deg": 0.08045257295319938,
+      "predicted_board_mm": [
+        11.946175178241788,
+        401.87233019335025,
+        51.460431092445376
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.35894063896733186,
+        "shoulder_side": -2.8581505071455666,
+        "shoulder_rotate": 1.9854295220440918,
+        "elbow": -1.1971216999211127,
+        "arm_roll": -2.2581875437781522,
+        "wrist_side": 0.13036482093689172,
+        "wrist": -2.062687938703402
+      },
+      "bounds_passed": true,
+      "active_limits": {},
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.0715537272837
+    },
+    {
+      "seed_index": 1,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 156,
+      "position_error_mm": 4.159067363199638,
+      "strict_frame_error_rad": 0.0014016913448665835,
+      "strict_frame_error_deg": 0.08031099824087161,
+      "predicted_board_mm": [
+        11.94964095392148,
+        401.87231960738507,
+        51.45957662984271
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3589607713666347,
+        "shoulder_side": -2.858125357758851,
+        "shoulder_rotate": 1.984186622388777,
+        "elbow": -1.197171593022596,
+        "arm_roll": -2.2569440948222614,
+        "wrist_side": 0.13032587530840486,
+        "wrist": -2.0626459727150306
+      },
+      "bounds_passed": true,
+      "active_limits": {},
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.072812511350765
+    },
+    {
+      "seed_index": 2,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 136,
+      "position_error_mm": 4.159273041710365,
+      "strict_frame_error_rad": 0.0014043525883853426,
+      "strict_frame_error_deg": 0.08046347626275305,
+      "predicted_board_mm": [
+        11.949139790528198,
+        401.8723153315856,
+        51.46007487741368
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.358946433891395,
+        "shoulder_side": -2.8581482203629927,
+        "shoulder_rotate": 1.9852188428638036,
+        "elbow": -1.197134551169213,
+        "arm_roll": -2.2579781909070507,
+        "wrist_side": 0.1303572825304202,
+        "wrist": -2.0626792584827625
+      },
+      "bounds_passed": true,
+      "active_limits": {},
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.071668185929955
+    },
+    {
+      "seed_index": 3,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 175,
+      "position_error_mm": 4.15933424802447,
+      "strict_frame_error_rad": 0.0014017236178937751,
+      "strict_frame_error_deg": 0.0803128473491218,
+      "predicted_board_mm": [
+        11.955425683047249,
+        401.8734498444727,
+        51.461986541845526
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.36159342617170204,
+        "shoulder_side": -2.857494969523469,
+        "shoulder_rotate": 1.9838429046067485,
+        "elbow": -1.2021280924040547,
+        "arm_roll": -2.2565940413697803,
+        "wrist_side": 0.13135917394359564,
+        "wrist": -2.0606624480273785
+      },
+      "bounds_passed": true,
+      "active_limits": {},
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.104365098884859
+    },
+    {
+      "seed_index": 4,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 168,
+      "position_error_mm": 4.159433765188487,
+      "strict_frame_error_rad": 0.0014016039898522735,
+      "strict_frame_error_deg": 0.08030599316723233,
+      "predicted_board_mm": [
+        11.955561132729098,
+        401.8733418981313,
+        51.46198124535379
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.36159982287478987,
+        "shoulder_side": -2.8575035343758595,
+        "shoulder_rotate": 1.9843045629592595,
+        "elbow": -1.2021366101708475,
+        "arm_roll": -2.257055874902929,
+        "wrist_side": 0.13137755738825582,
+        "wrist": -2.060664590781833
+      },
+      "bounds_passed": true,
+      "active_limits": {},
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.103936402698476
+    },
+    {
+      "seed_index": 5,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 127,
+      "position_error_mm": 4.159216585359182,
+      "strict_frame_error_rad": 0.00140318681383123,
+      "strict_frame_error_deg": 0.08039668230093865,
+      "predicted_board_mm": [
+        11.948158039517946,
+        401.87273436047633,
+        51.46087759614581
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.358965960301886,
+        "shoulder_side": -2.8581388517360926,
+        "shoulder_rotate": 1.9849718052633991,
+        "elbow": -1.1971706124486983,
+        "arm_roll": -2.257723527966614,
+        "wrist_side": 0.1303582868227194,
+        "wrist": -2.062661844316181
+      },
+      "bounds_passed": true,
+      "active_limits": {},
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.07213710698072
+    },
+    {
+      "seed_index": 6,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 180,
+      "position_error_mm": 4.180270277767084,
+      "strict_frame_error_rad": 0.0014128711770701353,
+      "strict_frame_error_deg": 0.08095155544179956,
+      "predicted_board_mm": [
+        11.951382655473513,
+        401.85260359309535,
+        51.46742141487641
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.362623404904055,
+        "shoulder_side": -2.8596117872823883,
+        "shoulder_rotate": 2.0904413774126476,
+        "elbow": -1.2033177515403102,
+        "arm_roll": -2.363141081112852,
+        "wrist_side": 0.13544083548806105,
+        "wrist": -2.0613457436785865
+      },
+      "bounds_passed": true,
+      "active_limits": {},
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 11.998414529471738
+    },
+    {
+      "seed_index": 7,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 96,
+      "position_error_mm": 4.161384248559147,
+      "strict_frame_error_rad": 0.0012856204855061766,
+      "strict_frame_error_deg": 0.07366062787506375,
+      "predicted_board_mm": [
+        11.946074163038444,
+        401.8180605013662,
+        51.35097333427692
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3606846428090504,
+        "shoulder_side": -2.8576459728146855,
+        "shoulder_rotate": 1.9831775859369702,
+        "elbow": -1.2009438007851885,
+        "arm_roll": -2.2558554503019352,
+        "wrist_side": 0.13116958444584464,
+        "wrist": -2.060738541362363
+      },
+      "bounds_passed": true,
+      "active_limits": {
+        "arm_roll": "upper"
+      },
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.096806948981056
+    },
+    {
+      "seed_index": 8,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 90,
+      "position_error_mm": 4.218572892340772,
+      "strict_frame_error_rad": 0.0014124275245207395,
+      "strict_frame_error_deg": 0.08092613602314896,
+      "predicted_board_mm": [
+        11.9582604903349,
+        401.808730876702,
+        51.46436697335805
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3617342747698701,
+        "shoulder_side": -2.8651076427324518,
+        "shoulder_rotate": 2.3443140388387804,
+        "elbow": -1.2013691740757064,
+        "arm_roll": -2.616765813324599,
+        "wrist_side": 0.1448852371028174,
+        "wrist": -2.063486080559365
+      },
+      "bounds_passed": true,
+      "active_limits": {},
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 11.7233623185972
+    },
+    {
+      "seed_index": 9,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 132,
+      "position_error_mm": 4.16161156484675,
+      "strict_frame_error_rad": 0.0012119274907977785,
+      "strict_frame_error_deg": 0.06943833029859263,
+      "predicted_board_mm": [
+        11.93745158989331,
+        401.8284081530979,
+        51.37469118995523
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.35857237006187687,
+        "shoulder_side": -2.8581387711114714,
+        "shoulder_rotate": 1.9828070116923913,
+        "elbow": -1.196955619274359,
+        "arm_roll": -2.2558554503019352,
+        "wrist_side": 0.13031962683437615,
+        "wrist": -2.062231925721995
+      },
+      "bounds_passed": true,
+      "active_limits": {
+        "arm_roll": "upper"
+      },
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.07214114242656
+    },
+    {
+      "seed_index": 10,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 180,
+      "position_error_mm": 4.166520732320422,
+      "strict_frame_error_rad": 0.0014056240126685444,
+      "strict_frame_error_deg": 0.08053632350815096,
+      "predicted_board_mm": [
+        11.95544868256488,
+        401.8661272605414,
+        51.46339601060623
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.36195000557419693,
+        "shoulder_side": -2.8581720901330194,
+        "shoulder_rotate": 2.0189552922445038,
+        "elbow": -1.202527608126612,
+        "arm_roll": -2.2916924341258826,
+        "wrist_side": 0.13270044872812184,
+        "wrist": -2.0609253958671254
+      },
+      "bounds_passed": true,
+      "active_limits": {},
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 12.070473450165135
+    },
+    {
+      "seed_index": 11,
+      "solver_success": false,
+      "passed": false,
+      "iterations": 96,
+      "position_error_mm": 4.227534462064707,
+      "strict_frame_error_rad": 0.0013134518235063148,
+      "strict_frame_error_deg": 0.07525524608067373,
+      "predicted_board_mm": [
+        11.94297056755611,
+        401.78653746329087,
+        51.440195321819736
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3621158952822295,
+        "shoulder_side": -2.8668383173636895,
+        "shoulder_rotate": 2.4220180250746397,
+        "elbow": -1.2024393880593043,
+        "arm_roll": -2.6943875843526808,
+        "wrist_side": 0.14798957688135383,
+        "wrist": -2.0628380573872906
+      },
+      "bounds_passed": true,
+      "active_limits": {},
+      "common_scene_and_gripper_passed": true,
+      "scene_failure": null,
+      "minimum_scene_margin_mm": 11.636755433848492
+    }
+  ],
+  "best": {
+    "seed_index": 1,
+    "solver_success": false,
+    "passed": false,
+    "iterations": 156,
+    "position_error_mm": 4.159067363199638,
+    "strict_frame_error_rad": 0.0014016913448665835,
+    "strict_frame_error_deg": 0.08031099824087161,
+    "predicted_board_mm": [
+      11.94964095392148,
+      401.87231960738507,
+      51.45957662984271
+    ],
+    "encoder_rad": {
+      "shoulder_front": -0.3589607713666347,
+      "shoulder_side": -2.858125357758851,
+      "shoulder_rotate": 1.984186622388777,
+      "elbow": -1.197171593022596,
+      "arm_roll": -2.2569440948222614,
+      "wrist_side": 0.13032587530840486,
+      "wrist": -2.0626459727150306
+    },
+    "bounds_passed": true,
+    "active_limits": {},
+    "common_scene_and_gripper_passed": true,
+    "scene_failure": null,
+    "minimum_scene_margin_mm": 12.072812511350765
+  },
+  "endpoint_passed": false,
+  "endpoint_method": "At most12 deterministic bounded damped IK starts; same strict full-frame/scene; finite diagnostic not a global reach proof.",
+  "local_linear_prediction_unclipped_encoder_rad": {
+    "shoulder_front": -0.7802595086046358,
+    "shoulder_side": -2.8854614630981836,
+    "shoulder_rotate": 2.2950785894757026,
+    "elbow": -1.9453651167433206,
+    "arm_roll": -2.5682550737412155,
+    "wrist_side": 0.17415750106316522,
+    "wrist": -1.7374216519935481
+  },
+  "source_sha256": {
+    "outputs/a8_lower25_execution_20261108/common_trial_config.json": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+    "outputs/a8_lower25_execution_20261108/source_snapshot/scripts/data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "outputs/a8_lower25_execution_20261108/local_plan.json": "14aed8811d838fa3f56c5b27bbe1f72cc5cc676065eb4a595b0849341df326ed",
+    "outputs/a8_lower25_execution_20261108/source_snapshot/scripts/left_arm_board_grasp.py": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+    "outputs/a8_lower25_execution_20261108/source_snapshot/scripts/left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "outputs/a8_lower25_execution_20261108/source_snapshot/scripts/left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "outputs/a8_lower25_execution_20261108/next10_diagnostic/diagnose_next10.py": "112be41e786309030172c7c7f77260644fd3be24b69f33c3d5a2338e5b75761d"
+  },
+  "full_reverse_branch_attempted": false,
+  "Clearance_transit_attempted": false,
+  "limitations": [
+    "Finite multi-start failure is not proof of global infeasibility or physical unreachability.",
+    "Visual remaining gap is not a calibrated TCP/contact height measurement.",
+    "No further bounds, orientation, geometry, XYZ offset or gain change was allowed.",
+    "No movement or next-test authorization is implied. A future test requires Home and fresh ordinary Clearance, not direct descent from present endpoint."
+  ],
+  "status": "endpoint-failed-no-path-prepared",
+  "failure_reason": "No start met BOTH0.5mm Cartesian and0.005rad fixed-frame limits under unchanged trial bounds and common scene.",
+  "elapsed_s": 12.598790000003646
+}
