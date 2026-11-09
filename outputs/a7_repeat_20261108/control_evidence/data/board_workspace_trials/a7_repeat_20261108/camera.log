@@ -1,0 +1,45 @@
+[0m[INFO] [1794169893.298455701]: Hello, angstrong camera node[0m
+[0m[INFO] [1794169893.347445720]: get depth_width 640[0m
+[0m[INFO] [1794169893.350955584]: get depth_height 480[0m
+[0m[INFO] [1794169893.350978913]: get rgb_width 640[0m
+[0m[INFO] [1794169893.350989665]: get rgb_height 480[0m
+[0m[INFO] [1794169893.351000193]: get set_fps 30[0m
+[0m[INFO] [1794169893.351010113]: get pub_tfTree 1[0m
+[0m[INFO] [1794169893.353457642]: config_path /home/nvidia/ascam_ws/src/ascamera/configurationfiles[0m
+[0m[INFO] [1794169893.353520139]: Angstrong camera server[0m
+[0m[INFO] [1794169893.353585837]: Angstrong camera sdk version: v1.2.28.20241021[0m
+[0m[INFO] [1794169894.355644794]: attached[0m
+[0m[INFO] [1794169894.355754941]: this is a new attach device, create and open it[0m
+[0m[INFO] [1794169895.118055742]: get model type 9[0m
+[0m[INFO] [1794169895.118262052]: get file: /home/nvidia/ascam_ws/src/ascamera/configurationfiles/hp60c_v2_00_20230704_configEncrypt.json[0m
+[0m[INFO] [1794169895.118504459]: 2026-11-08 12:31:35[INFO] [as_camera_sdk_api.cpp] [276] [AS_SDK_GetCameraAttrs] pid:26403  vid13442 busnum: 1  dev:2  port:2  ports:2[0m
+[0m[INFO] [1794169895.118525196]: usb camera[0m
+[0m[INFO] [1794169895.118546604]: bnum: 1[0m
+[0m[INFO] [1794169895.118557613]: dnum: 2[0m
+[0m[INFO] [1794169895.118567821]: port_numbers: 2[0m
+[0m[INFO] [1794169895.118580781]: create a new publisher info set[0m
+[0m[INFO] [1794169895.124457145]: 2026-11-08 12:31:35[INFO] [as_camera_sdk_api.cpp] [276] [AS_SDK_GetCameraAttrs] pid:26403  vid13442 busnum: 1  dev:2  port:2  ports:2[0m
+[0m[INFO] [1794169895.124505339]: Namespace /ascamera_hp60c[0m
+[0m[INFO] [1794169895.250403550]: 2026-11-08 12:31:35[INFO] [CameraHp60c.cpp] [1830] [getConfigurationParameters] according to the configuration file.[0m
+[0m[INFO] [1794169895.250496129]: 2026-11-08 12:31:35[INFO] [CameraHp60c.cpp] [1535] [parseConfigFileParameter] moduleName:AS_CAM_HP60C[0m
+[0m[INFO] [1794169895.250734856]: 2026-11-08 12:31:35[INFO] [CameraHp60c.cpp] [1562] [parseConfigFileParameter] Parsing config file /home/nvidia/ascam_ws/src/ascamera/configurationfiles/hp60c_v2_00_20230704_configEncrypt.json[0m
+[0m[INFO] [1794169895.251314585]: 2026-11-08 12:31:35[INFO] [CameraHp60c.cpp] [1627] [parseConfigFileParameter] configuration protocol Version: v2.x[0m
+[0m[INFO] [1794169895.251358842]: 2026-11-08 12:31:35[INFO] [CameraHp60c.cpp] [1638] [parseConfigFileParameter] configuration Version: v2.0.0.20230704[0m
+[0m[INFO] [1794169895.300950757]: 2026-11-08 12:31:35[INFO] [CameraHp60c.cpp] [1803] [setParamersAfterOpenCam] Camera confiParaEnable true, setting configuration parameter[0m
+[0m[INFO] [1794169896.789730946]: 2026-11-08 12:31:36[ERROR] [XuCmdCameraHp60c.cpp] [454] [getMjpegSize] get mjpeg from xu command failed[0m
+[0m[INFO] [1794169896.789917767]: 2026-11-08 12:31:36[INFO] [XuCmdCameraHp60c.cpp] [458] [getMjpegSize] mjpeg size:640x480[0m
+[0m[INFO] [1794169896.789960681]: camera opened[0m
+[0m[INFO] [1794169896.789983049]: get config info, ret 0, is_Registration 1[0m
+[0m[INFO] [1794169896.791900385]: #camera[0xaaaaea2b7220] SN[ASC60CG04003460]'s firmware version: DLS_VERc20865=:V01.09_2024110714:V01.19_2024110714:L01[0m
+[0m[INFO] [1794169896.792954464]: set depth resolution: 640x480@30fps[0m
+[0m[INFO] [1794169896.793698870]: set rgb resolution: 640x480@30fps[0m
+[0m[INFO] [1794169896.801615453]: 2026-11-08 12:31:36[INFO] [CameraHp60c.cpp] [259] [startStreaming] start streaming[0m
+[0m[INFO] [1794169896.801661726]: attached end[0m
+[0m[INFO] [1794169898.174091410]: 2026-11-08 12:31:38[INFO] [CameraHp60c.cpp] [911] [setInternalParameter] mjpeg info: size(640x480)[0m
+[0m[INFO] [1794169898.802120642]: SN [ASC60CG04003460]'s parameter:[0m
+[0m[INFO] [1794169898.802247782]: irfx: 445.077576[0m
+[0m[INFO] [1794169898.802263942]: irfy: 444.929779[0m
+[0m[INFO] [1794169898.802275239]: ircx: 321.328583[0m
+[0m[INFO] [1794169898.802285703]: ircy: 240.349045[0m
+[0m[INFO] [1794169898.802296391]: rgbfx: 590.613037[0m
+[0m[INFO] [1794169898.

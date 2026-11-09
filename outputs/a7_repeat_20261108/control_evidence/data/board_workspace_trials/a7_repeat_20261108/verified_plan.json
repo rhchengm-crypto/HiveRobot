@@ -1,0 +1,115 @@
+{
+  "motion_issued": false,
+  "build": "seven-axis-board-grasp-v32-descent-gain-continuity",
+  "prepared_plan": "approach_a7_repeat_20261108.json",
+  "prepared_plan_path": "/home/nvidia/hive_robot/DM_Control_Python/data/board_workspace_trials/approach_a7_repeat_20261108.json",
+  "plan_sha256": "a9b82fd72113530a13eb18586e16d2160cb9bb2ea44bef6fdc5994d909d697dd",
+  "source_hashes": {
+    "rigid_model": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "board_model": "669ef83ccdd28d086e187760ebc95a2c1d02bb1fba1175888bd02d3b9978e074",
+    "planner": "b0a4b9a1353e4198a112712e492139b96450ad7be89e17f7b7e4d4efccc4d7ac",
+    "controller": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "motion_adapter": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "fault_support": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+    "kinematics": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "collision": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "trace": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "task_pose": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+    "trajectory_support": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "general_motion": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47"
+  },
+  "request": {
+    "x_mm": 17.5,
+    "y_mm": 357.5,
+    "piece": "white_knight",
+    "stage": "approach",
+    "grip_height_mm": 50.2
+  },
+  "waypoints": 32,
+  "stages": {
+    "entry_search": 20,
+    "source_above": 5,
+    "contact": 7
+  },
+  "selected_reference": "validated:20261107_a7_v32_height50_x17",
+  "orientation": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 30,
+    "max_error_deg": 0.017076577945949818,
+    "tolerance_deg": 0.2864788975654116,
+    "checked_task_edge_samples": 22,
+    "max_joint_sample_step_deg": 0.5,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "gripper_clearance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 33.99505399759466,
+      "task": 34.05807539756906
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "gravity_envelope": {
+    "version": 1,
+    "path_sha256": "ce60279509ad8cb4ca60b77906ff063c5e2d7cd21d34c9abc48a7a551b800216",
+    "samples": 311,
+    "max_sample_step_deg": 0.5,
+    "headroom_Nm": 0.5,
+    "gravity_encoder_Nm": {
+      "shoulder_front": [
+        -8.439075980672397,
+        2.12570802976791
+      ],
+      "shoulder_side": [
+        0.015949136354372558,
+        2.0960301100618075
+      ],
+      "shoulder_rotate": [
+        -0.6892967284160626,
+        0.5149861956144058
+      ],
+      "elbow": [
+        3.172686709183403,
+        4.003077527315749
+      ],
+      "arm_roll": [
+        -0.3425515307971924,
+        9.891136836011024e-05
+      ],
+      "wrist_side": [
+        -0.014187021544349053,
+        0.13841723098827702
+      ],
+      "wrist": [
+        0.1750557518641456,
+        0.19291203965666004
+      ]
+    },
+    "physical_torque_rating_verified": false,
+    "scope": "sampled gravity range plus bounded residual headroom; runtime clipping retained"
+  },
+  "accepted_v32_comparison": {
+    "same_contact_cartesian_targets": true,
+    "maximum_contact_joint_change_deg": {
+      "shoulder_front": 0.41775486354323554,
+      "shoulder_side": 1.1204883085241115,
+      "shoulder_rotate": 1.318198540624508,
+      "elbow": 1.8419867654035023,
+      "arm_roll": 1.3382313619912898,
+      "wrist_side": 0.5079305536069301,
+      "wrist": 2.1344986751416797
+    },
+    "old_waypoints": 33,
+    "new_waypoints": 32
+  },
+  "full_path_precomputed_before_clearance": true,
+  "preparation_run_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794169946646_4830.txt",
+  "preparation_method": "local same-source geometric solve plus Jetson independent complete edge/orientation/gripper checks and fresh runtime stamp",
+  "remote_check_seconds": 4.927793561999806,
+  "models_and_code_modified": false
+}

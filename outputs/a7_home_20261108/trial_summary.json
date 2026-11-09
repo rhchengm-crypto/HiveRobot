@@ -1,0 +1,70 @@
+{
+  "date_local": "2026-11-08",
+  "action": "home-after-accepted-a7-repeat",
+  "accepted": true,
+  "home": {
+    "action": "home",
+    "ok": true,
+    "returncode": 0,
+    "duration_s": 77.806,
+    "started_at": "2026-11-08 12:49:07",
+    "finished_at": "2026-11-08 12:50:25",
+    "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794170947467_7500.txt"
+  },
+  "hold": {
+    "ok": true,
+    "duration_s": 5.015155076980591,
+    "max_velocity_rad_s": {
+      "shoulder_front": 0.005860805977135897,
+      "shoulder_side": 0.005860805977135897,
+      "shoulder_rotate": 0.021978022530674934,
+      "elbow": 0.005860805977135897,
+      "arm_roll": 0.03663003817200661,
+      "wrist_side": 0.021978022530674934,
+      "wrist": 0.021978022530674934
+    },
+    "max_abs_error_deg": {
+      "shoulder_front": 0.0,
+      "shoulder_side": 0.0,
+      "shoulder_rotate": 0.021856605344040804,
+      "elbow": 0.0,
+      "arm_roll": 0.0,
+      "wrist_side": 0.021856605344040804,
+      "wrist": 0.0
+    },
+    "motor_enable_mode": "reused-existing-enable",
+    "serial_session_reused": false
+  },
+  "operator_feedback": {
+    "date_local": "2026-11-08",
+    "action": "home-after-a7-repeat",
+    "operator_feedback": "全程无抖动或异常，保持稳定",
+    "accepted": true,
+    "jitter_observed": false,
+    "other_abnormality_observed": false,
+    "hold_stable": true,
+    "normal_home_has_per_frame_motor_feedback_trace": false,
+    "physical_jitter_acceptance_basis": "on-site operator observation",
+    "additional_motion_requested_or_issued": false
+  },
+  "ordinary_home_automatic_oscillation_detection": false,
+  "monitoring_limitation": "Ordinary Home has no per-frame actual-motor trace or automatic confirmed-oscillation detector. Physical jitter acceptance is from the on-site operator. Model logs are not actual-feedback vibration measurements.",
+  "runtime_code_modified": false,
+  "additional_motion_issued": false,
+  "records": {
+    "control": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_home_20261108_1794171166742086869/control_evidence.zip",
+      "bytes": 189996,
+      "sha256": "ab183e6d7dd7a67197290fb9859d37eea13eaa35d48397c11f822d2b7a0d139d"
+    },
+    "rgbd": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a7_home_20261108_1794171166742086869/rgbd_evidence.zip",
+      "bytes": 54647723,
+      "sha256": "5a7f8cc1446f8106569bd47b304405147f47d082f2fc927236ab30a005ccf621"
+    },
+    "rgb_depth_pairs": 437
+  },
+  "archives_downloaded_and_verified": true,
+  "frozen_runtime_source_and_models_match": true,
+  "checked_runtime_files": 10
+}
