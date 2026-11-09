@@ -1,0 +1,466 @@
+{
+  "schema": 1,
+  "motion_issued": false,
+  "hardware_accessed": false,
+  "network_accessed": false,
+  "geometry_or_offsets_or_runtime_code_modified": false,
+  "observation_scope": "Offline common-model encoder-FK predictions, not physical TCP/contact-height metrology",
+  "operator_observation": {
+    "recorded_at_utc": "2026-11-09T01:32:09.888627+00:00",
+    "original_response": "本轮横移问题解决，但是最终高度比上轮还要高",
+    "physical_observation": true,
+    "lateral_drift_resolved": true,
+    "lateral_drift_mm": null,
+    "height_acceptable": false,
+    "height_relative_to_previous_trial": "higher",
+    "height_error_mm": null,
+    "jitter": null,
+    "contact": null,
+    "post_hold_extra_movement": null,
+    "full_motion_accepted": false,
+    "successful_path_library_eligible": false,
+    "full_pose_fitting_eligible": false,
+    "additional_descent_authorized_by_feedback": false,
+    "height_error_visual_lower_bound_mm": 25.0,
+    "height_followup_response": "至少25mm",
+    "height_followup_is_approximate": true,
+    "height_followup_is_calibrated_board_datum": false
+  },
+  "additional_user_height_observation": {
+    "verbatim": "当前夹持区域至少还高25mm",
+    "approximate_visual_gap_lower_bound_mm": 25.0,
+    "calibrated_board_plane_measurement": false,
+    "exact_TCP_Z_measurement": false,
+    "another_motion_authorized": false
+  },
+  "reference_endpoint": {
+    "encoder_rad": {
+      "shoulder_front": -0.19169145822525024,
+      "shoulder_side": -2.854390859603882,
+      "shoulder_rotate": 2.3832685947418213,
+      "elbow": -0.9409094452857971,
+      "arm_roll": -2.6552605628967285,
+      "wrist_side": 0.17795833945274353,
+      "wrist": -1.9357976913452148
+    },
+    "predicted_TCP_board_mm": [
+      11.798050592563328,
+      405.6006774366655,
+      84.62267445748284
+    ],
+    "predicted_lowest_CAD_gripper_vertex_height_mm": 58.14248963368509,
+    "orientation_difference_from_saved_deg": 0.0,
+    "FK_vs_independent_POE_max_matrix_difference": 1.3322676295501878e-15
+  },
+  "trials": {
+    "v32_previous": {
+      "log": "outputs/a8_reference_execution_20261108/control_evidence/data/left_arm_v2_8_full_runs/arm_run_1794185510062_30907.txt",
+      "log_sha256": "d752d5f7919df0048968ebb59ffa8f0f5bfed23dd9c41f3800a9beaba1372cd0",
+      "same_exact_saved_joint_target": true,
+      "endpoint_max_joint_error_deg": 2.5791187041845425,
+      "motion_endpoint": {
+        "encoder_rad": {
+          "shoulder_front": -0.14667734503746033,
+          "shoulder_side": -2.8261616230010986,
+          "shoulder_rotate": 2.3805980682373047,
+          "elbow": -0.9233615398406982,
+          "arm_roll": -2.6583123207092285,
+          "wrist_side": 0.18940261006355286,
+          "wrist": -1.9350347518920898
+        },
+        "predicted_TCP_board_mm": [
+          -11.615894401621215,
+          394.7291670658844,
+          65.55424909310713
+        ],
+        "predicted_lowest_CAD_gripper_vertex_height_mm": 39.586531178684226,
+        "orientation_difference_from_saved_deg": 2.5603821773871704,
+        "FK_vs_independent_POE_max_matrix_difference": 1.3322676295501878e-15
+      },
+      "inline_hold_final": {
+        "encoder_rad": {
+          "shoulder_front": -0.14667734503746033,
+          "shoulder_side": -2.8269245624542236,
+          "shoulder_rotate": 2.380216598510742,
+          "elbow": -0.9233615398406982,
+          "arm_roll": -2.6583123207092285,
+          "wrist_side": 0.18940261006355286,
+          "wrist": -1.9350347518920898
+        },
+        "predicted_TCP_board_mm": [
+          -11.146537548849246,
+          394.7431392614585,
+          65.51185730536695
+        ],
+        "predicted_lowest_CAD_gripper_vertex_height_mm": 39.553318014380295,
+        "orientation_difference_from_saved_deg": 2.530715606351197,
+        "FK_vs_independent_POE_max_matrix_difference": 1.2212453270876722e-15
+      },
+      "hold_minus_motion_endpoint_predicted_mm": [
+        0.4693568527719698,
+        0.013972195574126545,
+        -0.04239178774018626
+      ],
+      "terminal_command": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "q": -0.19169145822525024,
+          "dq": 0.0,
+          "tau_ff": -8.76597180530386
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "q": -2.854390859603882,
+          "dq": 0.0,
+          "tau_ff": 0.8087064493500498
+        },
+        "shoulder_rotate": {
+          "kp": 36.0,
+          "kd": 4.5,
+          "q": 2.3832685947418213,
+          "dq": 0.0,
+          "tau_ff": -0.34948268224506096
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "q": -0.9409094452857971,
+          "dq": 0.0,
+          "tau_ff": 4.731725724209288
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "q": -2.6552605628967285,
+          "dq": 0.0,
+          "tau_ff": -0.0018024973920710338
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "q": 0.17795833945274353,
+          "dq": 0.0,
+          "tau_ff": 0.22922234114531298
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "q": -1.9357976913452148,
+          "dq": 0.0,
+          "tau_ff": 0.7486291078888653
+        }
+      },
+      "support_bias": null,
+      "hold_duration_s": 5.037452936172485,
+      "hold_ok": true,
+      "hold_terminal_origin_rad": {
+        "shoulder_front": -0.14667734503746033,
+        "shoulder_side": -2.8261616230010986,
+        "shoulder_rotate": 2.3805980682373047,
+        "elbow": -0.9233615398406982,
+        "arm_roll": -2.6583123207092285,
+        "wrist_side": 0.18940261006355286,
+        "wrist": -1.9350347518920898
+      },
+      "physical_position_measured": false
+    },
+    "v33_current": {
+      "log": "outputs/a8_v33_execution_20261108/control_evidence/data/left_arm_v2_8_full_runs/arm_run_1794187695341_35311.txt",
+      "log_sha256": "7c537d80cf17a419215b06574bd302b371abc811739f9d248df4e289e2590d4e",
+      "same_exact_saved_joint_target": true,
+      "endpoint_max_joint_error_deg": 0.4589955424140269,
+      "motion_endpoint": {
+        "encoder_rad": {
+          "shoulder_front": -0.19092851877212524,
+          "shoulder_side": -2.8540093898773193,
+          "shoulder_rotate": 2.381742477416992,
+          "elbow": -0.9386205673217773,
+          "arm_roll": -2.6583123207092285,
+          "wrist_side": 0.16994735598564148,
+          "wrist": -1.9380865097045898
+        },
+        "predicted_TCP_board_mm": [
+          13.562597444524021,
+          405.60837587173614,
+          84.44678453192685
+        ],
+        "predicted_lowest_CAD_gripper_vertex_height_mm": 58.0888246017414,
+        "orientation_difference_from_saved_deg": 0.4912199858175054,
+        "FK_vs_independent_POE_max_matrix_difference": 1.3322676295501878e-15
+      },
+      "inline_hold_final": {
+        "encoder_rad": {
+          "shoulder_front": -0.19092851877212524,
+          "shoulder_side": -2.8540093898773193,
+          "shoulder_rotate": 2.381742477416992,
+          "elbow": -0.9386205673217773,
+          "arm_roll": -2.657930850982666,
+          "wrist_side": 0.16994735598564148,
+          "wrist": -1.9357976913452148
+        },
+        "predicted_TCP_board_mm": [
+          13.641015227275235,
+          405.69932634886504,
+          84.89003864603063
+        ],
+        "predicted_lowest_CAD_gripper_vertex_height_mm": 58.46395438147503,
+        "orientation_difference_from_saved_deg": 0.48518243682395873,
+        "FK_vs_independent_POE_max_matrix_difference": 1.4432899320127035e-15
+      },
+      "hold_minus_motion_endpoint_predicted_mm": [
+        0.07841778275121314,
+        0.09095047712889937,
+        0.44325411410378024
+      ],
+      "terminal_command": {
+        "shoulder_front": {
+          "kp": 90.0,
+          "kd": 4.0,
+          "q": -0.19169145822525024,
+          "dq": 0.0,
+          "tau_ff": -13.311456636303786
+        },
+        "shoulder_side": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "q": -2.854390859603882,
+          "dq": 0.0,
+          "tau_ff": -1.3724737665638511
+        },
+        "shoulder_rotate": {
+          "kp": 36.0,
+          "kd": 4.5,
+          "q": 2.3832685947418213,
+          "dq": 0.0,
+          "tau_ff": 0.20766152508571967
+        },
+        "elbow": {
+          "kp": 70.0,
+          "kd": 3.0,
+          "q": -0.9409094452857971,
+          "dq": 0.0,
+          "tau_ff": 3.6901595402115426
+        },
+        "arm_roll": {
+          "kp": 18.0,
+          "kd": 1.0,
+          "q": -2.6552605628967285,
+          "dq": 0.0,
+          "tau_ff": 0.06774899500901355
+        },
+        "wrist_side": {
+          "kp": 16.0,
+          "kd": 2.2,
+          "q": 0.17795833945274353,
+          "dq": 0.0,
+          "tau_ff": -0.037016893780347615
+        },
+        "wrist": {
+          "kp": 22.0,
+          "kd": 1.4,
+          "q": -1.9357976913452148,
+          "dq": 0.0,
+          "tau_ff": 0.6901167414302573
+        }
+      },
+      "support_bias": {
+        "estimated_bias_tau": {
+          "shoulder_front": -4.7219160498838395,
+          "shoulder_side": -2.119057010813766,
+          "shoulder_rotate": 0.6165710425632062,
+          "elbow": -1.0975344453071285,
+          "arm_roll": 0.09359998657820413,
+          "wrist_side": -0.20408028065434775,
+          "wrist": -0.04812531107027484
+        },
+        "last_completed_segment_bias_tau": {
+          "shoulder_front": -4.666207514776515,
+          "shoulder_side": -2.0767812063589277,
+          "shoulder_rotate": 0.613178474468981,
+          "elbow": -0.9847087373400212,
+          "arm_roll": 0.07610052610059788,
+          "wrist_side": -0.2521683631402231,
+          "wrist": -0.05834439283075342
+        },
+        "pending_unapplied_bias_tau": {
+          "shoulder_front": -0.055708535107324764,
+          "shoulder_side": -0.04227580445483836,
+          "shoulder_rotate": 0.003392568094225168,
+          "elbow": -0.11282570796710734,
+          "arm_roll": 0.017499460477606255,
+          "wrist_side": 0.04808808248587537,
+          "wrist": 0.01021908176047858
+        },
+        "entry_anchor_replaced": false,
+        "persistent_learning_files_written": false,
+        "physical_tracking_improvement_verified": false
+      },
+      "hold_duration_s": 5.021821737289429,
+      "hold_ok": true,
+      "hold_terminal_origin_rad": {
+        "shoulder_front": -0.19092851877212524,
+        "shoulder_side": -2.8540093898773193,
+        "shoulder_rotate": 2.381742477416992,
+        "elbow": -0.9386205673217773,
+        "arm_roll": -2.6583123207092285,
+        "wrist_side": 0.16994735598564148,
+        "wrist": -1.9380865097045898
+      },
+      "physical_position_measured": false
+    }
+  },
+  "current_minus_previous_predicted_TCP_board_mm": [
+    25.178491846145235,
+    10.87920880585176,
+    18.89253543881972
+  ],
+  "exact_joint_contributions": {
+    "shoulder_front": {
+      "feedback_change_deg": -2.535405493496461,
+      "previous_error_from_saved_deg": 2.5791187041845425,
+      "current_error_from_saved_deg": 0.04371321068808161,
+      "exact_order_averaged_FK_displacement_contribution_mm": [
+        1.098834047942566,
+        12.99906194407875,
+        29.133023664069878
+      ],
+      "height_contribution_mm": 29.133023664069878
+    },
+    "shoulder_side": {
+      "feedback_change_deg": -1.5955595108716587,
+      "previous_error_from_saved_deg": 1.6174161162156995,
+      "current_error_from_saved_deg": 0.021856605344040804,
+      "exact_order_averaged_FK_displacement_contribution_mm": [
+        19.4537713740416,
+        0.31375178802827197,
+        -1.5829811476563544
+      ],
+      "height_contribution_mm": -1.5829811476563544
+    },
+    "shoulder_rotate": {
+      "feedback_change_deg": 0.0655698160321224,
+      "previous_error_from_saved_deg": -0.15300989778662566,
+      "current_error_from_saved_deg": -0.08744008175450324,
+      "exact_order_averaged_FK_displacement_contribution_mm": [
+        0.18075936080510302,
+        0.0006230417952565405,
+        -0.019866638073214204
+      ],
+      "height_contribution_mm": -0.019866638073214204
+    },
+    "elbow": {
+      "feedback_change_deg": -0.8742778741399722,
+      "previous_error_from_saved_deg": 1.005420921298802,
+      "current_error_from_saved_deg": 0.13114304715882982,
+      "exact_order_averaged_FK_displacement_contribution_mm": [
+        -1.0362453597964718,
+        -2.3412364384983078,
+        -7.155112141399329
+      ],
+      "height_contribution_mm": -7.155112141399329
+    },
+    "arm_roll": {
+      "feedback_change_deg": 0.0,
+      "previous_error_from_saved_deg": -0.17485284275232643,
+      "current_error_from_saved_deg": -0.17485284275232643,
+      "exact_order_averaged_FK_displacement_contribution_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "height_contribution_mm": 0.0
+    },
+    "wrist_side": {
+      "feedback_change_deg": -1.114703948019006,
+      "previous_error_from_saved_deg": 0.6557084056049791,
+      "current_error_from_saved_deg": -0.4589955424140269,
+      "exact_order_averaged_FK_displacement_contribution_mm": [
+        5.573272216612678,
+        0.03711235217351808,
+        -0.8933925488148118
+      ],
+      "height_contribution_mm": -0.8933925488148118
+    },
+    "wrist": {
+      "feedback_change_deg": -0.17485284275232643,
+      "previous_error_from_saved_deg": 0.04371321068808161,
+      "current_error_from_saved_deg": -0.1311396320642448,
+      "exact_order_averaged_FK_displacement_contribution_mm": [
+        -0.091899793460241,
+        -0.1301038817257288,
+        -0.5891357493064449
+      ],
+      "height_contribution_mm": -0.5891357493064449
+    }
+  },
+  "same_endpoint_Kp_Kd": {
+    "shoulder_front": true,
+    "shoulder_side": true,
+    "shoulder_rotate": true,
+    "elbow": true,
+    "arm_roll": true,
+    "wrist_side": true,
+    "wrist": true
+  },
+  "geometry_conformance": {
+    "tcp_in_wrist_frame_m": true,
+    "board_to_cad_rotation": true,
+    "board_to_cad_translation_m": true,
+    "gripper_vertex_envelope": true,
+    "joint_limits_encoder_rad": true
+  },
+  "expected_height_rise_if_previous_tracking_error_removed_mm": 19.068425364375713,
+  "current_predicted_height_error_from_saved_reference_mm": -0.17588992555599248,
+  "capture_semantics": {
+    "stored_pose_is_encoder_feedback_not_command_reference": true,
+    "chain": "Web capture-move -> v3.0/v2.8 non-replay delegation -> v2.6 capture_move -> arm.positions -> read_status -> reply-cache getPosition",
+    "capture_body": "capture_move stores pose=arm.positions(DEFAULT_JOINTS); it does not command enable or a target",
+    "read_body": "read_status refreshes seven motor statuses, waits20ms, receives replies, returns getPosition/getVelocity/getTorque; positions selects pos",
+    "capture_log_sha256": "6db2a2d5aa6798b2a66399cf7a3a95141a439ad0e585c64d5c53afd8a931e7e2",
+    "captured_source_log_matches_saved_pose": true,
+    "missing_capture_fields": [
+      "individual packet timestamps and sequences",
+      "per-axis freshness certificate",
+      "velocity and torque snapshot",
+      "simultaneous stable-window evidence",
+      "actual MIT q/Kp/Kd/FF law",
+      "gripper opening",
+      "identified physical gripping/contact point and measured Z"
+    ],
+    "physical_capture_pose_and_grasp_datum_independently_revalidated": false,
+    "source_version_caveat": "Capture log and seven saved q are frozen. Capture implementation chain inspected in current local files; those move-library source bytes were not included in original capture evidence.",
+    "inspected_local_source_sha256": {
+      "scripts/left_arm_v2_6_move_library.py": "10948c5e7d0b0a9719061b6a6c8354dac9da7cb5cc66f7c90ef8f93cf1688fea",
+      "scripts/left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+      "scripts/left_arm_v2_8_move_library.py": "7b86460a9f4514ff39d622498bbd60e73ec5b10784881d9f875991e9b7e939e2"
+    }
+  },
+  "replay_semantics": {
+    "replay_is_distinct_from_capture": true,
+    "description": "v2.6 biased_replay_target uses stored feedback pose plus adaptive bias; v2.8 combines inherited shared bias with pose-local bias and can alter held targets/torques. Thus successful legacy replay is not proof that its command q or final feedback equals stored pose.",
+    "these_board_trials_used_legacy_saved_angle_replay": false,
+    "these_board_trials_targeted_exact_saved_q_with_new_geometric_waypoints": true
+  },
+  "support_and_hold_semantics": {
+    "v33_static_residual_is_session_local": true,
+    "last_learned_bias_is_not_necessarily_applied": true,
+    "actual_applied_bias_source": "endpoint.quasistatic_support.last_completed_segment_bias_tau",
+    "pending_bias_source": "endpoint.quasistatic_support.pending_unapplied_bias_tau",
+    "hold_transfer_requires_comparing_actual_motion_endpoint_and_final_hold_feedback": true
+  },
+  "conclusion": "Steady tracking improved toward the same saved feedback endpoint. The unchanged model predicts that removing the old tracking error raises this endpoint; the measured-joint FK comparison and exact per-axis decomposition quantify that rise. This explains the direction of the new higher observation without proving physical millimetres. The taught endpoint/contact-datum suitability remains unresolved; no Z50.2 or common-plane correction follows.",
+  "next_step_scope": "Use the explicit observed height request only for a separately labelled offline geometric candidate. Do not adjust runtime board registration/TCP or hide a per-square compensation, and do not execute without a new user motion instruction.",
+  "source_sha256": {
+    "outputs/a8_v33_execution_20261108/source_snapshot/scripts/data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "outputs/a8_v33_execution_20261108/source_snapshot/scripts/data/left_arm_board_workspace_candidate.json": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+    "outputs/a8_reference_execution_20261108/board_workspace_candidate.json": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+    "outputs/a8_saved_reference_20261108/saved_pose_audit.json": "35baf40f6a56b131322752ba91c0b8933977382cb280e0a0d4f3b3c4adb25a22",
+    "outputs/a8_reference_execution_20261108/control_evidence/data/left_arm_v2_8_full_runs/arm_run_1794185510062_30907.txt": "d752d5f7919df0048968ebb59ffa8f0f5bfed23dd9c41f3800a9beaba1372cd0",
+    "outputs/a8_v33_execution_20261108/control_evidence/data/left_arm_v2_8_full_runs/arm_run_1794187695341_35311.txt": "7c537d80cf17a419215b06574bd302b371abc811739f9d248df4e289e2590d4e",
+    "outputs/a8_v33_execution_20261108/operator_feedback.json": "7c2cc31c77b363c95bf883e7ff5d0436cf8913b3036c2f539305e0138a6a4da4"
+  },
+  "physical_grasp_contact_Z_mm": null,
+  "nominal_A8_XYZ_consistency_resolved": false
+}

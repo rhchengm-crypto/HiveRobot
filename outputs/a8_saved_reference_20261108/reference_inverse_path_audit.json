@@ -1,0 +1,140 @@
+{
+  "schema": 1,
+  "request_kind": "operator-approved-endpoint inverse-path diagnostic",
+  "nominal_request_board_mm": [
+    27.5,
+    412.5,
+    50.2
+  ],
+  "nominal_request_solved": false,
+  "model_fk_of_reference_board_mm": [
+    11.798050592563328,
+    405.6006774366655,
+    84.62267445748284
+  ],
+  "original_request_was_not_relabelled_as_solved": true,
+  "endpoint_source": "Jetson Saved Moves A8_take; user confirms white knight near A8 centre",
+  "intermediate_waypoints_source": "new Cartesian reverse IK plus checked geometric transit",
+  "saved_angles_replayed_as_trajectory": false,
+  "motion_issued": false,
+  "serial_opened": false,
+  "runtime_model_modified": false,
+  "execution_eligible": false,
+  "fit_ground_truth": false,
+  "common_envelope_candidate_changes": {
+    "shoulder_front": {
+      "below_min": 2.0518458318233552,
+      "above_max": 0.0
+    }
+  },
+  "source_hashes": {
+    "left_arm_board_grasp.py": "b0a4b9a1353e4198a112712e492139b96450ad7be89e17f7b7e4d4efccc4d7ac",
+    "left_arm_fault_support.py": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+    "left_arm_board_home_handoff.py": "0a341c4f34dddd0176c5229f33095d3bbb534616dd673bf8b7f6fa9e87f1a472",
+    "left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+    "left_arm_v3_1_model_control.py": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996",
+    "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+    "left_arm_v3_1_motion_dynamics.py": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "left_arm_board_task_pose.py": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+    "left_arm_board_transit.py": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f",
+    "left_arm_trajectory_support.py": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "left_arm_motion_trace.py": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "left_arm_rigid_body.py": "4ea8673a58ecde110e3bd2414eec4c7a6543dfd5546a54534734283e984f7cfd",
+    "chessboard_vision_v3_0_web_control.py": "5f6cfb5dce9a3bb15141711972676a5807b580ef2af2a8821f6c879c901459a2",
+    "data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "data/left_arm_board_workspace_candidate.json": "669ef83ccdd28d086e187760ebc95a2c1d02bb1fba1175888bd02d3b9978e074",
+    "data/left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+    "data/left_arm_validated_path_library.json": "379a81f7f977ace5341d03831f080d26612fce41ffd9a27716809ae325d346a2",
+    "data/left_arm_v2_table_clearance.json": "dead14fe6a7bcdca9ccfd8235ed268b3c10c557b32d953de4f98d736cd59b2b1",
+    "data/left_arm_v2_home.json": "b50735e9ae53e24cea91045c3ce2528e26ecd9dbb4990e8295e9a616c0d74d39"
+  },
+  "branches": [
+    {
+      "above_height_mm": 140.0,
+      "reverse_samples": 8,
+      "gripper_clearance": {
+        "passed": true,
+        "complete_edges_checked": true,
+        "travel_minimum_required_mm": 20.0,
+        "task_minimum_required_mm": 5.0,
+        "waypoint_minimum_vertex_heights_mm": {
+          "travel": 40.036155715594674,
+          "task": 58.14248963368509
+        },
+        "physical_clearance_verified": false,
+        "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+      },
+      "orientation_audit": {
+        "constraint": "full-gripper-frame",
+        "checked_task_samples": 49,
+        "max_error_deg": 0.015554524935979827,
+        "tolerance_deg": 0.2864788975654116,
+        "checked_task_edge_samples": 41,
+        "max_joint_sample_step_deg": 0.5,
+        "free_transit_excluded": true,
+        "physical_pose_verified": false
+      },
+      "passed": true,
+      "waypoints": 33,
+      "stages": {
+        "entry_search": 19,
+        "source_above": 7,
+        "contact": 7
+      },
+      "endpoint_delta_from_saved_deg": {
+        "shoulder_front": 0.0,
+        "shoulder_side": 0.0,
+        "shoulder_rotate": 0.0,
+        "elbow": 0.0,
+        "arm_roll": 0.0,
+        "wrist_side": 0.0,
+        "wrist": 0.0
+      },
+      "planned_gravity_envelope": {
+        "version": 1,
+        "path_sha256": "3e37249b35187eef8b34aa8dc89cb3e6789e95c49beaf7505f0070b5beb6575a",
+        "samples": 334,
+        "max_sample_step_deg": 0.5,
+        "headroom_Nm": 0.5,
+        "gravity_encoder_Nm": {
+          "shoulder_front": [
+            -8.727724973074565,
+            2.145645158520153
+          ],
+          "shoulder_side": [
+            -0.03498188938822534,
+            1.313563685056792
+          ],
+          "shoulder_rotate": [
+            -0.9168268453195109,
+            0.16327892104820402
+          ],
+          "elbow": [
+            3.1701397132322913,
+            4.036169537756397
+          ],
+          "arm_roll": [
+            -0.09226174746411744,
+            0.013712683083595434
+          ],
+          "wrist_side": [
+            0.010255401114090505,
+            0.13981807249524789
+          ],
+          "wrist": [
+            0.18005641211491896,
+            0.19879846785682898
+          ]
+        },
+        "physical_torque_rating_verified": false,
+        "scope": "sampled gravity range plus bounded residual headroom; runtime clipping retained"
+      }
+    }
+  ],
+  "geometric_inverse_path_found": true,
+  "elapsed_s": 2.950493699987419,
+  "source_hashes_still_match": true
+}

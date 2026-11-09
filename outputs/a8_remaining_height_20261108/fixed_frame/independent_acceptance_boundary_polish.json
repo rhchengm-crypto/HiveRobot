@@ -1,0 +1,90 @@
+{
+  "motion_issued": false,
+  "network_accessed": false,
+  "hardware_accessed": false,
+  "executable": false,
+  "desired_frame_or_bounds_changed": false,
+  "position_tolerance_mm": 0.5,
+  "strict_full_frame_tolerance_rad": 0.005,
+  "independent_SLSQP_endpoint_results": [
+    {
+      "optimizer_success": true,
+      "message": "Optimization terminated successfully",
+      "nfev": 85,
+      "maximum_demonstrated_requested_descent_mm": 1.718270091382812,
+      "achieved_model_descent_mm": 1.5061136589368118,
+      "encoder_rad": {
+        "shoulder_front": -0.37826157775702535,
+        "shoulder_side": -2.854062050613237,
+        "shoulder_rotate": 1.9845634200064655,
+        "elbow": -1.199138805725184,
+        "arm_roll": -2.2558554503019352,
+        "wrist_side": 0.1288270639021199,
+        "wrist": -2.0784317386447335
+      },
+      "position_error_mm": 0.5000000000000763,
+      "full_frame_error_deg": 0.28647889756544825,
+      "lateral_error_mm": 0.45275782508076223,
+      "minimum_scene_margin_mm": 12.276198695803384,
+      "endpoint_passed": true
+    },
+    {
+      "optimizer_success": true,
+      "message": "Optimization terminated successfully",
+      "nfev": 76,
+      "maximum_demonstrated_requested_descent_mm": 1.7182700913824127,
+      "achieved_model_descent_mm": 1.5061136473206815,
+      "encoder_rad": {
+        "shoulder_front": -0.37826157711388514,
+        "shoulder_side": -2.854062050919139,
+        "shoulder_rotate": 1.9845634196240174,
+        "elbow": -1.1991388044884776,
+        "arm_roll": -2.2558554503019352,
+        "wrist_side": 0.1288270640288576,
+        "wrist": -2.07843173919
+      },
+      "position_error_mm": 0.4999999999999986,
+      "full_frame_error_deg": 0.2864788975655713,
+      "lateral_error_mm": 0.4527578196376957,
+      "minimum_scene_margin_mm": 12.27619868049105,
+      "endpoint_passed": true
+    }
+  ],
+  "conservative0p5mm_grid_continuous_descent_mm": 0.0,
+  "continuous_branch_passed": false,
+  "dense_audit": null,
+  "branch_failures": [
+    {
+      "grid_mm": 1.5,
+      "failure": {
+        "requested_descent_mm": 0.5,
+        "position_error_mm": 0.007206680415312412,
+        "frame_error_deg": 0.0006841361840909139,
+        "joint_step_deg": 19.03148354818931
+      }
+    },
+    {
+      "grid_mm": 1.0,
+      "failure": {
+        "requested_descent_mm": 0.5,
+        "position_error_mm": 0.007206680415312412,
+        "frame_error_deg": 0.0006841361840909139,
+        "joint_step_deg": 19.03148354818931
+      }
+    },
+    {
+      "grid_mm": 0.5,
+      "failure": {
+        "requested_descent_mm": 0.5,
+        "position_error_mm": 0.007206680415312412,
+        "frame_error_deg": 0.0006841361840909139,
+        "joint_step_deg": 19.03148354818931
+      }
+    }
+  ],
+  "desired_R_fixed_from_actual_held_feedback": true,
+  "physical_displacement_or_contact_verified": false,
+  "scope": "Finite independent constrained optimization of the original acceptance tolerances; not a globally proven or physical maximum.",
+  "source_script_sha256": "5516e6c933281dd74028f892fd0f9299e1ac2a3953ce0054efeff10dac579449",
+  "elapsed_s": 1.3124682999914512
+}

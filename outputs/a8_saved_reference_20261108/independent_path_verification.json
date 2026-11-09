@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "read_only_local_audit": true,
+  "motion_issued": false,
+  "runtime_changed": false,
+  "plan_execution_eligible": false,
+  "cfg_changed_paths": [
+    "/joint_bound_source",
+    "/joint_limits_encoder_rad",
+    "/profiles/white_knight/seed_encoder_rad/arm_roll",
+    "/profiles/white_knight/seed_encoder_rad/elbow",
+    "/profiles/white_knight/seed_encoder_rad/shoulder_front",
+    "/profiles/white_knight/seed_encoder_rad/shoulder_rotate",
+    "/profiles/white_knight/seed_encoder_rad/shoulder_side",
+    "/profiles/white_knight/seed_encoder_rad/wrist",
+    "/profiles/white_knight/seed_encoder_rad/wrist_side",
+    "/profiles/white_knight/wrist_rotation_in_board"
+  ],
+  "endpoint_identical_to_saved": true,
+  "terminal_board_mm": [
+    11.798050592563328,
+    405.6006774366655,
+    84.62267445748284
+  ],
+  "terminal_declared_error_mm": 0.0,
+  "nominal_difference_mm": [
+    -15.701949407436672,
+    -6.899322563334522,
+    34.42267445748284
+  ],
+  "nominal_difference_norm_mm": 38.45871011659751,
+  "fk_vs_independent_poe_max_matrix_error": 1.3322676295501878e-15,
+  "bounds_violation_rad": 0.0,
+  "start_fixed_clearance_six_delta_deg": {
+    "shoulder_front": 0.0,
+    "shoulder_side": 0.0,
+    "elbow": 0.0,
+    "arm_roll": 0.0,
+    "wrist_side": 0.0,
+    "wrist": 0.0
+  },
+  "start_rotate_rad": 2.3832685947418213,
+  "start_rotate_source": "A8_take saved snapshot, not newly measured start",
+  "required_clearance_entry_errors_deg": {
+    "shoulder_front": 0.0,
+    "shoulder_side": 0.0,
+    "elbow": 0.0,
+    "arm_roll": 0.0,
+    "wrist_side": 0.0,
+    "wrist": 0.0
+  },
+  "full_edge_audit": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 40.036155715594674,
+      "task": 58.14248963368509
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "full_task_orientation_audit": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 49,
+    "max_error_deg": 0.015554524935979827,
+    "tolerance_deg": 0.2864788975654116,
+    "checked_task_edge_samples": 41,
+    "max_joint_sample_step_deg": 0.5,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "gravity_recomputed_equal": true,
+  "gravity_all_values_finite": true,
+  "gravity_is_motor_rating_certification": false,
+  "path_hash": "3e37249b35187eef8b34aa8dc89cb3e6789e95c49beaf7505f0070b5beb6575a",
+  "task_dense_samples": 236,
+  "task_dense_max_lateral_error_mm": 0.39250958462458135,
+  "task_dense_max_rotation_error_deg": 0.015554524935980014,
+  "task_height_range_mm": [
+    84.62267445748284,
+    140.01318110465473
+  ],
+  "task_height_non_decreasing_steps": 0,
+  "task_max_departure_from_simple_joint_lerp_deg": 3.153127197302821,
+  "max_contact_waypoint_fk_residual_mm": 0.41830185751864984,
+  "all_source_sha_match": true,
+  "missing_execution_checks": [
+    "Fresh measured start and preserved shoulder_rotate after actual fixed Clearance; current start is synthetic forecast",
+    "No prepared-plan runtime stamp or remote byte/source validation; diagnostic plan explicitly ineligible",
+    "No fresh entry load anchor or support_limits hardware MIT range verification",
+    "No timed controller frame/gain/velocity execution simulation or measured robot feedback for this new route",
+    "No newly measured A8 XYZ or TCP/board calibration ground truth; FK endpoint cannot establish nominal A8 position",
+    "Collision proof covers configured geometry/opening, not unmodeled pieces/cables or physical registration uncertainty"
+  ],
+  "new_ik_not_replay_evidence": [
+    "Generator calls solve_ik for each reverse vertical Cartesian waypoint with full endpoint frame, then reverses them",
+    "Intermediate contact curve differs from simple endpoint joint interpolation",
+    "Saved pose is explicitly fixed terminal boundary condition; geometry path is not independent confirmation of nominal requested XYZ"
+  ],
+  "shared_candidate_changed_paths": [
+    "/approved_task_pose_references",
+    "/joint_bound_source",
+    "/joint_limits_encoder_rad",
+    "/pending_reference_provenance",
+    "/seeds/A8_take"
+  ],
+  "shared_candidate_profiles_unchanged": true,
+  "shared_candidate_same_bounds_as_diagnostic": true
+}

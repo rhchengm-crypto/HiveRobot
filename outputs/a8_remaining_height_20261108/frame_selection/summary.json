@@ -1,0 +1,87 @@
+{
+  "scope": "Pure offline mathematical diagnostics; no motor/network/config activation. Trial domain b643 is NOT the restored active common ff4 domain.",
+  "trial_config_sha256": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+  "restored_active_config_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+  "target_full10_board_mm": [
+    9.639697000830372,
+    406.65055148807676,
+    52.175188529761634
+  ],
+  "full10_cases": [
+    {
+      "path": "frame_selection_report.json",
+      "sha256": "5c86f51eddb6df2e87f6e2fff5a303008636e87e7a7954d2ed8d98d81d50b778",
+      "source_snapshot_sha256": "f5c7dd853b4b171c20d2d98ae7727acdbb9dc012b0c266779d3a5e23347be385",
+      "endpoints_passed": 0,
+      "complete_path": false,
+      "total_candidate_trials": 15,
+      "maximum_requested_frame_budget_deg": 5.0,
+      "front_total_software_extension_from_original_deg": 12.0,
+      "additional_front_deg": 0.0,
+      "coupled_posture_counterfactual": false,
+      "other_six_bounds_unchanged": true
+    },
+    {
+      "path": "front_total17/frame_selection_report.json",
+      "sha256": "ef27b0ac6b35a07f05eb85a990bcede13a7ca0f4b8c945d7aef028da08ce2204",
+      "source_snapshot_sha256": "f5c7dd853b4b171c20d2d98ae7727acdbb9dc012b0c266779d3a5e23347be385",
+      "endpoints_passed": 0,
+      "complete_path": false,
+      "total_candidate_trials": 15,
+      "maximum_requested_frame_budget_deg": 5.0,
+      "front_total_software_extension_from_original_deg": 17.0,
+      "additional_front_deg": 5.0,
+      "coupled_posture_counterfactual": false,
+      "other_six_bounds_unchanged": true
+    },
+    {
+      "path": "front_total20/frame_selection_report.json",
+      "sha256": "9d9aaa479308beb3a85a8ef51d9af369f227fbcb6deea33ede1cbe0100b49f12",
+      "source_snapshot_sha256": "f5c7dd853b4b171c20d2d98ae7727acdbb9dc012b0c266779d3a5e23347be385",
+      "endpoints_passed": 0,
+      "complete_path": false,
+      "total_candidate_trials": 15,
+      "maximum_requested_frame_budget_deg": 5.0,
+      "front_total_software_extension_from_original_deg": 20.0,
+      "additional_front_deg": 8.0,
+      "coupled_posture_counterfactual": false,
+      "other_six_bounds_unchanged": true
+    },
+    {
+      "path": "coupled_posture10/frame_selection_report.json",
+      "sha256": "6b4e2f420520b690fd21e5ddd9ae49e37e94a8bc2aa0ae168399d2a082ae2fc0",
+      "source_snapshot_sha256": "f5c7dd853b4b171c20d2d98ae7727acdbb9dc012b0c266779d3a5e23347be385",
+      "endpoints_passed": 0,
+      "complete_path": false,
+      "total_candidate_trials": 25,
+      "maximum_requested_frame_budget_deg": 5.0,
+      "front_total_software_extension_from_original_deg": 12.0,
+      "additional_front_deg": 0.0,
+      "coupled_posture_counterfactual": true,
+      "other_six_bounds_unchanged": false
+    }
+  ],
+  "full10_solution_demonstrated": false,
+  "physical_unreachable_proven": false,
+  "unconstrained_orientation_position_crosscheck_best_error_mm": 3.937417804438224,
+  "unconstrained_orientation_not_accepted_as_requested_task": true,
+  "finite_same_trial_domain_maxZ_search": {
+    "seeds": 3,
+    "maximum_new_frame_change_deg": 5.0,
+    "endpoint_only_local_descent_mm": 0.6278667731418253,
+    "complete_connection_plus_descent": true,
+    "path_requested_descent_mm": 0.6278667731418253,
+    "model_achieved_descent_mm": 0.5823464199613682,
+    "global_maximum_proven": false,
+    "does_not_improve_fixed_frame_1_5mm_request_1_316mm_FK_result_reported_by_parent": true,
+    "comparison_caveat": "The new-frame endpoint optimization enforces exact model XY and <=5deg new frame. The independently reported fixed-frame path permits the original position/orientation acceptance tolerances. Their descent numbers are not comparable global workspace maxima."
+  },
+  "conclusion": "No exact full10mm candidate/path passed the tested limited domains and new-frame budgets. The local exact-XY/newR<=5deg optimization produced an endpoint0.62787mm lower and a checked connection with0.58235mm model descent. The other fixed-frame study established a1.5mm request/1.316mm FK path within original acceptance tolerances; these are different optimization/acceptance tasks, not comparable global maxima. No new-frame option demonstrated a useful full10mm path. Failed searches do not prove physical unreachability or total mechanical maximum.",
+  "remaining_uncertainties": [
+    "Existing CAD and joint encoder geometry may not match the physical remaining gripping gap.",
+    "Software-domain extensions are not certified mechanical travel.",
+    "FK is not physical TCP/fingertip metrology."
+  ],
+  "executable": false,
+  "no_more_domain_search_after_specified_four_cases": true
+}

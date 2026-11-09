@@ -1,0 +1,2346 @@
+{
+  "inputs": {
+    "motion_issued": false,
+    "network_accessed": false,
+    "active_configuration_changed": false,
+    "scope": "Existing lower25 scoped trial bounds, not certified mechanical travel.",
+    "source_files": {
+      "outputs/a8_lower25_execution_20261108/control_evidence/models/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+      "outputs/a8_lower25_execution_20261108/control_evidence/models/left_arm_board_workspace_candidate.json": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+      "outputs/a8_lower25_execution_20261108/execution_audit.json": "0ff1999815a551579a4b2c0ed18b48166381a79146e83b26566a036b6d46b66e",
+      "outputs/a8_remaining_height_20261108/frame_selection/select_remaining10_frame.py": "f5c7dd853b4b171c20d2d98ae7727acdbb9dc012b0c266779d3a5e23347be385"
+    },
+    "scipy_version": "1.18.1",
+    "held_encoder_rad": {
+      "shoulder_front": -0.3553444743156433,
+      "shoulder_side": -2.8593499660491943,
+      "shoulder_rotate": 2.319943428039551,
+      "elbow": -1.1556801795959473,
+      "arm_roll": -2.5907912254333496,
+      "wrist_side": 0.14057374000549316,
+      "wrist": -2.096017360687256
+    },
+    "held_model_board_mm": [
+      9.639697000830372,
+      406.65055148807676,
+      62.175188529761634
+    ],
+    "requested_board_mm": [
+      9.639697000830372,
+      406.65055148807676,
+      52.175188529761634
+    ],
+    "held_wrist_rotation_in_cad": [
+      [
+        0.3299853764795794,
+        0.9396991996777042,
+        0.08986136786580846
+      ],
+      [
+        0.04944787245201993,
+        -0.11226964126349667,
+        0.9924466915459677
+      ],
+      [
+        0.9426900653022711,
+        -0.3230494416891165,
+        -0.08351346600849084
+      ]
+    ],
+    "bounds_encoder_rad": {
+      "shoulder_front": [
+        -0.4011309684645698,
+        2.1103306165446476
+      ],
+      "shoulder_side": [
+        -3.122766768049164,
+        -2.1797434934864803
+      ],
+      "shoulder_rotate": [
+        1.5249327915689075,
+        2.9232550016154484
+      ],
+      "elbow": [
+        -1.4702146402110297,
+        0.838674008846283
+      ],
+      "arm_roll": [
+        -3.421080624174042,
+        -2.0813225251025025
+      ],
+      "wrist_side": [
+        -0.7890395152828359,
+        0.5848098746051031
+      ],
+      "wrist": [
+        -3.4836426130046085,
+        -0.8567862161885065
+      ]
+    },
+    "front_total_software_extension_from_original_common_deg": 12.0,
+    "front_additional_software_extension_from_completed_trial_deg": 0.0,
+    "other_six_bounds_unchanged": false,
+    "unchanged_axes": [
+      "shoulder_front",
+      "shoulder_side",
+      "elbow",
+      "wrist_side",
+      "wrist"
+    ],
+    "coupled_posture_counterfactual": true,
+    "counterfactual_rotation_lower_extension_deg": 10.0,
+    "counterfactual_roll_upper_extension_deg": 10.0,
+    "mechanical_qualification": false,
+    "strict_position_tolerance_mm": 0.5,
+    "strict_new_frame_tolerance_rad": 0.005,
+    "model_predictions_not_physical_height_or_XY_measurements": true
+  },
+  "minimum_frame_trials": [
+    {
+      "optimizer_success": false,
+      "message": "Positive directional derivative for linesearch",
+      "iterations": 52,
+      "encoder_rad": {
+        "shoulder_front": -0.38128445996405597,
+        "shoulder_side": -2.8482863141750965,
+        "shoulder_rotate": 1.5249327915689197,
+        "elbow": -1.2028337903713557,
+        "arm_roll": -2.081322525102513,
+        "wrist_side": 0.11674114030280927,
+        "wrist": -2.09610729923673
+      },
+      "model_board_mm": [
+        10.998498491909736,
+        406.86721997347473,
+        61.733218773924776
+      ],
+      "position_error_mm": 9.656564030391966,
+      "full_frame_change_from_held_deg": 16.343838425434974,
+      "axis_change_from_held_deg": 1.1006547727930691,
+      "maximum_new_frame_change_deg": null,
+      "scene_minimum_clearance_mm": 12.565323502287459,
+      "scene_passed": true,
+      "scene_failure": null,
+      "bounds_passed": true,
+      "active_bounds": [
+        "shoulder_rotate",
+        "arm_roll"
+      ],
+      "actual_bound_extensions_from_completed_trial_deg": {
+        "shoulder_rotate": {
+          "below": 9.999999999999302,
+          "above": 0.0
+        },
+        "arm_roll": {
+          "below": 0.0,
+          "above": 9.999999999999378
+        }
+      },
+      "selected_new_wrist_rotation_in_cad": [
+        [
+          0.35294641880376304,
+          0.9354043614964413,
+          -0.021154336364816964
+        ],
+        [
+          0.32484126242900957,
+          -0.10130330804038755,
+          0.9403274929531753
+        ],
+        [
+          0.8774434338902579,
+          -0.3387570224711387,
+          -0.339612573455935
+        ]
+      ],
+      "selected_new_wrist_rotation_in_board": [
+        [
+          -0.13099197085285713,
+          -0.02248895748521706,
+          -0.9911283218450131
+        ],
+        [
+          0.3630223676962051,
+          0.9292174574378467,
+          -0.06906285068679731
+        ],
+        [
+          0.9225268907323655,
+          -0.3688484290111228,
+          -0.1135560315073619
+        ]
+      ],
+      "endpoint_only_passed": false,
+      "executable": false,
+      "globally_optimal_proven": false,
+      "seed_index": 0
+    },
+    {
+      "optimizer_success": false,
+      "message": "Positive directional derivative for linesearch",
+      "iterations": 48,
+      "encoder_rad": {
+        "shoulder_front": -0.3778768747126168,
+        "shoulder_side": -2.8504806517246624,
+        "shoulder_rotate": 1.5249327915689075,
+        "elbow": -1.2028343787801983,
+        "arm_roll": -2.0813225251025025,
+        "wrist_side": 0.11674138814680535,
+        "wrist": -2.096107403059143
+      },
+      "model_board_mm": [
+        12.52230858531113,
+        405.81977240309993,
+        59.347686650203336
+      ],
+      "position_error_mm": 7.774597913895996,
+      "full_frame_change_from_held_deg": 16.370193482822348,
+      "axis_change_from_held_deg": 1.321159530690882,
+      "maximum_new_frame_change_deg": null,
+      "scene_minimum_clearance_mm": 12.455475385973978,
+      "scene_passed": true,
+      "scene_failure": null,
+      "bounds_passed": true,
+      "active_bounds": [
+        "shoulder_rotate",
+        "arm_roll"
+      ],
+      "actual_bound_extensions_from_completed_trial_deg": {
+        "shoulder_rotate": {
+          "below": 10.000000000000002,
+          "above": 0.0
+        },
+        "arm_roll": {
+          "below": 0.0,
+          "above": 9.99999999999999
+        }
+      },
+      "selected_new_wrist_rotation_in_cad": [
+        [
+          0.3564870500784942,
+          0.9340904328096704,
+          -0.019800163125028858
+        ],
+        [
+          0.3247559439150262,
+          -0.10401340467445182,
+          0.9400610557511098
+        ],
+        [
+          0.8760425560543247,
+          -0.3415498133237281,
+          -0.3404308520101161
+        ]
+      ],
+      "selected_new_wrist_rotation_in_board": [
+        [
+          -0.13139415328548062,
+          -0.020433534977831704,
+          -0.9911195927488774
+        ],
+        [
+          0.3665240849905765,
+          0.9279406643580644,
+          -0.0677216254422206
+        ],
+        [
+          0.9210839655559162,
+          -0.3721674274826119,
+          -0.11443659518162189
+        ]
+      ],
+      "endpoint_only_passed": false,
+      "executable": false,
+      "globally_optimal_proven": false,
+      "seed_index": 1
+    },
+    {
+      "optimizer_success": false,
+      "message": "Positive directional derivative for linesearch",
+      "iterations": 45,
+      "encoder_rad": {
+        "shoulder_front": -0.3689330979387938,
+        "shoulder_side": -2.8465693484276144,
+        "shoulder_rotate": 1.5249327915690316,
+        "elbow": -1.202833312842369,
+        "arm_roll": -2.0813225251025815,
+        "wrist_side": 0.11674091854515291,
+        "wrist": -2.096107166264057
+      },
+      "model_board_mm": [
+        9.440404647981389,
+        403.03009955775855,
+        53.645247567257
+      ],
+      "position_error_mm": 3.9126031226500095,
+      "full_frame_change_from_held_deg": 16.42274328810006,
+      "axis_change_from_held_deg": 1.7917616542143637,
+      "maximum_new_frame_change_deg": null,
+      "scene_minimum_clearance_mm": 12.651276476865378,
+      "scene_passed": true,
+      "scene_failure": null,
+      "bounds_passed": true,
+      "active_bounds": [
+        "shoulder_rotate",
+        "arm_roll"
+      ],
+      "actual_bound_extensions_from_completed_trial_deg": {
+        "shoulder_rotate": {
+          "below": 9.99999999999289,
+          "above": 0.0
+        },
+        "arm_roll": {
+          "below": 0.0,
+          "above": 9.99999999999546
+        }
+      },
+      "selected_new_wrist_rotation_in_cad": [
+        [
+          0.3639727402685309,
+          0.931080006003274,
+          -0.02477633472412008
+        ],
+        [
+          0.323974515742091,
+          -0.10161688951388113,
+          0.9405926434515652
+        ],
+        [
+          0.8732493100432973,
+          -0.35037698295759795,
+          -0.3386319717959861
+        ]
+      ],
+      "selected_new_wrist_rotation_in_board": [
+        [
+          -0.13162144622581196,
+          -0.024648068865508483,
+          -0.9909935759603219
+        ],
+        [
+          0.3739568203154012,
+          0.9245951233823341,
+          -0.07266467062612308
+        ],
+        [
+          0.9180588714418155,
+          -0.3801530356564432,
+          -0.11247923385305568
+        ]
+      ],
+      "endpoint_only_passed": false,
+      "executable": false,
+      "globally_optimal_proven": false,
+      "seed_index": 2
+    },
+    {
+      "optimizer_success": false,
+      "message": "Positive directional derivative for linesearch",
+      "iterations": 57,
+      "encoder_rad": {
+        "shoulder_front": -0.3700951292564394,
+        "shoulder_side": -2.8477493710793356,
+        "shoulder_rotate": 1.5249327915689075,
+        "elbow": -1.2028336395763126,
+        "arm_roll": -2.0813225251025025,
+        "wrist_side": 0.11674106098601705,
+        "wrist": -2.096107229709168
+      },
+      "model_board_mm": [
+        10.332719542462915,
+        403.39698037754823,
+        54.34671510790131
+      ],
+      "position_error_mm": 3.9725977513515343,
+      "full_frame_change_from_held_deg": 16.41683209501594,
+      "axis_change_from_held_deg": 1.7321193528519763,
+      "maximum_new_frame_change_deg": null,
+      "scene_minimum_clearance_mm": 12.59220322152114,
+      "scene_passed": true,
+      "scene_failure": null,
+      "bounds_passed": true,
+      "active_bounds": [
+        "shoulder_rotate",
+        "arm_roll"
+      ],
+      "actual_bound_extensions_from_completed_trial_deg": {
+        "shoulder_rotate": {
+          "below": 10.000000000000002,
+          "above": 0.0
+        },
+        "arm_roll": {
+          "below": 0.0,
+          "above": 9.99999999999999
+        }
+      },
+      "selected_new_wrist_rotation_in_cad": [
+        [
+          0.3631251531233899,
+          0.9314429488125558,
+          -0.0235405241336498
+        ],
+        [
+          0.3241150270153503,
+          -0.1025891057749676,
+          0.940438687336465
+        ],
+        [
+          0.8735499827897395,
+          -0.3491267799577468,
+          -0.33914734126096613
+        ]
+      ],
+      "selected_new_wrist_rotation_in_board": [
+        [
+          -0.13164987568725048,
+          -0.023432982091561853,
+          -0.9910192760899393
+        ],
+        [
+          0.37311266358448164,
+          0.9250316454679963,
+          -0.07143805117489041
+        ],
+        [
+          0.9183981982258156,
+          -0.37916665232199553,
+          -0.11303715876872479
+        ]
+      ],
+      "endpoint_only_passed": false,
+      "executable": false,
+      "globally_optimal_proven": false,
+      "seed_index": 3
+    },
+    {
+      "optimizer_success": false,
+      "message": "Positive directional derivative for linesearch",
+      "iterations": 60,
+      "encoder_rad": {
+        "shoulder_front": -0.3700991708393495,
+        "shoulder_side": -2.8477527082041947,
+        "shoulder_rotate": 1.5249327915689075,
+        "elbow": -1.2028336404791704,
+        "arm_roll": -2.0813225251025025,
+        "wrist_side": 0.11674106169280889,
+        "wrist": -2.0961072310037747
+      },
+      "model_board_mm": [
+        10.335261285871955,
+        403.3982523352824,
+        54.34919917001524
+      ],
+      "position_error_mm": 3.9733589968473737,
+      "full_frame_change_from_held_deg": 16.41681017026618,
+      "axis_change_from_held_deg": 1.731911841134983,
+      "maximum_new_frame_change_deg": null,
+      "scene_minimum_clearance_mm": 12.592036162381646,
+      "scene_passed": true,
+      "scene_failure": null,
+      "bounds_passed": true,
+      "active_bounds": [
+        "shoulder_rotate",
+        "arm_roll"
+      ],
+      "actual_bound_extensions_from_completed_trial_deg": {
+        "shoulder_rotate": {
+          "below": 10.000000000000002,
+          "above": 0.0
+        },
+        "arm_roll": {
+          "below": 0.0,
+          "above": 9.99999999999999
+        }
+      },
+      "selected_new_wrist_rotation_in_cad": [
+        [
+          0.36312206460423574,
+          0.931444244484098,
+          -0.023536899009994193
+        ],
+        [
+          0.3241154712966992,
+          -0.10259173279929563,
+          0.9404382476416825
+        ],
+        [
+          0.8735511018043977,
+          -0.3491225512319241,
+          -0.33914881211296805
+        ]
+      ],
+      "selected_new_wrist_rotation_in_board": [
+        [
+          -0.13164990806911575,
+          -0.023429518375942187,
+          -0.9910193536828956
+        ],
+        [
+          0.37310959098885976,
+          0.9250331627157804,
+          -0.0714344523893594
+        ],
+        [
+          0.9183994418647691,
+          -0.3791631648046957,
+          -0.11303875281410264
+        ]
+      ],
+      "endpoint_only_passed": false,
+      "executable": false,
+      "globally_optimal_proven": false,
+      "seed_index": 4
+    }
+  ],
+  "bounded_trials": [
+    {
+      "budget_deg": 1.0,
+      "trials": [
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 112,
+          "encoder_rad": {
+            "shoulder_front": -0.3832208963648017,
+            "shoulder_side": -2.8523726926651047,
+            "shoulder_rotate": 1.7915667095088597,
+            "elbow": -1.1977721731369522,
+            "arm_roll": -2.081322525102759,
+            "wrist_side": 0.12011419545075341,
+            "wrist": -2.096950637019231
+          },
+          "model_board_mm": [
+            10.779473005414562,
+            406.5958447722461,
+            61.258862518023996
+          ],
+          "position_error_mm": 9.155065007437976,
+          "full_frame_change_from_held_deg": 1.505885169047778,
+          "axis_change_from_held_deg": 1.0978443869318912,
+          "maximum_new_frame_change_deg": 1.0,
+          "scene_minimum_clearance_mm": 12.360762855647698,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.999999999985281
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3490183007097569,
+              0.9332176583817884,
+              0.08538751579761077
+            ],
+            [
+              0.06565738551593653,
+              -0.11524506540976222,
+              0.9911648110308969
+            ],
+            [
+              0.9348129938639527,
+              -0.3403283370263389,
+              -0.10149526846115303
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.13433735178396009,
+              -0.009192984411379822,
+              -0.9908930138785338
+            ],
+            [
+              0.37132528007930327,
+              0.9275643667908876,
+              0.04173585789040594
+            ],
+            [
+              0.9187333738847737,
+              -0.37355031053050003,
+              0.12802012815517366
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 0
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 38,
+          "encoder_rad": {
+            "shoulder_front": -0.38020079343417207,
+            "shoulder_side": -2.8543496861394546,
+            "shoulder_rotate": 1.789436443414895,
+            "elbow": -1.1978060331007638,
+            "arm_roll": -2.0813225251025025,
+            "wrist_side": 0.12012921966585065,
+            "wrist": -2.096922408498585
+          },
+          "model_board_mm": [
+            12.165989398697125,
+            405.67473317618885,
+            59.15838081369798
+          ],
+          "position_error_mm": 7.489949875116769,
+          "full_frame_change_from_held_deg": 1.7301677313759292,
+          "axis_change_from_held_deg": 1.282362835668699,
+          "maximum_new_frame_change_deg": 1.0,
+          "scene_minimum_clearance_mm": 12.261800772099715,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.99999999999999
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3518407624379724,
+              0.9320524706559048,
+              0.08652323289898321
+            ],
+            [
+              0.06775385770700391,
+              -0.11754888514884135,
+              0.9907530844595369
+            ],
+            [
+              0.9336045697472172,
+              -0.3427250378138285,
+              -0.10450863984678402
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.13189128356670557,
+              -0.007448639740254102,
+              -0.9912362014601499
+            ],
+            [
+              0.37402515797637675,
+              0.9264301918701597,
+              0.042805149131464944
+            ],
+            [
+              0.917992304172466,
+              -0.37639290290524896,
+              0.12497404579626209
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 1
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 17,
+          "encoder_rad": {
+            "shoulder_front": -0.36911491698526566,
+            "shoulder_side": -2.8467887020664215,
+            "shoulder_rotate": 1.5270890043763725,
+            "elbow": -1.2027728485377247,
+            "arm_roll": -2.0813225251025025,
+            "wrist_side": 0.1167417720386349,
+            "wrist": -2.0960612658360303
+          },
+          "model_board_mm": [
+            9.57912734383903,
+            403.0858680136848,
+            53.75218762571489
+          ],
+          "position_error_mm": 3.8984052001540697,
+          "full_frame_change_from_held_deg": 16.298790639189104,
+          "axis_change_from_held_deg": 1.7799257984166297,
+          "maximum_new_frame_change_deg": 1.0,
+          "scene_minimum_clearance_mm": 12.640295332781779,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "shoulder_rotate": {
+              "below": 9.8764581064002,
+              "above": 0.0
+            },
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.99999999999999
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.36389020456616405,
+              0.9311405864473383,
+              -0.02368812553376962
+            ],
+            [
+              0.3219717538311922,
+              -0.10188137559153877,
+              0.9412514940452652
+            ],
+            [
+              0.8740240893451751,
+              -0.3501391060394203,
+              -0.33687460228734184
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              -0.12949278078970125,
+              -0.024339184649883085,
+              -0.9912816067162391
+            ],
+            [
+              0.3739778780911052,
+              0.9246729856133344,
+              -0.07155708473238753
+            ],
+            [
+              0.9183529639641965,
+              -0.37998351775768147,
+              -0.11063615959835559
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 2
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 35,
+          "encoder_rad": {
+            "shoulder_front": -0.3674600640327582,
+            "shoulder_side": -2.8517472140369846,
+            "shoulder_rotate": 1.8097050376382193,
+            "elbow": -1.1975041174517085,
+            "arm_roll": -2.0813225251025025,
+            "wrist_side": 0.12199196987175599,
+            "wrist": -2.0797100072447128
+          },
+          "model_board_mm": [
+            9.785423862772035,
+            403.1081197503716,
+            53.938311551258906
+          ],
+          "position_error_mm": 3.959628988115645,
+          "full_frame_change_from_held_deg": 1.0083967558472169,
+          "axis_change_from_held_deg": 1.0077437688531912,
+          "maximum_new_frame_change_deg": 1.0,
+          "scene_minimum_clearance_mm": 12.39207301402993,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.99999999999999
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3463921534258325,
+              0.9335992265305241,
+              0.09167857037837902
+            ],
+            [
+              0.04854609408294466,
+              -0.11543800680247217,
+              0.9921276849956182
+            ],
+            [
+              0.9368328307624071,
+              -0.33921460877603943,
+              -0.08530941565040995
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.1515586578905954,
+              -0.008767707650863923,
+              -0.9884093790130434
+            ],
+            [
+              0.36946141157450985,
+              0.9279837113864272,
+              0.048420003705535404
+            ],
+            [
+              0.9168032714687331,
+              -0.3725175951603121,
+              0.14388329548702108
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 3
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 42,
+          "encoder_rad": {
+            "shoulder_front": -0.3695795892007243,
+            "shoulder_side": -2.8516972093854984,
+            "shoulder_rotate": 1.8086568935486793,
+            "elbow": -1.1975190282824668,
+            "arm_roll": -2.081322525102589,
+            "wrist_side": 0.12116774430914873,
+            "wrist": -2.0874325567085292
+          },
+          "model_board_mm": [
+            9.810228823232498,
+            403.12191317804275,
+            53.92740507835937
+          ],
+          "position_error_mm": 3.943428997543989,
+          "full_frame_change_from_held_deg": 1.3334662130281711,
+          "axis_change_from_held_deg": 1.3308019750009823,
+          "maximum_new_frame_change_deg": 1.0,
+          "scene_minimum_clearance_mm": 12.394576155821994,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.999999999995026
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3517059795906183,
+              0.9316012760063423,
+              0.09177127253972127
+            ],
+            [
+              0.04885996248517909,
+              -0.11616977236642202,
+              0.9920268585347286
+            ],
+            [
+              0.9348345350842316,
+              -0.34441783712765245,
+              -0.08637560698576682
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.15054928284256167,
+              -0.009156727286826228,
+              -0.9885600982140561
+            ],
+            [
+              0.3747014842789422,
+              0.9258767398233338,
+              0.04848773384345181
+            ],
+            [
+              0.9148408118983039,
+              -0.37771472965653613,
+              0.142821118486523
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 4
+        }
+      ],
+      "best": {
+        "optimizer_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 17,
+        "encoder_rad": {
+          "shoulder_front": -0.36911491698526566,
+          "shoulder_side": -2.8467887020664215,
+          "shoulder_rotate": 1.5270890043763725,
+          "elbow": -1.2027728485377247,
+          "arm_roll": -2.0813225251025025,
+          "wrist_side": 0.1167417720386349,
+          "wrist": -2.0960612658360303
+        },
+        "model_board_mm": [
+          9.57912734383903,
+          403.0858680136848,
+          53.75218762571489
+        ],
+        "position_error_mm": 3.8984052001540697,
+        "full_frame_change_from_held_deg": 16.298790639189104,
+        "axis_change_from_held_deg": 1.7799257984166297,
+        "maximum_new_frame_change_deg": 1.0,
+        "scene_minimum_clearance_mm": 12.640295332781779,
+        "scene_passed": true,
+        "scene_failure": null,
+        "bounds_passed": true,
+        "active_bounds": [
+          "arm_roll"
+        ],
+        "actual_bound_extensions_from_completed_trial_deg": {
+          "shoulder_rotate": {
+            "below": 9.8764581064002,
+            "above": 0.0
+          },
+          "arm_roll": {
+            "below": 0.0,
+            "above": 9.99999999999999
+          }
+        },
+        "selected_new_wrist_rotation_in_cad": [
+          [
+            0.36389020456616405,
+            0.9311405864473383,
+            -0.02368812553376962
+          ],
+          [
+            0.3219717538311922,
+            -0.10188137559153877,
+            0.9412514940452652
+          ],
+          [
+            0.8740240893451751,
+            -0.3501391060394203,
+            -0.33687460228734184
+          ]
+        ],
+        "selected_new_wrist_rotation_in_board": [
+          [
+            -0.12949278078970125,
+            -0.024339184649883085,
+            -0.9912816067162391
+          ],
+          [
+            0.3739778780911052,
+            0.9246729856133344,
+            -0.07155708473238753
+          ],
+          [
+            0.9183529639641965,
+            -0.37998351775768147,
+            -0.11063615959835559
+          ]
+        ],
+        "endpoint_only_passed": false,
+        "executable": false,
+        "globally_optimal_proven": false,
+        "seed_index": 2
+      }
+    },
+    {
+      "budget_deg": 2.0,
+      "trials": [
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 54,
+          "encoder_rad": {
+            "shoulder_front": -0.3832094266539724,
+            "shoulder_side": -2.8517297495272715,
+            "shoulder_rotate": 1.733323467271081,
+            "elbow": -1.198700280387458,
+            "arm_roll": -2.081322525102505,
+            "wrist_side": 0.11927419015861751,
+            "wrist": -2.097128044303922
+          },
+          "model_board_mm": [
+            10.992706178903699,
+            406.7280558380195,
+            61.5093700559155
+          ],
+          "position_error_mm": 9.432050971204566,
+          "full_frame_change_from_held_deg": 4.504007140752193,
+          "axis_change_from_held_deg": 1.1035733653797009,
+          "maximum_new_frame_change_deg": 2.0,
+          "scene_minimum_clearance_mm": 12.392947255366474,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.999999999999837
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3523325669060431,
+              0.9337881318922739,
+              0.06246188465406852
+            ],
+            [
+              0.12327888684858984,
+              -0.11246794439584633,
+              0.9859783352288971
+            ],
+            [
+              0.9277198275097778,
+              -0.33969204615432586,
+              -0.15474248099573903
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.07653457144718961,
+              -0.011773589999513242,
+              -0.9969974132122499
+            ],
+            [
+              0.3720714089988979,
+              0.9280371793489333,
+              0.01760285066836681
+            ],
+            [
+              0.9250434184290861,
+              -0.3723014589342905,
+              0.07540754402862287
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 0
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 87,
+          "encoder_rad": {
+            "shoulder_front": -0.38026415148636117,
+            "shoulder_side": -2.8543911827510167,
+            "shoulder_rotate": 1.7828662606429906,
+            "elbow": -1.1979060843990212,
+            "arm_roll": -2.0813225251025025,
+            "wrist_side": 0.12001284758365932,
+            "wrist": -2.0970549338024522
+          },
+          "model_board_mm": [
+            12.276911931296404,
+            405.69951216823694,
+            59.201215479920215
+          ],
+          "position_error_mm": 7.564683277025393,
+          "full_frame_change_from_held_deg": 2.0055199767162626,
+          "axis_change_from_held_deg": 1.287433847401899,
+          "maximum_new_frame_change_deg": 2.0,
+          "scene_minimum_clearance_mm": 12.259723618024834,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.99999999999999
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.35232990146508514,
+              0.9320946507964233,
+              0.0840428610311362
+            ],
+            [
+              0.07426593668882897,
+              -0.11736409030200409,
+              0.9903081545434818
+            ],
+            [
+              0.9329245474213522,
+              -0.34267365271388855,
+              -0.11057376069568825
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.12538129483671834,
+              -0.007618479606332719,
+              -0.992079376700048
+            ],
+            [
+              0.37422722881316717,
+              0.9264661144226373,
+              0.04018109059545202
+            ],
+            [
+              0.9188218065108625,
+              -0.37630107307196203,
+              0.11901256355950077
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 1
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 52,
+          "encoder_rad": {
+            "shoulder_front": -0.3691154277078489,
+            "shoulder_side": -2.8467903929506697,
+            "shoulder_rotate": 1.5270742725702282,
+            "elbow": -1.2027731789994227,
+            "arm_roll": -2.0813225251025034,
+            "wrist_side": 0.1167416019622163,
+            "wrist": -2.0960612012777182
+          },
+          "model_board_mm": [
+            9.580568090024288,
+            403.08609252251733,
+            53.75253637206035
+          ],
+          "position_error_mm": 3.898318889066721,
+          "full_frame_change_from_held_deg": 16.299629378657244,
+          "axis_change_from_held_deg": 1.7798956648611841,
+          "maximum_new_frame_change_deg": 2.0,
+          "scene_minimum_clearance_mm": 12.64021068489172,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "shoulder_rotate": {
+              "below": 9.877302176716874,
+              "above": 0.0
+            },
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.999999999999938
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3638893356528444,
+              0.9311408185601708,
+              -0.02369234917074169
+            ],
+            [
+              0.32198578224662006,
+              -0.1018823874277247,
+              0.9412465857377975
+            ],
+            [
+              0.8740192832135708,
+              -0.3501381943506363,
+              -0.33688801912165567
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              -0.1295074817535001,
+              -0.024338002599009558,
+              -0.9912797152163242
+            ],
+            [
+              0.37397630220673195,
+              0.9246732838850384,
+              -0.07156146628626271
+            ],
+            [
+              0.9183515326701672,
+              -0.3799828676384648,
+              -0.11065027222561577
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 2
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 111,
+          "encoder_rad": {
+            "shoulder_front": -0.37192812526254193,
+            "shoulder_side": -2.851443895939159,
+            "shoulder_rotate": 1.7918342738360986,
+            "elbow": -1.1977674064236372,
+            "arm_roll": -2.0813225251025966,
+            "wrist_side": 0.1201252095784449,
+            "wrist": -2.096544616870621
+          },
+          "model_board_mm": [
+            9.830142230755094,
+            403.12126916642694,
+            53.90107589608279
+          ],
+          "position_error_mm": 3.9332925511253003,
+          "full_frame_change_from_held_deg": 2.0051053479717127,
+          "axis_change_from_held_deg": 1.7182678413414951,
+          "maximum_new_frame_change_deg": 2.0,
+          "scene_minimum_clearance_mm": 12.407256594641739,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.999999999994595
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3591758402493275,
+              0.9293486725003468,
+              0.0854620424693593
+            ],
+            [
+              0.06466666156696246,
+              -0.11613548184285884,
+              0.9911260125427612
+            ],
+            [
+              0.9310268195186298,
+              -0.350461973370824,
+              -0.10181093535595537
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.13396217598207322,
+              -0.010471563675531972,
+              -0.9909311185750185
+            ],
+            [
+              0.38140820936467906,
+              0.9234610234199523,
+              0.04180330194380532
+            ],
+            [
+              0.9146485189598121,
+              -0.3835493248310635,
+              0.12770278848270178
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 3
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 37,
+          "encoder_rad": {
+            "shoulder_front": -0.3719533610594935,
+            "shoulder_side": -2.8514827763572232,
+            "shoulder_rotate": 1.7917640503437844,
+            "elbow": -1.1977684599074436,
+            "arm_roll": -2.0813225251025034,
+            "wrist_side": 0.12012482468261691,
+            "wrist": -2.0965498262251288
+          },
+          "model_board_mm": [
+            9.859708668504863,
+            403.129001985926,
+            53.91494992395884
+          ],
+          "position_error_mm": 3.9340164893845686,
+          "full_frame_change_from_held_deg": 2.0062751948000432,
+          "axis_change_from_held_deg": 1.7171908761636667,
+          "maximum_new_frame_change_deg": 2.0,
+          "scene_minimum_clearance_mm": 12.405310304138892,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.999999999999938
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.359159712909375,
+              0.9293544559979707,
+              0.08546692775321407
+            ],
+            [
+              0.06474057298764388,
+              -0.11616663139944026,
+              0.9911175369039438
+            ],
+            [
+              0.9310279044325619,
+              -0.35043631213963045,
+              -0.1018893139730014
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.13389131045676822,
+              -0.010435662438878774,
+              -0.9909410749048758
+            ],
+            [
+              0.38138908973326274,
+              0.9234687798477829,
+              0.04180639758316843
+            ],
+            [
+              0.9146668678904917,
+              -0.38353162789515827,
+              0.12762449289805963
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 4
+        }
+      ],
+      "best": {
+        "optimizer_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 52,
+        "encoder_rad": {
+          "shoulder_front": -0.3691154277078489,
+          "shoulder_side": -2.8467903929506697,
+          "shoulder_rotate": 1.5270742725702282,
+          "elbow": -1.2027731789994227,
+          "arm_roll": -2.0813225251025034,
+          "wrist_side": 0.1167416019622163,
+          "wrist": -2.0960612012777182
+        },
+        "model_board_mm": [
+          9.580568090024288,
+          403.08609252251733,
+          53.75253637206035
+        ],
+        "position_error_mm": 3.898318889066721,
+        "full_frame_change_from_held_deg": 16.299629378657244,
+        "axis_change_from_held_deg": 1.7798956648611841,
+        "maximum_new_frame_change_deg": 2.0,
+        "scene_minimum_clearance_mm": 12.64021068489172,
+        "scene_passed": true,
+        "scene_failure": null,
+        "bounds_passed": true,
+        "active_bounds": [
+          "arm_roll"
+        ],
+        "actual_bound_extensions_from_completed_trial_deg": {
+          "shoulder_rotate": {
+            "below": 9.877302176716874,
+            "above": 0.0
+          },
+          "arm_roll": {
+            "below": 0.0,
+            "above": 9.999999999999938
+          }
+        },
+        "selected_new_wrist_rotation_in_cad": [
+          [
+            0.3638893356528444,
+            0.9311408185601708,
+            -0.02369234917074169
+          ],
+          [
+            0.32198578224662006,
+            -0.1018823874277247,
+            0.9412465857377975
+          ],
+          [
+            0.8740192832135708,
+            -0.3501381943506363,
+            -0.33688801912165567
+          ]
+        ],
+        "selected_new_wrist_rotation_in_board": [
+          [
+            -0.1295074817535001,
+            -0.024338002599009558,
+            -0.9912797152163242
+          ],
+          [
+            0.37397630220673195,
+            0.9246732838850384,
+            -0.07156146628626271
+          ],
+          [
+            0.9183515326701672,
+            -0.3799828676384648,
+            -0.11065027222561577
+          ]
+        ],
+        "endpoint_only_passed": false,
+        "executable": false,
+        "globally_optimal_proven": false,
+        "seed_index": 2
+      }
+    },
+    {
+      "budget_deg": 3.0,
+      "trials": [
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 43,
+          "encoder_rad": {
+            "shoulder_front": -0.3834901052194059,
+            "shoulder_side": -2.853431064295981,
+            "shoulder_rotate": 1.7603095398093858,
+            "elbow": -1.198258688867275,
+            "arm_roll": -2.0813225251025025,
+            "wrist_side": 0.11965654667813488,
+            "wrist": -2.097204906162516
+          },
+          "model_board_mm": [
+            11.923124336860564,
+            406.73727233888604,
+            61.46569066521115
+          ],
+          "position_error_mm": 9.567392060205599,
+          "full_frame_change_from_held_deg": 3.03146948661505,
+          "axis_change_from_held_deg": 1.1055877292313738,
+          "maximum_new_frame_change_deg": 3.0,
+          "scene_minimum_clearance_mm": 12.307783686579818,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.99999999999999
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.35082173731907557,
+              0.9334853826171283,
+              0.07435824812743175
+            ],
+            [
+              0.09672868368606148,
+              -0.11510359621002883,
+              0.9886327548143864
+            ],
+            [
+              0.9314331271630768,
+              -0.3396412851519587,
+              -0.13067565589481045
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.10326957534041148,
+              -0.0091853982505679,
+              -0.994610990924587
+            ],
+            [
+              0.3717559846204268,
+              0.9278446364343416,
+              0.030030293686920964
+            ],
+            [
+              0.9225686330609273,
+              -0.3728538039218643,
+              0.09923284835722318
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 0
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 57,
+          "encoder_rad": {
+            "shoulder_front": -0.38014240371642904,
+            "shoulder_side": -2.8540322974008707,
+            "shoulder_rotate": 1.7603043858271337,
+            "elbow": -1.1982592890498496,
+            "arm_roll": -2.0813225251025025,
+            "wrist_side": 0.11966527082034455,
+            "wrist": -2.097159694297341
+          },
+          "model_board_mm": [
+            12.279995778877458,
+            405.7108756238652,
+            59.21797626804587
+          ],
+          "position_error_mm": 7.579909464740582,
+          "full_frame_change_from_held_deg": 3.1138014297275083,
+          "axis_change_from_held_deg": 1.2988403412317144,
+          "maximum_new_frame_change_deg": 3.0,
+          "scene_minimum_clearance_mm": 12.277688030877679,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.99999999999999
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.35388958823788336,
+              0.9322725129061351,
+              0.07503413234324234
+            ],
+            [
+              0.09658179749113739,
+              -0.11622325033752585,
+              0.9885161164464461
+            ],
+            [
+              0.9302871146749286,
+              -0.34257863004084593,
+              -0.13117075325366992
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.1030075791459658,
+              -0.008714119792418953,
+              -0.9946423994354605
+            ],
+            [
+              0.3747949648661775,
+              0.9265993998903554,
+              0.03069668441046076
+            ],
+            [
+              0.9213675558372179,
+              -0.3759489542997529,
+              0.09871276924224923
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 1
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 61,
+          "encoder_rad": {
+            "shoulder_front": -0.36911613809477684,
+            "shoulder_side": -2.8467930867209246,
+            "shoulder_rotate": 1.5270507472950885,
+            "elbow": -1.2027737098777098,
+            "arm_roll": -2.0813225251025496,
+            "wrist_side": 0.11674134414155399,
+            "wrist": -2.096061091937345
+          },
+          "model_board_mm": [
+            9.582858486953288,
+            403.0864176511764,
+            53.75302376325604
+          ],
+          "position_error_mm": 3.8981847888541576,
+          "full_frame_change_from_held_deg": 16.300969583367298,
+          "axis_change_from_held_deg": 1.779853416933239,
+          "maximum_new_frame_change_deg": 3.0,
+          "scene_minimum_clearance_mm": 12.640075831211776,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "shoulder_rotate": {
+              "below": 9.878650075694264,
+              "above": 0.0
+            },
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.999999999997291
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3638880398854115,
+              0.9311411524293731,
+              -0.02369912827202088
+            ],
+            [
+              0.3220081771221408,
+              -0.1018840014605552,
+              0.9412387497935171
+            ],
+            [
+              0.8740115721744363,
+              -0.3501368368208153,
+              -0.33690943472435597
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              -0.12953096335243905,
+              -0.02433613754648586,
+              -0.9912766929280172
+            ],
+            [
+              0.37397387667473114,
+              0.924673720699643,
+              -0.07156849734592073
+            ],
+            [
+              0.9183492086879923,
+              -0.37998192411850096,
+              -0.11067279812736044
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 2
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 51,
+          "encoder_rad": {
+            "shoulder_front": -0.37192806343506013,
+            "shoulder_side": -2.850249990076808,
+            "shoulder_rotate": 1.7641577012777223,
+            "elbow": -1.1981945860291017,
+            "arm_roll": -2.0813225251025282,
+            "wrist_side": 0.11968890192268287,
+            "wrist": -2.0970323944880094
+          },
+          "model_board_mm": [
+            9.276039255250682,
+            403.14975559781954,
+            53.99778399932869
+          ],
+          "position_error_mm": 3.9635429941969798,
+          "full_frame_change_from_held_deg": 3.143089830930093,
+          "axis_change_from_held_deg": 1.7415481090961145,
+          "maximum_new_frame_change_deg": 3.0,
+          "scene_minimum_clearance_mm": 12.467022115031792,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.999999999998513
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.36131669764611646,
+              0.9295395324346741,
+              0.0735289170546786
+            ],
+            [
+              0.09196773681995843,
+              -0.11399772475510656,
+              0.9892150697067226
+            ],
+            [
+              0.9278966426204593,
+              -0.3506576341558645,
+              -0.12667692853038587
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.10660165653732076,
+              -0.012603714815334332,
+              -0.9942219235142385
+            ],
+            [
+              0.38233786138333714,
+              0.9235583591895914,
+              0.029286804602875173
+            ],
+            [
+              0.9178528458180618,
+              -0.38325070586221277,
+              0.10327172836648042
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 3
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 49,
+          "encoder_rad": {
+            "shoulder_front": -0.37196120331418764,
+            "shoulder_side": -2.8503308601515593,
+            "shoulder_rotate": 1.7649354588712578,
+            "elbow": -1.198182301441591,
+            "arm_roll": -2.0813225251025034,
+            "wrist_side": 0.11970054590597716,
+            "wrist": -2.0970301354006815
+          },
+          "model_board_mm": [
+            9.326837553797455,
+            403.15844652357003,
+            54.01214392812741
+          ],
+          "position_error_mm": 3.9581666529233828,
+          "full_frame_change_from_held_deg": 3.105142479963561,
+          "axis_change_from_held_deg": 1.739706083066684,
+          "maximum_new_frame_change_deg": 3.0,
+          "scene_minimum_clearance_mm": 12.462973822583027,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.999999999999938
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3612398631126953,
+              0.929539480462081,
+              0.07390612667843027
+            ],
+            [
+              0.09120582319116942,
+              -0.11410012846454615,
+              0.9892738036056539
+            ],
+            [
+              0.9280017559866705,
+              -0.3506244642729045,
+              -0.12599692829190992
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.10737009164777418,
+              -0.012496544334499643,
+              -0.9941405835188725
+            ],
+            [
+              0.38229533288000517,
+              0.9235634236399437,
+              0.02967963902465834
+            ],
+            [
+              0.9177809879691968,
+              -0.38324201086802,
+              0.10394046001495985
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 4
+        }
+      ],
+      "best": {
+        "optimizer_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 61,
+        "encoder_rad": {
+          "shoulder_front": -0.36911613809477684,
+          "shoulder_side": -2.8467930867209246,
+          "shoulder_rotate": 1.5270507472950885,
+          "elbow": -1.2027737098777098,
+          "arm_roll": -2.0813225251025496,
+          "wrist_side": 0.11674134414155399,
+          "wrist": -2.096061091937345
+        },
+        "model_board_mm": [
+          9.582858486953288,
+          403.0864176511764,
+          53.75302376325604
+        ],
+        "position_error_mm": 3.8981847888541576,
+        "full_frame_change_from_held_deg": 16.300969583367298,
+        "axis_change_from_held_deg": 1.779853416933239,
+        "maximum_new_frame_change_deg": 3.0,
+        "scene_minimum_clearance_mm": 12.640075831211776,
+        "scene_passed": true,
+        "scene_failure": null,
+        "bounds_passed": true,
+        "active_bounds": [
+          "arm_roll"
+        ],
+        "actual_bound_extensions_from_completed_trial_deg": {
+          "shoulder_rotate": {
+            "below": 9.878650075694264,
+            "above": 0.0
+          },
+          "arm_roll": {
+            "below": 0.0,
+            "above": 9.999999999997291
+          }
+        },
+        "selected_new_wrist_rotation_in_cad": [
+          [
+            0.3638880398854115,
+            0.9311411524293731,
+            -0.02369912827202088
+          ],
+          [
+            0.3220081771221408,
+            -0.1018840014605552,
+            0.9412387497935171
+          ],
+          [
+            0.8740115721744363,
+            -0.3501368368208153,
+            -0.33690943472435597
+          ]
+        ],
+        "selected_new_wrist_rotation_in_board": [
+          [
+            -0.12953096335243905,
+            -0.02433613754648586,
+            -0.9912766929280172
+          ],
+          [
+            0.37397387667473114,
+            0.924673720699643,
+            -0.07156849734592073
+          ],
+          [
+            0.9183492086879923,
+            -0.37998192411850096,
+            -0.11067279812736044
+          ]
+        ],
+        "endpoint_only_passed": false,
+        "executable": false,
+        "globally_optimal_proven": false,
+        "seed_index": 2
+      }
+    },
+    {
+      "budget_deg": 5.0,
+      "trials": [
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 87,
+          "encoder_rad": {
+            "shoulder_front": -0.3836996664098669,
+            "shoulder_side": -2.8527168088310124,
+            "shoulder_rotate": 1.7222599887208496,
+            "elbow": -1.1988890641062362,
+            "arm_roll": -2.081322525102564,
+            "wrist_side": 0.11913290475068487,
+            "wrist": -2.097087632474378
+          },
+          "model_board_mm": [
+            11.857780182724245,
+            406.9119419811963,
+            61.83757215139541
+          ],
+          "position_error_mm": 9.917150560685688,
+          "full_frame_change_from_held_deg": 5.117158594468845,
+          "axis_change_from_held_deg": 1.0820098209135096,
+          "maximum_new_frame_change_deg": 5.0,
+          "scene_minimum_clearance_mm": 12.343537247885708,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.999999999996453
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3522878204518073,
+              0.9340250359461173,
+              0.059080654931807766
+            ],
+            [
+              0.13430790155276776,
+              -0.11292950444150254,
+              0.9844837807740109
+            ],
+            [
+              0.9262044478093421,
+              -0.33888664661277673,
+              -0.16523063156007178
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.06546614283206745,
+              -0.011151141668829833,
+              -0.9977924815221713
+            ],
+            [
+              0.37153164532533767,
+              0.92831470081761,
+              0.014001884436043523
+            ],
+            [
+              0.9261092919653375,
+              -0.3716281317195917,
+              0.06491618480830927
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 0
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 31,
+          "encoder_rad": {
+            "shoulder_front": -0.38056344142090653,
+            "shoulder_side": -2.8479740871384287,
+            "shoulder_rotate": 1.5251459774132783,
+            "elbow": -1.202817714282868,
+            "arm_roll": -2.0813225251025025,
+            "wrist_side": 0.11672363305734913,
+            "wrist": -2.0960859927716733
+          },
+          "model_board_mm": [
+            10.750795975188186,
+            406.6489210467771,
+            61.27871457060421
+          ],
+          "position_error_mm": 9.17108117756326,
+          "full_frame_change_from_held_deg": 16.334807665091756,
+          "axis_change_from_held_deg": 1.1364156157076264,
+          "maximum_new_frame_change_deg": 5.0,
+          "scene_minimum_clearance_mm": 12.580953769911648,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "shoulder_rotate": {
+              "below": 9.987785350865622,
+              "above": 0.0
+            },
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.99999999999999
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.35353254877772905,
+              0.9351760454065743,
+              -0.021459288255803597
+            ],
+            [
+              0.32458155715736914,
+              -0.10112432751703948,
+              0.9404364322682985
+            ],
+            [
+              0.8773035675910712,
+              -0.33944017806080323,
+              -0.33929163828486947
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              -0.13079867813001872,
+              -0.022809035011577574,
+              -0.9911465349388453
+            ],
+            [
+              0.3636146655033668,
+              0.9289634675073928,
+              -0.06936318236296332
+            ],
+            [
+              0.9223210291597576,
+              -0.3694680283305761,
+              -0.11321349394485664
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 1
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 74,
+          "encoder_rad": {
+            "shoulder_front": -0.3691170447572174,
+            "shoulder_side": -2.846800417338745,
+            "shoulder_rotate": 1.526987086579304,
+            "elbow": -1.2027751591893814,
+            "arm_roll": -2.0813225251025025,
+            "wrist_side": 0.11674067155791604,
+            "wrist": -2.096060784538135
+          },
+          "model_board_mm": [
+            9.589058750869215,
+            403.0869765927977,
+            53.753666139157524
+          ],
+          "position_error_mm": 3.897848359029047,
+          "full_frame_change_from_held_deg": 16.304604475761682,
+          "axis_change_from_held_deg": 1.7797975435441082,
+          "maximum_new_frame_change_deg": 5.0,
+          "scene_minimum_clearance_mm": 12.639708850866302,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "shoulder_rotate": {
+              "below": 9.882297566029495,
+              "above": 0.0
+            },
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.99999999999999
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3638854705326634,
+              0.9311416855848577,
+              -0.023717624278458936
+            ],
+            [
+              0.3220687160113009,
+              -0.10188855646447527,
+              0.9412175435192539
+            ],
+            [
+              0.8739903354740574,
+              -0.35013409349530294,
+              -0.3369673724118832
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              -0.1295945729883151,
+              -0.024331104601947092,
+              -0.9912685024759054
+            ],
+            [
+              0.37396824149111274,
+              0.9246745152821432,
+              -0.07158767452418033
+            ],
+            [
+              0.9183425292384215,
+              -0.3799803128276305,
+              -0.11073373855964054
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 2
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 116,
+          "encoder_rad": {
+            "shoulder_front": -0.37190025666336485,
+            "shoulder_side": -2.850218635529635,
+            "shoulder_rotate": 1.7145305711194143,
+            "elbow": -1.1990204132002567,
+            "arm_roll": -2.081322525102513,
+            "wrist_side": 0.11902148115560685,
+            "wrist": -2.0969635623490905
+          },
+          "model_board_mm": [
+            9.836213489774448,
+            403.28300685006076,
+            54.216219977842776
+          ],
+          "position_error_mm": 3.942687534095634,
+          "full_frame_change_from_held_deg": 5.7286152461772515,
+          "axis_change_from_held_deg": 1.7322709475839846,
+          "maximum_new_frame_change_deg": 5.0,
+          "scene_minimum_clearance_mm": 12.468591700253754,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.999999999999378
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3634358318322163,
+              0.9300601566214423,
+              0.05387486617825768
+            ],
+            [
+              0.14101944076392783,
+              -0.1120842263525081,
+              0.983641521861288
+            ],
+            [
+              0.9208843105770972,
+              -0.349893171222675,
+              -0.17189198720326143
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.05720480700971807,
+              -0.014312960454442573,
+              -0.9982598605663805
+            ],
+            [
+              0.38224515858646435,
+              0.9240204082731069,
+              0.008655855359870004
+            ],
+            [
+              0.9222885930077364,
+              -0.38207515524806324,
+              0.058329468967053814
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 3
+        },
+        {
+          "optimizer_success": false,
+          "message": "Positive directional derivative for linesearch",
+          "iterations": 50,
+          "encoder_rad": {
+            "shoulder_front": -0.3722254556675787,
+            "shoulder_side": -2.8508868409497286,
+            "shoulder_rotate": 1.7162129851903956,
+            "elbow": -1.1989918007963463,
+            "arm_roll": -2.0813225251025025,
+            "wrist_side": 0.11904712351569019,
+            "wrist": -2.096972490856005
+          },
+          "model_board_mm": [
+            10.312502545835358,
+            403.380405055211,
+            54.38399786818186
+          ],
+          "position_error_mm": 4.00316920542538,
+          "full_frame_change_from_held_deg": 5.6327820847608425,
+          "axis_change_from_held_deg": 1.7168186288135492,
+          "maximum_new_frame_change_deg": 5.0,
+          "scene_minimum_clearance_mm": 12.435141983851937,
+          "scene_passed": true,
+          "scene_failure": null,
+          "bounds_passed": true,
+          "active_bounds": [
+            "arm_roll"
+          ],
+          "actual_bound_extensions_from_completed_trial_deg": {
+            "arm_roll": {
+              "below": 0.0,
+              "above": 9.99999999999999
+            }
+          },
+          "selected_new_wrist_rotation_in_cad": [
+            [
+              0.3630934505518328,
+              0.9301198560030174,
+              0.055138005361928144
+            ],
+            [
+              0.13943130879317722,
+              -0.11274989318834704,
+              0.9837918335269107
+            ],
+            [
+              0.9212611227521686,
+              -0.3495204072081411,
+              -0.17062657662413006
+            ]
+          ],
+          "selected_new_wrist_rotation_in_board": [
+            [
+              0.05885113062788689,
+              -0.01358305710202573,
+              -0.9981743560037908
+            ],
+            [
+              0.3819787975901814,
+              0.9241175689536375,
+              0.009945699712949172
+            ],
+            [
+              0.9222953662549641,
+              -0.3818667559646738,
+              0.059573803585446165
+            ]
+          ],
+          "endpoint_only_passed": false,
+          "executable": false,
+          "globally_optimal_proven": false,
+          "seed_index": 4
+        }
+      ],
+      "best": {
+        "optimizer_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 74,
+        "encoder_rad": {
+          "shoulder_front": -0.3691170447572174,
+          "shoulder_side": -2.846800417338745,
+          "shoulder_rotate": 1.526987086579304,
+          "elbow": -1.2027751591893814,
+          "arm_roll": -2.0813225251025025,
+          "wrist_side": 0.11674067155791604,
+          "wrist": -2.096060784538135
+        },
+        "model_board_mm": [
+          9.589058750869215,
+          403.0869765927977,
+          53.753666139157524
+        ],
+        "position_error_mm": 3.897848359029047,
+        "full_frame_change_from_held_deg": 16.304604475761682,
+        "axis_change_from_held_deg": 1.7797975435441082,
+        "maximum_new_frame_change_deg": 5.0,
+        "scene_minimum_clearance_mm": 12.639708850866302,
+        "scene_passed": true,
+        "scene_failure": null,
+        "bounds_passed": true,
+        "active_bounds": [
+          "arm_roll"
+        ],
+        "actual_bound_extensions_from_completed_trial_deg": {
+          "shoulder_rotate": {
+            "below": 9.882297566029495,
+            "above": 0.0
+          },
+          "arm_roll": {
+            "below": 0.0,
+            "above": 9.99999999999999
+          }
+        },
+        "selected_new_wrist_rotation_in_cad": [
+          [
+            0.3638854705326634,
+            0.9311416855848577,
+            -0.023717624278458936
+          ],
+          [
+            0.3220687160113009,
+            -0.10188855646447527,
+            0.9412175435192539
+          ],
+          [
+            0.8739903354740574,
+            -0.35013409349530294,
+            -0.3369673724118832
+          ]
+        ],
+        "selected_new_wrist_rotation_in_board": [
+          [
+            -0.1295945729883151,
+            -0.024331104601947092,
+            -0.9912685024759054
+          ],
+          [
+            0.37396824149111274,
+            0.9246745152821432,
+            -0.07158767452418033
+          ],
+          [
+            0.9183425292384215,
+            -0.3799803128276305,
+            -0.11073373855964054
+          ]
+        ],
+        "endpoint_only_passed": false,
+        "executable": false,
+        "globally_optimal_proven": false,
+        "seed_index": 2
+      }
+    }
+  ],
+  "selected_new_frame_endpoint": null,
+  "orientation_transition": [],
+  "strict_new_frame_vertical_branch": [],
+  "failure": null,
+  "complete_orientation_transition_plus_10mm_descent": false,
+  "motion_issued": false,
+  "network_accessed": false,
+  "runtime_or_models_modified": false,
+  "physical_validation_complete": false,
+  "executable": false,
+  "elapsed_s": 25.049754000006942,
+  "limitations": [
+    "Local numerical candidates, not proof of global reachability or certified mechanical travel.",
+    "No claim of measured physical descent or lateral accuracy from encoder FK.",
+    "A selected frame is a new explicit task, not a relaxed tracking tolerance.",
+    "Current-pose orientation transition and every descent edge must pass before any full-path claim."
+  ]
+}

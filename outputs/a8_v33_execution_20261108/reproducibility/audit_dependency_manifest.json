@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "purpose": "Self-contained local audit decoder chain for future Mac/GitHub reproduction",
+  "network_or_hardware_needed": false,
+  "runtime_sources_changed": false,
+  "entrypoint": "outputs/a8_v33_execution_20261108/reproducibility/audit_execution.py",
+  "dependency_chain": [
+    "audit_execution.py",
+    "audit_a8_reference_execution_20261108.py",
+    "audit_a7_repeat_20261108.py"
+  ],
+  "files": [
+    {
+      "original_path": "tmp/audit_a7_repeat_20261108.py",
+      "original_sha256": "b503d2d32eb2a09fb3a5643e3f98d6170473f08f36d3e2e8f112dc2c3c13b99f",
+      "copied_path": "outputs/a8_v33_execution_20261108/reproducibility/audit_a7_repeat_20261108.py",
+      "copied_sha256": "a3d6a0d8b73508bfbd5760699645ef20e3531d8a2e854df9cdae6ac362960194",
+      "original_bytes": 15297,
+      "copied_bytes": 15297,
+      "changes": [
+        "repository root resolved from outputs/trial/reproducibility instead of tmp"
+      ],
+      "original_unchanged": true
+    },
+    {
+      "original_path": "tmp/audit_a8_reference_execution_20261108.py",
+      "original_sha256": "d52a7d09a9baf801860278f449a1e958075d2f663fae2fb4e9cd4de228356993",
+      "copied_path": "outputs/a8_v33_execution_20261108/reproducibility/audit_a8_reference_execution_20261108.py",
+      "copied_sha256": "dd27edaed1b263932b466cd66a4f4f1eb43375ce7cae704e05c6025f24b88c89",
+      "original_bytes": 19052,
+      "copied_bytes": 19075,
+      "changes": [
+        "repository root resolved from outputs/trial/reproducibility instead of tmp",
+        "A7 decoder dependency is co-located; no tmp dependency"
+      ],
+      "original_unchanged": true
+    },
+    {
+      "path": "outputs/a8_v33_execution_20261108/reproducibility/audit_execution.py",
+      "before_sha256": "501f943f5abf0f7f17b6e6582ad6ff698924398557e93e6935c2564f14f8ee84",
+      "after_sha256": "f8fa512e6ebbd5c9f440941d86d11bdd17ce483decaa6a5ee4f5b4f0bbc3d22b",
+      "changes": [
+        "A8 decoder and A7 provenance hash paths now resolve co-located helpers"
+      ]
+    }
+  ],
+  "command": "python3 -B outputs/a8_v33_execution_20261108/reproducibility/audit_execution.py",
+  "note": "Requires the extracted control_evidence beside reproducibility. The frozen pure static observer is loaded from that evidence; no ignored tmp helper is required.",
+  "reverification": {
+    "checks": 18,
+    "all_checks_true": true,
+    "accepted_windows": 11,
+    "all_accepted_windows_reproduced": true,
+    "motor_frames": 4471,
+    "trace_complete": true,
+    "execution_audit_sha256": "dc97f70cfb2d67cc6b2db05eedb0e189739c3e783d8022134316a0154abedce7",
+    "runtime_or_evidence_mutated": false,
+    "original_tmp_helpers_unchanged": true,
+    "required_tmp_dependencies": [],
+    "external_python_packages_required": []
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "action": "dynamics:board-grasp",
+  "ok": true,
+  "running": false,
+  "support_running": null,
+  "returncode": 0,
+  "duration_s": 103.237,
+  "post_move_model_hold": {
+    "enabled": true,
+    "state": "complete",
+    "same_serial_session": true,
+    "seconds": 5.0,
+    "joints": [
+      "shoulder_front",
+      "shoulder_side",
+      "shoulder_rotate",
+      "elbow",
+      "arm_roll",
+      "wrist_side",
+      "wrist"
+    ]
+  },
+  "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794185510062_30907.txt",
+  "error": null,
+  "command": [
+    "python3",
+    "-u",
+    "left_arm_board_grasp.py",
+    "--model",
+    "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_general_dynamics.json",
+    "--board-model",
+    "data/left_arm_board_workspace_candidate.json",
+    "--hold-model",
+    "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v3_1_dynamics.json",
+    "--mode",
+    "apply",
+    "--x-mm",
+    "11.798050592563328",
+    "--y-mm",
+    "405.6006774366655",
+    "--piece",
+    "white_knight",
+    "--stage",
+    "approach",
+    "--no-model-hold",
+    "--grip-height-mm",
+    "84.62267445748284",
+    "--validate-candidate-approach",
+    "--plan-output",
+    "data/board_workspace_trials/approach_447ab53c72f996b4.json",
+    "--prepared-plan",
+    "data/board_workspace_trials/approach_a8_reference_20261108.json",
+    "--execute",
+    "--inline-model-hold"
+  ],
+  "trace": {
+    "path": "/home/nvidia/hive_robot/DM_Control_Python/data/board_motion_traces/trace_1794185516975282199.jsonl",
+    "wall_s": 1794185613.098276,
+    "context": {
+      "stage": "model_hold",
+      "waypoint_index": 32,
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        84.62267445748284
+      ],
+      "attempt": null,
+      "phase": "interpolation_origin_ready"
+    },
+    "feedback": {
+      "shoulder_front": {
+        "pos": -0.14667734503746033,
+        "vel": -0.0019536020699888468,
+        "tau": -12.84786319732666
+      },
+      "shoulder_side": {
+        "pos": -2.8269245624542236,
+        "vel": -0.0019536020699888468,
+        "tau": -1.1692308187484741
+      },
+      "shoulder_rotate": {
+        "pos": 2.380216598510742,
+        "vel": 0.007326007355004549,
+        "tau": -0.2954823076725006
+      },
+      "elbow": {
+        "pos": -0.9233615398406982,
+        "vel": -0.0019536020699888468,
+        "tau": 3.4666666984558105
+      },
+      "arm_roll": {
+        "pos": -2.6583123207092285,
+        "vel": 0.007326007355004549,
+        "tau": 0.03663003817200661
+      },
+      "wrist_side": {
+        "pos": 0.18940261006355286,
+        "vel": -0.007326007355004549,
+        "tau": 0.021978022530674934
+      },
+      "wrist": {
+        "pos": -1.9350347518920898,
+        "vel": -0.007326007355004549,
+        "tau": 0.7057387232780457
+      }
+    },
+    "shoulder_rotate_command": {
+      "kp": 36.0,
+      "kd": 4.5,
+      "q": 2.3805980682373047,
+      "dq": 0.0,
+      "tau_ff": -0.2533437280824633
+    }
+  },
+  "fault_markers": [],
+  "tail": [
+    "{\"ok\": true, \"motion_issued\": true, \"claw_contact_required\": false, \"grasp_contact_confirmed\": false, \"endpoint\": {\"automatic_endpoint_correction\": true, \"endpoint_settle_attempts\": 3, \"fixed_board_offset_mm\": [0.0, 0.0, 0.0], \"model_hold_motion_gains\": {\"shoulder_front\": {\"kp\": 90.0, \"kd\": 4.0, \"q\": -0.19169145822525024, \"dq\": 0.0, \"tau_ff\": -8.76597180530386}, \"shoulder_side\": {\"kp\": 70.0, \"kd\": 3.0, \"q\": -2.854390859603882, \"dq\": 0.0, \"tau_ff\": 0.8087064493500498}, \"shoulder_rotate\": {\"kp\": 3",
+    "board motor trace complete= {\"path\": \"/home/nvidia/hive_robot/DM_Control_Python/data/board_motion_traces/trace_1794185516975282199.jsonl\", \"frames_written\": 5966, \"dropped_frames\": 0, \"capture_errors\": 0, \"error\": null}"
+  ],
+  "polled_wall_s": 1794185627.2765093
+}

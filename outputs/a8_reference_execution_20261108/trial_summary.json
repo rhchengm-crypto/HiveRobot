@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "experiment_id": "20261108_a8_reference_inverse",
+  "date_local": "2026-11-08",
+  "recorded_at_utc": "2026-11-09T00:59:14.751821+00:00",
+  "status": "controller-completed; operator-rejected-height-and-lateral-drift",
+  "request": {
+    "x_mm": 11.798050592563328,
+    "y_mm": 405.6006774366655,
+    "piece": "white_knight",
+    "stage": "approach",
+    "grip_height_mm": 84.62267445748284
+  },
+  "request_kind": "inverse-geometric path constrained by user-approved saved endpoint",
+  "physical_board_square": "A8",
+  "original_nominal_A8_XYZ_solved": false,
+  "operator_validation": {
+    "accepted": false,
+    "motion_accepted": false,
+    "trajectory_smoothness_accepted": true,
+    "original_response": "无抖动，无接触，最终高度太高，可以下降15mm，有横移向边界外横移了20mm",
+    "stage_confirmation": "下降过程中逐渐发生",
+    "jitter": false,
+    "contact": false,
+    "gripping_height_acceptable": false,
+    "height_too_high_mm": 15.0,
+    "approximate_lateral_drift_mm": 20.0,
+    "lateral_direction": "outward beyond A-column boundary",
+    "qualitative_visual_estimate": true,
+    "external_precise_metrology": false
+  },
+  "geometry_ground_truth": false,
+  "fitting_eligible": false,
+  "motion_issued": true,
+  "claw_closed": false,
+  "same_serial_hold_completed": true,
+  "encoder_endpoint_rad": {
+    "shoulder_front": -0.14667734503746033,
+    "shoulder_side": -2.8261616230010986,
+    "shoulder_rotate": 2.3805980682373047,
+    "elbow": -0.9233615398406982,
+    "arm_roll": -2.6583123207092285,
+    "wrist_side": 0.18940261006355286,
+    "wrist": -1.9350347518920898
+  },
+  "saved_endpoint_rad": {
+    "shoulder_front": -0.19169145822525024,
+    "shoulder_side": -2.854390859603882,
+    "shoulder_rotate": 2.3832685947418213,
+    "elbow": -0.9409094452857971,
+    "arm_roll": -2.6552605628967285,
+    "wrist_side": 0.17795833945274353,
+    "wrist": -1.9357976913452148
+  },
+  "endpoint_minus_saved_deg": {
+    "shoulder_front": 2.5791187041845425,
+    "shoulder_side": 1.6174161162156995,
+    "shoulder_rotate": -0.15300989778662566,
+    "elbow": 1.005420921298802,
+    "arm_roll": -0.17485284275232643,
+    "wrist_side": 0.6557084056049791,
+    "wrist": 0.04371321068808161
+  },
+  "evidence": {
+    "directory": "outputs/a8_reference_execution_20261108",
+    "control_log": "arm_run_1794185510062_30907.txt",
+    "control_archive": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a8_reference_execution_20261108_1794185664803029992/control_evidence.zip",
+      "bytes": 2995741,
+      "sha256": "1bb9f48540b4d53a0cf72c9227aa3a3cae093210d86a20febae79cb6ff7abfcc",
+      "zip_crc_verified": true
+    },
+    "rgbd_archive": {
+      "path": "/home/nvidia/hive_robot/DM_Control_Python/data/experiment_archives/a8_reference_execution_20261108_1794185664803029992/rgbd_evidence.zip",
+      "bytes": 79122875,
+      "sha256": "6d763847a531b8c93da80b3b0ffd58cd0e470e66502a66b3fe1450181094b402",
+      "zip_crc_verified": true
+    },
+    "rgbd_pairs": 638,
+    "local_download_verification": {
+      "control": {
+        "sha256": "1bb9f48540b4d53a0cf72c9227aa3a3cae093210d86a20febae79cb6ff7abfcc",
+        "bytes": 2995741,
+        "members_verified": 92
+      },
+      "rgbd": {
+        "sha256": "6d763847a531b8c93da80b3b0ffd58cd0e470e66502a66b3fe1450181094b402",
+        "bytes": 79122875,
+        "members_verified": 1278
+      }
+    }
+  },
+  "source_models": {
+    "left_arm_board_grasp.py": "b0a4b9a1353e4198a112712e492139b96450ad7be89e17f7b7e4d4efccc4d7ac",
+    "left_arm_fault_support.py": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+    "left_arm_board_home_handoff.py": "0a341c4f34dddd0176c5229f33095d3bbb534616dd673bf8b7f6fa9e87f1a472",
+    "left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+    "left_arm_v3_1_model_control.py": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996",
+    "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+    "left_arm_v3_1_motion_dynamics.py": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "left_arm_board_kinematics.py": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "left_arm_board_collision.py": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "left_arm_board_task_pose.py": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+    "left_arm_board_transit.py": "21ef17210b67eccfa705f214596f684243743f3dc6a281947fba0e395c96840f",
+    "left_arm_trajectory_support.py": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "left_arm_motion_trace.py": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "left_arm_rigid_body.py": "4ea8673a58ecde110e3bd2414eec4c7a6543dfd5546a54534734283e984f7cfd",
+    "chessboard_vision_v3_0_web_control.py": "5f6cfb5dce9a3bb15141711972676a5807b580ef2af2a8821f6c879c901459a2",
+    "data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "data/left_arm_board_workspace_candidate.json": "669ef83ccdd28d086e187760ebc95a2c1d02bb1fba1175888bd02d3b9978e074",
+    "data/left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+    "data/left_arm_validated_path_library.json": "379a81f7f977ace5341d03831f080d26612fce41ffd9a27716809ae325d346a2",
+    "data/left_arm_v2_table_clearance.json": "dead14fe6a7bcdca9ccfd8235ed268b3c10c557b32d953de4f98d736cd59b2b1",
+    "data/left_arm_v2_home.json": "b50735e9ae53e24cea91045c3ce2528e26ecd9dbb4990e8295e9a616c0d74d39"
+  },
+  "active_board_model_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+  "controller_audit": {
+    "motor_frames": 4484,
+    "trace_complete": true,
+    "oscillation_events": 0,
+    "shoulder_rotate_gain_pairs": [
+      [
+        36.0,
+        4.5
+      ]
+    ]
+  },
+  "learning_and_Clearance_policy_unchanged": true,
+  "next_work": "Correct generic tracking and reconcile task-frame mapping before retesting; no new trajectory executed after rejection."
+}

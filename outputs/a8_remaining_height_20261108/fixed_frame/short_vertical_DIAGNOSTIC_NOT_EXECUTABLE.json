@@ -1,0 +1,151 @@
+{
+  "executable": false,
+  "motion_issued": false,
+  "actual_feedback_start_encoder_rad": {
+    "shoulder_front": -0.3553444743156433,
+    "shoulder_side": -2.8593499660491943,
+    "shoulder_rotate": 2.319943428039551,
+    "elbow": -1.1556801795959473,
+    "arm_roll": -2.5907912254333496,
+    "wrist_side": 0.14057374000549316,
+    "wrist": -2.096017360687256
+  },
+  "requested_descent_mm": 1.5,
+  "waypoints": [
+    {
+      "stage": "contact",
+      "target_board_mm": [
+        9.639697000830372,
+        406.65055148807676,
+        61.925188529761634
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3648300868794121,
+        "shoulder_side": -2.8599064936302163,
+        "shoulder_rotate": 2.3194703737742235,
+        "elbow": -1.1732723638150921,
+        "arm_roll": -2.5903028474676453,
+        "wrist_side": 0.14136490153254375,
+        "wrist": -2.087942243099057
+      }
+    },
+    {
+      "stage": "contact",
+      "target_board_mm": [
+        9.639697000830372,
+        406.65055148807676,
+        61.675188529761634
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3807234501580765,
+        "shoulder_side": -2.8591041217141058,
+        "shoulder_rotate": 2.2410166006103385,
+        "elbow": -1.2022333634527498,
+        "arm_roll": -2.5119369926151416,
+        "wrist_side": 0.13963334840554326,
+        "wrist": -2.074654883292404
+      }
+    },
+    {
+      "stage": "contact",
+      "target_board_mm": [
+        9.639697000830372,
+        406.65055148807676,
+        61.425188529761634
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3781603553536188,
+        "shoulder_side": -2.8543386821516683,
+        "shoulder_rotate": 1.9977110676415804,
+        "elbow": -1.1992946929524047,
+        "arm_roll": -2.2687703347342767,
+        "wrist_side": 0.13003399816029992,
+        "wrist": -2.0733737934368968
+      }
+    },
+    {
+      "stage": "contact",
+      "target_board_mm": [
+        9.639697000830372,
+        406.65055148807676,
+        61.175188529761634
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3776463879045177,
+        "shoulder_side": -2.8541391234140736,
+        "shoulder_rotate": 1.9848821909294918,
+        "elbow": -1.1991985077013692,
+        "arm_roll": -2.2559271443413897,
+        "wrist_side": 0.12961606938849057,
+        "wrist": -2.072862267390628
+      }
+    },
+    {
+      "stage": "contact",
+      "target_board_mm": [
+        9.639697000830372,
+        406.65055148807676,
+        60.925188529761634
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.377197129945131,
+        "shoulder_side": -2.8541804992050457,
+        "shoulder_rotate": 1.9848288682736133,
+        "elbow": -1.199133640386177,
+        "arm_roll": -2.2558554503019352,
+        "wrist_side": 0.12967954996109843,
+        "wrist": -2.0725050120597217
+      }
+    },
+    {
+      "stage": "contact",
+      "target_board_mm": [
+        9.639697000830372,
+        406.65055148807676,
+        60.675188529761634
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.3767860041355783,
+        "shoulder_side": -2.8542143575539507,
+        "shoulder_rotate": 1.984848517388676,
+        "elbow": -1.1991391635940765,
+        "arm_roll": -2.2558554503019352,
+        "wrist_side": 0.1297603594507315,
+        "wrist": -2.0721217952326842
+      }
+    }
+  ],
+  "dense_audit": {
+    "samples": 415,
+    "max_lateral_error_mm": 0.3905359779006903,
+    "max_full_frame_error_deg": 0.03242632150392749,
+    "minimum_scene_margin_mm": 11.983664341436615,
+    "maximum_joint_edge_step_deg": 13.940380171290947,
+    "initial_model_height_mm": 62.175188529761634,
+    "minimum_model_height_mm": 60.85889869716431,
+    "achieved_model_descent_mm": 1.3162898325973273,
+    "descent_monotonic": true,
+    "complete_swept_edges_checked": true
+  },
+  "orientation": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 42,
+    "max_error_deg": 0.03202657907200562,
+    "tolerance_deg": 0.2864788975654116,
+    "checked_task_edge_samples": 36,
+    "max_joint_sample_step_deg": 0.5,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "gripper_clearance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "task": 40.870476847166955
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "motion_issued_by_collector": false,
+  "arm_process_not_interrupted": true,
+  "source_hashes_verified": {
+    "left_arm_v2_8.py": "b294cfb1a09653438da4de65f1d1ce64585443e78ea4d01746a63d58346ebfa2",
+    "left_arm_v2_6.py": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "left_arm_general_motion.py": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47",
+    "left_arm_v3_1_motion_dynamics.py": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "left_arm_v3_1_model_control.py": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996",
+    "chessboard_vision_v3_0_web_control.py": "5f6cfb5dce9a3bb15141711972676a5807b580ef2af2a8821f6c879c901459a2",
+    "data/left_arm_v2_home.json": "b50735e9ae53e24cea91045c3ce2528e26ecd9dbb4990e8295e9a616c0d74d39",
+    "data/left_arm_v2_table_clearance.json": "dead14fe6a7bcdca9ccfd8235ed268b3c10c557b32d953de4f98d736cd59b2b1",
+    "data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "data/left_arm_v3_1_dynamics.json": "aa91af203c5888c4d21db3d1507ea22479b63913824f8bf85145c8924b4f342f",
+    "data/left_arm_board_workspace_candidate.json": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d"
+  },
+  "runtime_source_version": "source_hashes.json captured before this Home; bytes verified before archive",
+  "workflow_action": "home",
+  "workflow_run_ids": [
+    "06754a11113fc487"
+  ],
+  "general_motion_records": [
+    {
+      "source_line": 1375,
+      "workflow_run_id": "06754a11113fc487",
+      "frames": 639,
+      "sha256": "a02704a3c6180d318882922150371b31ea6c0ae86d47a7dcce55e5a966230a8e"
+    },
+    {
+      "source_line": 1376,
+      "workflow_run_id": "06754a11113fc487",
+      "frames": 579,
+      "sha256": "5feb3168468bb2e56f42c63f728cf901e3cf8990dda8c367cf6ddeb9f3202d82"
+    },
+    {
+      "source_line": 1377,
+      "workflow_run_id": "06754a11113fc487",
+      "frames": 1167,
+      "sha256": "57223faed7fe990a7c744c889e56894103a23482a70aa6a82df04d55db45ae69"
+    },
+    {
+      "source_line": 1378,
+      "workflow_run_id": "06754a11113fc487",
+      "frames": 359,
+      "sha256": "44410ce7bd23c5b3871a5f072bbd632864ca3c0f0701325ec03ba1f751995f78"
+    },
+    {
+      "source_line": 1379,
+      "workflow_run_id": "06754a11113fc487",
+      "frames": 259,
+      "sha256": "9b33b6ee9dd806f4306fb4057dfe1ba8d77eb246f79842891c824bff5da49f08"
+    },
+    {
+      "source_line": 1380,
+      "workflow_run_id": "06754a11113fc487",
+      "frames": 274,
+      "sha256": "db7e341cf593feab68421f400317fc3b6a85c38a5b580007597cffb3e32d1da2"
+    }
+  ],
+  "historical_rolling_log_copied": false,
+  "home_run": {
+    "action": "home",
+    "ok": true,
+    "returncode": 0,
+    "duration_s": 62.117,
+    "started_at": "2026-11-08 17:01:56",
+    "finished_at": "2026-11-08 17:02:58",
+    "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794186116620_31830.txt"
+  },
+  "hold_run": {
+    "action": "dynamics:model-hold-after:home",
+    "ok": true,
+    "returncode": 0,
+    "duration_s": 6.102,
+    "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794186178797_31973.txt",
+    "post_move_model_hold": {
+      "enabled": true,
+      "state": "complete",
+      "seconds": 5.0,
+      "joints": [
+        "shoulder_front",
+        "shoulder_side",
+        "shoulder_rotate",
+        "elbow",
+        "arm_roll",
+        "wrist_side",
+        "wrist"
+      ],
+      "motor_enable_mode": "reused-existing-enable",
+      "preceding_motion_enabled_joints": [
+        "arm_roll",
+        "elbow",
+        "shoulder_front",
+        "shoulder_rotate",
+        "shoulder_side",
+        "wrist",
+        "wrist_side"
+      ]
+    }
+  },
+  "monitoring_limitations": "Ordinary Home lacks per-frame actual feedback and an automatic feedback-oscillation detector. Model reference_samples are commands. Return code and holding summaries cannot independently certify absence of physical jitter; preserve separate on-site observations.",
+  "physical_jitter_absence_certified_by_software": false,
+  "operator_feedback_context_included": false
+}

@@ -1,0 +1,2135 @@
+{
+  "schema": 1,
+  "motion_issued": false,
+  "hardware_accessed": false,
+  "network_accessed": false,
+  "runtime_modified": false,
+  "model_or_config_modified": false,
+  "deployable": false,
+  "fit_is_exploratory_only": true,
+  "per_square_offset_fitted": false,
+  "joint_angle_replay_used": false,
+  "old_request_XYZ_used_as_ground_truth": false,
+  "source_sha256": {
+    "scripts/data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "scripts/data/left_arm_board_workspace_candidate.json": "669ef83ccdd28d086e187760ebc95a2c1d02bb1fba1175888bd02d3b9978e074",
+    "scripts/data/left_arm_validated_path_library.json": "379a81f7f977ace5341d03831f080d26612fce41ffd9a27716809ae325d346a2",
+    "outputs/a8_saved_reference_20261108/saved_pose_audit.json": "35baf40f6a56b131322752ba91c0b8933977382cb280e0a0d4f3b3c4adb25a22",
+    "scripts/data/chess_crown_geometry_v2_8.json": "baba89671df47a7380223b87a328b862f2b82080ed2493558ce6a6fe0c4adc8b"
+  },
+  "source_hashes_unchanged_at_finish": true,
+  "dataset": [
+    {
+      "id": "validated:20261106_b3_v25_height20",
+      "nominal_physical_xy_mm": [
+        82.5,
+        137.5
+      ],
+      "physical_z_mm": null,
+      "requested_xyz_mm": [
+        82.5,
+        137.5,
+        20.2
+      ],
+      "request_z_not_used_for_fit": true,
+      "assumption": "Nominal square centre interpreted as approximate observed physical alignment; acceptance is qualitative, not millimetre metrology.",
+      "source": "scripts/data/board_workspace_trials/validation_20261106_b3_v25_height20.json",
+      "source_sha256": "79d1ebbabda9535557df1417238654f479e643de55acb7706dfe2865aa6940c5",
+      "piece": "white_knight",
+      "observation_scope": "accepted empty-load approach; claw closure and loaded grasp not tested",
+      "encoder_rad": {
+        "shoulder_front": 0.7719157934188843,
+        "shoulder_side": -2.790684461593628,
+        "shoulder_rotate": 2.015526056289673,
+        "elbow": 0.4247730076313019,
+        "arm_roll": -2.8177690505981445,
+        "wrist_side": -0.7017242908477783,
+        "wrist": -2.9112305641174316
+      },
+      "baseline_tcp_board_mm": [
+        75.48818428444983,
+        142.91394433633252,
+        22.86010981342597
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.36479328294334085,
+          0.3972058607906786,
+          -0.8421124419416657
+        ],
+        [
+          0.5200065610142998,
+          0.6633261896505243,
+          0.5381371039296574
+        ],
+        [
+          0.772346448960246,
+          -0.6342127957375607,
+          0.03542728470042678
+        ]
+      ],
+      "minimum_CAD_gripper_vertex_height_mm": 12.378237843455546,
+      "external_TCP_measurement": false
+    },
+    {
+      "id": "validated:20261107_a1_v25_height30",
+      "nominal_physical_xy_mm": [
+        27.5,
+        27.5
+      ],
+      "physical_z_mm": null,
+      "requested_xyz_mm": [
+        27.5,
+        27.5,
+        30.2
+      ],
+      "request_z_not_used_for_fit": true,
+      "assumption": "Nominal square centre interpreted as approximate observed physical alignment; acceptance is qualitative, not millimetre metrology.",
+      "source": "scripts/data/board_workspace_trials/validation_20261107_a1_v25_height30.json",
+      "source_sha256": "2b024e4b8dbe4551d9941e2ca9398e25e06fb40674cc0d37ff4c10494095f1ce",
+      "piece": "white_knight",
+      "observation_scope": "accepted empty-load approach; claw closure and loaded grasp not tested",
+      "encoder_rad": {
+        "shoulder_front": 1.405165195465088,
+        "shoulder_side": -2.465667247772217,
+        "shoulder_rotate": 1.895361304283142,
+        "elbow": 0.6303883194923401,
+        "arm_roll": -2.93869686126709,
+        "wrist_side": -0.7009612917900085,
+        "wrist": -2.1776530742645264
+      },
+      "baseline_tcp_board_mm": [
+        35.89182277450546,
+        23.806945449618564,
+        26.031946559084176
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.2577557387212208,
+          0.516684181449492,
+          -0.8164554095577699
+        ],
+        [
+          0.31121910093423766,
+          0.7555758378856594,
+          0.5764094242958469
+        ],
+        [
+          0.9147156117449633,
+          -0.40266935548071353,
+          0.033952021836470815
+        ]
+      ],
+      "minimum_CAD_gripper_vertex_height_mm": 7.336814326751072,
+      "external_TCP_measurement": false
+    },
+    {
+      "id": "validated:20261107_a6_v25_height30",
+      "nominal_physical_xy_mm": [
+        27.5,
+        302.5
+      ],
+      "physical_z_mm": null,
+      "requested_xyz_mm": [
+        27.5,
+        302.5,
+        30.2
+      ],
+      "request_z_not_used_for_fit": true,
+      "assumption": "Nominal square centre interpreted as approximate observed physical alignment; acceptance is qualitative, not millimetre metrology.",
+      "source": "scripts/data/board_workspace_trials/validation_20261107_a6_v25_height30.json",
+      "source_sha256": "3f699437b5cf3075781f5f69f23619c1fa46bd15429db72f2b5dc872e427a986",
+      "piece": "white_knight",
+      "observation_scope": "accepted empty-load approach; claw closure and loaded grasp not tested",
+      "encoder_rad": {
+        "shoulder_front": 0.2149614691734314,
+        "shoulder_side": -2.823491334915161,
+        "shoulder_rotate": 1.8263142108917236,
+        "elbow": -0.28324559330940247,
+        "arm_roll": -2.372587203979492,
+        "wrist_side": -0.6139848828315735,
+        "wrist": -2.443922996520996
+      },
+      "baseline_tcp_board_mm": [
+        25.243646565961825,
+        298.55750332114496,
+        23.497621169035387
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.17746375569485015,
+          0.3100197512133815,
+          -0.9340205400697945
+        ],
+        [
+          0.4271852119028703,
+          0.8307417680131922,
+          0.3569046225671736
+        ],
+        [
+          0.8865773571133987,
+          -0.46233739707697163,
+          0.01499070104803733
+        ]
+      ],
+      "minimum_CAD_gripper_vertex_height_mm": 6.715208073130601,
+      "external_TCP_measurement": false
+    },
+    {
+      "id": "validated:20261107_a7_v32_height50_x17",
+      "nominal_physical_xy_mm": [
+        27.5,
+        357.5
+      ],
+      "physical_z_mm": null,
+      "requested_xyz_mm": [
+        17.5,
+        357.5,
+        50.2
+      ],
+      "request_z_not_used_for_fit": true,
+      "assumption": "Nominal square centre interpreted as approximate observed physical alignment; acceptance is qualitative, not millimetre metrology. A7 nominal X27.5 is assumed despite requested X17.5; previous record accepted A7 vicinity, not exact centre.",
+      "source": "scripts/data/board_workspace_trials/validation_20261107_a7_v32_height50_x17.json",
+      "source_sha256": "6936ff59d860507038ce7386ef603878b00e7baf127305758e9ce400e0bc51cd",
+      "piece": "white_knight",
+      "observation_scope": "accepted empty-load approach; claw closure and loaded grasp not tested",
+      "encoder_rad": {
+        "shoulder_front": -0.08907453715801239,
+        "shoulder_side": -2.7388036251068115,
+        "shoulder_rotate": 1.8617913722991943,
+        "elbow": -0.7085908055305481,
+        "arm_roll": -2.268444299697876,
+        "wrist_side": -0.5136567950248718,
+        "wrist": -2.3424506187438965
+      },
+      "baseline_tcp_board_mm": [
+        15.289517899907066,
+        350.5462094072527,
+        35.94329262929796
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.18433445295209833,
+          0.29377584761015163,
+          -0.9379320662051102
+        ],
+        [
+          0.4427752171332592,
+          0.8271445975278792,
+          0.3460952497117505
+        ],
+        [
+          0.8774798667476343,
+          -0.4790903527951491,
+          0.022394582183492967
+        ]
+      ],
+      "minimum_CAD_gripper_vertex_height_mm": 19.706600164690858,
+      "external_TCP_measurement": false
+    },
+    {
+      "id": "validated:20261107_b6_v25_height30",
+      "nominal_physical_xy_mm": [
+        82.5,
+        302.5
+      ],
+      "physical_z_mm": null,
+      "requested_xyz_mm": [
+        82.5,
+        302.5,
+        30.2
+      ],
+      "request_z_not_used_for_fit": true,
+      "assumption": "Nominal square centre interpreted as approximate observed physical alignment; acceptance is qualitative, not millimetre metrology.",
+      "source": "scripts/data/board_workspace_trials/validation_20261107_b6_v25_height30.json",
+      "source_sha256": "26566906ad70a31a37e20ee1ba16fece1191955afb5cf3958ec5c9e1ecd3e3cd",
+      "piece": "white_knight",
+      "observation_scope": "accepted empty-load approach; claw closure and loaded grasp not tested",
+      "encoder_rad": {
+        "shoulder_front": 0.26951247453689575,
+        "shoulder_side": -2.908560276031494,
+        "shoulder_rotate": 1.9838635921478271,
+        "elbow": -0.1989395022392273,
+        "arm_roll": -2.440108299255371,
+        "wrist_side": -0.4537651538848877,
+        "wrist": -2.49237060546875
+      },
+      "baseline_tcp_board_mm": [
+        73.70195327636851,
+        299.3642934554518,
+        26.267831600905534
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.17873715757428643,
+          0.3045817952768728,
+          -0.9355655821417233
+        ],
+        [
+          0.42499020656312037,
+          0.8336961058790268,
+          0.3526104470482744
+        ],
+        [
+          0.8873761056213427,
+          -0.4606307990441633,
+          0.01956819215548424
+        ]
+      ],
+      "minimum_CAD_gripper_vertex_height_mm": 9.422888976152478,
+      "external_TCP_measurement": false
+    },
+    {
+      "id": "validated:20261107_c1_v27_height30",
+      "nominal_physical_xy_mm": [
+        137.5,
+        27.5
+      ],
+      "physical_z_mm": null,
+      "requested_xyz_mm": [
+        137.5,
+        27.5,
+        30.2
+      ],
+      "request_z_not_used_for_fit": true,
+      "assumption": "Nominal square centre interpreted as approximate observed physical alignment; acceptance is qualitative, not millimetre metrology.",
+      "source": "scripts/data/board_workspace_trials/validation_20261107_c1_v27_height30.json",
+      "source_sha256": "eaf3ed7d2d713a771b204f1fd899498c53c82c7d75acc41e1cb838f0ef42268a",
+      "piece": "white_knight",
+      "observation_scope": "accepted empty-load approach; claw closure and loaded grasp not tested",
+      "encoder_rad": {
+        "shoulder_front": 1.4120317697525024,
+        "shoulder_side": -2.459182024002075,
+        "shoulder_rotate": 2.381742477416992,
+        "elbow": 0.813878059387207,
+        "arm_roll": -2.829594850540161,
+        "wrist_side": -0.21076524257659912,
+        "wrist": -2.2611963748931885
+      },
+      "baseline_tcp_board_mm": [
+        134.04568591745888,
+        28.633442224901955,
+        31.703737498806937
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.2438033092091245,
+          0.5163793659863567,
+          -0.8209216142861682
+        ],
+        [
+          0.30824675021148307,
+          0.7613115037639027,
+          0.5704285540019942
+        ],
+        [
+          0.9195346037005567,
+          -0.392118788915137,
+          0.026438002515054508
+        ]
+      ],
+      "minimum_CAD_gripper_vertex_height_mm": 12.696355018818169,
+      "external_TCP_measurement": false
+    },
+    {
+      "id": "validated:20261107_d1_v28_height30",
+      "nominal_physical_xy_mm": [
+        192.5,
+        27.5
+      ],
+      "physical_z_mm": null,
+      "requested_xyz_mm": [
+        192.5,
+        27.5,
+        30.2
+      ],
+      "request_z_not_used_for_fit": true,
+      "assumption": "Nominal square centre interpreted as approximate observed physical alignment; acceptance is qualitative, not millimetre metrology.",
+      "source": "scripts/data/board_workspace_trials/validation_20261107_d1_v28_height30.json",
+      "source_sha256": "8f5f95eab525d3cd1552195539d68395c4a8545f68b94c02e22f847807d4d6eb",
+      "piece": "white_knight",
+      "observation_scope": "accepted empty-load approach; claw closure and loaded grasp not tested",
+      "encoder_rad": {
+        "shoulder_front": 1.054207682609558,
+        "shoulder_side": -2.400434970855713,
+        "shoulder_rotate": 2.606431722640991,
+        "elbow": 0.8146410584449768,
+        "arm_roll": -2.985999822616577,
+        "wrist_side": -0.2508201599121094,
+        "wrist": -2.8147172927856445
+      },
+      "baseline_tcp_board_mm": [
+        188.57032576549193,
+        32.18935903680932,
+        35.03435449957739
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.48884504787959954,
+          0.5711876048491228,
+          -0.6593748851983324
+        ],
+        [
+          0.4004788951306869,
+          0.5245549917847466,
+          0.7513046753139566
+        ],
+        [
+          0.7750143054928059,
+          -0.6313372954771692,
+          0.02767752917217802
+        ]
+      ],
+      "minimum_CAD_gripper_vertex_height_mm": 24.440318062762575,
+      "external_TCP_measurement": false
+    },
+    {
+      "id": "A8_take",
+      "nominal_physical_xy_mm": [
+        27.5,
+        412.5
+      ],
+      "physical_z_mm": null,
+      "requested_xyz_mm": [
+        27.5,
+        412.5,
+        50.2
+      ],
+      "request_z_not_used_for_fit": true,
+      "assumption": "User confirms white knight and basically aligned with A8 centre; nominal XY is approximate, exact physical TCP/contact Z remains unmeasured.",
+      "source": "outputs/a8_saved_reference_20261108/saved_pose_audit.json",
+      "source_sha256": "35baf40f6a56b131322752ba91c0b8933977382cb280e0a0d4f3b3c4adb25a22",
+      "piece": "white_knight",
+      "observation_scope": "user-reported usable grasp endpoint; no independent metric XYZ or contact-point identification",
+      "encoder_rad": {
+        "shoulder_front": -0.19169145822525024,
+        "shoulder_side": -2.854390859603882,
+        "shoulder_rotate": 2.3832685947418213,
+        "elbow": -0.9409094452857971,
+        "arm_roll": -2.6552605628967285,
+        "wrist_side": 0.17795833945274353,
+        "wrist": -1.9357976913452148
+      },
+      "baseline_tcp_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        84.62267445748284
+      ],
+      "wrist_rotation_in_board": [
+        [
+          0.15037298107425046,
+          0.00071148189032173,
+          -0.9886290812819348
+        ],
+        [
+          0.14843778758494036,
+          0.9886474769576761,
+          0.023289257654777934
+        ],
+        [
+          0.9774222167414296,
+          -0.1502519886681778,
+          0.14856025754395613
+        ]
+      ],
+      "minimum_CAD_gripper_vertex_height_mm": 58.14248963368509,
+      "external_TCP_measurement": false
+    }
+  ],
+  "excluded": [
+    {
+      "name": "validated:20261107_110_165_v25_height20",
+      "reason": "non-square-centre request; no independently measured physical XY"
+    },
+    {
+      "name": "validated:20261107_b6_v25_height20",
+      "reason": "not accepted white-knight endpoint"
+    },
+    {
+      "name": "validated:historical-C4",
+      "reason": "historical physical registration and exact contact datum not independently certified; omitted from main fit"
+    },
+    {
+      "name": "validated:historical-C5",
+      "reason": "historical physical registration and exact contact datum not independently certified; omitted from main fit"
+    }
+  ],
+  "fit_models": [
+    {
+      "model": "translation_only",
+      "assumptions": "Only approximate physical nominal XY fitted; all Z are unmeasured and omitted. Board normal/normal translation held fixed; optional yaw about unchanged board normal.",
+      "tcp_delta_wrist_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "board_origin_translation_in_fitted_board_xy_mm": [
+        -5.621351615411646,
+        -1.6734531664778365
+      ],
+      "board_yaw_delta_deg": 0.0,
+      "linear_design_rank": 2,
+      "linear_design_singular_values": [
+        2.8284271247461903,
+        2.8284271247461903
+      ],
+      "linear_design_condition_number": 1.0,
+      "training_xy_rms_norm_mm": 8.196511602215795,
+      "training_xy_max_norm_mm": 14.157960525163713,
+      "training_rows": [
+        {
+          "id": "validated:20261106_b3_v25_height20",
+          "predicted_xy_mm": [
+            81.10953589986147,
+            144.58739750281035
+          ],
+          "xy_error_norm_mm": 7.2225060592993895,
+          "predicted_unmeasured_z_mm": 22.86010981342597
+        },
+        {
+          "id": "validated:20261107_a1_v25_height30",
+          "predicted_xy_mm": [
+            41.513174389917104,
+            25.4803986160964
+          ],
+          "xy_error_norm_mm": 14.157960525163713,
+          "predicted_unmeasured_z_mm": 26.031946559084176
+        },
+        {
+          "id": "validated:20261107_a6_v25_height30",
+          "predicted_xy_mm": [
+            30.864998181373473,
+            300.2309564876228
+          ],
+          "xy_error_norm_mm": 4.058542992467602,
+          "predicted_unmeasured_z_mm": 23.497621169035387
+        },
+        {
+          "id": "validated:20261107_a7_v32_height50_x17",
+          "predicted_xy_mm": [
+            20.910869515318712,
+            352.21966257373055
+          ],
+          "xy_error_norm_mm": 8.443850062585089,
+          "predicted_unmeasured_z_mm": 35.94329262929796
+        },
+        {
+          "id": "validated:20261107_b6_v25_height30",
+          "predicted_xy_mm": [
+            79.32330489178015,
+            301.0377466219296
+          ],
+          "xy_error_norm_mm": 3.497081176104746,
+          "predicted_unmeasured_z_mm": 26.267831600905534
+        },
+        {
+          "id": "validated:20261107_c1_v27_height30",
+          "predicted_xy_mm": [
+            139.66703753287052,
+            30.306895391379793
+          ],
+          "xy_error_norm_mm": 3.5460842357477476,
+          "predicted_unmeasured_z_mm": 31.703737498806937
+        },
+        {
+          "id": "validated:20261107_d1_v28_height30",
+          "predicted_xy_mm": [
+            194.19167738090357,
+            33.862812203287156
+          ],
+          "xy_error_norm_mm": 6.5838553671356355,
+          "predicted_unmeasured_z_mm": 35.03435449957739
+        },
+        {
+          "id": "A8_take",
+          "predicted_xy_mm": [
+            17.419402207974976,
+            407.2741306031433
+          ],
+          "xy_error_norm_mm": 11.354653794703877,
+          "predicted_unmeasured_z_mm": 84.62267445748284
+        }
+      ],
+      "leave_one_out": [
+        {
+          "heldout": "validated:20261106_b3_v25_height20",
+          "predicted_xy_mm": [
+            80.91089817127026,
+            145.59988286035468
+          ],
+          "residual_xy_mm": [
+            -1.5891018287297385,
+            8.099882860354683
+          ],
+          "error_norm_mm": 8.254292639199301,
+          "fitted_tcp_delta_wrist_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            -5.422713886820428,
+            -2.6859385240221734
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 22.86010981342597
+        },
+        {
+          "heldout": "validated:20261107_a1_v25_height30",
+          "predicted_xy_mm": [
+            43.51505644561955,
+            25.1918841326816
+          ],
+          "residual_xy_mm": [
+            16.01505644561955,
+            -2.3081158673183992
+          ],
+          "error_norm_mm": 16.180526314472818,
+          "fitted_tcp_delta_wrist_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            -7.62323367111409,
+            -1.3849386830630366
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 26.031946559084176
+        },
+        {
+          "heldout": "validated:20261107_a6_v25_height30",
+          "predicted_xy_mm": [
+            31.345712207283967,
+            299.90680741442605
+          ],
+          "residual_xy_mm": [
+            3.8457122072839667,
+            -2.593192585573945
+          ],
+          "error_norm_mm": 4.638334848534396,
+          "fitted_tcp_delta_wrist_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            -6.102065641322142,
+            -1.3493040932810938
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 23.497621169035387
+        },
+        {
+          "heldout": "validated:20261107_a7_v32_height50_x17",
+          "predicted_xy_mm": [
+            19.96956516036424,
+            351.4653286556921
+          ],
+          "residual_xy_mm": [
+            -7.53043483963576,
+            -6.034671344307924
+          ],
+          "error_norm_mm": 9.650114357240087,
+          "fitted_tcp_delta_wrist_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            -4.680047260457175,
+            -0.9191192484393442
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 35.94329262929796
+        },
+        {
+          "heldout": "validated:20261107_b6_v25_height30",
+          "predicted_xy_mm": [
+            78.86949130489161,
+            300.8288532822053
+          ],
+          "residual_xy_mm": [
+            -3.6305086951083894,
+            -1.671146717794727
+          ],
+          "error_norm_mm": 3.9966642012625613,
+          "fitted_tcp_delta_wrist_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            -5.167538028523098,
+            -1.4645598267534965
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 26.267831600905534
+        },
+        {
+          "heldout": "validated:20261107_c1_v27_height30",
+          "predicted_xy_mm": [
+            139.97661432328061,
+            30.707880447291192
+          ],
+          "residual_xy_mm": [
+            2.4766143232806144,
+            3.207880447291192
+          ],
+          "error_norm_mm": 4.052667697997435,
+          "fitted_tcp_delta_wrist_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            -5.93092840582172,
+            -2.0744382223892353
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 31.703737498806937
+        },
+        {
+          "heldout": "validated:20261107_d1_v28_height30",
+          "predicted_xy_mm": [
+            194.4333455781755,
+            34.771785375185324
+          ],
+          "residual_xy_mm": [
+            1.933345578175505,
+            7.271785375185324
+          ],
+          "error_norm_mm": 7.5244061338693,
+          "fitted_tcp_delta_wrist_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            -5.863019812683585,
+            -2.5824263383760018
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 35.03435449957739
+        },
+        {
+          "heldout": "A8_take",
+          "predicted_xy_mm": [
+            15.979316809114255,
+            406.5275778321638
+          ],
+          "residual_xy_mm": [
+            -11.520683190885745,
+            -5.972422167836214
+          ],
+          "error_norm_mm": 12.976747193947286,
+          "fitted_tcp_delta_wrist_mm": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            -4.181266216550928,
+            -0.9269003954983096
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 84.62267445748284
+        }
+      ],
+      "LOO_xy_rms_norm_mm": 9.367441831103763,
+      "LOO_xy_max_norm_mm": 16.180526314472818,
+      "LOO_tcp_delta_norm_range_mm": [
+        0.0,
+        0.0
+      ],
+      "LOO_tcp_delta_component_span_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "A8_heldout": {
+        "heldout": "A8_take",
+        "predicted_xy_mm": [
+          15.979316809114255,
+          406.5275778321638
+        ],
+        "residual_xy_mm": [
+          -11.520683190885745,
+          -5.972422167836214
+        ],
+        "error_norm_mm": 12.976747193947286,
+        "fitted_tcp_delta_wrist_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+          -4.181266216550928,
+          -0.9269003954983096
+        ],
+        "fitted_board_yaw_delta_deg": 0.0,
+        "predicted_unmeasured_z_mm": 84.62267445748284
+      }
+    },
+    {
+      "model": "tcp_only",
+      "assumptions": "Only approximate physical nominal XY fitted; all Z are unmeasured and omitted. Board normal/normal translation held fixed; optional yaw about unchanged board normal.",
+      "tcp_delta_wrist_mm": [
+        -2.941727323304186,
+        5.39975233950623,
+        -5.413381774513182
+      ],
+      "board_origin_translation_in_fitted_board_xy_mm": [
+        0.0,
+        0.0
+      ],
+      "board_yaw_delta_deg": 0.0,
+      "linear_design_rank": 3,
+      "linear_design_singular_values": [
+        2.827252899443567,
+        2.792439690500239,
+        0.4570794433212679
+      ],
+      "linear_design_condition_number": 6.185473752439951,
+      "training_xy_rms_norm_mm": 7.880079591718267,
+      "training_xy_max_norm_mm": 15.285267474781469,
+      "training_rows": [
+        {
+          "id": "validated:20261106_b3_v25_height20",
+          "predicted_xy_mm": [
+            81.11855133802543,
+            142.05288238131837
+          ],
+          "xy_error_norm_mm": 4.757850185093113,
+          "predicted_unmeasured_z_mm": 16.971703716616194
+        },
+        {
+          "id": "validated:20261107_a1_v25_height30",
+          "predicted_xy_mm": [
+            42.34332712654127,
+            23.85102184302285
+          ],
+          "xy_error_norm_mm": 15.285267474781469,
+          "predicted_unmeasured_z_mm": 20.98299260043924
+        },
+        {
+          "id": "validated:20261107_a6_v25_height30",
+          "predicted_xy_mm": [
+            31.451836232480485,
+            299.85457973748896
+          ],
+          "xy_error_norm_mm": 4.755550228275328,
+          "predicted_unmeasured_z_mm": 18.31189450404387
+        },
+        {
+          "id": "validated:20261107_a7_v32_height50_x17",
+          "predicted_xy_mm": [
+            21.410957376381127,
+            351.8365157115058
+          ],
+          "xy_error_norm_mm": 8.31573775189358,
+          "predicted_unmeasured_z_mm": 30.653786453256696
+        },
+        {
+          "id": "validated:20261107_b6_v25_height30",
+          "predicted_xy_mm": [
+            79.88539722908763,
+            300.7070256832718
+          ],
+          "xy_error_norm_mm": 3.1703161593301017,
+          "predicted_unmeasured_z_mm": 21.064190735389953
+        },
+        {
+          "id": "validated:20261107_c1_v27_height30",
+          "predicted_xy_mm": [
+            140.56076585588468,
+            28.74961037313095
+          ],
+          "xy_error_norm_mm": 3.3060268766581378,
+          "predicted_unmeasured_z_mm": 26.73825408159893
+        },
+        {
+          "id": "validated:20261107_d1_v28_height30",
+          "predicted_xy_mm": [
+            193.78599652296796,
+            29.77662733623495
+          ],
+          "xy_error_norm_mm": 2.614731168816008,
+          "predicted_unmeasured_z_mm": 29.19557967090298
+        },
+        {
+          "id": "A8_take",
+          "predicted_xy_mm": [
+            16.711362761817618,
+            410.37639182483485
+          ],
+          "xy_error_norm_mm": 10.995653920468932,
+          "predicted_unmeasured_z_mm": 80.13182789815814
+        }
+      ],
+      "leave_one_out": [
+        {
+          "heldout": "validated:20261106_b3_v25_height20",
+          "predicted_xy_mm": [
+            81.49833241537505,
+            143.67676145011006
+          ],
+          "residual_xy_mm": [
+            -1.001667584624954,
+            6.176761450110064
+          ],
+          "error_norm_mm": 6.257453152973194,
+          "fitted_tcp_delta_wrist_mm": [
+            1.559993135572042,
+            3.7383403365767425,
+            -4.697926577584491
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            0.0,
+            0.0
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 21.52762691344278
+        },
+        {
+          "heldout": "validated:20261107_a1_v25_height30",
+          "predicted_xy_mm": [
+            44.5868490766636,
+            23.470505323260518
+          ],
+          "residual_xy_mm": [
+            17.086849076663597,
+            -4.029494676739482
+          ],
+          "error_norm_mm": 17.55554723494974,
+          "fitted_tcp_delta_wrist_mm": [
+            -4.708770685797337,
+            7.251745040635474,
+            -7.547107834928873
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            0.0,
+            0.0
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 18.548465429021462
+        },
+        {
+          "heldout": "validated:20261107_a6_v25_height30",
+          "predicted_xy_mm": [
+            32.03299143514219,
+            299.458778414306
+          ],
+          "residual_xy_mm": [
+            4.532991435142193,
+            -3.041221585694018
+          ],
+          "error_norm_mm": 5.458666511554238,
+          "fitted_tcp_delta_wrist_mm": [
+            -3.596531511669357,
+            5.558194099309841,
+            -6.1074126982540475
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            0.0,
+            0.0
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 17.647702376384505
+        },
+        {
+          "heldout": "validated:20261107_a7_v32_height50_x17",
+          "predicted_xy_mm": [
+            20.541846838345634,
+            350.98314769976366
+          ],
+          "residual_xy_mm": [
+            -6.958153161654366,
+            -6.516852300236337
+          ],
+          "error_norm_mm": 9.53337607168291,
+          "fitted_tcp_delta_wrist_mm": [
+            -3.946331142023709,
+            4.693297095646199,
+            -4.905468705134824
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            0.0,
+            0.0
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 30.122097221261672
+        },
+        {
+          "heldout": "validated:20261107_b6_v25_height30",
+          "predicted_xy_mm": [
+            79.50600626804496,
+            300.44364152479653
+          ],
+          "residual_xy_mm": [
+            -2.993993731955044,
+            -2.056358475203467
+          ],
+          "error_norm_mm": 3.6321630808000926,
+          "fitted_tcp_delta_wrist_mm": [
+            -2.959751040447366,
+            4.980665000614725,
+            -5.1477423754608225
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            0.0,
+            0.0
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 21.24643953805023
+        },
+        {
+          "heldout": "validated:20261107_c1_v27_height30",
+          "predicted_xy_mm": [
+            141.0811292639105,
+            29.013565559829715
+          ],
+          "residual_xy_mm": [
+            3.5811292639104977,
+            1.5135655598297149
+          ],
+          "error_norm_mm": 3.8878486993115846,
+          "fitted_tcp_delta_wrist_mm": [
+            -3.899243597188393,
+            6.366520509474062,
+            -5.7235087161432645
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            0.0,
+            0.0
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 25.470497633323692
+        },
+        {
+          "heldout": "validated:20261107_d1_v28_height30",
+          "predicted_xy_mm": [
+            194.56965947520374,
+            30.707423582259825
+          ],
+          "residual_xy_mm": [
+            2.0696594752037356,
+            3.2074235822598247
+          ],
+          "error_norm_mm": 3.8172053100844665,
+          "fitted_tcp_delta_wrist_mm": [
+            0.5234181372370406,
+            4.12859869916679,
+            -5.134042892723427
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            0.0,
+            0.0
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 32.69137508491341
+        },
+        {
+          "heldout": "A8_take",
+          "predicted_xy_mm": [
+            14.724319174180605,
+            411.61241405324296
+          ],
+          "residual_xy_mm": [
+            -12.775680825819395,
+            -0.8875859467570422
+          ],
+          "error_norm_mm": 12.80647607174159,
+          "fitted_tcp_delta_wrist_mm": [
+            -6.9180415632126,
+            7.213850527348298,
+            -4.006985699355246
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            0.0,
+            0.0
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 76.18165272209801
+        }
+      ],
+      "LOO_xy_rms_norm_mm": 9.18504300478772,
+      "LOO_xy_max_norm_mm": 17.55554723494974,
+      "LOO_tcp_delta_norm_range_mm": [
+        6.203167028501114,
+        11.476896975134451
+      ],
+      "LOO_tcp_delta_component_span_mm": [
+        8.478034698784642,
+        3.5134047040587317,
+        3.540122135573627
+      ],
+      "A8_heldout": {
+        "heldout": "A8_take",
+        "predicted_xy_mm": [
+          14.724319174180605,
+          411.61241405324296
+        ],
+        "residual_xy_mm": [
+          -12.775680825819395,
+          -0.8875859467570422
+        ],
+        "error_norm_mm": 12.80647607174159,
+        "fitted_tcp_delta_wrist_mm": [
+          -6.9180415632126,
+          7.213850527348298,
+          -4.006985699355246
+        ],
+        "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+          0.0,
+          0.0
+        ],
+        "fitted_board_yaw_delta_deg": 0.0,
+        "predicted_unmeasured_z_mm": 76.18165272209801
+      }
+    },
+    {
+      "model": "tcp_translation",
+      "assumptions": "Only approximate physical nominal XY fitted; all Z are unmeasured and omitted. Board normal/normal translation held fixed; optional yaw about unchanged board normal.",
+      "tcp_delta_wrist_mm": [
+        7.735196586897604,
+        -14.849626324632114,
+        -26.504047211222833
+      ],
+      "board_origin_translation_in_fitted_board_xy_mm": [
+        13.93019670711112,
+        -21.915287648607706
+      ],
+      "board_yaw_delta_deg": 0.0,
+      "linear_design_rank": 5,
+      "linear_design_singular_values": [
+        3.974062043905138,
+        3.9509990210886787,
+        0.5894517166166223,
+        0.43335301473492177,
+        0.2473650034800312
+      ],
+      "linear_design_condition_number": 16.065579156293012,
+      "training_xy_rms_norm_mm": 6.065595702637733,
+      "training_xy_max_norm_mm": 11.960425803784094,
+      "training_rows": [
+        {
+          "id": "validated:20261106_b3_v25_height20",
+          "predicted_xy_mm": [
+            80.80076464616984,
+            144.7386277045477
+          ],
+          "xy_error_norm_mm": 7.435397220912394,
+          "predicted_unmeasured_z_mm": 37.31321803006322
+        },
+        {
+          "id": "validated:20261107_a1_v25_height30",
+          "predicted_xy_mm": [
+            37.92222307620803,
+            21.632372578496373
+          ],
+          "xy_error_norm_mm": 11.960425803784094,
+          "predicted_unmeasured_z_mm": 38.18707510863453
+        },
+        {
+          "id": "validated:20261107_a6_v25_height30",
+          "predicted_xy_mm": [
+            32.837813927687094,
+            301.98153076915276
+          ],
+          "xy_error_norm_mm": 5.362934632264844,
+          "predicted_unmeasured_z_mm": 36.82369464998922
+        },
+        {
+          "id": "validated:20261107_a7_v32_height50_x17",
+          "predicted_xy_mm": [
+            23.281718627525855,
+            354.43073737652503
+          ],
+          "xy_error_norm_mm": 5.216729894217527,
+          "predicted_unmeasured_z_mm": 49.25153755091285
+        },
+        {
+          "id": "validated:20261107_b6_v25_height30",
+          "predicted_xy_mm": [
+            81.42767213361003,
+            302.8412843229891
+          ],
+          "xy_error_norm_mm": 1.1253275266137408,
+          "predicted_unmeasured_z_mm": 39.45341917509753
+        },
+        {
+          "id": "validated:20261107_c1_v27_height30",
+          "predicted_xy_mm": [
+            136.09106033072254,
+            26.509222410231665
+          ],
+          "xy_error_norm_mm": 1.722425970557465,
+          "predicted_unmeasured_z_mm": 43.938621850313375
+        },
+        {
+          "id": "validated:20261107_d1_v28_height30",
+          "predicted_xy_mm": [
+            187.415622198181,
+            29.50036946889894
+          ],
+          "xy_error_norm_mm": 5.463732757349384,
+          "predicted_unmeasured_z_mm": 49.67079889299257
+        },
+        {
+          "id": "A8_take",
+          "predicted_xy_mm": [
+            25.223125059895608,
+            413.36585536915845
+          ],
+          "xy_error_norm_mm": 2.435952588449927,
+          "predicted_unmeasured_z_mm": 90.4769652589779
+        }
+      ],
+      "leave_one_out": [
+        {
+          "heldout": "validated:20261106_b3_v25_height20",
+          "predicted_xy_mm": [
+            81.77549525176431,
+            148.13012287706536
+          ],
+          "residual_xy_mm": [
+            -0.7245047482356881,
+            10.63012287706536
+          ],
+          "error_norm_mm": 10.654783879165471,
+          "fitted_tcp_delta_wrist_mm": [
+            19.94620851308672,
+            -20.31440853417159,
+            -29.88062686019485
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            18.082777442164108,
+            -24.398972456692597
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 50.09056148413771
+        },
+        {
+          "heldout": "validated:20261107_a1_v25_height30",
+          "predicted_xy_mm": [
+            40.37773448865989,
+            20.574684796680142
+          ],
+          "residual_xy_mm": [
+            12.87773448865989,
+            -6.925315203319858
+          ],
+          "error_norm_mm": 14.621765838152161,
+          "fitted_tcp_delta_wrist_mm": [
+            8.993421355441047,
+            -9.29249472684869,
+            -26.62718261156533
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            14.770816503878036,
+            -16.33815832753797
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 37.096125652903176
+        },
+        {
+          "heldout": "validated:20261107_a6_v25_height30",
+          "predicted_xy_mm": [
+            33.89193264635664,
+            301.67093159347644
+          ],
+          "residual_xy_mm": [
+            6.3919326463566435,
+            -0.829068406523561
+          ],
+          "error_norm_mm": 6.445475729397742,
+          "fitted_tcp_delta_wrist_mm": [
+            4.85818042269788,
+            -15.557069237168967,
+            -26.38190643102315
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            12.032108621518896,
+            -23.37781699955507
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 34.60190555344509
+        },
+        {
+          "heldout": "validated:20261107_a7_v32_height50_x17",
+          "predicted_xy_mm": [
+            22.534888638818327,
+            353.56118761186536
+          ],
+          "residual_xy_mm": [
+            -4.965111361181673,
+            -3.938812388134636
+          ],
+          "error_norm_mm": 6.337710458663933,
+          "fitted_tcp_delta_wrist_mm": [
+            5.261457153033342,
+            -13.525379592589452,
+            -23.546732496605898
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            11.836302695982614,
+            -20.022192294073754
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 46.512674995494066
+        },
+        {
+          "heldout": "validated:20261107_b6_v25_height30",
+          "predicted_xy_mm": [
+            81.20841227863198,
+            302.9608228665841
+          ],
+          "residual_xy_mm": [
+            -1.2915877213680176,
+            0.46082286658412386
+          ],
+          "error_norm_mm": 1.3713338602818195,
+          "fitted_tcp_delta_wrist_mm": [
+            8.48941354349924,
+            -14.684917752755972,
+            -26.65020889670619
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            14.471174231992054,
+            -21.628512614304718
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 40.043963319820236
+        },
+        {
+          "heldout": "validated:20261107_c1_v27_height30",
+          "predicted_xy_mm": [
+            135.42534973669513,
+            25.80632642803613
+          ],
+          "residual_xy_mm": [
+            -2.074650263304875,
+            -1.6936735719638705
+          ],
+          "error_norm_mm": 2.6781904120879534,
+          "fitted_tcp_delta_wrist_mm": [
+            10.905228154243344,
+            -16.560481954388706,
+            -28.842342065559325
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            16.404877728665863,
+            -22.871563962512433
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 47.46261436361981
+        },
+        {
+          "heldout": "validated:20261107_d1_v28_height30",
+          "predicted_xy_mm": [
+            182.15169478334843,
+            31.97519092612216
+          ],
+          "residual_xy_mm": [
+            -10.348305216651568,
+            4.47519092612216
+          ],
+          "error_norm_mm": 11.274517935691271,
+          "fitted_tcp_delta_wrist_mm": [
+            -4.177826919092622,
+            -22.05684713423892,
+            -25.054048951315693
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            8.297733947745014,
+            -31.852216777884614
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 45.02835491716021
+        },
+        {
+          "heldout": "A8_take",
+          "predicted_xy_mm": [
+            21.43383942175879,
+            416.014622385066
+          ],
+          "residual_xy_mm": [
+            -6.06616057824121,
+            3.514622385065991
+          ],
+          "error_norm_mm": 7.010768479319132,
+          "fitted_tcp_delta_wrist_mm": [
+            3.274991766708179,
+            -5.804846175140444,
+            -24.722920692774846
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            15.294349773932488,
+            -16.242537411364125
+          ],
+          "fitted_board_yaw_delta_deg": 0.0,
+          "predicted_unmeasured_z_mm": 85.02307038627897
+        }
+      ],
+      "LOO_xy_rms_norm_mm": 8.619382785082305,
+      "LOO_xy_max_norm_mm": 14.621765838152161,
+      "LOO_tcp_delta_norm_range_mm": [
+        25.605558337405643,
+        41.27200370346653
+      ],
+      "LOO_tcp_delta_component_span_mm": [
+        24.12403543217934,
+        16.252000959098478,
+        6.3338943635889535
+      ],
+      "A8_heldout": {
+        "heldout": "A8_take",
+        "predicted_xy_mm": [
+          21.43383942175879,
+          416.014622385066
+        ],
+        "residual_xy_mm": [
+          -6.06616057824121,
+          3.514622385065991
+        ],
+        "error_norm_mm": 7.010768479319132,
+        "fitted_tcp_delta_wrist_mm": [
+          3.274991766708179,
+          -5.804846175140444,
+          -24.722920692774846
+        ],
+        "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+          15.294349773932488,
+          -16.242537411364125
+        ],
+        "fitted_board_yaw_delta_deg": 0.0,
+        "predicted_unmeasured_z_mm": 85.02307038627897
+      }
+    },
+    {
+      "model": "tcp_translation_yaw",
+      "assumptions": "Only approximate physical nominal XY fitted; all Z are unmeasured and omitted. Board normal/normal translation held fixed; optional yaw about unchanged board normal.",
+      "tcp_delta_wrist_mm": [
+        6.279111040651787,
+        6.202652838856688,
+        -4.532180238733779
+      ],
+      "board_origin_translation_in_fitted_board_xy_mm": [
+        10.429078429128088,
+        0.10866245705317837
+      ],
+      "board_yaw_delta_deg": 2.3519878993290457,
+      "linear_design_rank": 5,
+      "linear_design_singular_values": [
+        3.974062043905139,
+        3.9509990210886796,
+        0.5894517166166222,
+        0.4333530147349218,
+        0.24736500348003138
+      ],
+      "linear_design_condition_number": 16.065579156293005,
+      "training_xy_rms_norm_mm": 5.194686268418876,
+      "training_xy_max_norm_mm": 7.762093493787053,
+      "training_rows": [
+        {
+          "id": "validated:20261106_b3_v25_height20",
+          "predicted_xy_mm": [
+            79.62692064851959,
+            144.17170011888527
+          ],
+          "xy_error_norm_mm": 7.264032450109018,
+          "predicted_unmeasured_z_mm": 23.615394290748366
+        },
+        {
+          "id": "validated:20261107_a1_v25_height30",
+          "predicted_xy_mm": [
+            35.09125666387637,
+            25.880457574052514
+          ],
+          "xy_error_norm_mm": 7.762093493787053,
+          "predicted_unmeasured_z_mm": 29.124052552523178
+        },
+        {
+          "id": "validated:20261107_a6_v25_height30",
+          "predicted_xy_mm": [
+            34.56506996253644,
+            303.07535423857405
+          ],
+          "xy_error_norm_mm": 7.088458653006293,
+          "predicted_unmeasured_z_mm": 26.12887991293424
+        },
+        {
+          "id": "validated:20261107_a7_v32_height50_x17",
+          "predicted_xy_mm": [
+            26.71812057505771,
+            355.554866336417
+          ],
+          "xy_error_norm_mm": 2.0963970054243046,
+          "predicted_unmeasured_z_mm": 38.37995872888228
+        },
+        {
+          "id": "validated:20261107_b6_v25_height30",
+          "predicted_xy_mm": [
+            82.99793266803955,
+            301.91756561254766
+          ],
+          "xy_error_norm_mm": 0.7662680716224367,
+          "predicted_unmeasured_z_mm": 28.893945195772158
+        },
+        {
+          "id": "validated:20261107_c1_v27_height30",
+          "predicted_xy_mm": [
+            133.29311069975137,
+            26.721634537686786
+          ],
+          "xy_error_norm_mm": 4.278290590582704,
+          "predicted_unmeasured_z_mm": 34.92559886938062
+        },
+        {
+          "id": "validated:20261107_d1_v28_height30",
+          "predicted_xy_mm": [
+            188.99308195852365,
+            26.282197425123915
+          ],
+          "xy_error_norm_mm": 3.7123465976397148,
+          "predicted_unmeasured_z_mm": 35.859349763021655
+        },
+        {
+          "id": "A8_take",
+          "predicted_xy_mm": [
+            23.714506823695302,
+            411.39622415671295
+          ],
+          "xy_error_norm_mm": 3.9431306978178484,
+          "predicted_unmeasured_z_mm": 89.15475430244385
+        }
+      ],
+      "leave_one_out": [
+        {
+          "heldout": "validated:20261106_b3_v25_height20",
+          "predicted_xy_mm": [
+            80.21870569716454,
+            146.94149398857752
+          ],
+          "residual_xy_mm": [
+            -2.2812943028354624,
+            9.44149398857752
+          ],
+          "error_norm_mm": 9.713192700265704,
+          "fitted_tcp_delta_wrist_mm": [
+            15.3541218626925,
+            0.7566660407535899,
+            -7.768394358374445
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            13.45597991723248,
+            -3.307734629750143
+          ],
+          "fitted_board_yaw_delta_deg": 2.26235836159556,
+          "predicted_unmeasured_z_mm": 33.96371090723407
+        },
+        {
+          "heldout": "validated:20261107_a1_v25_height30",
+          "predicted_xy_mm": [
+            39.5233112321979,
+            22.130867674732833
+          ],
+          "residual_xy_mm": [
+            12.023311232197898,
+            -5.3691323252671666
+          ],
+          "error_norm_mm": 13.167672342237445,
+          "fitted_tcp_delta_wrist_mm": [
+            7.225442021809037,
+            -3.5387871286254864,
+            -19.728763329291382
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            12.640829669025845,
+            -10.701914251228684
+          ],
+          "fitted_board_yaw_delta_deg": 0.6389720884740067,
+          "predicted_unmeasured_z_mm": 33.396300907095394
+        },
+        {
+          "heldout": "validated:20261107_a6_v25_height30",
+          "predicted_xy_mm": [
+            36.330400112892484,
+            303.2672654477346
+          ],
+          "residual_xy_mm": [
+            8.830400112892484,
+            0.7672654477345873
+          ],
+          "error_norm_mm": 8.863670933707938,
+          "fitted_tcp_delta_wrist_mm": [
+            3.6050870295753814,
+            9.503094808481256,
+            -0.7702380634895517
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            8.459545973364705,
+            2.603483320490328
+          ],
+          "fitted_board_yaw_delta_deg": 2.845763804456745,
+          "predicted_unmeasured_z_mm": 22.288627173405622
+        },
+        {
+          "heldout": "validated:20261107_a7_v32_height50_x17",
+          "predicted_xy_mm": [
+            26.23270397512044,
+            354.83037152296373
+          ],
+          "residual_xy_mm": [
+            -1.2672960248795597,
+            -2.6696284770362695
+          ],
+          "error_norm_mm": 2.9551574272919074,
+          "fitted_tcp_delta_wrist_mm": [
+            4.207345356463833,
+            4.780536995264574,
+            -4.804824188157279
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            8.952734165608671,
+            -1.1959599294371364
+          ],
+          "fitted_board_yaw_delta_deg": 2.1367089879123333,
+          "predicted_unmeasured_z_mm": 37.23724228627863
+        },
+        {
+          "heldout": "validated:20261107_b6_v25_height30",
+          "predicted_xy_mm": [
+            83.15262736119244,
+            301.72341971645574
+          ],
+          "residual_xy_mm": [
+            0.6526273611924438,
+            -0.7765802835442628
+          ],
+          "error_norm_mm": 1.01439608110772,
+          "fitted_tcp_delta_wrist_mm": [
+            5.4683850594697745,
+            6.608840884530283,
+            -3.6867214206212338
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            9.759705327928595,
+            0.5406942388125023
+          ],
+          "fitted_board_yaw_delta_deg": 2.4059687402677246,
+          "predicted_unmeasured_z_mm": 28.00396770843638
+        },
+        {
+          "heldout": "validated:20261107_c1_v27_height30",
+          "predicted_xy_mm": [
+            130.77491880754366,
+            25.591865200792547
+          ],
+          "residual_xy_mm": [
+            -6.725081192456344,
+            -1.9081347992074527
+          ],
+          "error_norm_mm": 6.990543287690628,
+          "fitted_tcp_delta_wrist_mm": [
+            12.361486699273753,
+            6.41093609374291,
+            -4.2311239121951605
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            14.647046127366655,
+            2.015019477296237
+          ],
+          "fitted_board_yaw_delta_deg": 2.892886265574638,
+          "predicted_unmeasured_z_mm": 40.4448413104504
+        },
+        {
+          "heldout": "validated:20261107_d1_v28_height30",
+          "predicted_xy_mm": [
+            185.43301213824054,
+            25.982016890401816
+          ],
+          "residual_xy_mm": [
+            -7.066987861759458,
+            -1.517983109598184
+          ],
+          "error_norm_mm": 7.228180279937744,
+          "fitted_tcp_delta_wrist_mm": [
+            0.8274917749874617,
+            1.8310953113606436,
+            -9.390839491176548
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            11.641996400572502,
+            -7.0283800163113535
+          ],
+          "fitted_board_yaw_delta_deg": 2.1769121243616567,
+          "predicted_unmeasured_z_mm": 34.25971846726667
+        },
+        {
+          "heldout": "A8_take",
+          "predicted_xy_mm": [
+            17.506717921893795,
+            408.81593137410664
+          ],
+          "residual_xy_mm": [
+            -9.993282078106205,
+            -3.68406862589336
+          ],
+          "error_norm_mm": 10.650729943665386,
+          "fitted_tcp_delta_wrist_mm": [
+            6.8831129092891485,
+            21.26786174477485,
+            10.452458099793393
+          ],
+          "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+            7.707791367674956,
+            18.340152836571782
+          ],
+          "fitted_board_yaw_delta_deg": 3.0414722092554296,
+          "predicted_unmeasured_z_mm": 89.70766328076223
+        }
+      ],
+      "LOO_xy_rms_norm_mm": 8.445506634779022,
+      "LOO_xy_max_norm_mm": 13.167672342237445,
+      "LOO_tcp_delta_norm_range_mm": [
+        7.977570080591726,
+        24.676974426473297
+      ],
+      "LOO_tcp_delta_component_span_mm": [
+        14.526630087705039,
+        24.806648873400338,
+        30.181221429084776
+      ],
+      "A8_heldout": {
+        "heldout": "A8_take",
+        "predicted_xy_mm": [
+          17.506717921893795,
+          408.81593137410664
+        ],
+        "residual_xy_mm": [
+          -9.993282078106205,
+          -3.68406862589336
+        ],
+        "error_norm_mm": 10.650729943665386,
+        "fitted_tcp_delta_wrist_mm": [
+          6.8831129092891485,
+          21.26786174477485,
+          10.452458099793393
+        ],
+        "fitted_board_origin_translation_in_fitted_board_xy_mm": [
+          7.707791367674956,
+          18.340152836571782
+        ],
+        "fitted_board_yaw_delta_deg": 3.0414722092554296,
+        "predicted_unmeasured_z_mm": 89.70766328076223
+      }
+    },
+    {
+      "model": "tcp_translation_full_board_rotation_gauge_fixed",
+      "assumptions": "Fit approximate nominalXY only. Shared board rotation3, shared board-origin in-plane translation2, shared wrist-localTCP3. Unobservable board-normal translation fixed tozero as gauge, not as an estimated datum. Board rotation-vector norm limited15deg. No physicalZ labels supplied.",
+      "parameters": 8,
+      "tcp_delta_wrist_mm": [
+        15.294229210926975,
+        12.380825532581154,
+        3.6364344327863614
+      ],
+      "board_origin_translation_in_fitted_board_xy_mm": [
+        13.75152158344644,
+        13.884543008673305
+      ],
+      "board_rotation_vector_deg": [
+        6.249547389372923,
+        -5.612178925179874,
+        3.037388373530201
+      ],
+      "rotation_norm_deg": 8.93191597541689,
+      "training_xy_rms_norm_mm": 4.618700211945646,
+      "training_xy_max_norm_mm": 7.384993697955043,
+      "training_rows": [
+        {
+          "id": "validated:20261106_b3_v25_height20",
+          "predicted_xy_mm": [
+            79.00873865990397,
+            144.0076283063791
+          ],
+          "xy_error_norm_mm": 7.384993697955043,
+          "predicted_unmeasured_z_mm": 0.8987578690835816
+        },
+        {
+          "id": "validated:20261107_a1_v25_height30",
+          "predicted_xy_mm": [
+            34.673648968298004,
+            27.05297200586304
+          ],
+          "xy_error_norm_mm": 7.187563811744917,
+          "predicted_unmeasured_z_mm": 26.236305438340302
+        },
+        {
+          "id": "validated:20261107_a6_v25_height30",
+          "predicted_xy_mm": [
+            32.65636607791613,
+            302.1430725002941
+          ],
+          "xy_error_norm_mm": 5.168704709066914,
+          "predicted_unmeasured_z_mm": -6.859717475495288
+        },
+        {
+          "id": "validated:20261107_a7_v32_height50_x17",
+          "predicted_xy_mm": [
+            26.34729330580307,
+            355.7746081792221
+          ],
+          "xy_error_norm_mm": 2.075020399430713,
+          "predicted_unmeasured_z_mm": 0.2894337080898697
+        },
+        {
+          "id": "validated:20261107_b6_v25_height30",
+          "predicted_xy_mm": [
+            81.08254546859891,
+            300.41675405823185
+          ],
+          "xy_error_norm_mm": 2.519740264885048,
+          "predicted_unmeasured_z_mm": -8.740551201513975
+        },
+        {
+          "id": "validated:20261107_c1_v27_height30",
+          "predicted_xy_mm": [
+            132.80472878393957,
+            26.776010661135288
+          ],
+          "xy_error_norm_mm": 4.750761239544183,
+          "predicted_unmeasured_z_mm": 22.215052760297574
+        },
+        {
+          "id": "validated:20261107_d1_v28_height30",
+          "predicted_xy_mm": [
+            191.91791636256465,
+            25.79357596509992
+          ],
+          "xy_error_norm_mm": 1.8029709780954981,
+          "predicted_unmeasured_z_mm": 14.461829046070944
+        },
+        {
+          "id": "A8_take",
+          "predicted_xy_mm": [
+            26.508762372975866,
+            413.03537832377464
+          ],
+          "xy_error_norm_mm": 1.1265797720517514,
+          "predicted_unmeasured_z_mm": 49.46650864902827
+        }
+      ],
+      "leave_one_out": [
+        {
+          "heldout": "validated:20261106_b3_v25_height20",
+          "predicted_xy_mm": [
+            79.48776423475337,
+            146.60963856375406
+          ],
+          "error_norm_mm": 9.594742261659043,
+          "fitted_tcp_delta_wrist_mm": [
+            24.9952777217484,
+            7.104272091782832,
+            0.6041022896197429
+          ],
+          "fitted_board_rotation_vector_deg": [
+            7.196140225337395,
+            -5.863137677688222,
+            3.0367468433813696
+          ],
+          "fitted_board_origin_translation_xy_mm": [
+            18.275743542482854,
+            12.31365680478757
+          ],
+          "predicted_unmeasured_z_mm": 8.072373266895424
+        },
+        {
+          "heldout": "validated:20261107_a1_v25_height30",
+          "predicted_xy_mm": [
+            40.368980198514855,
+            24.683883371916195
+          ],
+          "error_norm_mm": 13.173502351794587,
+          "fitted_tcp_delta_wrist_mm": [
+            4.338464078031752,
+            13.607889822825179,
+            -4.576064954468593
+          ],
+          "fitted_board_rotation_vector_deg": [
+            1.31198678741512,
+            -8.898663965032853,
+            1.297551369345709
+          ],
+          "fitted_board_origin_translation_xy_mm": [
+            11.277208286826594,
+            7.451006423607133
+          ],
+          "predicted_unmeasured_z_mm": 15.883526189230867
+        },
+        {
+          "heldout": "validated:20261107_a6_v25_height30",
+          "predicted_xy_mm": [
+            34.80309542746816,
+            302.0863177132138
+          ],
+          "error_norm_mm": 7.314802516617038,
+          "fitted_tcp_delta_wrist_mm": [
+            11.113461478694582,
+            12.16230256747475,
+            4.472841386399226
+          ],
+          "fitted_board_rotation_vector_deg": [
+            5.448024967164723,
+            -3.309590872687291,
+            3.230344439119257
+          ],
+          "fitted_board_origin_translation_xy_mm": [
+            10.444209526915513,
+            12.00633635273029
+          ],
+          "predicted_unmeasured_z_mm": -4.237290485819377
+        },
+        {
+          "heldout": "validated:20261107_a7_v32_height50_x17",
+          "predicted_xy_mm": [
+            25.72714184849213,
+            355.09376530531443
+          ],
+          "error_norm_mm": 2.988811039740792,
+          "fitted_tcp_delta_wrist_mm": [
+            14.012164393021864,
+            10.744365679179452,
+            2.799185361042092
+          ],
+          "fitted_board_rotation_vector_deg": [
+            6.578515035097506,
+            -5.675442546533538,
+            2.811925722917938
+          ],
+          "fitted_board_origin_translation_xy_mm": [
+            12.777602505401807,
+            12.486047848261899
+          ],
+          "predicted_unmeasured_z_mm": -1.908545184595167
+        },
+        {
+          "heldout": "validated:20261107_b6_v25_height30",
+          "predicted_xy_mm": [
+            80.38166783564994,
+            299.19388705805426
+          ],
+          "error_norm_mm": 3.926539690799159,
+          "fitted_tcp_delta_wrist_mm": [
+            18.48828954060136,
+            12.460909662134053,
+            4.779659653023109
+          ],
+          "fitted_board_rotation_vector_deg": [
+            8.489125686638772,
+            -6.32172210037111,
+            3.214919089870453
+          ],
+          "fitted_board_origin_translation_xy_mm": [
+            14.782206350909192,
+            16.56633641431042
+          ],
+          "predicted_unmeasured_z_mm": -19.655466994869954
+        },
+        {
+          "heldout": "validated:20261107_c1_v27_height30",
+          "predicted_xy_mm": [
+            128.50938644486126,
+            25.662285871956783
+          ],
+          "error_norm_mm": 9.176509429748004,
+          "fitted_tcp_delta_wrist_mm": [
+            34.34245364016076,
+            8.617668932852675,
+            -1.905139593220268
+          ],
+          "fitted_board_rotation_vector_deg": [
+            10.482227952373252,
+            -3.8579790731916304,
+            3.8540266952945172
+          ],
+          "fitted_board_origin_translation_xy_mm": [
+            26.332553880876468,
+            18.09786177906252
+          ],
+          "predicted_unmeasured_z_mm": 41.486490004832326
+        },
+        {
+          "heldout": "validated:20261107_d1_v28_height30",
+          "predicted_xy_mm": [
+            193.350479899282,
+            21.33265556867547
+          ],
+          "error_norm_mm": 6.225709067541817,
+          "fitted_tcp_delta_wrist_mm": [
+            20.615704733208634,
+            23.45146738542983,
+            7.506117326077627
+          ],
+          "fitted_board_rotation_vector_deg": [
+            6.46049912576521,
+            -6.932577463159949,
+            3.8299644247661297
+          ],
+          "fitted_board_origin_translation_xy_mm": [
+            19.77463625315324,
+            25.311872132125295
+          ],
+          "predicted_unmeasured_z_mm": 4.986427093678474
+        },
+        {
+          "heldout": "A8_take",
+          "predicted_xy_mm": [
+            18.895104067484745,
+            419.3366021029707
+          ],
+          "error_norm_mm": 10.990148421370877,
+          "fitted_tcp_delta_wrist_mm": [
+            19.5047969787535,
+            19.100135036018102,
+            -4.235397534139148
+          ],
+          "fitted_board_rotation_vector_deg": [
+            10.168444345219914,
+            -0.44623927304350314,
+            2.8626466940740163
+          ],
+          "fitted_board_origin_translation_xy_mm": [
+            22.1640714541115,
+            17.409226561268703
+          ],
+          "predicted_unmeasured_z_mm": 23.064843579420383
+        }
+      ],
+      "LOO_xy_rms_norm_mm": 8.567441461310775,
+      "LOO_xy_max_norm_mm": 13.173502351794587,
+      "LOO_tcp_delta_component_span_mm": [
+        30.00398956212901,
+        16.347195293646998,
+        12.08218228054622
+      ],
+      "A8_heldout": {
+        "heldout": "A8_take",
+        "predicted_xy_mm": [
+          18.895104067484745,
+          419.3366021029707
+        ],
+        "error_norm_mm": 10.990148421370877,
+        "fitted_tcp_delta_wrist_mm": [
+          19.5047969787535,
+          19.100135036018102,
+          -4.235397534139148
+        ],
+        "fitted_board_rotation_vector_deg": [
+          10.168444345219914,
+          -0.44623927304350314,
+          2.8626466940740163
+        ],
+        "fitted_board_origin_translation_xy_mm": [
+          22.1640714541115,
+          17.409226561268703
+        ],
+        "predicted_unmeasured_z_mm": 23.064843579420383
+      },
+      "method": "Seven-start variable-projection damped Gauss-Newton; sharedTCP/in-plane translation solved linearly for each rotation. Numerical fit, no global guarantee.",
+      "elapsed_s": 1.6194011999905342
+    }
+  ],
+  "full_transform_plus_TCP_XY_local_identifiability": {
+    "parameters": 9,
+    "observations": 16,
+    "rank": 8,
+    "scaled_rotation_column_note": "Rotation increments scaled so one coordinate equals0.01rad; position increments usemm.",
+    "singular_values": [
+      8.26243050683696,
+      4.077422166786977,
+      2.081637507845942,
+      0.7555823285814366,
+      0.5170641041017147,
+      0.28542781591604816,
+      0.22926864860546292,
+      0.14916248931757278,
+      3.027008044059105e-18
+    ],
+    "board_normal_translation_unobservable": true,
+    "interpretation": "Nominal XY alone leaves board-normal translation exactly unobservable; numerical rank of remaining parameters does not establish robustness or metric truth."
+  },
+  "common_plane_contact_datum_audit": {
+    "A8_current_CAD_TCP_height_mm": 84.62267445748284,
+    "A8_current_lowest_CAD_gripper_vertex_height_mm": 58.14248963368509,
+    "A8_TCP_above_lowest_CAD_vertex_mm": 26.480184823797757,
+    "if_forcing_A8_TCP_to_unmeasured_requested50_2_common_plane_shift_mm": 34.42267445748284,
+    "if_forcing_A8_lowest_CAD_vertex_to_unmeasured50_2_common_plane_shift_mm": 7.942489633685085,
+    "effects_on_accepted_rows": [
+      {
+        "id": "validated:20261106_b3_v25_height20",
+        "baseline_lowest_CAD_vertex_height_mm": 12.378237843455546,
+        "lowest_after_forcing_A8_TCP50_2_mm": -22.044436614027298,
+        "lowest_after_forcing_A8_min_vertex50_2_mm": 4.435748209770461
+      },
+      {
+        "id": "validated:20261107_a1_v25_height30",
+        "baseline_lowest_CAD_vertex_height_mm": 7.336814326751072,
+        "lowest_after_forcing_A8_TCP50_2_mm": -27.08586013073177,
+        "lowest_after_forcing_A8_min_vertex50_2_mm": -0.6056753069340131
+      },
+      {
+        "id": "validated:20261107_a6_v25_height30",
+        "baseline_lowest_CAD_vertex_height_mm": 6.715208073130601,
+        "lowest_after_forcing_A8_TCP50_2_mm": -27.70746638435224,
+        "lowest_after_forcing_A8_min_vertex50_2_mm": -1.2272815605544842
+      },
+      {
+        "id": "validated:20261107_a7_v32_height50_x17",
+        "baseline_lowest_CAD_vertex_height_mm": 19.706600164690858,
+        "lowest_after_forcing_A8_TCP50_2_mm": -14.716074292791983,
+        "lowest_after_forcing_A8_min_vertex50_2_mm": 11.764110531005773
+      },
+      {
+        "id": "validated:20261107_b6_v25_height30",
+        "baseline_lowest_CAD_vertex_height_mm": 9.422888976152478,
+        "lowest_after_forcing_A8_TCP50_2_mm": -24.999785481330363,
+        "lowest_after_forcing_A8_min_vertex50_2_mm": 1.4803993424673934
+      },
+      {
+        "id": "validated:20261107_c1_v27_height30",
+        "baseline_lowest_CAD_vertex_height_mm": 12.696355018818169,
+        "lowest_after_forcing_A8_TCP50_2_mm": -21.726319438664675,
+        "lowest_after_forcing_A8_min_vertex50_2_mm": 4.753865385133084
+      },
+      {
+        "id": "validated:20261107_d1_v28_height30",
+        "baseline_lowest_CAD_vertex_height_mm": 24.440318062762575,
+        "lowest_after_forcing_A8_TCP50_2_mm": -9.982356394720266,
+        "lowest_after_forcing_A8_min_vertex50_2_mm": 16.49782842907749
+      },
+      {
+        "id": "A8_take",
+        "baseline_lowest_CAD_vertex_height_mm": 58.14248963368509,
+        "lowest_after_forcing_A8_TCP50_2_mm": 23.719815176202246,
+        "lowest_after_forcing_A8_min_vertex50_2_mm": 50.2
+      }
+    ],
+    "interpretation": "26.480mm of A8 TCP-versus-50.2 discrepancy can be a CAD-point semantic difference only if the intended physical reference were the lowest gripper vertex, which has not been established. A common plane shift to force either equality conflicts with several accepted CAD non-contact poses. Neither equality is measured ground truth."
+  },
+  "existing_fitting_code": {
+    "scripts/left_arm_board_kinematics.py:266": "estimate_board_and_tcp assumes full3D board_tcp_mm for every anchor and at least4points; unsuitable for new A8 without physicalZ. Historical fouranchors mix piece/contact datums, nominalZ55, and older physical registrations.",
+    "scripts/audit_left_arm_common_calibration.py:1": "Explicitly rejects requestedXYZ and qualitative acceptance as position ground truth; C4/C5/B3 qualified only as quasi-static torque proxies.",
+    "scripts/fit_geometry_calibration.py:1": "Legacy reduced shoulder-frame affine correction fitter; not the current seven-axis shared CAD calibration workflow."
+  },
+  "recommendation": "Keep runtime geometry unchanged. UseA8q as an explicitly taught endpoint/branch reference for fresh reverse-path geometry only. For reusable Cartesian calibration collect same-opening, same-defined physical contact point at multiple board locations/orientations with measuredXY and at least one independently measuredZ/contactplane datum; fit shared model and validate heldoutphysicalpoints.",
+  "limitations": [
+    "All nominal XY labels are approximate assumptions, not metrology; A7 nominalX27.5 substitutes for old requestedX17.5 and is specially uncertain.",
+    "Historical successful grasp and recent accepted empty approach are different evidence scopes; accepted height need not mean one shared physical graspZ.",
+    "No new model, board transform, TCP, physical joint limits, or hardware plan is authorized or deployed by this audit.",
+    "A8 alone cannot distinguish board translation, wrist-local contact TCP offset, kinematic error, or object/contact semantics."
+  ],
+  "elapsed_s": 0.1392284000030486,
+  "full_board_rotation_extension_note": "Exploratory8parameter XY-only fit included to test whether allowing common board tilt resolves heldoutA8. Its board-normal origin is fixed only as gauge and cannot infer physicalZ."
+}

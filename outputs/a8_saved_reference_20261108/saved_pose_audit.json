@@ -1,0 +1,81 @@
+{
+  "motion_issued": false,
+  "saved_move": {
+    "name": "A8_take",
+    "type": "left_arm_v2_6_saved_move",
+    "created_at": "2026-11-08 16:32:15",
+    "note": "web-control-1.2",
+    "pose": {
+      "shoulder_front": -0.19169145822525024,
+      "shoulder_side": -2.854390859603882,
+      "shoulder_rotate": 2.3832685947418213,
+      "elbow": -0.9409094452857971,
+      "arm_roll": -2.6552605628967285,
+      "wrist_side": 0.17795833945274353,
+      "wrist": -1.9357976913452148
+    },
+    "replay_requires_table_clearance": true,
+    "replay_order": [
+      "shoulder_front",
+      "shoulder_side",
+      "shoulder_rotate",
+      "elbow",
+      "arm_roll",
+      "wrist_side"
+    ],
+    "replay_final_joint": "wrist"
+  },
+  "source_sha256": "3d8f2d0fcf4bcb8a3cf8c49125f155c737813f89b833f906316b314fc0551ce7",
+  "saved_pose_tcp_board_mm": [
+    11.798050592563328,
+    405.6006774366655,
+    84.62267445748284
+  ],
+  "saved_pose_wrist_rotation_in_board": [
+    [
+      0.15037298107425046,
+      0.00071148189032173,
+      -0.9886290812819348
+    ],
+    [
+      0.14843778758494036,
+      0.9886474769576761,
+      0.023289257654777934
+    ],
+    [
+      0.9774222167414296,
+      -0.1502519886681778,
+      0.14856025754395613
+    ]
+  ],
+  "target_board_mm": [
+    27.5,
+    412.5,
+    50.2
+  ],
+  "difference_from_current_request_mm": [
+    -15.701949407436672,
+    -6.899322563334522,
+    34.42267445748284
+  ],
+  "operating_bound_violations_deg": {
+    "shoulder_front": {
+      "below_min": 2.0518458318233552,
+      "above_max": 0.0
+    }
+  },
+  "body_and_board_check": {
+    "passed": true
+  },
+  "latest_web_action": {
+    "action": "capture-move:A8_take",
+    "running": false,
+    "support_running": null,
+    "full_log_path": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794184334719_27716.txt",
+    "returncode": 0
+  },
+  "source_hashes": {
+    "data/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "data/left_arm_board_workspace_candidate.json": "669ef83ccdd28d086e187760ebc95a2c1d02bb1fba1175888bd02d3b9978e074"
+  }
+}

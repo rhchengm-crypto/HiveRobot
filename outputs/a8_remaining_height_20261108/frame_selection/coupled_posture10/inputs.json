@@ -1,0 +1,96 @@
+{
+  "motion_issued": false,
+  "network_accessed": false,
+  "active_configuration_changed": false,
+  "scope": "Existing lower25 scoped trial bounds, not certified mechanical travel.",
+  "source_files": {
+    "outputs/a8_lower25_execution_20261108/control_evidence/models/left_arm_general_dynamics.json": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "outputs/a8_lower25_execution_20261108/control_evidence/models/left_arm_board_workspace_candidate.json": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+    "outputs/a8_lower25_execution_20261108/execution_audit.json": "0ff1999815a551579a4b2c0ed18b48166381a79146e83b26566a036b6d46b66e",
+    "outputs/a8_remaining_height_20261108/frame_selection/select_remaining10_frame.py": "f5c7dd853b4b171c20d2d98ae7727acdbb9dc012b0c266779d3a5e23347be385"
+  },
+  "scipy_version": "1.18.1",
+  "held_encoder_rad": {
+    "shoulder_front": -0.3553444743156433,
+    "shoulder_side": -2.8593499660491943,
+    "shoulder_rotate": 2.319943428039551,
+    "elbow": -1.1556801795959473,
+    "arm_roll": -2.5907912254333496,
+    "wrist_side": 0.14057374000549316,
+    "wrist": -2.096017360687256
+  },
+  "held_model_board_mm": [
+    9.639697000830372,
+    406.65055148807676,
+    62.175188529761634
+  ],
+  "requested_board_mm": [
+    9.639697000830372,
+    406.65055148807676,
+    52.175188529761634
+  ],
+  "held_wrist_rotation_in_cad": [
+    [
+      0.3299853764795794,
+      0.9396991996777042,
+      0.08986136786580846
+    ],
+    [
+      0.04944787245201993,
+      -0.11226964126349667,
+      0.9924466915459677
+    ],
+    [
+      0.9426900653022711,
+      -0.3230494416891165,
+      -0.08351346600849084
+    ]
+  ],
+  "bounds_encoder_rad": {
+    "shoulder_front": [
+      -0.4011309684645698,
+      2.1103306165446476
+    ],
+    "shoulder_side": [
+      -3.122766768049164,
+      -2.1797434934864803
+    ],
+    "shoulder_rotate": [
+      1.5249327915689075,
+      2.9232550016154484
+    ],
+    "elbow": [
+      -1.4702146402110297,
+      0.838674008846283
+    ],
+    "arm_roll": [
+      -3.421080624174042,
+      -2.0813225251025025
+    ],
+    "wrist_side": [
+      -0.7890395152828359,
+      0.5848098746051031
+    ],
+    "wrist": [
+      -3.4836426130046085,
+      -0.8567862161885065
+    ]
+  },
+  "front_total_software_extension_from_original_common_deg": 12.0,
+  "front_additional_software_extension_from_completed_trial_deg": 0.0,
+  "other_six_bounds_unchanged": false,
+  "unchanged_axes": [
+    "shoulder_front",
+    "shoulder_side",
+    "elbow",
+    "wrist_side",
+    "wrist"
+  ],
+  "coupled_posture_counterfactual": true,
+  "counterfactual_rotation_lower_extension_deg": 10.0,
+  "counterfactual_roll_upper_extension_deg": 10.0,
+  "mechanical_qualification": false,
+  "strict_position_tolerance_mm": 0.5,
+  "strict_new_frame_tolerance_rad": 0.005,
+  "model_predictions_not_physical_height_or_XY_measurements": true
+}

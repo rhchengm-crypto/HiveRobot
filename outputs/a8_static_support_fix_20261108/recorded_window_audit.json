@@ -1,0 +1,457 @@
+{
+  "schema": 1,
+  "generated_at_utc": "2026-11-09T01:16:19.558120+00:00",
+  "motion_issued": false,
+  "network_accessed": false,
+  "controller_or_sdk_imported": false,
+  "evidence_preserved": true,
+  "manifest_verification": {
+    "path": "outputs/a8_reference_execution_20261108/control_evidence/manifest.json",
+    "bytes": 16917,
+    "sha256": "19e1b76c33aca66da18c813ce3c00d4a6a492b9bc8a1f179f26abf1f5b93fe00",
+    "checked_files": 92,
+    "all_original_files_match": true
+  },
+  "files": {
+    "helper": {
+      "path": "outputs/a8_static_support_fix_20261108/reproducibility/audit_recorded_static_windows.py",
+      "bytes": 10939,
+      "sha256": "a151138c23356a49c24029d6e1f7c11a015e75f39c35fc468e8ffbe5b1d9932f"
+    },
+    "recorded_v32_board_code": {
+      "path": "outputs/a8_reference_execution_20261108/control_evidence/source/left_arm_board_grasp.py",
+      "bytes": 107780,
+      "sha256": "b0a4b9a1353e4198a112712e492139b96450ad7be89e17f7b7e4d4efccc4d7ac"
+    },
+    "recorded_gravity_code": {
+      "path": "outputs/a8_reference_execution_20261108/control_evidence/source/left_arm_rigid_body.py",
+      "bytes": 13725,
+      "sha256": "4ea8673a58ecde110e3bd2414eec4c7a6543dfd5546a54534734283e984f7cfd"
+    },
+    "recorded_model": {
+      "path": "outputs/a8_reference_execution_20261108/control_evidence/models/left_arm_general_dynamics.json",
+      "bytes": 31263,
+      "sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7"
+    },
+    "recorded_limits_source": {
+      "path": "outputs/a8_reference_execution_20261108/control_evidence/source/left_arm_v3_1_model_control.py",
+      "bytes": 87240,
+      "sha256": "a44f5c3c9bad28ee317ea415792f7906320b534ad8eebbd8204c2d4cf03d8996"
+    },
+    "recorded_motion_log": {
+      "path": "outputs/a8_reference_execution_20261108/control_evidence/data/left_arm_v2_8_full_runs/arm_run_1794185510062_30907.txt",
+      "bytes": 573944,
+      "sha256": "d752d5f7919df0048968ebb59ffa8f0f5bfed23dd9c41f3800a9beaba1372cd0"
+    },
+    "recorded_control_trace": {
+      "path": "outputs/a8_reference_execution_20261108/control_evidence/data/board_motion_traces/trace_1794185516975282199.jsonl",
+      "bytes": 10007684,
+      "sha256": "4cd5871fc1b54be45627cfd5bec6d4481d69a143e2f5cc57b3e0190d8e179c22"
+    },
+    "current_static_support_code": {
+      "path": "scripts/left_arm_static_support.py",
+      "bytes": 17756,
+      "sha256": "ce4d53088a9818a7c229f822c9d9d2bb5f826328982b2a859a284e04bbe3203d"
+    }
+  },
+  "recorded_retries": [
+    {
+      "attempt": 1,
+      "frames": 108,
+      "reported_max_error_deg": 2.5791187041845425,
+      "entry_error_deg": {
+        "shoulder_front": 2.5791187041845425,
+        "shoulder_side": 1.6392727215597402,
+        "shoulder_rotate": -0.15300989778662566,
+        "elbow": 1.005420921298802,
+        "arm_roll": -0.17485284275232643,
+        "wrist_side": 0.6557084056049791,
+        "wrist": 0.04371321068808161
+      },
+      "last_ff_Nm": {
+        "shoulder_front": -8.76597180530386,
+        "shoulder_side": 0.8087064493500498,
+        "shoulder_rotate": -0.34948268224506096,
+        "elbow": 4.731725724209288,
+        "arm_roll": -0.0018024973920710338,
+        "wrist_side": 0.22922234114531298,
+        "wrist": 0.7486291078888653
+      }
+    },
+    {
+      "attempt": 2,
+      "frames": 102,
+      "reported_max_error_deg": 2.5791187041845425,
+      "entry_error_deg": {
+        "shoulder_front": 2.5791187041845425,
+        "shoulder_side": 1.6174161162156995,
+        "shoulder_rotate": -0.15300989778662566,
+        "elbow": 1.005420921298802,
+        "arm_roll": -0.17485284275232643,
+        "wrist_side": 0.6338518002609383,
+        "wrist": 0.04371321068808161
+      },
+      "last_ff_Nm": {
+        "shoulder_front": -8.76597180530386,
+        "shoulder_side": 0.8087064493500498,
+        "shoulder_rotate": -0.34948268224506096,
+        "elbow": 4.731725724209288,
+        "arm_roll": -0.0018024973920710338,
+        "wrist_side": 0.22922234114531298,
+        "wrist": 0.7486291078888653
+      }
+    },
+    {
+      "attempt": 3,
+      "frames": 109,
+      "reported_max_error_deg": 2.5791187041845425,
+      "entry_error_deg": {
+        "shoulder_front": 2.5791187041845425,
+        "shoulder_side": 1.6174161162156995,
+        "shoulder_rotate": -0.15300989778662566,
+        "elbow": 1.005420921298802,
+        "arm_roll": -0.17485284275232643,
+        "wrist_side": 0.6557084056049791,
+        "wrist": 0.04371321068808161
+      },
+      "last_ff_Nm": {
+        "shoulder_front": -8.76597180530386,
+        "shoulder_side": 0.8087064493500498,
+        "shoulder_rotate": -0.34948268224506096,
+        "elbow": 4.731725724209288,
+        "arm_roll": -0.0018024973920710338,
+        "wrist_side": 0.22922234114531298,
+        "wrist": 0.7486291078888653
+      }
+    }
+  ],
+  "all_three_retries_same_reference_gains_and_ff": true,
+  "control_invariants_across_three_retries": {
+    "shoulder_front": {
+      "q_ref_span_rad": 5.551115123125783e-17,
+      "ff_span_Nm": 5.329070518200751e-15,
+      "gain_pairs": [
+        [
+          90.0,
+          4.0
+        ]
+      ],
+      "max_abs_reference_dq_rad_s": 0.0
+    },
+    "shoulder_side": {
+      "q_ref_span_rad": 8.881784197001252e-16,
+      "ff_span_Nm": 5.88418203051333e-15,
+      "gain_pairs": [
+        [
+          70.0,
+          3.0
+        ]
+      ],
+      "max_abs_reference_dq_rad_s": 0.0
+    },
+    "shoulder_rotate": {
+      "q_ref_span_rad": 8.881784197001252e-16,
+      "ff_span_Nm": 8.881784197001252e-16,
+      "gain_pairs": [
+        [
+          36.0,
+          4.5
+        ]
+      ],
+      "max_abs_reference_dq_rad_s": 0.0
+    },
+    "elbow": {
+      "q_ref_span_rad": 2.220446049250313e-16,
+      "ff_span_Nm": 3.552713678800501e-15,
+      "gain_pairs": [
+        [
+          70.0,
+          3.0
+        ]
+      ],
+      "max_abs_reference_dq_rad_s": 0.0
+    },
+    "arm_roll": {
+      "q_ref_span_rad": 8.881784197001252e-16,
+      "ff_span_Nm": 2.5175174445113413e-16,
+      "gain_pairs": [
+        [
+          18.0,
+          1.0
+        ]
+      ],
+      "max_abs_reference_dq_rad_s": 0.0
+    },
+    "wrist_side": {
+      "q_ref_span_rad": 5.551115123125783e-17,
+      "ff_span_Nm": 3.885780586188048e-16,
+      "gain_pairs": [
+        [
+          16.0,
+          2.2
+        ]
+      ],
+      "max_abs_reference_dq_rad_s": 0.0
+    },
+    "wrist": {
+      "q_ref_span_rad": 4.440892098500626e-16,
+      "ff_span_Nm": 2.220446049250313e-16,
+      "gain_pairs": [
+        [
+          22.0,
+          1.4
+        ]
+      ],
+      "max_abs_reference_dq_rad_s": 0.0
+    }
+  },
+  "last_fixed_window": {
+    "attempt": 3,
+    "frames": 14,
+    "start_s": 16370.609224381,
+    "end_s": 16370.988748695,
+    "duration_s": 0.3795243139993545,
+    "frame_indices_are_original": true,
+    "recorded_individual_freshness_verified_flags": [
+      false
+    ],
+    "per_joint": {
+      "shoulder_front": {
+        "measured_position_median_rad": -0.14667734503746033,
+        "target_rad": -0.19169145822525024,
+        "position_error_deg": 2.5791187041845425,
+        "position_span_deg": 0.0,
+        "peak_abs_velocity_rad_s": 0.005860805977135897,
+        "torque_median_Nm": -12.84786319732666,
+        "ff_median_Nm": -8.76597180530386,
+        "stationary_P_component_Nm": -4.0512701869010925
+      },
+      "shoulder_side": {
+        "measured_position_median_rad": -2.8261616230010986,
+        "target_rad": -2.854390859603882,
+        "position_error_deg": 1.6174161162156995,
+        "position_span_deg": 0.0,
+        "peak_abs_velocity_rad_s": 0.005860805977135897,
+        "torque_median_Nm": -1.2376068830490112,
+        "ff_median_Nm": 0.8087064493500498,
+        "stationary_P_component_Nm": -1.9760465621948242
+      },
+      "shoulder_rotate": {
+        "measured_position_median_rad": 2.3805980682373047,
+        "target_rad": 2.3832685947418213,
+        "position_error_deg": -0.15300989778662566,
+        "position_span_deg": 0.021856605344040804,
+        "peak_abs_velocity_rad_s": 0.021978022530674934,
+        "torque_median_Nm": -0.29792430996894836,
+        "ff_median_Nm": -0.34948268224506096,
+        "stationary_P_component_Nm": 0.09613895416259766
+      },
+      "elbow": {
+        "measured_position_median_rad": -0.9233615398406982,
+        "target_rad": -0.9409094452857971,
+        "position_error_deg": 1.005420921298802,
+        "position_span_deg": 0.0,
+        "peak_abs_velocity_rad_s": 0.005860805977135897,
+        "torque_median_Nm": 3.452991485595703,
+        "ff_median_Nm": 4.731725724209288,
+        "stationary_P_component_Nm": -1.2283533811569214
+      },
+      "arm_roll": {
+        "measured_position_median_rad": -2.6583123207092285,
+        "target_rad": -2.6552605628967285,
+        "position_error_deg": -0.17485284275232643,
+        "position_span_deg": 0.0,
+        "peak_abs_velocity_rad_s": 0.03663003817200661,
+        "torque_median_Nm": 0.03663003817200661,
+        "ff_median_Nm": -0.0018024973920710338,
+        "stationary_P_component_Nm": 0.054931640625
+      },
+      "wrist_side": {
+        "measured_position_median_rad": 0.18940261006355286,
+        "target_rad": 0.17795833945274353,
+        "position_error_deg": 0.6557084056049791,
+        "position_span_deg": 0.021856605344040804,
+        "peak_abs_velocity_rad_s": 0.021978022530674934,
+        "torque_median_Nm": 0.017094017937779427,
+        "ff_median_Nm": 0.22922234114531298,
+        "stationary_P_component_Nm": -0.18310832977294922
+      },
+      "wrist": {
+        "measured_position_median_rad": -1.9350347518920898,
+        "target_rad": -1.9357976913452148,
+        "position_error_deg": 0.04371321068808161,
+        "position_span_deg": 0.0,
+        "peak_abs_velocity_rad_s": 0.021978022530674934,
+        "torque_median_Nm": 0.7057387232780457,
+        "ff_median_Nm": 0.7486291078888653,
+        "stationary_P_component_Nm": -0.01678466796875
+      }
+    }
+  },
+  "actual_new_observer_result_on_unchanged_old_trace": {
+    "accepted": false,
+    "reason": "individual-feedback-freshness-unverified"
+  },
+  "counterfactual_only": {
+    "actual_observation_eligible": false,
+    "individual_receive_timestamps_or_sequences_fabricated": false,
+    "applied_to_robot": false,
+    "new_hardware_validation_pending": true,
+    "initial_entry_anchor_Nm": {
+      "shoulder_front": 2.126495838165283,
+      "shoulder_side": 0.6632478833198547,
+      "shoulder_rotate": -0.13431014120578766,
+      "elbow": 4.041025638580322,
+      "arm_roll": 0.06593406945466995,
+      "wrist_side": 0.20757021009922028,
+      "wrist": 0.7399267554283142
+    },
+    "initial_model_gravity_Nm": {
+      "shoulder_front": 2.1647426703945767,
+      "shoulder_side": -0.017634799962750705,
+      "shoulder_rotate": 0.10140146885510162,
+      "elbow": 3.1592114994946483,
+      "arm_roll": 0.008566951011360636,
+      "wrist_side": 0.015898226929282167,
+      "wrist": 0.18816544561110615
+    },
+    "model_gravity_at_window_median_actual_q_Nm": {
+      "shoulder_front": -8.55116658601788,
+      "shoulder_side": 0.2827169710327556,
+      "shoulder_rotate": -0.1262613038502529,
+      "elbow": 3.810530853006965,
+      "arm_roll": -0.05579464766542635,
+      "wrist_side": 0.04335811851913067,
+      "wrist": 0.19560771553868356
+    },
+    "immutable_entry_baseline_at_actual_q_Nm": {
+      "shoulder_front": -8.589413418247172,
+      "shoulder_side": 0.9635996543153611,
+      "shoulder_rotate": -0.36197291391114217,
+      "elbow": 4.6923449920926386,
+      "arm_roll": 0.0015724707778829675,
+      "wrist_side": 0.2350301016890688,
+      "wrist": 0.7473690253558916
+    },
+    "potential_observed_absolute_static_residual_Nm": {
+      "shoulder_front": -4.258449779079488,
+      "shoulder_side": -2.2012065373643726,
+      "shoulder_rotate": 0.0640486039421938,
+      "elbow": -1.2393535064969354,
+      "arm_roll": 0.03505756739412364,
+      "wrist_side": -0.21793608375128937,
+      "wrist": -0.041630302077845904
+    },
+    "bounded_update_from_zero_alpha_half": {
+      "bias": {
+        "shoulder_front": -2.129224889539744,
+        "shoulder_side": -1.1006032686821863,
+        "shoulder_rotate": 0.0320243019710969,
+        "elbow": -0.6196767532484677,
+        "arm_roll": 0.01752878369706182,
+        "wrist_side": -0.10896804187564468,
+        "wrist": -0.020815151038922952
+      },
+      "audit": {
+        "shoulder_front": {
+          "previous_bias_Nm": 0.0,
+          "observed_residual_Nm": -4.258449779079488,
+          "bounded_observation_Nm": -4.258449779079488,
+          "bias_limit_Nm": 7.0,
+          "bias_Nm": -2.129224889539744,
+          "change_Nm": -2.129224889539744,
+          "alpha": 0.5,
+          "saturated": false,
+          "entry_anchor_modified": false,
+          "joint_target_modified": false,
+          "observation_semantics": "absolute session residual, not an additive increment"
+        },
+        "shoulder_side": {
+          "previous_bias_Nm": 0.0,
+          "observed_residual_Nm": -2.2012065373643726,
+          "bounded_observation_Nm": -2.2012065373643726,
+          "bias_limit_Nm": 6.1086523819801535,
+          "bias_Nm": -1.1006032686821863,
+          "change_Nm": -1.1006032686821863,
+          "alpha": 0.5,
+          "saturated": false,
+          "entry_anchor_modified": false,
+          "joint_target_modified": false,
+          "observation_semantics": "absolute session residual, not an additive increment"
+        },
+        "shoulder_rotate": {
+          "previous_bias_Nm": 0.0,
+          "observed_residual_Nm": 0.0640486039421938,
+          "bounded_observation_Nm": 0.0640486039421938,
+          "bias_limit_Nm": 2.5,
+          "bias_Nm": 0.0320243019710969,
+          "change_Nm": 0.0320243019710969,
+          "alpha": 0.5,
+          "saturated": false,
+          "entry_anchor_modified": false,
+          "joint_target_modified": false,
+          "observation_semantics": "absolute session residual, not an additive increment"
+        },
+        "elbow": {
+          "previous_bias_Nm": 0.0,
+          "observed_residual_Nm": -1.2393535064969354,
+          "bounded_observation_Nm": -1.2393535064969354,
+          "bias_limit_Nm": 6.1086523819801535,
+          "bias_Nm": -0.6196767532484677,
+          "change_Nm": -0.6196767532484677,
+          "alpha": 0.5,
+          "saturated": false,
+          "entry_anchor_modified": false,
+          "joint_target_modified": false,
+          "observation_semantics": "absolute session residual, not an additive increment"
+        },
+        "arm_roll": {
+          "previous_bias_Nm": 0.0,
+          "observed_residual_Nm": 0.03505756739412364,
+          "bounded_observation_Nm": 0.03505756739412364,
+          "bias_limit_Nm": 1.5707963267948966,
+          "bias_Nm": 0.01752878369706182,
+          "change_Nm": 0.01752878369706182,
+          "alpha": 0.5,
+          "saturated": false,
+          "entry_anchor_modified": false,
+          "joint_target_modified": false,
+          "observation_semantics": "absolute session residual, not an additive increment"
+        },
+        "wrist_side": {
+          "previous_bias_Nm": 0.0,
+          "observed_residual_Nm": -0.21793608375128937,
+          "bounded_observation_Nm": -0.21793608375128937,
+          "bias_limit_Nm": 1.3962634015954636,
+          "bias_Nm": -0.10896804187564468,
+          "change_Nm": -0.10896804187564468,
+          "alpha": 0.5,
+          "saturated": false,
+          "entry_anchor_modified": false,
+          "joint_target_modified": false,
+          "observation_semantics": "absolute session residual, not an additive increment"
+        },
+        "wrist": {
+          "previous_bias_Nm": 0.0,
+          "observed_residual_Nm": -0.041630302077845904,
+          "bounded_observation_Nm": -0.041630302077845904,
+          "bias_limit_Nm": 1.9198621771937625,
+          "bias_Nm": -0.020815151038922952,
+          "change_Nm": -0.020815151038922952,
+          "alpha": 0.5,
+          "saturated": false,
+          "entry_anchor_modified": false,
+          "joint_target_modified": false,
+          "observation_semantics": "absolute session residual, not an additive increment"
+        }
+      }
+    },
+    "potential_baseline_smoothstep_duration_s_at_1Nm_per_s": 3.193837334309616,
+    "scope": "Numerical demonstration only. These old cached samples are ineligible for live learning. Bias is not installed in any model or controller."
+  },
+  "root_cause_supported_by_record": "Three settle retries repeated the same q-reference, gains and FF while stable encoder residual persisted; no additional correction law was applied.",
+  "physical_drift_solved": false,
+  "physical_tracking_improvement_verified": false,
+  "fitting_eligible": false,
+  "measurement_caveat": "Encoder stability and model gravity cannot establish physical XY drift, contact clearance, or uniquely identify gravity-versus-friction/load-model error."
+}

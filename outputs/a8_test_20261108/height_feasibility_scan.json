@@ -1,0 +1,202 @@
+{
+  "motion_issued": false,
+  "network_accessed": false,
+  "runtime_modified": false,
+  "full_path_generated": false,
+  "endpoint_only": true,
+  "original_request_board_mm": [
+    27.5,
+    412.5,
+    50.2
+  ],
+  "physical_height_change_authorized": false,
+  "orientation_reference": "validated:20261107_a7_v32_height50_x17",
+  "position_tolerance_mm": 0.5,
+  "rotation_tolerance_deg": 0.2864788975654116,
+  "model_sha256": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+  "board_model_sha256": "669ef83ccdd28d086e187760ebc95a2c1d02bb1fba1175888bd02d3b9978e074",
+  "seed_names": [
+    "current-position-only-best",
+    "forecast-Clearance",
+    "accepted-A7-planned-terminal",
+    "accepted-A6-measured",
+    "accepted-A7-measured"
+  ],
+  "hypothetical_heights_mm": [
+    60.2,
+    70.2,
+    80.2,
+    100.2,
+    120.2,
+    140.2
+  ],
+  "results": [
+    {
+      "height_mm": 60.2,
+      "trials": 5,
+      "success": false,
+      "successful_trials": 0,
+      "best_seed": "current-position-only-best",
+      "position_error_mm": 27.533854208031304,
+      "rotation_error_deg": 7.173535003776587,
+      "minimum_body_gripper_clearance_mm": 16.986329505957666,
+      "active_bounds": [
+        {
+          "joint": "shoulder_front",
+          "side": "lower",
+          "distance_deg": 0.0
+        }
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.15587999271661085,
+        "shoulder_side": -2.7599038154903828,
+        "shoulder_rotate": 2.273763888866561,
+        "elbow": -0.7636628150761803,
+        "arm_roll": -2.6195392395928523,
+        "wrist_side": -0.19174430776783935,
+        "wrist": -2.3385076359772765
+      },
+      "all_requested_seeds_completed": true
+    },
+    {
+      "height_mm": 70.2,
+      "trials": 5,
+      "success": false,
+      "successful_trials": 0,
+      "best_seed": "forecast-Clearance",
+      "position_error_mm": 25.833588481301646,
+      "rotation_error_deg": 7.018872978421524,
+      "minimum_body_gripper_clearance_mm": 17.279674571580397,
+      "active_bounds": [
+        {
+          "joint": "shoulder_front",
+          "side": "lower",
+          "distance_deg": 0.0
+        }
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.15587999271661085,
+        "shoulder_side": -2.7540257915135715,
+        "shoulder_rotate": 2.277127890696614,
+        "elbow": -0.7361519385763935,
+        "arm_roll": -2.637798159346269,
+        "wrist_side": -0.2003708725104595,
+        "wrist": -2.366474525680215
+      },
+      "all_requested_seeds_completed": true
+    },
+    {
+      "height_mm": 80.2,
+      "trials": 5,
+      "success": false,
+      "successful_trials": 0,
+      "best_seed": "current-position-only-best",
+      "position_error_mm": 24.381397314775143,
+      "rotation_error_deg": 6.886362078847061,
+      "minimum_body_gripper_clearance_mm": 17.563358110858303,
+      "active_bounds": [
+        {
+          "joint": "shoulder_front",
+          "side": "lower",
+          "distance_deg": 0.0
+        }
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.15587999271661085,
+        "shoulder_side": -2.7483386469171527,
+        "shoulder_rotate": 2.280133552283045,
+        "elbow": -0.7083970639765641,
+        "arm_roll": -2.6560971834641194,
+        "wrist_side": -0.20796218765434932,
+        "wrist": -2.3949691022838673
+      },
+      "all_requested_seeds_completed": true
+    },
+    {
+      "height_mm": 100.2,
+      "trials": 5,
+      "success": false,
+      "successful_trials": 0,
+      "best_seed": "current-position-only-best",
+      "position_error_mm": 22.177726064561618,
+      "rotation_error_deg": 6.707585570512988,
+      "minimum_body_gripper_clearance_mm": 18.087264431843504,
+      "active_bounds": [
+        {
+          "joint": "shoulder_front",
+          "side": "lower",
+          "distance_deg": 0.0
+        }
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.15587999271661085,
+        "shoulder_side": -2.7378279733092867,
+        "shoulder_rotate": 2.284800423604467,
+        "elbow": -0.6524050724747452,
+        "arm_roll": -2.692018261696102,
+        "wrist_side": -0.21977011250582326,
+        "wrist": -2.452710877634206
+      },
+      "all_requested_seeds_completed": true
+    },
+    {
+      "height_mm": 120.2,
+      "trials": 5,
+      "success": false,
+      "successful_trials": 0,
+      "best_seed": "forecast-Clearance",
+      "position_error_mm": 20.843581403494255,
+      "rotation_error_deg": 6.665262095611192,
+      "minimum_body_gripper_clearance_mm": 18.567975027019852,
+      "active_bounds": [
+        {
+          "joint": "shoulder_front",
+          "side": "lower",
+          "distance_deg": 0.0
+        }
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.15587999271661085,
+        "shoulder_side": -2.728174290087899,
+        "shoulder_rotate": 2.289754961006145,
+        "elbow": -0.5963074877300709,
+        "arm_roll": -2.7282421086606607,
+        "wrist_side": -0.226154057630798,
+        "wrist": -2.5100637273905897
+      },
+      "all_requested_seeds_completed": true
+    },
+    {
+      "height_mm": 140.2,
+      "trials": 5,
+      "success": false,
+      "successful_trials": 0,
+      "best_seed": "current-position-only-best",
+      "position_error_mm": 20.323863415491818,
+      "rotation_error_deg": 6.769208050157635,
+      "minimum_body_gripper_clearance_mm": 18.995893376479117,
+      "active_bounds": [
+        {
+          "joint": "shoulder_front",
+          "side": "lower",
+          "distance_deg": 0.0
+        }
+      ],
+      "encoder_rad": {
+        "shoulder_front": -0.15587999271661085,
+        "shoulder_side": -2.7195722752931526,
+        "shoulder_rotate": 2.2942730300179774,
+        "elbow": -0.5406392262451616,
+        "arm_roll": -2.7630925157821786,
+        "wrist_side": -0.2274395870561078,
+        "wrist": -2.5657697148472556
+      },
+      "all_requested_seeds_completed": true
+    }
+  ],
+  "first_solved_height_mm": null,
+  "interpretation": "Numerical endpoint-only height sensitivity; not an executable path, physical reach proof, or authorization to move or alter the requested height.",
+  "elapsed_s": 25.781811499997275,
+  "all_heights_completed": true,
+  "model_configuration_unchanged": true
+}

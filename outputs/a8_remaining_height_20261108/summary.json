@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "recorded_at_utc": "2026-11-09T04:51:58.771550+00:00",
+  "kind": "offline-planning-diagnostic-not-execution",
+  "user_question": "能否补足剩余约10mm；否则还能下降多少",
+  "basis_trial": "validation_20261108_a8_lower25.json",
+  "basis_actual_encoder_feedback": {
+    "shoulder_front": -0.3553444743156433,
+    "shoulder_side": -2.8593499660491943,
+    "shoulder_rotate": 2.319943428039551,
+    "elbow": -1.1556801795959473,
+    "arm_roll": -2.5907912254333496,
+    "wrist_side": 0.14057374000549316,
+    "wrist": -2.096017360687256
+  },
+  "basis_model_board_mm": [
+    9.639697000830372,
+    406.65055148807676,
+    62.175188529761634
+  ],
+  "approximate_physical_remaining_gap_mm": 10,
+  "gap_source": "operator visual observation, not calibrated TCP or contact metrology",
+  "requested_actual_feedback_relative_target_board_mm": [
+    9.639697000830372,
+    406.65055148807676,
+    52.175188529761634
+  ],
+  "trial_board_model_sha256": "b64370a7c0e4264c65b085b6b0db15fbe6f1ce1be66a489260e8640a988c1301",
+  "active_restored_board_model_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+  "domain_note": "Calculations use the completed trial's front lower extension of12deg; that temporary configuration is NOT active now. Other extended domains are offline counterfactuals, not mechanical-limit qualification.",
+  "full10mm_complete_path_found": false,
+  "fixed_actual_desired_frame": {
+    "complete_path_passed": true,
+    "requested_descent_mm": 1.5,
+    "samples": 415,
+    "max_lateral_error_mm": 0.3905359779006903,
+    "max_full_frame_error_deg": 0.03242632150392749,
+    "minimum_scene_margin_mm": 11.983664341436615,
+    "maximum_joint_edge_step_deg": 13.940380171290947,
+    "initial_model_height_mm": 62.175188529761634,
+    "minimum_model_height_mm": 60.85889869716431,
+    "achieved_model_descent_mm": 1.3162898325973273,
+    "descent_monotonic": true,
+    "complete_swept_edges_checked": true,
+    "position_tolerance_mm": 0.5,
+    "rotation_tolerance_rad": 0.005,
+    "rounded_down_model_displacement_mm": 1.0,
+    "not_global_or_physical_maximum": true,
+    "physical_displacement_verified": false
+  },
+  "new_frame_up_to5deg_exact_XY_local_minimum": {
+    "endpoint_descent_mm": 0.6278667731418253,
+    "complete_connection_plus_descent": true,
+    "connected_model_descent_mm": 0.5823464199613682,
+    "improves_best_demonstrated_descent": false,
+    "scope": "Local exact-XY endpoint objective differs from the fixed-frame path's unchanged0.5mm position acceptance budget; neither is a proven global maximum."
+  },
+  "full10mm_diagnostics": [
+    "Actual-held full frame frozen:12 seeds failed; prior total3D residual4.094mm is not height error.",
+    "Explicit new requested full frames within1/2/3/5deg: no accepted full10mm endpoint.",
+    "Two differential-evolution position-only crosschecks with free orientation: best residual approximately3.937mm; not an accepted orientation task or proof of unreachability.",
+    "Offline front lower total17/20deg proposals, other six bounds unchanged: no accepted full10mm endpoint.",
+    "Offline coupled proposal:front12 unchanged, roll upper+10deg and shoulder_rotate lower-10deg, new frame<=5deg: no accepted full10mm endpoint."
+  ],
+  "numerical_bottleneck": "arm_roll upper software bound on fixed-frame continuation; shoulder_rotate lower and arm_roll upper in the broader full10mm position search. Front lower extension alone did not resolve it.",
+  "safety_and_preservation": {
+    "motion_issued": false,
+    "motor_or_web_command_issued": false,
+    "active_model_or_runtime_modified": false,
+    "prepared_execution_stamp_created": false,
+    "model_hold_changed": false,
+    "adaptive_learning_changed": false,
+    "ordinary_clearance_shoulder_rotate_skip_changed": false,
+    "physical_estop_changed": false,
+    "shoulder_rotate_gain_changed": false,
+    "pose_tolerances_relaxed": false,
+    "per_square_XYZ_offset_added": false,
+    "saved_angle_replay_used": false
+  },
+  "executed": false,
+  "motion_issued": false,
+  "height_passed": false,
+  "physical_validation_accepted": false,
+  "physical_validation_complete": false,
+  "fitting_eligible": false,
+  "successful_path_library_updated": false,
+  "executable": false,
+  "global_or_physical_maximum_proven": false,
+  "report_files": {
+    "fixed_frame/report.json": {
+      "bytes": 41363,
+      "sha256": "5a4cbba698f1d2c66c4d36d7563efec93752593174ce23b00a2a972129d1da82"
+    },
+    "fixed_frame/independent_acceptance_boundary_polish.json": {
+      "bytes": 3215,
+      "sha256": "7b060400ffbc1f6993cd78f08391cf170e41ee26ee80615ce8813bdd4b2f1fc7"
+    },
+    "frame_selection/frame_selection_report.json": {
+      "bytes": 47099,
+      "sha256": "5c86f51eddb6df2e87f6e2fff5a303008636e87e7a7954d2ed8d98d81d50b778"
+    },
+    "frame_selection/free_orientation_position_crosscheck.json": {
+      "bytes": 6296,
+      "sha256": "2106807a1ddd90802394bd61ab509216f1346963a0b268465a2a231528a935ea"
+    },
+    "frame_selection/front_total17/frame_selection_report.json": {
+      "bytes": 47056,
+      "sha256": "ef27b0ac6b35a07f05eb85a990bcede13a7ca0f4b8c945d7aef028da08ce2204"
+    },
+    "frame_selection/front_total20/frame_selection_report.json": {
+      "bytes": 47101,
+      "sha256": "9d9aaa479308beb3a85a8ef51d9af369f227fbcb6deea33ede1cbe0100b49f12"
+    },
+    "frame_selection/coupled_posture10/frame_selection_report.json": {
+      "bytes": 74430,
+      "sha256": "6b4e2f420520b690fd21e5ddd9ae49e37e94a8bc2aa0ae168399d2a082ae2fc0"
+    },
+    "frame_selection/max_descent_new_frame_report.json": {
+      "bytes": 17020,
+      "sha256": "f4a8e053da2a5bb2d366c8ffb72c39f3e3cf1f25f2979f96fb98cf1cca5bdeb7"
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "motion_issued": false,
+  "accepted": false,
+  "reference_endpoint": "A8_take",
+  "tracking_error_confirmed": true,
+  "planned_terminal_equals_saved": true,
+  "actual_endpoint_minus_saved_deg": {
+    "shoulder_front": 2.5791187041845425,
+    "shoulder_side": 1.6174161162156995,
+    "shoulder_rotate": -0.15300989778662566,
+    "elbow": 1.005420921298802,
+    "arm_roll": -0.17485284275232643,
+    "wrist_side": 0.6557084056049791,
+    "wrist": 0.04371321068808161
+  },
+  "terminal_contact_commands_and_PD_estimates": {
+    "shoulder_front": {
+      "target_rad": -0.19169145822525024,
+      "feedback_rad": -0.14667734503746033,
+      "kp": 90.0,
+      "kd": 4.0,
+      "tau_ff_Nm": -8.765971805303858,
+      "measured_tau_Nm": -12.84786319732666,
+      "calculated_pd_tau_Nm": -4.043455778621137
+    },
+    "shoulder_side": {
+      "target_rad": -2.854390859603882,
+      "feedback_rad": -2.8261616230010986,
+      "kp": 70.0,
+      "kd": 3.0,
+      "tau_ff_Nm": 0.8087064493500499,
+      "measured_tau_Nm": -1.2376068830490112,
+      "calculated_pd_tau_Nm": -1.9701857559848577
+    },
+    "shoulder_rotate": {
+      "target_rad": 2.3832685947418213,
+      "feedback_rad": 2.3805980682373047,
+      "kp": 36.0,
+      "kd": 4.5,
+      "tau_ff_Nm": -0.3494826822450609,
+      "measured_tau_Nm": -0.2905983030796051,
+      "calculated_pd_tau_Nm": 0.19504005555063486
+    },
+    "elbow": {
+      "target_rad": -0.9409094452857971,
+      "feedback_rad": -0.9233615398406982,
+      "kp": 70.0,
+      "kd": 3.0,
+      "tau_ff_Nm": 4.731725724209287,
+      "measured_tau_Nm": 3.452991485595703,
+      "calculated_pd_tau_Nm": -1.2224925749469548
+    },
+    "arm_roll": {
+      "target_rad": -2.6552605628967285,
+      "feedback_rad": -2.6583123207092285,
+      "kp": 18.0,
+      "kd": 1.0,
+      "tau_ff_Nm": -0.0018024973920710546,
+      "measured_tau_Nm": 0.03663003817200661,
+      "calculated_pd_tau_Nm": 0.06225764798000455
+    },
+    "wrist_side": {
+      "target_rad": 0.17795833945274353,
+      "feedback_rad": 0.18940261006355286,
+      "kp": 16.0,
+      "kd": 2.2,
+      "tau_ff_Nm": 0.22922234114531298,
+      "measured_tau_Nm": 0.021978022530674934,
+      "calculated_pd_tau_Nm": -0.16699111359193922
+    },
+    "wrist": {
+      "target_rad": -1.9357976913452148,
+      "feedback_rad": -1.9350347518920898,
+      "kp": 22.0,
+      "kd": 1.4,
+      "tau_ff_Nm": 0.7486291078888653,
+      "measured_tau_Nm": 0.7057387232780457,
+      "calculated_pd_tau_Nm": -0.006528257671743632
+    }
+  },
+  "lateral_observation": {
+    "accepted": false,
+    "motion_accepted": false,
+    "trajectory_smoothness_accepted": true,
+    "original_response": "无抖动，无接触，最终高度太高，可以下降15mm，有横移向边界外横移了20mm",
+    "stage_confirmation": "下降过程中逐渐发生",
+    "jitter": false,
+    "contact": false,
+    "gripping_height_acceptable": false,
+    "height_too_high_mm": 15.0,
+    "approximate_lateral_drift_mm": 20.0,
+    "lateral_direction": "outward beyond A-column boundary",
+    "qualitative_visual_estimate": true,
+    "external_precise_metrology": false
+  },
+  "model_predictions_not_external_measurements": {
+    "external_measurement": false,
+    "caveat": "All board positions and displacements below are FK predictions from encoders, not camera/physical displacement measurements.",
+    "board_mm": {
+      "planned_terminal": [
+        11.798050592563378,
+        405.6006774366654,
+        84.62267445748301
+      ],
+      "motion_endpoint_feedback": [
+        -11.615894401621171,
+        394.72916706588427,
+        65.55424909310725
+      ],
+      "after_inline_hold_feedback": [
+        -11.146537548849244,
+        394.7431392614586,
+        65.51185730536704
+      ],
+      "saved_A8_take": [
+        11.798050592563378,
+        405.6006774366654,
+        84.62267445748301
+      ]
+    },
+    "hold_minus_motion_endpoint_mm": [
+      0.4693568527719272,
+      0.013972195574353918,
+      -0.04239178774020047
+    ]
+  },
+  "model_predicted_contact_displacement_mm": [
+    3.610132779627664,
+    -1.5688450398534428,
+    -59.66715866318016
+  ],
+  "model_to_observation_caveat": "The model predicts contact-stage X increases by about3.61mm, while the operator observes about20mm outward. Also FK at measured endpoint is below FK at saved endpoint, while physical grip remains too high. These are different datums/observations and do not establish an external geometric calibration. Do not correct height or XY from encoder-FK alone.",
+  "support_takeover_stable": true,
+  "no_automatic_motion_after_operator_rejection": true,
+  "conclusion": "Exact saved joint endpoint was planned but not reached in feedback. Multi-axis steady tracking/support discrepancy exists. It is not sufficient to attribute all observed drift to tracking alone; shared task-datum and joint-to-board mapping remain to be checked.",
+  "next_implementation_direction": "Improve generic load/feedforward and steady tracking without square-specific XY/Z offsets or increasing shoulder_rotate Kp/Kd; verify against actual joint endpoint and independent field observation before accepting a new path."
+}

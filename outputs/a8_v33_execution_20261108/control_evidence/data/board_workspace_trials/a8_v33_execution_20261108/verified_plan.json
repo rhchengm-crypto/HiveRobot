@@ -1,0 +1,57 @@
+{
+  "motion_issued": false,
+  "prepared_plan_path": "/home/nvidia/hive_robot/DM_Control_Python/data/board_workspace_trials/approach_a8_v33_20261108.json",
+  "prepared_plan": "approach_a8_v33_20261108.json",
+  "plan_sha256": "208530a5eaa8e8674c233ba2161e15713fa0d9d2c86f77d457aff21d6ac517c0",
+  "request": {
+    "x_mm": 11.798050592563328,
+    "y_mm": 405.6006774366655,
+    "piece": "white_knight",
+    "stage": "approach",
+    "grip_height_mm": 84.62267445748284
+  },
+  "source_hashes": {
+    "rigid_model": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "board_model": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+    "planner": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+    "controller": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "motion_adapter": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "fault_support": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+    "kinematics": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "collision": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "trace": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "task_pose": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+    "static_support": "ce4d53088a9818a7c229f822c9d9d2bb5f826328982b2a859a284e04bbe3203d",
+    "trajectory_support": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "general_motion": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47"
+  },
+  "common_config_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+  "waypoints": 33,
+  "execution_groups": 9,
+  "orientation": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 49,
+    "max_error_deg": 0.015554524935979827,
+    "tolerance_deg": 0.2864788975654116,
+    "checked_task_edge_samples": 41,
+    "max_joint_sample_step_deg": 0.5,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "gripper_clearance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 40.62841418997087,
+      "task": 58.14248963368509
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "remote_verification_s": 5.191435015000025,
+  "geometry_modified": false,
+  "full_path_precomputed_before_Clearance": true,
+  "nominal_A8_XYZ_consistency_resolved": false
+}

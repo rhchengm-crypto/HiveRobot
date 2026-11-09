@@ -1,0 +1,110 @@
+{
+  "path": "/home/nvidia/hive_robot/DM_Control_Python/data/board_motion_traces/trace_1794187701411214636.jsonl",
+  "offset": 13565792,
+  "events": {
+    "trace_started": 1,
+    "segment_boundary": 71,
+    "motor_frame": 4471,
+    "gripper_feedback_clearance": 1251,
+    "quasistatic_support_observation": 11,
+    "trace_closed": 1
+  },
+  "stage_frames": {
+    "entry_search": 2371,
+    "source_above": 817,
+    "contact": 954,
+    "endpoint_settle": 201,
+    "model_hold": 128
+  },
+  "peak_velocity_rad_s": {
+    "shoulder_front": 0.16605617105960846,
+    "shoulder_side": 0.10744810849428177,
+    "shoulder_rotate": 0.03663003817200661,
+    "elbow": 0.17387057840824127,
+    "arm_roll": 0.095238097012043,
+    "wrist_side": 0.08058608323335648,
+    "wrist": 0.18315018713474274
+  },
+  "peak_tracking_error_deg": {
+    "shoulder_front": 2.9014780333433894,
+    "shoulder_side": 1.6342346704340822,
+    "shoulder_rotate": 0.5034993843172492,
+    "elbow": 1.1303151479902918,
+    "arm_roll": 0.8330203650603838,
+    "wrist_side": 1.6704912542314323,
+    "wrist": 0.8697013208649007
+  },
+  "max_dropped": 0,
+  "writer_error": null,
+  "latest_frame": {
+    "wall_s": 1794187795.599323,
+    "context": {
+      "stage": "model_hold",
+      "waypoint_index": 32,
+      "target_board_mm": [
+        11.798050592563328,
+        405.6006774366655,
+        84.62267445748284
+      ],
+      "attempt": null,
+      "phase": "interpolation_origin_ready"
+    },
+    "velocity_rad_s": {
+      "shoulder_front": 0.0019536020699888468,
+      "shoulder_side": -0.0019536020699888468,
+      "shoulder_rotate": -0.007326007355004549,
+      "elbow": -0.0019536020699888468,
+      "arm_roll": -0.007326007355004549,
+      "wrist_side": -0.007326007355004549,
+      "wrist": -0.007326007355004549
+    },
+    "feedback_minus_command_deg": {
+      "shoulder_front": 0.0,
+      "shoulder_side": 0.0,
+      "shoulder_rotate": 0.021856605344040804,
+      "elbow": 0.0,
+      "arm_roll": 0.021856605344040804,
+      "wrist_side": 0.0,
+      "wrist": 0.1311396320642448
+    },
+    "individual_feedback_freshness_verified": true,
+    "feedback_age_s": {
+      "shoulder_front": 0.0037966819982102606,
+      "shoulder_side": 0.003205076998710865,
+      "shoulder_rotate": 0.002471034000336658,
+      "elbow": 0.0016060749985626899,
+      "arm_roll": 0.0007844770007068291,
+      "wrist_side": 6.969899914111011e-05,
+      "wrist": 0.006497516998933861
+    },
+    "shoulder_rotate_gains": {
+      "kp": 36.0,
+      "kd": 4.5
+    }
+  },
+  "latest_static_update": {
+    "stage": "endpoint_settle",
+    "updated": true,
+    "reason": "quasistatic-load-observation",
+    "bias_tau": {
+      "shoulder_front": -4.7219160498838395,
+      "shoulder_side": -2.119057010813766,
+      "shoulder_rotate": 0.6165710425632062,
+      "elbow": -1.0975344453071285,
+      "arm_roll": 0.09359998657820413,
+      "wrist_side": -0.20408028065434775,
+      "wrist": -0.04812531107027484
+    },
+    "applied_to_motor": false,
+    "application": "pending next segment torque-continuous support-baseline ramp",
+    "window_end_s": 18553.499847819,
+    "observation_accepted": true
+  },
+  "backlog_bytes": 0,
+  "accepted_bias_updates": 11,
+  "footer": {
+    "event": "trace_closed",
+    "frames_written": 5805,
+    "queue_dropped_frames": 0
+  }
+}

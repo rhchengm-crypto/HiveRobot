@@ -1,0 +1,26 @@
+{
+  "package_only": true,
+  "uploaded": false,
+  "deployed": false,
+  "motion_issued": false,
+  "bundle": "outputs/a8_static_support_fix_20261108/a8_v33_static_support_bundle.zip",
+  "bytes": 64181,
+  "sha256": "0531d8d63722d4c64d82c91ff95647dc456f545be01cabe92e776d5c133789dc",
+  "rendered_deploy": "outputs/a8_static_support_fix_20261108/reproducibility/deploy_v33_remote.py",
+  "rendered_deploy_sha256": "ea394c55043accf45d90938c4ab3c77177b28588fa12c0f377168fa256fc63a3",
+  "source_file_sha256": {
+    "left_arm_static_support.py": "ce4d53088a9818a7c229f822c9d9d2bb5f826328982b2a859a284e04bbe3203d",
+    "left_arm_board_grasp.py": "9d88000d0463b8caafa4616c6ce9d25f0b7dd81b7111f20b56f613df5291bf77",
+    "test_left_arm_static_support.py": "82805a80f24f56763aa2ef1f3b0fd7cb5b2c50153c7daf977c74ad3dde12b8fe",
+    "test_left_arm_board_static_support.py": "b403136a7d8769afdab97d2ef7ade3fc9f3b9fde68bb74e803032721e09ff98a"
+  },
+  "protected_baseline_files": 24,
+  "baseline_provenance": {
+    "Home_frozen_source_files": 11,
+    "Home_before_status_run_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794185510062_30907.txt",
+    "matched_A8_frozen_execution_run_log": "/home/nvidia/hive_robot/DM_Control_Python/data/left_arm_v2_8_full_runs/arm_run_1794185510062_30907.txt",
+    "board_grasp_sha256": "b0a4b9a1353e4198a112712e492139b96450ad7be89e17f7b7e4d4efccc4d7ac",
+    "board_grasp_validation": "frozen A8 source bytes == its prepared-plan SHA == archive manifest SHA; run is Home immediately preceding status",
+    "remote_current_hash_used_as_planner_baseline": false
+  }
+}

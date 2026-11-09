@@ -1,0 +1,98 @@
+{
+  "motion_issued": false,
+  "prepared_plan": "approach_a8_reference_20261108.json",
+  "prepared_plan_path": "/home/nvidia/hive_robot/DM_Control_Python/data/board_workspace_trials/approach_a8_reference_20261108.json",
+  "plan_sha256": "32b0cd6ffe418abf3524ab147d79b292f3492fd976692c08a917cb27c165b57d",
+  "request": {
+    "x_mm": 11.798050592563328,
+    "y_mm": 405.6006774366655,
+    "piece": "white_knight",
+    "stage": "approach",
+    "grip_height_mm": 84.62267445748284
+  },
+  "common_config_sha256": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+  "previous_config_sha256": "669ef83ccdd28d086e187760ebc95a2c1d02bb1fba1175888bd02d3b9978e074",
+  "source_hashes": {
+    "rigid_model": "83f5e4b240d48ce4aae1c8037922696c5f2f1ed120476c8ae7da9e6ca00d6fd7",
+    "board_model": "ff4d75df0ef85964ba153d267c5547ba036f63d075409ca0582174c6e836164d",
+    "planner": "b0a4b9a1353e4198a112712e492139b96450ad7be89e17f7b7e4d4efccc4d7ac",
+    "controller": "00919276ff18aa3935b3581125e1ed3998aa727e5e44617d0c142cb301c287d9",
+    "motion_adapter": "9b26921fccfcd6ad987b85f231f65308aaabdfc848692a6ca66995728bc2071c",
+    "fault_support": "01d3ffbc3a0d82b28f278d32b0fd80c3abd498f2e58c7109c5e774274918f0dd",
+    "kinematics": "7e4a01e0969cc56b53c41947f71a3e7081eb3a8e0cbf672d07a38fbe2d2b0fe4",
+    "collision": "f81b9427aa57c0f48124d1ab6b32b0230acb4819b2f8783f0f9ddae669775edb",
+    "trace": "31e8a7c686c445ef8191ba3a2925e44faac752c0c35558d57ac49ca7aca2c461",
+    "task_pose": "04972339e770869b478eda2b32d7137c2be67e363472c686cf7e5f086a2e0271",
+    "trajectory_support": "41389981c45b443b830c1ada78fe00878dfad904736bfab1368f45429fedef98",
+    "general_motion": "5dafc43aee98fa3d294e2a33f74c8fc34d6a3f7ad33e5754d62624659b9f6b47"
+  },
+  "waypoints": 33,
+  "reference_endpoint": "A8_take",
+  "original_nominal_A8_XYZ_solved": false,
+  "orientation": {
+    "constraint": "full-gripper-frame",
+    "checked_task_samples": 49,
+    "max_error_deg": 0.015554524935979827,
+    "tolerance_deg": 0.2864788975654116,
+    "checked_task_edge_samples": 41,
+    "max_joint_sample_step_deg": 0.5,
+    "free_transit_excluded": true,
+    "physical_pose_verified": false
+  },
+  "gripper_clearance": {
+    "passed": true,
+    "complete_edges_checked": true,
+    "travel_minimum_required_mm": 20.0,
+    "task_minimum_required_mm": 5.0,
+    "waypoint_minimum_vertex_heights_mm": {
+      "travel": 40.036155715594674,
+      "task": 58.14248963368509
+    },
+    "physical_clearance_verified": false,
+    "gripper_opening": "approved revised STEP gripper opening; not every possible finger opening"
+  },
+  "gravity_envelope": {
+    "version": 1,
+    "path_sha256": "15afec9bb91ffb0f57c326e8854b90f8d5ed97f3cd67198c40c8799e48c17468",
+    "samples": 334,
+    "max_sample_step_deg": 0.5,
+    "headroom_Nm": 0.5,
+    "gravity_encoder_Nm": {
+      "shoulder_front": [
+        -8.727724973074565,
+        2.1320520603572737
+      ],
+      "shoulder_side": [
+        -0.0008829675754099856,
+        1.313563685056792
+      ],
+      "shoulder_rotate": [
+        -0.9168268453195109,
+        0.11611841658235725
+      ],
+      "elbow": [
+        3.1721931052222514,
+        4.036169537756397
+      ],
+      "arm_roll": [
+        -0.09226174746411744,
+        0.006782385258647535
+      ],
+      "wrist_side": [
+        0.015176241367543553,
+        0.13981807249524789
+      ],
+      "wrist": [
+        0.18005641211491896,
+        0.19879846785682903
+      ]
+    },
+    "physical_torque_rating_verified": false,
+    "scope": "sampled gravity range plus bounded residual headroom; runtime clipping retained"
+  },
+  "remote_check_s": 5.261633656000413,
+  "runtime_code_changed": false,
+  "shared_reference_configuration_activated": true,
+  "full_path_precomputed_before_Home": true,
+  "operator_preflight": "\u5df2\u6e05\u7a7a\u3001\u672a\u5939\u68cb\u5b50\uff0c\u6211\u5728\u65c1\u53ef\u6025\u505c"
+}
