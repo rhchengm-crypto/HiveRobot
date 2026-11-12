@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-11",
+  "build": "gpt-tailnet-gateway-20261111-wifi-portal",
+  "app_bytes": 2208544,
+  "app_sha256": "8f80e8b13dc7fd110a8a2eeb83633198cd7fd657b061ffe6469691c0d6020aa3",
+  "build_pass": true,
+  "app_only_flash_verified": true,
+  "board_mac": "28:84:85:a8:8f:70",
+  "nvs_erased": false,
+  "sd_formatted": false,
+  "hotspot_observation": {
+    "isolated_mode": 2,
+    "clients": 1,
+    "after_failed_submission_still_accessible": true
+  },
+  "new_network_connection": "passed on subsequent user submission: associated=1, got_ip=1, WIFI_SAVE success=1",
+  "root_cause_status": "Hotspot access recovered with isolated AP. Target failure was AUTH_EXPIRE before association; subsequent submission and restart connected successfully. No RSSI/security/router-side log captured, so RF, router response and compatibility causes cannot be distinguished.",
+  "user_acceptance": "连接成功了，读取失败和成功的日志，找下原因",
+  "restart_test": {
+    "method": "esptool read_mac then hard_reset; no NVS erase",
+    "stored": 1,
+    "portal": 0,
+    "connected": 1,
+    "associated": 1,
+    "wifi_mode": 1,
+    "reason": 0,
+    "mic": 1
+  },
+  "failed_submission": {
+    "reason": 2,
+    "associated": 0,
+    "status": 6
+  },
+  "evidence": [
+    "[WIFI_CONNECT] failed=1 reason=2 associated=0 status=6 original_preserved=1",
+    "[WIFI_EVENT] associated=1",
+    "[WIFI_EVENT] got_ip=1",
+    "[WIFI_SAVE] success=1",
+    "[WIFI_INFO] configured=1 stored=1 portal=0 pending=0 connected=1 reason=0 associated=1 mode=1 clients=0"
+  ]
+}

@@ -149,3 +149,8 @@ GitHub 仓库沿用 `rhchengm-crypto/HiveRobot`。`SOURCE_SYNC_20261105.json` �
 已app-only刷入并校验；旧版本迁移、重新进GPT、芯片重启后均 auth_key_sent=0 且网关ready。重启保留NVS标记，约5.7秒ready；切页正常，短睡眠及32000帧麦克风、SD、Wi-Fi回归通过。没有撤销/人为过期真实AuthKey，也未清空生产身份测试全新入网；不能称为实际等过90天的测试。真人问答待验收。详见 NODE_AUTH_FIX.md 和 NODE_AUTH_VALIDATION.json。
 
 2026-11-07 真人问答验收：用户确认“正常显示回答”，保留当前版本。
+
+
+## 2026-11-11：配网热点修正与实测
+
+配网采用 AP-only 隔离旧网络重连，连接时排除扫描冲突，失败后保留热点重试，退出后恢复已保存网络。增加无凭据事件诊断。用户确认热点可连接、新 Wi-Fi 已连接成功；日志完成关联、获取 IP、WIFI_SAVE success=1，硬重启后 stored=1/connected=1/portal=0。首次目标网络失败 reason=2 AUTH_EXPIRE，未完成关联；重试同版固件成功，不能仅凭此码认定密码或信号根因。详细代码/限制见 WIFI_PORTAL_FIX.md 与 WIFI_PORTAL_VALIDATION.json。构建 gpt-tailnet-gateway-20261111-wifi-portal，应用区刷入校验通过，保留 NVS、SD、全部原功能。

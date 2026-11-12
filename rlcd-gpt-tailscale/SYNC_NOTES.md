@@ -28,3 +28,6 @@ build/、private-backup/、日志、用户历史、真实配置与固件二进�
 2026-11-07：原AuthKey过期兼容修正：已注册身份优先node-only重连，旧版迁移、切页、芯片重启、短睡眠回归通过，日志确认auth_key_sent=0。测试限制及真人验收见 NODE_AUTH_FIX.md / NODE_AUTH_VALIDATION.json。
 
 2026-11-07 真人问答验收：用户确认“正常显示回答”，保留当前版本。
+
+
+2026-11-11: Wi-Fi portal AP isolation and credential-free connection diagnostics. Full build/app-only flash passed; user and serial verified new Wi-Fi save and automatic connection after hard restart. See WIFI_PORTAL_FIX.md / WIFI_PORTAL_VALIDATION.json for failed AUTH_EXPIRE attempt, subsequent success and causal limitations.
